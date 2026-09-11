@@ -1,0 +1,41 @@
+{
+  "id": "spada2011-t01-06",
+  "collection": "spada2011",
+  "published_name": "Test 6/1",
+  "title": "Love numbers for a multistratified model",
+  "test_class": "wavenumber",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "vss96",
+  "loads": "loads/spada2011.json",
+  "what_to_compute": "As test 5/1, for the 28-layer model VSS96 instead of M3-L70-V01. The many layers make the root-finding of the normal mode method hard, which is the point of the test.",
+  "outputs": [
+    "h_loading_time",
+    "l_loading_time",
+    "k_loading_time"
+  ],
+  "parameters": {
+    "harmonic_degrees": [
+      2,
+      256
+    ],
+    "time_window_kyr": [
+      0.01,
+      1000000.0
+    ]
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T01-06",
+    "contributors": [
+      "GS",
+      "GSA",
+      "RR",
+      "VK"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+  },
+  "status": "specified; no reader and no converted data yet"
+}

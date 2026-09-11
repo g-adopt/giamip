@@ -1,0 +1,80 @@
+{
+  "id": "m3-l70-v01",
+  "name": "M3-L70-V01",
+  "kind": "complete_model",
+  "description": "The reference earth model of both published benchmarks: spherically symmetric, five layers, incompressible, self-gravitating, with a Maxwell viscoelastic mantle, a purely elastic lithosphere and a uniform inviscid fluid core. The name records three mantle layers, a 70 km lithosphere and viscosity profile 01.",
+  "compressible": false,
+  "self_gravitating": true,
+  "used_by": ["spada2011 (all tests)", "martinec2018 (all cases A to E)"],
+  "source": {
+    "citation": "Spada, G. et al. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132, table 3.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "notes": [
+    "A layer runs from its own top_radius_km down to the next layer's top_radius_km. The published table gives one row per interface, which is the same information written the other way round.",
+    "gravity_at_top_m_s2 is the unperturbed gravity at the layer's upper interface, computed from the density profile. It is reproduced here because the plotting scripts of Martinec et al. (2018) divide the gravitational potential by the surface value, 9.815, to obtain geoid height.",
+    "The lithosphere is purely elastic. Codes that cannot represent infinite viscosity use a large finite value; Spada et al. (2011) note 1e30 Pa s or more.",
+    "The core is an inviscid fluid with zero shear modulus. The core-mantle boundary conditions are those of Wu and Ni (1996)."
+  ],
+  "layers": [
+    {
+      "role": "lithosphere",
+      "top_radius_km": 6371,
+      "bottom_radius_km": 6301,
+      "thickness_km": 70,
+      "density_kg_m3": 3037,
+      "shear_modulus_pa": 5.0605e10,
+      "viscosity_pa_s": null,
+      "rheology": "elastic",
+      "gravity_at_top_m_s2": 9.815
+    },
+    {
+      "role": "upper mantle",
+      "top_radius_km": 6301,
+      "bottom_radius_km": 5951,
+      "thickness_km": 350,
+      "density_kg_m3": 3438,
+      "shear_modulus_pa": 7.0363e10,
+      "viscosity_pa_s": 1.0e21,
+      "rheology": "maxwell",
+      "gravity_at_top_m_s2": 9.854
+    },
+    {
+      "role": "transition zone",
+      "top_radius_km": 5951,
+      "bottom_radius_km": 5701,
+      "thickness_km": 250,
+      "density_kg_m3": 3871,
+      "shear_modulus_pa": 1.0549e11,
+      "viscosity_pa_s": 1.0e21,
+      "rheology": "maxwell",
+      "gravity_at_top_m_s2": 9.978
+    },
+    {
+      "role": "lower mantle",
+      "top_radius_km": 5701,
+      "bottom_radius_km": 3480,
+      "thickness_km": 2221,
+      "density_kg_m3": 4978,
+      "shear_modulus_pa": 2.2834e11,
+      "viscosity_pa_s": 2.0e21,
+      "rheology": "maxwell",
+      "gravity_at_top_m_s2": 10.024
+    },
+    {
+      "role": "core",
+      "top_radius_km": 3480,
+      "bottom_radius_km": 0,
+      "thickness_km": 3480,
+      "density_kg_m3": 10750,
+      "shear_modulus_pa": 0.0,
+      "viscosity_pa_s": 0.0,
+      "rheology": "inviscid fluid",
+      "gravity_at_top_m_s2": 10.457
+    }
+  ],
+  "relaxation_modes": {
+    "count": 9,
+    "note": "Nine isostatic modes for harmonic degree 2 and above. Degree 1 has fewer (Greff-Lefftz and Legros 1997), and degree 0 Love numbers vanish for an incompressible model. Spada et al. (2011) test 1/1 tabulates the relaxation times."
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "martinec2018-C",
+  "collection": "martinec2018",
+  "published_name": "Benchmark C",
+  "title": "Fixed coastline, marine-terminating ice",
+  "description": "The cap grows over 10 kyr and reaches the coast of the deep nearby basin. The ocean geometry is still fixed, so ice that reaches the coast is calved.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/martinec2018.json",
+  "specification": {
+    "sea_level_equation": 1,
+    "ice_height_model": "L2",
+    "time_scenario": "T1",
+    "ocean_basin": "B2",
+    "terminal_time_kyr": 15
+  },
+  "outputs": [
+    "U",
+    "N",
+    "S"
+  ],
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "comparison": {
+    "reference_solution": "VEGA (contributor ZM)",
+    "metrics": [
+      "root mean square difference",
+      "maximum difference"
+    ],
+    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+  },
+  "reference_data": {
+    "contributors": [
+      "ZM",
+      "VK",
+      "YS",
+      "MS",
+      "SK"
+    ],
+    "archive": null,
+    "reference": "Not held. Only Kachuck's submission is available, under an internal code that is not yet tied to this case letter.",
+    "published_figure": "Figures 7 to 11"
+  },
+  "status": "specified; no reader and no converted data yet"
+}

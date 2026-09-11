@@ -4,7 +4,9 @@
     {
       "id": "ice-year-longname",
       "kind": "metadata",
-      "applies_to": ["giamip/ice-history/*.nc"],
+      "applies_to": [
+        "giamip/ice-history/*.nc"
+      ],
       "field": "year:long_name",
       "as_shipped": "Calendar year (positive = CE, negative = BCE)",
       "correct": "Year offset from 2000 CE, which the protocol defines as model year 0",
@@ -16,7 +18,9 @@
     {
       "id": "ice-fillvalue-zero",
       "kind": "trap",
-      "applies_to": ["giamip/ice-history/*.nc"],
+      "applies_to": [
+        "giamip/ice-history/*.nc"
+      ],
       "field": "ice_thickness:_FillValue, ice_thickness:missing_value",
       "as_shipped": "0.0",
       "correct": "Zero is a real value meaning no ice, not a missing value",
@@ -28,7 +32,9 @@
     {
       "id": "topography-source-attribute",
       "kind": "metadata",
-      "applies_to": ["giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"],
+      "applies_to": [
+        "giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"
+      ],
       "field": "source",
       "as_shipped": "Merge: BedMachine Greenland (28-Jul-2022, v5.5), BedMachine Greenland (28-Jul-2022, v5.5), GEBCO (downloaded June 2025)",
       "correct": "The first of the two Greenland entries should name the Antarctic dataset, BedMachine Antarctica v3",
@@ -40,7 +46,9 @@
     {
       "id": "topography-missing-crs",
       "kind": "metadata",
-      "applies_to": ["giamip/initial-topography/*.nc"],
+      "applies_to": [
+        "giamip/initial-topography/*.nc"
+      ],
       "field": "topg:grid_mapping",
       "as_shipped": "crs",
       "correct": "No variable named `crs` exists in any of the three files",
@@ -52,7 +60,9 @@
     {
       "id": "glac3-version-naming",
       "kind": "naming",
-      "applies_to": ["giamip/ice-history/iceHistory-GLAC3c_profile*.nc"],
+      "applies_to": [
+        "giamip/ice-history/iceHistory-GLAC3c_profile*.nc"
+      ],
       "field": "filename, title, source",
       "as_shipped": "Filename says GLAC3c_profile1; title and source say GLAC3c_merge1; the protocol experiment table says GLAC3b (Profile 1)",
       "correct": "Not established. Asked of the organisers on 2026-09-11.",
@@ -64,7 +74,9 @@
     {
       "id": "benchmarkA-vega-truncated",
       "kind": "truncated",
-      "applies_to": ["martinec2018/benchmarkA/Z_ZM_load.out"],
+      "applies_to": [
+        "martinec2018/benchmarkA/Z_ZM_load.out"
+      ],
       "as_shipped": "One row, colatitude 0, seven columns",
       "correct": "The full VEGA reference profile over colatitude 0 to 180, as benchmark B's equivalent files have",
       "evidence": "A_fig10_diff.gmt reads this file as the ZM curve across the whole range in two of its four panels. Benchmark B's Z_ZM_load.out and Z_ZM_basin.out are complete.",
@@ -75,7 +87,9 @@
     {
       "id": "benchmarkA-sk-superseded",
       "kind": "superseded",
-      "applies_to": ["martinec2018/benchmarkA/A_fig10_SBK.dat"],
+      "applies_to": [
+        "martinec2018/benchmarkA/A_fig10_SBK.dat"
+      ],
       "as_shipped": "360 rows on linspace(180, 0, 360), dated 2017-11-15",
       "correct": "Use l721j256/A_fig10_SBK.dat from martinec2018/sbk_benchmark_data.tar.gz: 721 rows on a 0.25 degree grid, dated 2018-01-15",
       "evidence": "Z_SK_load_diff.out has 721 rows on the same 0.25 degree descending grid as the superseding file, and is dated 2018-01-17. Subtracting it from that file with no interpolation reconstructs VEGA to a maximum of 1.7e-4 m and an RMS of 2.3e-5 m against the reconstruction from GA, which is print precision. The shipped 360-row file is on a different grid and cannot be the same submission. One consequence: the figure shipped in the archive draws the old SK profile in its left panel and the new SK difference in its right panel.",
@@ -86,7 +100,12 @@
     {
       "id": "benchmarkA-colatitude-ordering",
       "kind": "trap",
-      "applies_to": ["martinec2018/benchmarkA/Z_SK_load_diff.out", "martinec2018/benchmarkA/Z_YS_load_diff.out", "martinec2018/benchmarkA/A_fig10_SBK.dat", "martinec2018/benchmarkA/A_fig10_YS.dat"],
+      "applies_to": [
+        "martinec2018/benchmarkA/Z_SK_load_diff.out",
+        "martinec2018/benchmarkA/Z_YS_load_diff.out",
+        "martinec2018/benchmarkA/A_fig10_SBK.dat",
+        "martinec2018/benchmarkA/A_fig10_YS.dat"
+      ],
       "field": "colatitude column",
       "as_shipped": "Descending, from 180 to 0",
       "correct": "Every other file in the same directory ascends from 0 to 180",
@@ -98,11 +117,42 @@
     {
       "id": "benchmarkA-fortran-exponent",
       "kind": "trap",
-      "applies_to": ["martinec2018/benchmarkA/A_fig10_YS.dat"],
+      "applies_to": [
+        "martinec2018/benchmarkA/A_fig10_YS.dat"
+      ],
       "as_shipped": "Fortran D exponents, for example -0.3024125086287D+03",
       "correct": "The same numbers with an E exponent",
       "evidence": "numpy.loadtxt raises `could not convert string '-0.3024125086287D+03' to float64`. awk, which the original GMT scripts used, accepts the leading digits and silently drops the exponent, so a naive re-run of those scripts plots this contributor 1000 times too small.",
       "action": "Replace D with E before parsing.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-ww-axisymmetric-rescaled",
+      "kind": "trap",
+      "applies_to": [
+        "martinec2018/benchmarkA/Z_WW_axi_load_diff.out"
+      ],
+      "field": "columns 2 and 4",
+      "as_shipped": "The values as the contributor submitted them",
+      "correct": "The published figure plots 9/10 of column 2 and 2/3 of column 4",
+      "evidence": "A_fig10_diff.gmt applies `9*$2/10` to the vertical displacement difference in panel 2 and `2*$4/3` to the geoid difference in panel 4. No other series in any of the four scripts carries a rescaling of this kind; the only other arithmetic is division by the surface gravity 9.8155 to turn a potential into a geoid height. The reason for the two factors is not recorded in the script or in the paper.",
+      "action": "A redraw of published figure 3 must apply both factors to reproduce the figure. A comparison against the data must not: use the columns as submitted, and treat the discrepancy the factors imply as unexplained until the contributor confirms it.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-geoid-sign-varies",
+      "kind": "trap",
+      "applies_to": [
+        "martinec2018/benchmarkA/*",
+        "martinec2018/benchmarkB/*"
+      ],
+      "field": "the geoid column",
+      "as_shipped": "Different contributors store the geoid with opposite signs, and two store the gravitational potential",
+      "correct": "Positive geoid height, upward",
+      "evidence": "Decoded from the plotting scripts by scripts/decode_gmt_layouts.py. For benchmark A, four series are plotted as they stand: A-fig10-TABOO_256.dat column 7, A_fig10_YS.dat column 5, caseA_0.25.lmax256_GA.dat column 6, and Z_ZM_load.out column 5, which holds the gravitational potential and is divided by the surface gravity 9.8155. Six are negated: A_fig10_KS_256.dat column 5, A_fig10_SBK.dat column 4, case_A_VILMA_uve.dat column 4, fig10_n_VB_256.dat column 2, n_10ka.dat column 2, and n_10ka_axi.dat column 2, which is both negated and divided by 9.8155.",
+      "action": "Take the sign and any division by gravity from gia_mip/resources/column_layouts.json, never by assumption. A reader that guesses is wrong by a factor of minus one for six of the ten benchmark A contributors, and by a factor of 9.8155 for two.",
       "status": "confirmed",
       "discovered": "2026-09-11"
     }

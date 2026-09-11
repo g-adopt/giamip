@@ -2,8 +2,70 @@
 title: "Spada et al. (2011)"
 ---
 
-::: {.callout-note}
-## Not written yet
+> Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z.,
+> Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A.
+> (2011). A benchmark study for glacial isostatic adjustment codes.
+> *Geophysical Journal International* 185(1), 106-132.
+> doi:[10.1111/j.1365-246X.2011.04952.x](https://doi.org/10.1111/j.1365-246X.2011.04952.x)
 
-What the ten tests are, which codes contributed to each, what the data files contain, and how to reproduce the published figures.
-:::
+Nine codes compared on a spherically symmetric, incompressible, five-layer
+earth, with no ocean and no sea level equation. The work was done inside COST
+Action ES0701, and Martinec et al. (2018) is its continuation.
+
+The paper divides the work into two classes. Class 1 is the wavenumber
+domain: Love numbers, relaxation spectra and the polar motion transfer
+function. Class 2 is the spatial domain: surface deformation for an analytic
+load. The paper writes a test as "Test X/Y" with Y the class, and the archive
+directories are `T01-0X` and `T02-0X`.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+rows = ["| Case | Published as | Directory | Title | Contributors |",
+        "| --- | --- | --- | --- | --- |"]
+for c in cases.cases("spada2011"):
+    rows.append(f"| [`{c['id']}`](../results/index.qmd#{c['id']}) | "
+                f"{c['published_name']} | `{c['reference_data']['directory']}` | "
+                f"{c['title']} | {', '.join(c['reference_data']['contributors'])} |")
+Markdown("\n".join(rows))
+```
+
+Test 6/1 is the only one that uses a different earth model, the 28-layer
+VSS96, chosen because the many layers make the root-finding of the normal
+mode method hard.
+
+## What we hold
+
+One archive, `spada2011/spada2011-cost-es0701.tar.gz`, holding 977 files: the
+contributor data, 87 GMT plotting scripts, Fortran filter programs and the
+PostScript figures. It is a working copy repacked with forty-seven operating
+system files removed, which the manifest records.
+
+Eleven README files inside the `T02` directories document the VILMA
+submissions: `u` is vertical displacement, `v` horizontal, `e` geoid, in
+metres and metres per year, with `*cost` the fine grid and `*costg` the
+global grid, both poles omitted.
+
+## Two traps already recorded
+
+Both were found by a G-ADOPT script that reads this archive, and both are
+silent.
+
+The `.ela`, `.flu` and `.res` files hold **absolute values** of the residues,
+because they exist to make a logarithmic plot. They reconstruct `h` correctly
+and get `l` and `k` wrong. The `.dat` files are signed; read those.
+
+The residue lists have **twelve** entries while the relaxation spectrum has
+nine. Positions 6, 9 and 12 are Maxwell modes of vanishing strength. Drop
+them by fixed position: dropping by magnitude is right at degree 2 and drops
+four modes at degree 128, where a real mode is also small.
+
+## Not decoded yet
+
+The 87 GMT scripts in this archive have not been put through
+`scripts/decode_gmt_layouts.py`, so the column layouts for the Spada data
+files are not written down the way the Martinec ones are. That is the next
+piece of work on this collection.

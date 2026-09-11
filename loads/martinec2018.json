@@ -1,0 +1,54 @@
+{
+  "$comment": "The ice-height models, time scenarios and ocean basins of Martinec et al. (2018), tables 1, 2 and 3. All five cases use the same spherical cap shape as Spada et al. (2011) table 4 row 1, with an angular radius of 10 degrees, moved and rescaled.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414, tables 1 to 4.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "constants": {
+    "ice_density_kg_m3": 931,
+    "water_density_kg_m3": 1000,
+    "surface_gravity_m_s2": 9.8155,
+    "$comment": "The densities follow Spada et al. (2011). The surface gravity is the value the plotting scripts divide the gravitational potential by to obtain geoid height; it is the surface value of the M3-L70-V01 gravity profile, 9.815, carried to one more digit."
+  },
+  "load_shape": {
+    "name": "Spherical cap, parabolic cross-section",
+    "surface_mass_density": "sigma_ice(Omega, t) = rho_ice * h_ice(Omega, t), with the cap profile of Spada et al. (2011) table 4 row 1",
+    "angular_radius_deg": 10
+  },
+  "ice_height_models": {
+    "L0": {"centre_colatitude_deg": 0,  "centre_longitude_deg": 0,  "height_m": 1500, "note": "The model used in Spada et al. (2011)."},
+    "L1": {"centre_colatitude_deg": 25, "centre_longitude_deg": 75, "height_m": 1500, "note": "Thick enough that the ice never floats when it meets the ocean."},
+    "L2": {"centre_colatitude_deg": 25, "centre_longitude_deg": 75, "height_m": 500,  "note": "Low enough that the condition for floating ice is met when the cap reaches the coast, which is what cases C, D and E exercise."}
+  },
+  "time_scenarios": {
+    "T0": {
+      "description": "Heaviside loading. The height h(t) and the angular radius alpha(t) take their full values for t in (t0, t1].",
+      "terminal_time_kyr": 10,
+      "height": "h(t) = h0",
+      "radius": "alpha(t) = alpha0"
+    },
+    "T1": {
+      "description": "A linear increase of h(t) and alpha(t) from zero at t0 to their full values at t1, then held constant to t2.",
+      "growth_end_kyr": 10,
+      "terminal_time_kyr": 15,
+      "height": "h(t0) = 0, h(t1) = h0, then h(t) = h0 for t in (t1, t2]",
+      "radius": "alpha(t0) = 0, alpha(t1) = alpha0, then alpha(t) = alpha0 for t in (t1, t2]"
+    }
+  },
+  "ocean_basins": {
+    "$formula": "zeta0(Omega) = bmax - b0 * exp(-psi^2 / (2 * sigma_b^2)), where cos(psi) = cos(theta)cos(theta_b) + sin(theta)sin(theta_b)cos(lambda - lambda_b). zeta0 is the solid Earth topography at the initial time. Its minimum is bmax - b0 at the basin centre and its maximum is bmax at the antipode.",
+    "sigma_b_deg": 26,
+    "B0": {"centre_colatitude_deg": 0,   "centre_longitude_deg": 0,   "bmax_m": 0,    "b0_m": 0,    "note": "No ocean. The sea level equation is not solved."},
+    "B1": {"centre_colatitude_deg": 100, "centre_longitude_deg": 320, "bmax_m": 760,  "b0_m": 1200, "radius_deg": 24.85, "max_depth_m": 440, "note": "Far from the ice load, so the ice stays inland."},
+    "B2": {"centre_colatitude_deg": 35,  "centre_longitude_deg": 25,  "bmax_m": 3800, "b0_m": 6000, "radius_deg": 24.85, "max_depth_m": 2200, "note": "Deep and close to the ice load, so a growing cap reaches the coast."}
+  },
+  "sea_level_equation_levels": {
+    "0": "Not solved. No ocean load.",
+    "1": "Solved with a fixed ocean geometry.",
+    "2": "Solved with a time-varying ocean geometry, so the coastline moves and ice may float."
+  },
+  "notes": [
+    "The basin radius psi0 = sigma_b * sqrt(ln(b0/bmax)) is 24.85 degrees for both B1 and B2.",
+    "Benchmark E uses basin B2*, which has the same parameters as B2 but prescribes the topography at the terminal time instead of the initial time, so the initial topography is the unknown."
+  ]
+}

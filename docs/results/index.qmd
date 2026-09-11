@@ -2,8 +2,68 @@
 title: "Cases"
 ---
 
-::: {.callout-note}
-## Not written yet
+Twenty-seven cases: ten tests from Spada et al. (2011), five from Martinec et
+al. (2018), and the twelve GIAMIP experiments. Each is a JSON file in
+`cases/`, and this page is generated from those files.
 
-One page per case: the full specification, and the data to compare against.
-:::
+None of them has been run. A case here is a specification: what earth model,
+what load, over what time, on what grid, with which constants, and what to
+compare against.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+out = []
+
+out.append("## Spada et al. (2011)\n")
+out.append("| Case | Published as | Title | Class | Earth model | Contributors |")
+out.append("| --- | --- | --- | --- | --- | --- |")
+for c in cases.cases("spada2011"):
+    out.append(f"| `{c['id']}` | {c['published_name']} | {c['title']} | "
+               f"{c['test_class']} | {c['earth_model']} | "
+               f"{', '.join(c['reference_data']['contributors'])} |")
+
+out.append("\n## Martinec et al. (2018)\n")
+out.append("| Case | Title | SLE | Ice | Time | Basin | Terminal time | Contributors | Data held |")
+out.append("| --- | --- | ---: | --- | --- | --- | ---: | --- | --- |")
+for c in cases.cases("martinec2018"):
+    s = c["specification"]
+    held = "yes" if c["reference_data"].get("archive") else "no"
+    out.append(f"| `{c['id']}` | {c['title']} | {s['sea_level_equation']} | "
+               f"{s['ice_height_model']} | {s['time_scenario']} | {s['ocean_basin']} | "
+               f"{s['terminal_time_kyr']} kyr | "
+               f"{', '.join(c['reference_data']['contributors'])} | {held} |")
+
+out.append("\n## GIAMIP\n")
+out.append("| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start |")
+out.append("| --- | ---: | --- | --- | --- | --- | --- | ---: |")
+for c in cases.cases("giamip"):
+    e, t = c["earth"], c["topography"]
+    out.append(f"| `{c['experiment_id']}` | {c['tier']} | {c['forcing']['ice_history']} | "
+               f"{e['viscosity']} | {e['elastic_structure']} | {e['rheology']} | "
+               f"{t['model']} | {c['period']['start_ka_before_2000ce']} ka |")
+Markdown("\n".join(out))
+```
+
+## Full specification of one case
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json
+from gia_mip import cases
+out = []
+for c in cases.cases():
+    out.append(f"### `{c['id']}`\n")
+    if c.get("title"):
+        out.append(f"**{c['title']}**\n")
+    if c.get("description"):
+        out.append(c["description"] + "\n")
+    out.append("```json\n" + json.dumps(c, indent=1, ensure_ascii=False) + "\n```\n")
+Markdown("\n".join(out))
+```

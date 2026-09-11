@@ -2,8 +2,86 @@
 title: "Martinec et al. (2018)"
 ---
 
-::: {.callout-note}
-## Not written yet
+> Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun,
+> Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James,
+> T. S. (2018). A benchmark study of numerical implementations of the sea
+> level equation in GIA modelling. *Geophysical Journal International* 215(1),
+> 389-414. doi:[10.1093/gji/ggy280](https://doi.org/10.1093/gji/ggy280)
 
-What the five sea-level-equation cases are, which codes contributed to each, and what is missing from the material we hold.
-:::
+Ten codes, five cases of increasing complexity, all on the same incompressible
+earth model as Spada et al. (2011) and all using the same spherical cap of
+angular radius 10 degrees, moved and rescaled. The sea level equation has no
+analytic solution, so accuracy is measured as the difference from a chosen
+reference, the VEGA solution of Martinec.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+rows = ["| Case | Title | SLE | Ice | Time | Basin | Terminal |",
+        "| --- | --- | ---: | --- | --- | --- | ---: |"]
+for c in cases.cases("martinec2018"):
+    s = c["specification"]
+    rows.append(f"| [{c['published_name']}](../results/index.qmd#{c['id']}) | "
+                f"{c['title']} | {s['sea_level_equation']} | {s['ice_height_model']} | "
+                f"{s['time_scenario']} | {s['ocean_basin']} | {s['terminal_time_kyr']} kyr |")
+Markdown("\n".join(rows))
+```
+
+Case A does not solve the sea level equation and coincides with Spada et al.
+(2011) test 1/2 for the cap load, which is what makes it the entry point.
+
+## What we hold
+
+The archives for cases A and B, and Kachuck's giapy submission for all five.
+Nothing for C, D or E from the other four contributors, and no reference
+solution for them.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+rows = ["| Case | Archive | Contributors in the paper | Reference solution |",
+        "| --- | --- | ---: | --- |"]
+for c in cases.cases("martinec2018"):
+    r = c["reference_data"]
+    rows.append(f"| {c['published_name']} | "
+                f"{'`' + r['archive'] + '`' if r.get('archive') else 'not held'} | "
+                f"{len(r['contributors'])} | "
+                f"{r.get('reference', 'held')} |")
+Markdown("\n".join(rows))
+```
+
+## Two things to know before reading the data
+
+**Case B is called C2 inside the files.** Every filename in `benchmarkB.zip`
+begins `C2_`. The identification is certain, because two of Kachuck's `C2`
+files are byte-identical to files in that archive. His other internal codes,
+`D3`, `E2` and `F1`, are not yet tied to published case letters, and the
+driver he shipped generates neither `C2` nor `D3`, so it cannot settle the
+question. The case files say so instead of guessing.
+
+**Benchmark A's reference is one row.** `Z_ZM_load.out` holds a single line at
+colatitude 0. It is recoverable: every `Z_<code>_load_diff.out` is that
+contributor minus VEGA, so adding a contributor's profile back onto its own
+difference file returns the reference. Five contributors agree to better than
+one millimetre across the whole range and reproduce the surviving row exactly.
+See [the corrections](../data/corrections.qmd).
+
+## Figures
+
+| Figure | Shows |
+| --- | --- |
+| 3 | Case A, cross-section through the ice centre, and the differences |
+| 4 | The case B ice cap and ocean basin, drawn from `uprav.out` |
+| 5 | Case B through the ice centre, longitude 75 |
+| 6 | Case B through the basin centre, longitude 320 |
+| 7 to 11 | Case C |
+| 12 onward | Cases D and E |
+
+The scripts that drew figures 3, 4, 5 and 6 are in the archives and are
+decoded in [the column layouts](../reference/column-layouts.qmd).

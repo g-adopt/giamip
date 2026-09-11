@@ -1,0 +1,30 @@
+{
+  "id": "spada2011-t01-04",
+  "collection": "spada2011",
+  "published_name": "Test 4/1",
+  "title": "Polar motion transfer function",
+  "test_class": "wavenumber",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/spada2011.json",
+  "what_to_compute": "Compute the coefficients of the polar motion transfer function M(s) in the Laplace domain: the secular and elastic rotational residues and the rotational characteristic frequencies.",
+  "outputs": [
+    "pmtf_coefficients"
+  ],
+  "parameters": {
+    "harmonic_degree": 2
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T01-04",
+    "contributors": [
+      "GS",
+      "VB"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+  },
+  "status": "specified; no reader and no converted data yet"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "prem",
+  "name": "PREM",
+  "kind": "elastic_structure",
+  "description": "The Preliminary Reference Earth Model, prescribed as the elastic structure for GIAMIP experiments Exp01, Exp02, Exp05, Exp06 and Exp07. A viscosity profile such as VM5a or VM7 is layered onto it.",
+  "used_by": ["giamip Exp01", "giamip Exp02", "giamip Exp05", "giamip Exp06", "giamip Exp07"],
+  "source": {
+    "citation": "Dziewonski, A. M. and Anderson, D. L. (1981). Preliminary reference Earth model. Physics of the Earth and Planetary Interiors 25(4), 297-356.",
+    "doi": "10.1016/0031-9201(81)90046-7"
+  },
+  "layers": null,
+  "notes": [
+    "The layer table is not reproduced here. PREM is widely distributed and every solver that needs it already carries a deck; sl1d ships three PREM variants in sl1d/models/.",
+    "The protocol states that each group may choose its own treatment of compressibility, so a PREM deck may be used compressible or with the incompressible approximation. The choice is recorded in the model report.",
+    "PREM is a seismic model and is layered in depth below the surface, while M3-L70-V01 is given in radius. Mixing the two conventions is a real risk when a single reader handles both."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "vss96",
+  "name": "VSS96",
+  "kind": "complete_model",
+  "description": "A 28-layer Maxwell mantle with a uniform core and a homogeneous elastic lithosphere. Used in Spada et al. (2011) test 6/1 to check that codes agree on a multistratified model, where the root-finding of the viscoelastic normal mode method becomes hard.",
+  "compressible": false,
+  "self_gravitating": true,
+  "used_by": ["spada2011 test 6/1", "spada2011 test 7/1 (as an alternative to M3-L70-V01)"],
+  "source": {
+    "citation": "Vermeersen, L. L. A., Sabadini, R. and Spada, G. (1996). Analytical visco-elastic relaxation models. Geophysical Research Letters 23, 697-700. The layer table used by the benchmark is the file VSS96.dat distributed from the COST ES0701 benchmark page.",
+    "doi": "10.1029/96GL00620"
+  },
+  "layers": null,
+  "notes": [
+    "The 28 layer values are not reproduced here. The distributed file VSS96.dat is the authority and is inside the spada2011 archive; figure 1 of Spada et al. (2011) plots the profile against M3-L70-V01.",
+    "Reading VSS96.dat out of the archive and recording the table here is outstanding work."
+  ]
+}

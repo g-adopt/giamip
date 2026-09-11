@@ -2,8 +2,89 @@
 title: "What a solver must provide"
 ---
 
-::: {.callout-note}
-## Not written yet
+This repository runs nothing. To use a case here you bring your own solver.
+This page lists what that solver has to be able to do, so the gap can be
+measured before the work starts.
 
-The capabilities a solver needs before it can run these cases, written against the protocol and the two papers. Tracks what is missing in sl1d and in G-ADOPT.
-:::
+## For the two published benchmarks
+
+**An incompressible, five-layer, self-gravitating spherical earth** with a
+Maxwell viscoelastic mantle, a purely elastic lithosphere and an inviscid
+fluid core, using the core-mantle boundary conditions of Wu and Ni (1996).
+That is [M3-L70-V01](earth-models.qmd#m3-l70-v01). A compressible solver has
+to be able to approximate it, or the comparison measures compressibility and
+not the code.
+
+**Loading Love numbers to degree 256**, elastic and fluid, with their
+relaxation spectrum, for the wavenumber-domain tests. Tidal Love numbers for
+test 3/1. Degree one in the centre of mass frame for test 7/1.
+
+**Surface fields for an analytic axisymmetric load**: vertical and horizontal
+displacement and geoid height, on a colatitude grid, at prescribed epochs.
+
+**The sea level equation** at three levels for the Martinec cases: not solved
+for case A, solved on a fixed ocean geometry for cases B and C, and solved on
+a time-varying geometry with floating ice for cases D and E.
+
+## For GIAMIP
+
+**The prescribed grid**, 257 latitudes by 513 longitudes, Gauss-Legendre. A
+solver on a different internal grid must interpolate while conserving ice
+mass, which the protocol asks for explicitly in section 2.2.1.
+
+**Ten output variables**, four gridded and six scalar time series. The six
+scalars are mass and area integrals, and protocol section 6.1 requires them
+to be computed on the solver's own grid before any interpolation, so they
+cannot be recovered from the gridded output afterwards. They are:
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json, pathlib
+v = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+                / "variables.json").read_text())
+rows = ["| Variable | Dimensions | Unit | Precision | Long name |",
+        "| --- | --- | --- | --- | --- |"]
+for e in v["variables"]:
+    if not e["mandatory"]:
+        continue
+    rows.append(f"| `{e['variable']}` | {e['dim']} | `{e['units']}` | "
+                f"{e['precision']} | {e['long_name']} |")
+Markdown("\n".join(rows))
+```
+
+**The centre of mass frame of the whole Earth system**, with the treatment of
+degree one documented.
+
+**Output in the prescribed form**: one NetCDF file per variable, named
+`[variable]_[experiment]_[member]_[group]_[model].nc`, dimensions ordered
+`(time, lat, lon)`, latitude south to north, longitude in `[0, 360)`, no fill
+value attribute, and four global attributes naming the group, the model and
+the contributors. The compliance checker rejects a file whose experiment,
+member, group or model name contains an underscore.
+
+## Where the two solvers stand
+
+Recorded so the gap is visible. Neither is work for this repository.
+
+### sl1d
+
+A one-dimensional Love number and sea level code in Python and JAX,
+at [g-adopt/sl1d](https://github.com/g-adopt/sl1d).
+
+| Requirement | State |
+| --- | --- |
+| M3-L70-V01 | Missing. `sl1d/models/` ships PREM variants only, so the deck has to be written. |
+| Incompressible earth | The kernel has an incompressible matrix, so this is a deck and a code path, not new physics. |
+| 513 longitudes | Missing. `GaussLegendreGrid.build` raises `ValueError("nlon must be even")`. |
+| The six scalar integrals | Missing. `SeaLevelResult` returns displacement, geoid and relative sea level. It holds the grounded ice mask internally and returns neither it nor any integral. |
+| Centre of mass frame | Not exposed. |
+| Sea level equation | Present, with rotational feedback. |
+
+### G-ADOPT
+
+A three-dimensional finite element geodynamics framework built on Firedrake.
+It already carries a Spada benchmark case in `tests/3d_spada`. The GIAMIP
+requirements have not been assessed against it.

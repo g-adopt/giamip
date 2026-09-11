@@ -1,0 +1,47 @@
+{
+  "id": "martinec2018-E",
+  "collection": "martinec2018",
+  "published_name": "Benchmark E",
+  "title": "Moving coastline, floating ice, terminal topography prescribed",
+  "description": "As case D, with the solid Earth topography prescribed at the terminal time instead of the initial time. The initial topography becomes the unknown and is solved for. The motivation is that present-day topography is measured while initial topography is not.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/martinec2018.json",
+  "specification": {
+    "sea_level_equation": 2,
+    "ice_height_model": "L2",
+    "time_scenario": "T1",
+    "ocean_basin": "B2*",
+    "terminal_time_kyr": 15
+  },
+  "outputs": [
+    "U",
+    "N",
+    "S"
+  ],
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "comparison": {
+    "reference_solution": "VEGA (contributor ZM)",
+    "metrics": [
+      "root mean square difference",
+      "maximum difference"
+    ],
+    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+  },
+  "reference_data": {
+    "contributors": [
+      "ZM",
+      "VK",
+      "YS",
+      "MS",
+      "SK"
+    ],
+    "archive": null,
+    "reference": "Not held.",
+    "published_figure": "Figures 17 onward"
+  },
+  "status": "specified; no reader and no converted data yet"
+}

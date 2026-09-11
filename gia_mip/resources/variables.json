@@ -1,0 +1,217 @@
+{
+  "$comment": "Generated from GIAMIP_VARIABLES in the compliance checker, which transcribes the GIAMIP data request spreadsheet. It is NOT retyped from the protocol prose: the protocol names only delta_g, Clm and Slm, while the data request requires ten variables. Regenerate with scripts/build_variables.py and let the test compare the two, so an upstream change is a visible diff.",
+  "generated": "2026-09-11T07:03:32+00:00",
+  "source": {
+    "repository": "https://github.com/JanJereczek/GIA_SimulationChecker",
+    "symbol": "GIAMIP_VARIABLES in giamip_compliance_checker.py",
+    "read_commit": "6207e0657dd9",
+    "data_request_version": "3",
+    "data_request_dated": "2026-07-02"
+  },
+  "filename_convention": {
+    "pattern": "{variable}_{experiment}_{member}_{group}_{model}.nc",
+    "member_optional": true,
+    "constraint": "The variable name may contain underscores. The experiment id, the member, the group and the model must not: the checker splits the filename on underscores and returns nothing when they do, so the file is rejected. Hyphens are allowed; the protocol's own example is ISSM-SLC.",
+    "example": "delta_g_Exp10_m01_JPL_ISSM-SLC.nc"
+  },
+  "dimension_order": "(time, lat, lon) for gridded fields",
+  "required_global_attributes": [
+    "group",
+    "model",
+    "contributors_name",
+    "contributors_email"
+  ],
+  "fill_value": "No _FillValue and no missing_value attribute is permitted on an output variable.",
+  "variables": [
+    {
+      "variable": "delta_bed",
+      "dim": "lat_lon_t",
+      "units": "m",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": null,
+      "bounds": [
+        -3000.0,
+        3000.0
+      ],
+      "long_name": "Change in the bedrock elevation relative to the initial simulation time step"
+    },
+    {
+      "variable": "delta_g",
+      "dim": "lat_lon_t",
+      "units": "m",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": null,
+      "bounds": [
+        -500.0,
+        500.0
+      ],
+      "long_name": "Change in the geoid height relative to the initial simulation time step"
+    },
+    {
+      "variable": "ocean_area_fraction",
+      "dim": "lat_lon_t",
+      "units": "1",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": "sea_area_fraction",
+      "bounds": [
+        -1e-06,
+        1.000001
+      ],
+      "long_name": "Fraction of horizontal grid-cell area covered by ocean"
+    },
+    {
+      "variable": "land_ice_area_fraction",
+      "dim": "lat_lon_t",
+      "units": "1",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": "land_ice_area_fraction",
+      "bounds": [
+        -1e-06,
+        1.000001
+      ],
+      "long_name": "Fraction of horizontal grid-cell area covered by grounded and floating land ice"
+    },
+    {
+      "variable": "mean_delta_g",
+      "dim": "t",
+      "units": "m",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": [
+        -300.0,
+        300.0
+      ],
+      "long_name": "Spatial mean of geoid height change (delta_g) over the ocean area"
+    },
+    {
+      "variable": "grd_ice_mass",
+      "dim": "t",
+      "units": "kg",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": [
+        1e+18,
+        1e+20
+      ],
+      "long_name": "Spatial integration of grounded ice volume times ice density"
+    },
+    {
+      "variable": "total_ice_mass",
+      "dim": "t",
+      "units": "kg",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": [
+        1e+18,
+        1e+20
+      ],
+      "long_name": "Spatial integration, total (grounded and floating) ice volume times ice density"
+    },
+    {
+      "variable": "ocean_area_grdice",
+      "dim": "t",
+      "units": "m2",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": [
+        100000000000000.0,
+        500000000000000.0
+      ],
+      "long_name": "Total ocean area including marine regions covered by grounded ice"
+    },
+    {
+      "variable": "ocean_area",
+      "dim": "t",
+      "units": "m2",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": [
+        100000000000000.0,
+        500000000000000.0
+      ],
+      "long_name": "Total ocean area excluding marine regions covered by grounded ice"
+    },
+    {
+      "variable": "maf",
+      "dim": "t",
+      "units": "kg",
+      "mandatory": true,
+      "output_interval": "forcing",
+      "precision": "float64",
+      "standard_name": "land_ice_mass_not_displacing_sea_water",
+      "bounds": [
+        1e+19,
+        1e+20
+      ],
+      "long_name": "Land ice mass above flotation that would contribute to global mean sea-level change if converted to water and added to the ocean"
+    },
+    {
+      "variable": "delta_bed_east",
+      "dim": "lat_lon_t",
+      "units": "m",
+      "mandatory": false,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": null,
+      "bounds": [
+        -200.0,
+        200.0
+      ],
+      "long_name": "Eastward horizontal solid Earth displacement relative to the initial simulation timestep"
+    },
+    {
+      "variable": "delta_bed_north",
+      "dim": "lat_lon_t",
+      "units": "m",
+      "mandatory": false,
+      "output_interval": "forcing",
+      "precision": "float32",
+      "standard_name": null,
+      "bounds": [
+        -200.0,
+        200.0
+      ],
+      "long_name": "Northward horizontal solid Earth displacement relative to the initial simulation timestep"
+    },
+    {
+      "variable": "Clm",
+      "dim": "degree_order",
+      "units": "1",
+      "mandatory": false,
+      "output_interval": "once",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": null,
+      "long_name": "Cosine spherical harmonic coefficients (C_lm) of geoid height change (delta_g) between the first and final simulation timesteps"
+    },
+    {
+      "variable": "Slm",
+      "dim": "degree_order",
+      "units": "1",
+      "mandatory": false,
+      "output_interval": "once",
+      "precision": "float64",
+      "standard_name": null,
+      "bounds": null,
+      "long_name": "Sine spherical harmonic coefficients (S_lm) of geoid height change (delta_g) between the first and final simulation timesteps"
+    }
+  ]
+}

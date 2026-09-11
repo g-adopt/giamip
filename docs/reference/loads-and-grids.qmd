@@ -2,8 +2,145 @@
 title: "Loads and grids"
 ---
 
-::: {.callout-note}
-## Not written yet
+The surface loads, time histories and ocean basins of the two benchmarks, and
+the grid GIAMIP prescribes. Generated from `loads/` and `gia_mip/grids.py`.
 
-The analytic cap, disc and point loads, the exponential ocean basin, the time scenarios, and the Gauss-Legendre grid that GIAMIP prescribes.
+## Spada et al. (2011): three analytic loads
+
+Each is axisymmetric about its own centre, given as a surface mass density
+against colatitude with a closed form for its Legendre coefficients. Mass is
+not conserved: there is no ocean in this benchmark, so nothing compensates the
+load.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+t = cases.loads("spada2011")
+out = []
+for key, L in t["loads"].items():
+    out.append(f"### {L['name']}\n")
+    out.append("```\n" + L["surface_mass_density"] + "\n```\n")
+    out.append("Legendre coefficients:\n\n```\n" + L["legendre_coefficients"] + "\n```\n")
+    numbers = [f"{k.replace('_', ' ')}: {v}" for k, v in L.items()
+               if k not in ("name", "surface_mass_density",
+                            "legendre_coefficients", "note")]
+    if numbers:
+        out.append("Reference values: " + ", ".join(numbers) + ".\n")
+    if L.get("note"):
+        out.append(L["note"] + "\n")
+Markdown("\n".join(out))
+```
+
+### Constants
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+c = cases.loads("spada2011")["constants"]
+rows = ["| Constant | Value |", "| --- | ---: |"]
+for k, v in c.items():
+    if k.startswith("$"):
+        continue
+    rows.append(f"| {k.replace('_', ' ')} | {v} |")
+rows.append("")
+rows.append("::: {.callout-important}")
+rows.append(c["$comment"])
+rows.append(":::")
+Markdown("\n".join(rows))
+```
+
+## Martinec et al. (2018): ice, time and basins
+
+Every case uses the same cap shape, with an angular radius of 10 degrees,
+moved and rescaled.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+t = cases.loads("martinec2018")
+out = ["### Ice height models\n",
+       "| Model | Centre colatitude | Centre longitude | Height (m) | Note |",
+       "| --- | ---: | ---: | ---: | --- |"]
+for k, v in t["ice_height_models"].items():
+    out.append(f"| {k} | {v['centre_colatitude_deg']} | {v['centre_longitude_deg']} | "
+               f"{v['height_m']} | {v.get('note', '')} |")
+
+out.append("\n### Time scenarios\n")
+for k, v in t["time_scenarios"].items():
+    out.append(f"**{k}** {v['description']} Terminal time {v['terminal_time_kyr']} kyr.\n")
+
+out.append("\n### Ocean basins\n")
+out.append("```\n" + t["ocean_basins"]["$formula"] + "\n```\n")
+out.append(f"with sigma_b = {t['ocean_basins']['sigma_b_deg']} degrees.\n")
+out.append("| Basin | Centre colatitude | Centre longitude | bmax (m) | b0 (m) | Max depth (m) | Note |")
+out.append("| --- | ---: | ---: | ---: | ---: | ---: | --- |")
+for k, v in t["ocean_basins"].items():
+    if k.startswith("$") or k == "sigma_b_deg":
+        continue
+    out.append(f"| {k} | {v['centre_colatitude_deg']} | {v['centre_longitude_deg']} | "
+               f"{v['bmax_m']} | {v['b0_m']} | {v.get('max_depth_m', '-')} | {v.get('note', '')} |")
+
+out.append("\n### Sea level equation levels\n")
+for k, v in t["sea_level_equation_levels"].items():
+    out.append(f"- **{k}** {v}")
+out.append("")
+for n in t.get("notes", []):
+    out.append(f"- {n}")
+Markdown("\n".join(out))
+```
+
+## The GIAMIP grid
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import numpy as np
+from gia_mip import grids
+
+lat, lon = grids.latitudes(), grids.longitudes()
+spacing = np.diff(lat)
+areas = grids.cell_areas(6371000.0)
+ratio = areas.sum() / (4 * np.pi * 6371000.0 ** 2)
+
+table = f"""
+A Gauss-Legendre quadrature grid, {grids.NLAT} latitudes by {grids.NLON}
+longitudes, integrating exactly to spherical harmonic degree {grids.LMAX}.
+
+| Property | Value |
+| --- | --- |
+| Latitudes | {grids.NLAT}, the Gauss-Legendre nodes in sin(latitude) |
+| First and last latitude | {lat[0]:.5f}, {lat[-1]:.5f} degrees |
+| Latitude spacing | {spacing.min():.4f} at the pole to {spacing.max():.4f} degrees at the equator |
+| Longitudes | {grids.NLON}, equally spaced over [0, 360) |
+| Longitude step | {lon[1] - lon[0]:.6f} degrees |
+| Last longitude | {lon[-1]:.5f} degrees, so 360 is not a repeat of 0 |
+| Cell area | the quadrature weight times the longitude step times the radius squared |
+| Total area check | {ratio:.15f} of 4 pi a squared |
+"""
+Markdown(table)
+```
+
+::: {.callout-warning}
+## Two ways to get this grid wrong
+
+The latitudes are not equally spaced, and neither pole is a grid point. The
+area of a cell is the quadrature weight times the longitude step, because on
+a sphere the area element is `a^2 dlambda d(sin phi)` and the weights
+integrate `d(sin phi)` exactly. Using `cos(lat) * dlat * dlon` gives an answer
+that is wrong and looks plausible, and six of the ten variables GIAMIP
+requires are area or mass integrals.
+
+An axis built with `numpy.linspace` has the right count and the right extent
+and is a different grid. `gia_mip.grids.check` rejects it.
 :::

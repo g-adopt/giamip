@@ -2,8 +2,90 @@
 title: "Column layouts"
 ---
 
-::: {.callout-note}
-## Not written yet
+What each column of each Martinec et al. (2018) data file holds.
 
-What every column of every benchmark data file holds, decoded from the GMT scripts that plotted the published figures. GMT 4 no longer runs, so for several files those scripts are the only record.
+Most of these files have no header. The only surviving record of their
+contents is the GMT 4 script that drew the published figure, in lines like
+
+```
+awk '{print $1, -$4}' $inpSK | psxy -R -JX $lineSK -K -O >> pom.ps
+```
+
+which says: for that contributor, take column 1 as the abscissa and the
+negation of column 4 as the ordinate, on whichever panel is being drawn. The
+panel's y-axis label names the quantity.
+
+GMT 4 no longer runs. This table is produced by
+`scripts/decode_gmt_layouts.py`, which reads those scripts and writes down
+what they say while the result can still be checked against the figures
+shipped beside them.
+
+::: {.callout-warning}
+## Read the sign from here, never by assumption
+
+Contributors do not agree on the sign of the geoid, and two of them submitted
+the gravitational potential instead, which the scripts divide by the surface
+gravity 9.8155. A reader that guesses is wrong by a factor of minus one for
+six of the ten benchmark A contributors and by a factor of 9.8155 for two.
 :::
+
+## Panels
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json, pathlib
+d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+                / "column_layouts.json").read_text())
+rows = ["| Script | Panel | Quantity | Series drawn |", "| --- | ---: | --- | ---: |"]
+for s in d["scripts"]:
+    for p in s["panels"]:
+        drawn = sum(1 for x in p["series"] if x["drawn"])
+        rows.append(f"| `{s['script']}` | {p['panel']} | {p['quantity']} | {drawn} |")
+Markdown("\n".join(rows))
+```
+
+## By file
+
+Each row says: in this script and panel, this quantity is column *n* of this
+file, negated or not, with any arithmetic the script applies before plotting.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json, pathlib
+d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+                / "column_layouts.json").read_text())
+out = []
+for name, entries in d["by_file"].items():
+    if name.startswith("<unresolved"):
+        continue
+    out.append(f"### `{name}`\n")
+    out.append("| Script | Panel | Quantity | x | y | Sign | Arithmetic | In the figure |")
+    out.append("| --- | ---: | --- | ---: | ---: | --- | --- | --- |")
+    for e in entries:
+        y = e["ordinate"]
+        extra = ""
+        if e.get("value"):
+            extra = f" (value: column {e['value'].get('column')})"
+        out.append(
+            f"| `{e['script']}` | {e['panel']} | {e['quantity']}{extra} | "
+            f"{e['abscissa'].get('column', '?')} | {y.get('column', '?')} | "
+            f"{'negated' if y.get('negated') else 'as stored'} | "
+            f"{y.get('scale') or '-'} | "
+            f"{'yes' if e['drawn_in_the_published_figure'] else 'commented out'} |")
+    out.append("")
+Markdown("\n".join(out))
+```
+
+## What is not decoded
+
+The Spada et al. (2011) archive holds 87 further GMT scripts covering its ten
+tests. They are not decoded yet. Eleven README files inside the `T02`
+directories do document the VILMA submissions: `u` is vertical displacement,
+`v` is horizontal, `e` is geoid, in metres and metres per year, with `*cost`
+holding the fine grid, `*costg` the global grid, and both poles omitted.

@@ -2,8 +2,73 @@
 title: "Earth models"
 ---
 
-::: {.callout-note}
-## Not written yet
+Every case names an earth model. This page is generated from `models/`, so a
+case and its model cannot disagree.
 
-M3-L70-V01, VSS96, PREM, VM5a, VM7 and the Gowan et al. (2021) profile, as parameter tables.
-:::
+Two kinds appear. A **complete model** gives density, shear modulus and
+viscosity for every layer and stands on its own; the two published benchmarks
+both use one, M3-L70-V01. A **viscosity profile** gives viscosity against
+depth and is layered onto a separate elastic structure, which for GIAMIP is
+PREM; VM5a, VM7 and the Gowan et al. profile are of this kind.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+
+from gia_mip import cases
+rows = ["| Model | Kind | Elastic structure | Used by |", "| --- | --- | --- | --- |"]
+for m in cases.earth_models():
+    rows.append(f"| [{m['name']}](#{m['id']}) | {m['kind'].replace('_',' ')} | "
+                f"{m.get('elastic_structure', '—')} | {', '.join(m.get('used_by', [])) or '—'} |")
+Markdown("\n".join(rows))
+```
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+
+from gia_mip import cases
+out = []
+for m in cases.earth_models():
+    out.append(f"## {m['name']} {{#{m['id']}}}\n")
+    out.append(m["description"] + "\n")
+    src = m.get("source", {})
+    if src.get("doi"):
+        out.append(f"**Source** {src['citation']} doi:[{src['doi']}](https://doi.org/{src['doi']})\n")
+    elif src.get("citation"):
+        out.append(f"**Source** {src['citation']}\n")
+    layers = m.get("layers")
+    if layers and m["kind"] == "complete_model":
+        out.append("\n| Role | Top (km) | Bottom (km) | Density (kg/m³) | Shear modulus (Pa) | Viscosity (Pa s) | Rheology | g at top (m/s²) |")
+        out.append("| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |")
+        for L in layers:
+            visc = "elastic" if L["viscosity_pa_s"] is None else f"{L['viscosity_pa_s']:.3g}"
+            out.append(f"| {L['role']} | {L['top_radius_km']} | {L['bottom_radius_km']} | "
+                       f"{L['density_kg_m3']} | {L['shear_modulus_pa']:.4g} | {visc} | "
+                       f"{L['rheology']} | {L['gravity_at_top_m_s2']} |")
+        out.append("")
+    elif layers and m["kind"] == "viscosity_profile":
+        out.append("\n| Top depth (km) | Bottom depth (km) | Viscosity (Pa s) |")
+        out.append("| ---: | ---: | ---: |")
+        for L in layers:
+            visc = "elastic lid" if L["viscosity_pa_s"] is None else f"{L['viscosity_pa_s']:.3g}"
+            out.append(f"| {L['top_depth_km']} | {L['bottom_depth_km']} | {visc} |")
+        out.append("")
+    for key, label in (("lithosphere_thickness_km", "Lithosphere thickness (km)"),
+                       ("upper_mantle_viscosity_pa_s", "Upper mantle viscosity (Pa s)"),
+                       ("lower_mantle_viscosity_pa_s", "Lower mantle viscosity (Pa s)")):
+        if key in m:
+            v = m[key]
+            v = f"{v['min']:.3g} to {v['max']:.3g}" if isinstance(v, dict) else f"{v:.3g}"
+            out.append(f"- **{label}** {v}")
+    if m.get("relaxation_modes"):
+        r = m["relaxation_modes"]
+        out.append(f"\n**Relaxation modes** {r['count']}. {r['note']}\n")
+    for n in m.get("notes", []):
+        out.append(f"\n::: {{.callout-note}}\n{n}\n:::\n")
+Markdown("\n".join(out))
+```

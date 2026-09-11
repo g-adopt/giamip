@@ -1,0 +1,55 @@
+{
+  "id": "martinec2018-B",
+  "collection": "martinec2018",
+  "published_name": "Benchmark B",
+  "title": "Fixed coastline, inland ice",
+  "description": "The sea level equation is solved with a fixed ocean geometry. The ice cap sits inland and never reaches the ocean basin, so the only coupling is through the uniform water layer and the deformation and geoid it produces.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/martinec2018.json",
+  "specification": {
+    "sea_level_equation": 1,
+    "ice_height_model": "L1",
+    "time_scenario": "T0",
+    "ocean_basin": "B1",
+    "terminal_time_kyr": 10
+  },
+  "outputs": [
+    "U",
+    "N",
+    "S"
+  ],
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "comparison": {
+    "reference_solution": "VEGA (contributor ZM)",
+    "metrics": [
+      "root mean square difference",
+      "maximum difference"
+    ],
+    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+  },
+  "reference_data": {
+    "contributors": [
+      "ZM",
+      "VK",
+      "YS",
+      "MS",
+      "SK",
+      "WW",
+      "VB",
+      "KS",
+      "GA"
+    ],
+    "archive": "martinec2018/benchmarkB.zip",
+    "internal_case_code": "C2",
+    "published_figure": "Figures 5 and 6, with figure 4 showing the ice and basin geometry",
+    "cross_sections": [
+      "through the ice centre at longitude 75",
+      "through the basin centre at longitude 320"
+    ]
+  },
+  "status": "specified; no reader and no converted data yet"
+}

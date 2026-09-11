@@ -1,0 +1,54 @@
+{
+  "id": "martinec2018-A",
+  "collection": "martinec2018",
+  "published_name": "Benchmark A",
+  "title": "No sea level equation",
+  "description": "The simplest case: a Heaviside spherical cap at the pole, no ocean, no sea level equation. It coincides with Spada et al. (2011) test 1/2 for the cap load, and it establishes the level of disagreement between the codes before any ocean is added.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/martinec2018.json",
+  "specification": {
+    "sea_level_equation": 0,
+    "ice_height_model": "L0",
+    "time_scenario": "T0",
+    "ocean_basin": "B0",
+    "terminal_time_kyr": 10
+  },
+  "outputs": [
+    "U",
+    "N"
+  ],
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "comparison": {
+    "reference_solution": "VEGA (contributor ZM)",
+    "metrics": [
+      "root mean square difference",
+      "maximum difference"
+    ],
+    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+  },
+  "reference_data": {
+    "contributors": [
+      "ZM",
+      "VK",
+      "YS",
+      "MS",
+      "SK",
+      "WW",
+      "VB",
+      "KS",
+      "GA",
+      "WWa"
+    ],
+    "archive": "martinec2018/benchmarkA.zip",
+    "reference": "Z_ZM_load.out holds one row, so the VEGA reference must be reconstructed. See correction benchmarkA-vega-truncated.",
+    "published_figure": "Figure 3",
+    "cross_sections": [
+      "through the ice centre at (0, 0)"
+    ]
+  },
+  "status": "specified; no reader and no converted data yet"
+}

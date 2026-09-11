@@ -1,0 +1,16 @@
+{
+  "id": "giamip-open-range",
+  "name": "GIAMIP suggested range",
+  "kind": "parameter_range",
+  "description": "The range GIAMIP suggests for experiments whose viscosity structure is labelled 'Within suggested range', which are Exp03 and Exp04. A choice inside this range is made by the group and recorded in the model report.",
+  "used_by": ["giamip Exp03", "giamip Exp04"],
+  "source": {
+    "citation": "GIAMIP protocol v2.4, section 3.1.4."
+  },
+  "lithosphere_thickness_km": {"min": 60, "max": 120},
+  "upper_mantle_viscosity_pa_s": {"min": 1.0e20, "max": 1.0e21},
+  "lower_mantle_viscosity_pa_s": {"min": 1.0e21, "max": 1.0e23},
+  "notes": [
+    "For the optional experiments the protocol encourages one-dimensional models to explore values well outside this range where a region calls for it, naming West Antarctica and Alaska with upper mantle viscosities of 1e18 to 1e19 Pa s."
+  ]
+}

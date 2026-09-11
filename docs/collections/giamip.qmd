@@ -2,8 +2,101 @@
 title: "GIAMIP"
 ---
 
-::: {.callout-note}
-## Not written yet
+The Glacial Isostatic Adjustment Model Intercomparison Project. Unlike the two
+benchmarks, this one is open: there is no reference answer, and the point is
+to measure the spread between models.
 
-The twelve experiments, the inputs, the required output, and how a submission is assembled and checked.
-:::
+Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.
+Endorsed by PALSEA-Next, with the output archive supported by ISMIP7.
+
+The protocol as supplied is [reproduced here](../protocol/giamip-v2.4.qmd).
+
+## Timeline
+
+| Milestone | Date |
+| --- | --- |
+| Protocol announcement and data release | 1 July 2026 |
+| Model submission deadline | 1 November 2026 |
+| Analysis and drafting | Winter 2026 to Spring 2027 |
+| Manuscript submission | Spring to Summer 2027 |
+
+## Experiments
+
+Five mandatory, seven optional. A field marked `open` is the group's choice
+and has to be recorded in the model report.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+rows = ["| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start | Open choices |",
+        "| --- | ---: | --- | --- | --- | --- | --- | ---: | ---: |"]
+for c in cases.cases("giamip"):
+    e, t = c["earth"], c["topography"]
+    rows.append(f"| [`{c['experiment_id']}`](../results/index.qmd#{c['id']}) | {c['tier']} | "
+                f"{c['forcing']['ice_history']} | {e['viscosity']} | {e['elastic_structure']} | "
+                f"{e['rheology']} | {t['model']} | {c['period']['start_ka_before_2000ce']} ka | "
+                f"{len(c['open_choices'])} |")
+Markdown("\n".join(rows))
+```
+
+## Inputs
+
+Six ice histories and three bed topographies, all on the prescribed
+Gauss-Legendre grid of 257 latitudes by 513 longitudes. Only grounded ice
+loads the solid Earth; floating ice is masked out.
+
+The ice histories run from 122 ka before 2000 CE to 1000 years after it, in
+463 steps, at 500 years before 26 ka and 100 years after. PaleoMIST starts at
+80 ka and has 379 steps.
+
+The three topographies differ only in their Antarctic source: BedMachine
+Antarctica v3, Bedmap3 or Bedmap2, each merged with BedMachine Greenland v5.5
+and GEBCO.
+
+## Output
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json, pathlib
+v = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+                / "variables.json").read_text())
+man = [e for e in v["variables"] if e["mandatory"]]
+opt = [e for e in v["variables"] if not e["mandatory"]]
+rows = [f"{len(man)} mandatory variables and {len(opt)} optional ones.\n",
+        "| Variable | Required | Dimensions | Unit | Precision | Long name |",
+        "| --- | --- | --- | --- | --- | --- |"]
+for e in v["variables"]:
+    rows.append(f"| `{e['variable']}` | {'yes' if e['mandatory'] else 'optional'} | "
+                f"{e['dim']} | `{e['units']}` | {e['precision']} | {e['long_name']} |")
+rows.append("")
+rows.append(f"Filename pattern: `{v['filename_convention']['pattern']}`")
+rows.append("")
+rows.append("::: {.callout-warning}")
+rows.append(v["filename_convention"]["constraint"])
+rows.append(":::")
+Markdown("\n".join(rows))
+```
+
+This list is generated from the compliance checker that protocol section 6.3
+requires every submission to pass, and not retyped from the protocol prose,
+which names only three of the fourteen. See `AGENTS.md` on where authority
+lives.
+
+## Three things that do not line up
+
+**The GLAC3 version.** The protocol table says GLAC3b. The filenames say
+`GLAC3c_profile`. The attributes inside the files say `GLAC3c_merge`. The
+compliance checker expects a fourth spelling. Asked of the organisers.
+
+**Exp06 and Exp07 have no input file.** They repeat Exp01 and Exp02 over 80
+ka and only the 122 ka histories were delivered, so the truncation is ours to
+define and to record.
+
+**Four experiments are open in every column.** Exp09 to Exp12 are not cases
+until the earth structure is chosen.

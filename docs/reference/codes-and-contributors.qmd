@@ -2,8 +2,60 @@
 title: "Codes and contributors"
 ---
 
-::: {.callout-note}
-## Not written yet
+Who contributed what, under which abbreviation. The abbreviations appear in
+every data filename in both archives, so this table is needed to read them.
 
-Who contributed what to each benchmark, under which abbreviation, with which code and which numerical method.
+## Spada et al. (2011)
+
+From table 1 of the paper.
+
+| Abbreviation | Code | Author or user | Method |
+| --- | --- | --- | --- |
+| Bl | ABAQUS | B. Lund | Finite elements, flat-Earth approximation |
+| Gs | TABOO | G. Spada | Viscoelastic normal modes |
+| Gs | PMTF | G. Spada | Polar motion transfer function, viscoelastic normal modes |
+| Gsa | ALMA | G. Spada | Post-Widder inversion |
+| Pg | ABAQUS | P. Gasperini | Finite elements |
+| Rr | FastLove-HiDeg | R. E. M. Riva | Viscoelastic normal modes |
+| Vb | MHPLove | V. R. Barletta | High-precision Love numbers in Mathematica |
+| Vk | VILMA | V. Klemann | Spectral finite elements |
+| Zm | VEENT | Z. Martinec | Viscoelastic normal modes |
+
+Which contributor covered which test is recorded in each case file under
+`reference_data.contributors`, and is shown on the
+[cases page](../results/index.qmd).
+
+## Martinec et al. (2018)
+
+From table 5 of the paper. The parametrisation column reads as time domain or
+Laplace domain, then the spatial method: spherical harmonics, finite
+differences or finite elements.
+
+| Abbreviation | Code | Author or user | Parametrisation | Reference |
+| --- | --- | --- | --- | --- |
+| ZM | VEGA | Z. Martinec | TD-FE-SH | Martinec (2000) |
+| VK | VILMA | V. Klemann | TD-FE-SH | Klemann et al. (2008) |
+| MS | SELEN | D. Melini, G. Spada | LD-FD-SH | Spada and Stocchi (2007) |
+| WW | TUDSLE | W. van der Wal | LD-FD-SH | Schotman (2007) |
+| YS | MUSSEL | Y. Sun, R. E. M. Riva | LD-FD-SH | Riva et al. (2018) |
+| KS | PGCcalc | K. Simon, T. James | LD-FD-SH | James and Ivins (1998) |
+| VB | TSec02 | V. R. Barletta | LD-FD-SH | Barletta and Spada (2012) |
+| WWa | AFCAL | W. van der Wal | TD-FE-FE/SH | Wu and van der Wal (2003) |
+| GA | A13 | G. A | LD-FD-SH | A et al. (2013) |
+| SK | giapy | S. Kachuck | TD-FD-SH | Kachuck (2017) |
+
+::: {.callout-note}
+## Two abbreviations that are easy to confuse
+
+`MS` is the SELEN and TABOO results of Melini and Spada. In the benchmark A
+plotting script the same series is labelled `MS` in the legend while its file
+is named `A-fig10-TABOO_256.dat`, because benchmark A was computed with TABOO
+and the other four cases with SELEN.
+
+`SK` is Kachuck's giapy and `KS` is Simon and James's PGCcalc. They differ by
+the order of two letters and appear in adjacent columns of every figure.
 :::
+
+The VEGA solution of ZM is the reference for all five cases. Table 6 of the
+paper records the coverage: every code contributed case A, all but WWa
+contributed case B, and five contributed each of C, D and E.

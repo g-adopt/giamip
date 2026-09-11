@@ -1,0 +1,51 @@
+{
+  "id": "spada2011-t02-02",
+  "collection": "spada2011",
+  "published_name": "Test 2/2",
+  "title": "Rates of geodetic quantities",
+  "test_class": "spatial",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/spada2011.json",
+  "what_to_compute": "As test 1/2, for the time derivatives of U, V and N.",
+  "outputs": [
+    "U_rate",
+    "V_rate",
+    "N_rate"
+  ],
+  "parameters": {
+    "epochs_kyr": [
+      0,
+      1,
+      2,
+      5,
+      10,
+      "infinity"
+    ],
+    "harmonic_degrees": [
+      2,
+      128
+    ],
+    "loads": [
+      "cap",
+      "disc",
+      "point"
+    ],
+    "placement": "north pole"
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T02-02",
+    "contributors": [
+      "BL",
+      "GS",
+      "PG",
+      "VK"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+  },
+  "status": "specified; no reader and no converted data yet"
+}

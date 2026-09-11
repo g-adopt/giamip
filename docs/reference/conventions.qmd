@@ -2,8 +2,92 @@
 title: "Units, signs and datums"
 ---
 
-::: {.callout-note}
-## Not written yet
+Two solvers that disagree on a sign give results that look wrong for no
+visible reason. This page states the conventions for each collection. Where a
+data file departs from them, the departure is in
+[the column layouts](column-layouts.qmd) and
+[the corrections](../data/corrections.qmd).
 
-The sign and datum of every quantity in every collection. Two solvers that disagree on the sign of the geoid give answers that look wrong for no visible reason, so this page exists before any case does.
+## Quantities
+
+| Symbol | Name | Unit | Positive direction | Datum |
+| --- | --- | --- | --- | --- |
+| U | Vertical displacement of the solid surface | m | Upward | The undeformed surface at the initial time |
+| V | Horizontal displacement | m | Southward for the colatitude component | As above |
+| N | Geoid displacement | m | Upward | The geoid at the initial time |
+| S | Sea-surface variation | m | Upward | The sea surface at the initial time |
+| RSL | Relative sea level | m | Sea level rising with respect to the solid surface | As above |
+| zeta | Solid Earth topography | m | Upward, so a negative value is ocean depth | Mean sea level |
+| h_UF | Thickness of the uniform water layer | m | Positive when water is added to the ocean | Zero at the initial time |
+
+`N` is a height, and several benchmark contributors store the gravitational
+potential perturbation instead. Dividing the potential by the surface gravity
+gives the height; the Martinec scripts use 9.8155 m/s², the surface value of
+the M3-L70-V01 gravity profile.
+
+## Angles
+
+Both benchmarks work in colatitude, measured from the north pole, from 0 to
+180 degrees. GIAMIP works in latitude, from -90 to 90, ordered south to
+north. Longitude is 0 to 360 eastward in GIAMIP; the benchmarks use the same
+range, except `uprav.out`, which is -180 to 180.
+
+Colatitude does not run the same way in every benchmark file. Six of the
+benchmark A difference files ascend from 0 and two descend from 180. See
+correction `benchmarkA-colatitude-ordering`.
+
+## Densities
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+b = cases.loads("spada2011")["constants"]
+g = cases.case("giamip-exp01")["constants"]
+Markdown(f"""
+| Quantity | Benchmarks | GIAMIP |
+| --- | ---: | ---: |
+| Ice density (kg/m3) | {b['ice_density_kg_m3']} | {g['ice_density_kg_m3']} |
+| Ocean water density (kg/m3) | {b['water_density_kg_m3']} | {g['ocean_water_density_kg_m3']} |
+| Fresh water density (kg/m3) | {b['water_density_kg_m3']} | {g['fresh_water_density_kg_m3']} |
+| Earth radius (m) | {b['earth_radius_m']:.0f} | {g['earth_radius_m']} |
+""")
+```
+
+::: {.callout-important}
+The densities differ between the two, which is why every case carries its own
+constants and no shared constants module exists. A module would give one
+collection the other's values and report nothing.
 :::
+
+## Reference frame
+
+GIAMIP requires output in the centre of mass frame of the whole Earth system,
+which includes the solid Earth and the surface mass redistribution, and not
+the centre of mass of the solid Earth alone. Protocol section 6.1 asks that
+the treatment of degree one and any conversion between the two frames be
+documented in the model report.
+
+Spada et al. (2011) test 7/1 requires the degree one loading Love numbers in
+the centre of mass frame.
+
+## Time
+
+The benchmarks measure time in thousands of years from the moment of loading,
+with `t = 0` the instant the load is applied.
+
+GIAMIP measures time in years from 2000 CE, which is model year 0. Negative
+is the past. The prescribed interval runs from 122 ka or 80 ka before 2000 CE
+to 1000 years after it, at 500-year steps before 26 ka and 100-year steps
+after. The forcing files carry both a `time` variable in days since
+2000-01-01 on a 365-day calendar and a `year` variable holding the offset in
+years, whose `long_name` is wrong; see correction `ice-year-longname`.
+
+## Spherical harmonics
+
+GIAMIP requires the optional Stokes coefficients as fully normalised real
+spherical harmonics with 4 pi normalisation, dimensionless, at a reference
+radius of 6371000 m, for degrees 0 to 96. A different internal convention
+must be converted before submission.

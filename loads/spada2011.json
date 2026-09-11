@@ -1,0 +1,54 @@
+{
+  "$comment": "The three analytic surface loads of Spada et al. (2011), table 4. Each is an axisymmetric surface mass density as a function of colatitude from the load centre, with a closed form for its Legendre coefficients. Mass conservation is not applied: these expressions describe the load alone, and no compensating ocean load exists in that benchmark.",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132, tables 2 and 4.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "constants": {
+    "ice_density_kg_m3": 931,
+    "water_density_kg_m3": 1000,
+    "earth_radius_m": 6.371e6,
+    "gravitational_constant_m3_kg_s2": 6.6732e-11,
+    "seconds_per_year": 3.15576e7,
+    "earth_angular_velocity_rad_s": 7.292115e-5,
+    "polar_moment_of_inertia_kg_m2": 8.0394e37,
+    "equatorial_moment_of_inertia_kg_m2": 8.0131e37,
+    "$comment": "Table 2. The ice density of 931 kg/m3 and the water density of 1000 kg/m3 differ from the GIAMIP values of 917 and 1025; a shared constants module would give one of the two the other's numbers."
+  },
+  "loads": {
+    "cap": {
+      "name": "Spherical cap, parabolic cross-section",
+      "surface_mass_density": "sigma(theta) = rho_ice * h * (cos(theta) - cos(alpha)) / (1 - cos(alpha)) for 0 <= theta <= alpha, and 0 beyond",
+      "legendre_coefficients": "sigma_n = -rho_ice*h/(4*(1-cos(alpha))) * [ (T_{n+1}(alpha) - T_{n+2}(alpha))/(n + 3/2) - (T_{n-1}(alpha) - T_n(alpha))/(n - 1/2) ], for n >= 1, where T_n(alpha) = cos(n*alpha) is the Chebyshev polynomial of the second kind as defined in table 2",
+      "thickness_m": 1500,
+      "angular_radius_deg": 10,
+      "note": "This is the load Martinec et al. (2018) reuse for every one of their five cases."
+    },
+    "disc": {
+      "name": "Disc, rectangular cross-section",
+      "surface_mass_density": "sigma(theta) = rho_ice * h for 0 <= theta <= alpha, and 0 beyond",
+      "legendre_coefficients": "sigma_n = rho_ice*h/2 * [ -P_{n+1}(cos alpha) + P_{n-1}(cos alpha) ], for n >= 1",
+      "thickness_m": 1000,
+      "angular_radius_deg": 10
+    },
+    "point": {
+      "name": "Point load",
+      "surface_mass_density": "sigma(theta) = m_delta / (2*pi*a^2) * delta(1 - cos(theta))",
+      "legendre_coefficients": "sigma_n = m_delta/(4*pi*a^2) * (2n + 1), for n >= 1",
+      "mass_kg": 1.0e18
+    }
+  },
+  "placement": {
+    "tests_1_2_and_2_2": "Centred on the north pole.",
+    "test_3_2": "Centroid at colatitude 25 degrees, longitude 75 degrees."
+  },
+  "time_history": {
+    "description": "A Heaviside step: the load is applied at t = 0 and held. Geodetic quantities are evaluated at t = 0, 1, 2, 5, 10 and infinity kyr.",
+    "epochs_kyr": [0, 1, 2, 5, 10, "infinity"]
+  },
+  "output_grids": {
+    "near_field": "colatitude 0 to 2.5*alpha at 0.25 degree spacing",
+    "global": "colatitude 0 to 180 at 1 degree spacing",
+    "harmonic_degrees": "n_min = 2 to n_max = 128 for the viscoelastic normal mode results of tests 1/2 and 2/2"
+  }
+}

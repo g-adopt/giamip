@@ -1,0 +1,41 @@
+{
+  "id": "spada2011-t01-05",
+  "collection": "spada2011",
+  "published_name": "Test 5/1",
+  "title": "Time-domain Love numbers",
+  "test_class": "wavenumber",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "loads/spada2011.json",
+  "what_to_compute": "Compute Heaviside Love numbers directly in the time domain, for a significant number of degrees between 2 and 256. Intended for methods that are not based on viscoelastic normal modes.",
+  "outputs": [
+    "h_loading_time",
+    "l_loading_time",
+    "k_loading_time"
+  ],
+  "parameters": {
+    "harmonic_degrees": [
+      2,
+      256
+    ],
+    "time_window_kyr": [
+      0.01,
+      1000000.0
+    ],
+    "spacing": "logarithmic"
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T01-05",
+    "contributors": [
+      "GS",
+      "GSA",
+      "VK"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+  },
+  "status": "specified; no reader and no converted data yet"
+}

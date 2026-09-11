@@ -2,8 +2,461 @@
 title: "GIAMIP protocol v2.4"
 ---
 
-::: {.callout-note}
-## Not written yet
+The GIAMIP experiment protocol as supplied, version 2.4, dated 8 September
+2026. Converted from the Word document to Markdown; the prose is unchanged.
+The original conversion, including the two embedded equation images, is
+`data/original/giamip/giamip-protocol-v2.4.md`.
 
-The protocol document as supplied, dated 8 September 2026, with our notes on the points where the delivered files and the protocol text disagree.
+::: {.callout-note}
+## Where this document is not the authority
+
+The protocol names three output variables. The data request spreadsheet it
+refers to defines fourteen, and the compliance checker transcribes them. For
+anything about output format, see
+[the GIAMIP collection page](../collections/giamip.qmd) and
+`gia_mip/resources/variables.json`, which are generated from the checker.
+
+Three points where the delivered files disagree with this text are recorded
+in [the corrections](../data/corrections.qmd): the GLAC3b and GLAC3c naming,
+the absence of an 80 ka forcing file for Exp06 and Exp07, and the
+mislabelled `year` variable.
 :::
+
+---
+
+**Glacial Isostatic Adjustment Model Intercomparison Project (GIAMIP)**
+
+ 
+
+**Introduction** 
+
+ 
+
+Redistribution of mass on the Earth's surface induces perturbations in the planet's gravitational and rotational potentials, as well as deformation of the solid surface, collectively referred to as gravitational, rotational, and deformational (GRD) effects. GRD effects occur over a wide range of timescales, from the immediate elastic response to viscoelastic adjustment over tens of thousands of years following surface mass redistribution. The long-timescale viscoelastic adjustment of the solid Earth and the associated sea-level response to glacial loading and unloading are commonly referred to as Glacial Isostatic Adjustment (GIA), which produces distinct sea-level fingerprints that reflect the geometry and timing of ice-mass evolution.
+
+Modeling GIA is essential for inferring the past ice-sheet loading history and the solid Earth structure. It is also crucial for quantifying regional sea-level changes, which often significantly deviate from global mean sea-level trends. Moreover, modern geodetic observations of present-day ice mass changes from satellite gravimetry (e.g. GRACE and GRACE-FO), ice-elevation changes from satellite altimetry, and solid Earth deformation from GNSS require knowledge of ongoing GIA signals resulting from surface mass redistribution over paleo glacial cycles. 
+
+However, modeling GIA involves uncertainties related to ice mass history, solid Earth structure and rheology, and model assumptions. As GIA models of varying complexity continue to emerge, it is increasingly important to characterize the spread in model predictions, which reflects the underlying uncertainties in these contributing components.
+
+To systematically assess these uncertainties, we introduce the GIA Model Intercomparison Project (GIAMIP), a coordinated community effort focused on the Last Glacial Cycle (\~122,000 years ago to present). GIAMIP aims to bring together a diverse set of numerical models incorporating a range of solid Earth rheologies and ice-sheet histories to evaluate the spread in GIA and sea-level predictions. This ensemble-based approach provides a physically grounded range of model predictions to support the interpretation of a wide range of datasets, including geodetic observations, relative sea-level records, and paleo-sea-level constraints. The products of this activity will be available to the public, enabling assessment of the effects of GIA-related uncertainties in a range of applications in the sea-level and geodetic communities.
+
+ 
+
+**Objectives and Deliverables** 
+
+* Assess uncertainties in modeled GIA arising from input ice history, solid Earth structure and rheology, and differences in numerical formulation and model implementation  
+* Quantify measurements of GIA-derived uncertainties for the geodetic observation community for better inference of physical quantities from geodetic and space observations (e.g., ice mass and elevation changes, vertical land motions of the solid Earth)  
+* Provide background GIA signal for ice sheet models: quantify the uncertainty-bounded contribution of ongoing GIA associated with past deglaciation to future solid Earth deformation and sea-level change. Because the prescribed paleo ice histories contain no recent or future ice-loading changes, the GIA response may be approximated as linear over centennial projection timescales for many Earth models. Where appropriate, these fields may be superposed on GRD responses associated with contemporaneous ice-loading changes to provide background solid Earth deformation signals for ice-sheet simulations submitted to the Ice Sheet Model Intercomparison Project (ISMIP).
+
+**GIAMIP Experiment Protocol**
+
+ 
+
+1. **Experiments** (Also linked [here](https://docs.google.com/spreadsheets/d/1P62LPaUR48VnW2XwnfD6arjzOWMsr5Qq/edit?gid=1135141520#gid=1135141520))  
+   There are two categories of experiments in GIAMIP: Tier 1 (mandatory) and Tier 2 (optional) experiments. The five Tier 1 experiments (Exp01–05) define a common set of relatively controlled model comparisons designed to characterize inter-model differences arising from ice history, Earth structure, rheology, initial topography, numerical formulation, and model implementation. The seven Tier 2 experiments (Exp06–12) allow participating groups to explore additional model configurations, parameter choices, and sensitivities beyond the common comparison set.
+
+   Note that Exp06–07 are more constrained but still optional companion experiments that repeat the configurations of Exp01 and Exp02 over the shorter 80 ka–future interval. These experiments are intended to help assess sensitivity to the length of the loading history and initialization period, particularly in the context of the PaleoMIST ice history, which begins at 80 ka.
+
+   For the optional experiments, participating groups may submit multiple simulations for a given experiment to explore sensitivities to Earth structure, rheology, numerical configuration, initial topography, or other model choices. Additional simulations should follow the naming convention ExpXX\_mYY, where XX denotes the experiment number and YY denotes the simulation/member identifier (e.g., Exp08\_m02). The m01 identifier should correspond to the primary or baseline submission for a given experiment, while subsequent identifiers may be used for additional sensitivity experiments. Any modifications relative to the nominal experiment configuration should be clearly documented in Section 8 of the [Model Report Template](https://docs.google.com/document/d/1oGE4pYxxYs-7Ot0w-CedKZyNnbL4g1G2/edit).
+
+   Experiments labeled with prescribed solid Earth structures (e.g., VM5a, VM7, Gowan et al.) should follow the specified profiles provided in Sections 3.1.1 \- 3.1.3 Experiments labeled as “Within suggested range” allow participating groups to select solid Earth parameters within the ranges provided in Section 3.1.4. Experiments labeled as “Open” allow participating groups to choose their own solid Earth structures and rheology choices of interests. All modeling choices should be documented in the accompanying model report.
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+ 
+
+|  | Experiment ID | Global input ice model | Viscosity structure | Elastic structure | Earth rheology | Initial polar topography (GEBCO 2024 for rest of the globe) | Period |
+| ----- | :---: | :---: | :---: | ----- | :---: | :---: | :---: |
+| Tier 1 Experiments (Mandatory)  | Exp01 | ICE-6G\_D | VM5a | PREM | Maxwell | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
+|  | Exp02 | ICE-7G\_NA | VM7 | PREM | Open | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
+|  | Exp03 | GLAC3b (Profile 1\) | Within suggested range |        Open | Open | Bedmap3(ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
+|  | Exp04 | GLAC3b (Profile 2\) | Within suggested range | Open | Open | Bedmap3 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
+|  | Exp05 | PaleoMist (Version a1) | Gowan et al. (2021) | PREM | Maxwell | BedMachineV3 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
+| Tier 2l Experiments (Optional)  | Exp06 | ICE-6G\_D | VM5a | PREM | Maxwell | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
+|  | Exp07 | ICE-7G\_NA | VM7 | PREM | Same as Exp02 | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
+|  | Exp08 | PaleoMist | Open | Open | Open  | Open | 80 ka-1000 yrs into future |
+|  | Exp09 | GLAC3b (Profile 1\) | Open | Open | Open  | Open | 122 ka-1000 yrs into future |
+|  | Exp10 | GLAC3b (Profile 2\) | Open | Open | Open  | Open | 122 ka-1000 yrs into future |
+|  | Exp11 | GLAC3b (Profile 3\) | Open  | Open  | Open | Open | 122 ka-1000 yrs into future |
+|  | Exp12 | ICE-6G\_D | Open  | Open  | Open | Open | 122 ka-1000 yrs into future |
+
+ 
+
+ 
+
+* For additional details on the prescribed solid Earth structures, refer to Section 3\.
+
+ 
+
+ 
+
+2. **Input global ice history profiles ([link to the input files](https://drive.google.com/drive/folders/1wuEVYLWqwJh-KhA7SODvPihPe0LZplN1?usp=share_link))**
+
+ 
+
+   **2.1. Global ice history**
+
+   We explore a total of five global ice history reconstructions in the mandatory experiments. In the optional experiments, we include one additional profile derived from GLAC3b (Exp11). These ice histories were selected based on their availability through public repositories, their history of use within the paleo GIA/sea-level community, and their application within the space geodesy community. For example, ICE-6G\_D has been widely used to calculate GIA correction terms for GRACE-derived estimates of contemporary ice mass balance. We also considered the diversity of groups that developed these ice-sheet reconstructions.
+
+    
+
+   In the model simulations, only grounded ice should contribute to loading of the solid Earth (i.e., floating ice should be masked out).
+
+ 
+
+   **2.2. Grid and temporal resolution**
+
+   **2.2.1. Spatial grid**
+
+   To ensure that everyone starts from the same source, the ice history files have been collected and interpolated onto the common, global gaussian grid with 257 & 513 latitudinal nodes. Each modeling group can interpolate onto their model native grid ensuring ice mass conservation. 
+
+    
+
+   **2.2.2. Timesteps** 
+
+   The temporal resolution of the pre-processed input ice loading history on the common grid is 500 years for pre-LGM (before 26 ka) and 100 years for post-LGM (26 \- 0 ka). Negative time stamps indicate the past times and positive time stamps indicate the future times, with ‘0’ being the present day representing 2000 CE.
+
+    
+
+   For times between the present day and future, zero ice loading changes have been added to the original data of paleo history (note the ocean loading will keep redistributing for the present day-future timescale). The idea behind this is to capture the background, linear GIA signals that can be applied to future ice sheet and sea level projections.
+
+ 
+
+3. **Solid Earth structure profiles**  
+      
+   This section provides details of the solid Earth profiles for the experiments described in Section 1\. For all experiments, each modeling group can assign Earth compressibility of their choice. Where labeled as ‘Open’, each modeling group can make a choice of their own (you can be explorative\!)   
+    
+
+ 
+
+**3.1.1. VM5a (relevant for Exp 01&06):** 
+
+ 
+
+| Depth range (km below surface) | Viscosity (X1021Pa s) |
+| :---: | :---: |
+| 0–60 | Elastic lid/infinite viscosity |
+| 60–100 | 10.0 |
+| 100–420 | 0.50 |
+| 420–670 | 0.50 |
+| 670–1260 | 1.57 |
+| 1260–2885.5 (CMB) | 3.23  |
+
+	(Following Table 2 in Roy & Peltier, 2017\)
+
+ 
+
+ 
+
+**3.1.2. VM7 (relevant for Exp 02&07):**
+
+ 
+
+| Depth range (km below surface) | Viscosity (X1021Pa s) |
+| :---: | :---: |
+| 0–75 | Elastic lid/infinite viscosity |
+| 75–115  | 10.0 |
+| 115–420 | 0.45 |
+| 420–670 | 0.45 |
+| 670–980 | 0.90 |
+| 980–1470 | 1.80 |
+| 1470–1950 | 6.00 |
+| 1950–2400 | 10.0 |
+| 2400 – 2885.5 (CMB) | 12.0  |
+
+(Following Table 2 in Roy & Peltier, 2017\)
+
+ 
+
+**3.1.3. Gowan et al. (2021; relevant for Exp05)** 
+
+ 
+
+| Lithosphere thickness | 120 km |
+| :---: | :---: |
+| Upper mantle viscosity | 0.4 X 1021 Pa s |
+| Lower mantle viscosity | 40 X 1021 Pa s |
+
+ 
+
+ 
+
+**3.1.4 Suggested range of solid Earth structure for the "Open" category**
+
+ 
+
+| Lithosphere thickness | 60–120 km |
+| :---: | :---: |
+| Upper mantle viscosity | 1020–1021 Pa s |
+| Lower mantle viscosity | 1021–1023 Pa s |
+
+ 
+
+In the optional experiments, we encourage 1D models to explore solid Earth parameters suitable for certain regions of the globe that are very different (e.g., West Antarctica and Alaska regions that have much lower upper mantle viscosity such as 1018 \- 1019 Pa s.)
+
+ 
+
+**3.2. Note specific to 3D GIA models**
+
+ 
+
+Choices are open for tomographic models, velocity to viscosity scaling law, background viscosity profiles. These can be explored in the optional experiments.	  
+
+   
+
+ 
+
+4. **Reference topography**  
+      
+   Preprocessed present-day global topography profiles are provided to participating groups on the prescribed global Gaussian grid described in Section 2.2. For the Antarctic region, we adopt three alternative bed topography datasets (Bedmap2, Fretwell et al., 2013; Bedmap3, Pritchard et al., 2025; and BedMachineV3, Morlighem et al., 2020). For the Greenland region, we adopt BedMachineV5 as the only topography dataset. For the remainder of the globe, we adopt the GEBCO 2024 topography. Together, these datasets define three alternative realizations of present-day global topography.  
+      
+   Wherever the bed elevation is provided by a regional topography datasets, this value is used instead of that provided by GEBCO. No additional smoothing or blending is applied across dataset boundaries during the preprocessing stage. (Nonetheless, this results in a smooth global topography, due to the fact that Bedmap and BedMachine both use GEBCO outside of the ice-covered domain.)   
+      
+   The use of multiple present-day topography datasets is intentional and is designed to help quantify the sensitivity of modeled GIA and sea-level predictions to uncertainties in present-day bed geometry and bathymetry.  
+      
+5. **Reference system**  
+      
+   **Time:** we define “present day” as the year 2000 Common Era, and this year will be the reference year in our analysis (i.e. model year 0\)
+
+ 
+
+   **Spatial:** geocentric (i.e., sea surface height & geoid & topography defined with respect to the center of mass of the whole Earth System)
+
+    
+
+6. **Outputs submission**  
+    
+
+**6.1 Variables, grid and format**
+
+ 
+
+Several required and optional model outputs outlined in [this spreadsheet](https://docs.google.com/spreadsheets/d/1J5o2MxnOGaKYWp3VmcRPSJ9j0KDQpnD2/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true) are requested for submission. 
+
+ 
+
+Two-dimensional output fields must be provided on the prescribed common grid (global Gaussian grid with 257 × 513 nodes). However, globally integrated scalar quantities (e.g., total ice mass, grounded ice mass, ocean area, etc.) **should be calculated directly on the native model grid/mesh prior to any interpolation or remapping to the common output grid.** This is intended to preserve internally consistent mass, area, and volume calculations and avoid interpolation-related discrepancies between models.
+
+ 
+
+Scalar time-evolving quantities should be submitted at the same temporal resolution as the provided input forcing files: 500-year intervals before 26 ka, 100-year intervals from 26 ka to present, and the prescribed future time steps. Time-evolving 2D spatial fields should be submitted at the output intervals specified in the output-variable spreadsheet. Where 2D fields are requested at reduced temporal resolution, model values should represent instantaneous snapshots at the specified model times, not temporal averages, unless otherwise noted.
+
+ 
+
+Please ensure that all variables are submitted in the exact format requested. In particular, time-evolving spatial fields must use the dimension ordering \[time, lat, lon\]. Latitude must span (-90°, 90°) and be ordered south-to-north, while longitude must span \[0°, 360°) and increase west-to-east. Please also use the prescribed variable\_name and long\_name attributes for each variable where applicable. All time-evolving outputs should include both the starting and ending simulation timesteps, as specified in the output-variable spreadsheet.
+
+ 
+
+Importantly, all submitted outputs should be provided in the center-of-mass reference frame of the whole Earth system (CM), which includes the solid Earth and surface mass redistribution, rather than in the center-of-mass reference frame of the solid Earth alone (CE). If applicable, participating groups should document the treatment of degree-1 terms and any CE-to-CM transformations in the model report.
+
+ 
+
+Output file naming convention: Each output variable should be written to a separate NetCDF file using the following naming convention:
+
+ 
+
+\[variable\_name\]\_\[experiment\_id\]\_\[ensemble-member\_identifier\]\_\[group\_name\]\_\[model\_name\].nc
+
+ 
+
+where experiment\_id may include optional ensemble-member identifiers (e.g., `Exp08_m02`). 
+
+Examples:
+
+* delta\_g\_Exp03\_JPL\_ISSM-SLC.nc  
+* delta\_g\_Exp10\_m01\_JPL\_ISSM-SLC.nc   
+* delta\_g\_Exp10\_m02\_JPL\_ISSM-SLC.nc   
+     
+  Submitted NetCDF files should also minimally include the following metadata attributes where applicable (see the next subsection 6.2 for more detail.)  
+     
+  Important note: please verify the dimension ordering in the final NetCDF files, particularly when using Fortran, MATLAB, or other column-major environments. Depending on the NetCDF interface used, the dimension ordering in the written file may differ from the ordering of the in-memory array. The dimensions in the final NetCDF file must follow the ordering specified in this protocol.
+
+	**6.2 Metadata requirements** 
+
+All variables, including coordinate variables, should include the `units` and `long_name` attributes. Variables with an applicable CF standard name shall also include the `standard_name` attribute.
+
+**6.3 Automated Quality Check script**
+
+Before submission, model output files must be validated using the automated quality-check (QC) script provided in the following GitHub repository: 
+
+[https://github.com/JanJereczek/GIA\_SimulationChecker](https://github.com/JanJereczek/GIA_SimulationChecker)
+
+**The QC report generated by the script must be submitted together with the output files.** This is to help participating groups verify compliance with the requested output conventions (Hard Checks) and identify potential scientific or technical inconsistencies (Soft Checks). 
+
+Submitted outputs are expected to successfully pass the Hard Checks prior to official submission. Soft Checks generate warnings only and do not prevent submission. Outputs that do not pass the prescribed Hard Checks may be returned to participating groups for reformatting and resubmission before inclusion in the GIAMIP archive and multimodel analyses.
+
+The types of checks and associated pass criteria are documented in detail [here](https://docs.google.com/document/d/1EFyQHMATeCUgvhr12Ss_ElUF2fSr0viI/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true).
+
+\[**Updated 07/13/2026**: The current version of the QC script does not yet include all planned hard and soft checks. An updated version incorporating the remaining checks will be uploaded by the end of August or early September 2026\. In the meantime, modelers are encouraged to use the current version to validate their outputs. An announcement will be sent to participating groups once the finalized version becomes available.\]
+
+**6.4 Output submission repository**
+
+	Output files will be uploaded to Ghub on [Globus](https://www.globus.org/), graciously supported by [ISMIP7](https://www.ismip.org/).  
+
+When you are ready for your submission, please send an email to: [grdmip@gmail.com](mailto:grdmip@gmail.com) with the following information:
+
+1. Your globus email or id,   
+2. Your Institution or modeling group name  
+3. Model name (include version number if applicable)
+
+   We will then create an output folder for your submission.
+
+ 
+
+7. **Spherical Harmonic Normalization Convention**  
+      
+   While the GIAMIP analysis team will compute Stokes coefficients from the submitted geoid height changes (‘delta\_g’) fields using a common spherical harmonic analysis pipeline, we additionally and optionally request Stokes coefficients of geoid height change (‘Clm’ and ‘Slm’) as diagnostic variables. These optional diagnostic coefficients should represent geoid-height change between the first and final simulation timesteps.   
+      
+   Submitted coefficients must be dimensionless and use the fully normalized real spherical harmonic convention (4π normalization) with a reference Earth radius of 6,371,000 m. Submitted Clm and Slm coefficients should correspond to the real spherical harmonic basis defined below. The fully normalized real spherical harmonic convention (4π normalization) is defined as:  
+      
+      
+   ![][image1],  
+      
+      Where the normalization factor is:  
+      
+   	![][image2],  
+      
+      such that:
+
+   ![][image3].
+
+	If a different normalization convention is used internally by a model, submitted
+
+coefficients must be converted to the convention defined above prior to submission.
+
+ 
+
+ 
+
+8. **Other constants**   
+      
+   * density of ice: 917 kg/m^3  
+   * density of ocean water: 1025 kg/m^3 (if applicable)  
+   * density of fresh water: 1000 kg/m^3  
+   * Reference Earth radius**:** 6371000 m
+
+ 
+
+ 
+
+9. **Model report**   
+      
+   Along with model outputs, participating groups are requested to submit a model report describing the numerical implementation and configuration used for the simulations. To facilitate comparison across models, groups are encouraged to answer each question explicitly and keep responses concise but sufficiently detailed. Submitted reports may be incorporated into supplementary material associated with GIAMIP publications. A model report template can be found at [this link](https://docs.google.com/document/d/1oGE4pYxxYs-7Ot0w-CedKZyNnbL4g1G2/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true)
+
+ 
+
+ 
+
+10. **Data transfer & storage**  
+       
+    This is in progress and will be finalized by the time of the official protocol announcement. Data transfer will be done through Globus and data storage will be supported by Ghub.  
+       
+11. **Tentative timeline**  
+       
+    The anticipated timeline for GIAMIP is as follows:  
+* Initial protocol testing and feedback phase: June 2026  
+* Protocol announcement and data release: July 1st, 2026  
+* Model submission deadline: November 1st, 2026  
+* Analysis and drafting manuscript : Winter 2026-Spring 2027  
+* Submission of the GIAMIP manuscript: Spring-Summer, 2027  
+*  
+
+12. ## **Data policy and publication guidelines**
+
+    Participating groups retain ownership of their individual model outputs and remain free to analyze and publish results based solely on their own simulations at any time.
+
+    Submitted GIAMIP datasets will also contribute to a shared multimodel ensemble intended for coordinated intercomparison analyses and overview publications led by the GIAMIP collaboration. Prior to publication of the primary GIAMIP overview paper, participating groups agree not to publish analyses based on the submitted multimodel ensemble datasets, except for analyses involving only their own model outputs, unless prior coordination has occurred within the GIAMIP collaboration.
+
+    Additional collaborative analyses and authorship policies will be discussed collectively within the participating community as the project progresses.
+
+ 
+
+ 
+
+13. **Contributions and Acknowledgements**  
+    **Leadership**  
+    Lead: Holly Han  
+    Associate & Technical Lead: Jan Swierczek-Jereczek  
+       
+    **Technical Working group (alphabetical order)**  
+    Sam Chester, Holly Han, Erin Hightower, Sam Kodama, Donghyuck David Lee, Jan Swierczek-Jereczek  
+       
+    **Protocol Development (alphabetical order)**  
+    Surendra Adhikari, Jacky Austermann, Lambert Caron, Sam Chester, Roger Creel, Jeff Freymueller, Heiko Goelzer, Holly Han, Erin Hightower, Matt Hoffman, Erik Ivins (JPL), Volker Klemann, Tanghua Li, Yucheng Lin,  Andrew Lloyd, Daniele Melini, Glenn Milne, Tamara Pico, Riccardo Riva, William Scott, Giorgio Spada, Lev Tarasov, Tao Yuan, Shijie Zhong  
+       
+    **Steering Committee**  
+    Glenn Milne, Jerry Mitrovica, Frank Pattyn  
+     
+
+**Acknowledgements**
+
+GIAMIP is endorsed by the [PALSEA-Next](https://palseagroup.weebly.com/) (PALeo constraints on SEA level rise) working group. We thank the members of the [ISMIP7 GIA/Sea Level Focus Group](https://www.ismip.org/participants/focus-groups/gia-sea-level) for valuable discussions and feedback during the development of this protocol. We also thank Evan Gowan for valuable discussions and guidance regarding the PaleoMIST ice history.
+
+ 
+
+ 
+
+14. **Contact email: [grdmip@gmail.com](mailto:grdmip@gmail.com)**  
+       
+15. **Protocol Document Versions**  
+* v1.0 — October 22, 2025  
+* v2.0 — May 24, 2026  
+* v2.1 — June 10, 2026  
+* v2.2 — July 2, 2026  
+* V2.3 — July 13, 2026 (information added regarding output submission and output file checker)  
+* V2.4 — Sept 8, 2026 (note adding regarding dimension ordering of output variables
+
+ 
+
+**References**
+
+ 
+
+Dziewonski, A. M., and D. L. Anderson (1981), Preliminary reference Earth model, Physics of the Earth and Planetary Interiors, 25(4), 297–356, [https://doi.org/10.1016/0031-9201(81)90046-7](https://doi.org/10.1016/0031-9201\(81\)90046-7)
+
+Gowan, E. J., X. Zhang, S. Khosravi*,* et al. (2021), A new global ice sheet reconstruction for the past 80,000 years, Nature Communications, *12*, 1199, [https://doi.org/10.1038/s41467-021-21469-w](https://doi.org/10.1038/s41467-021-21469-w)
+
+Roy, K., and W. R. Peltier (2015), Glacial isostatic adjustment, relative sea level history and mantle viscosity: Reconciling relative sea level model predictions for the U.S. East Coast with geological constraints, Geophysical Journal International, 201(2), 1156–1181, [https://doi.org/10.1093/gji/ggv066](https://doi.org/10.1093/gji/ggv066)
+
+ 
+
+Roy, K., and W. R. Peltier (2017), Space-geodetic and water level gauge constraints on continental uplift and tilting over North America: Regional convergence of the ICE-6G\_C (VM5a/VM6) models, Geophysical Journal International, 210(2), 1115–1142, [https://doi.org/10.1093/gji/ggx156](https://doi.org/10.1093/gji/ggx156)
+
+ 
+
+Peltier, W. R., D. F. Argus, and R. Drummond (2018), Comment on “An assessment of the ICE-6G\_C (VM5a) glacial isostatic adjustment model” by Purcell et al., Journal of Geophysical Research: Solid Earth, 123, 2019–2018, [https://doi.org/10.1002/2016JB013844](https://doi.org/10.1002/2016JB013844)
+
+ 
+
+Lev Tarasov; GLAC3B ice history
+
+ 
+
+Fretwell, P., et al. (2013): Bedmap2: improved ice bed, surface and thickness datasets for Antarctica, The Cryosphere, 7, 375–393, [https://doi.org/10.5194/tc-7-375-2013](https://doi.org/10.5194/tc-7-375-2013).
+
+ 
+
+Morlighem, M., et al. (2026); New high-resolution subglacial bed topography and coastal bathymetry of the Antarctic and Greenland Ice Sheets. *Philos Trans A Math Phys Eng Sci*; 384 (2319): 20240538\. [https://doi.org/10.1098/rsta.2024.0538](https://doi.org/10.1098/rsta.2024.0538)
+
+ 
+
+Morlighem, M., et al. (2020): Deep glacial troughs and stabilizing ridges unveiled beneath the margins of the Antarctic ice sheet. *Nat. Geosci.* **13**, 132–137. [https://doi.org/10.1038/s41561-019-0510-8](https://doi.org/10.1038/s41561-019-0510-8)
+
+ 
+
+Pritchard, H. D., et al.: Bedmap3 updated ice bed, surface and thickness gridded datasets for Antarctica. *Sci Data* **12**, 414 (2025). [https://doi.org/10.1038/s41597-025-04672-y](https://doi.org/10.1038/s41597-025-04672-y)
+
+ 
+
