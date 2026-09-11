@@ -36,7 +36,9 @@ import zipfile
 # archive lands. That module imports only the standard library, so importing
 # it here costs nothing and cannot fail on a bare machine.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from gia_mip.data import unpack_target  # noqa: E402
+from gia_mip.data import (  # noqa: E402
+    STAMP as UNPACK_STAMP, common_top, member_path, unpack_target,
+)
 
 # Read files in one-megabyte pieces so a 300 MB archive is never held whole in
 # memory. The same chunk size is used by sl1d.data, for no reason beyond
@@ -121,37 +123,72 @@ def main() -> int:
     provenance = json.loads(args.provenance.read_text())
     declared = set(provenance["artifacts"])
 
+    # One inventory pass. Reading an archive decompresses all of it, and the
+    # ice history is 316 MB, so this is done once and the result serves both
+    # the manifest entry and the stray check.
+    inventories: dict[str, list[dict] | None] = {}
+    for rel in sorted(declared):
+        path = args.root / rel
+        if path.exists():
+            inventories[rel] = inventory(path)
+
+    def on_disk_names(rel: str) -> set[str]:
+        """Where this archive's members land, relative to its unpack target."""
+        members = inventories.get(rel) or []
+        top = common_top([m["name"] for m in members])
+        return {member_path(m["name"], top) for m in members}
+
     # Every file under the root is an artifact, with two exclusions. Files
     # inside an unpack target are archive members, already inventoried inside
     # their archive's entry, so counting them again would make every fetched
     # tree look undocumented. Caches and hidden files are never artifacts.
     unpacked = {
-        unpack_target(args.root / rel)
+        unpack_target(args.root / rel): rel
         for rel in declared
         if (args.root / rel).exists()
     }
 
-    def is_artifact(path: pathlib.Path) -> bool:
-        if not path.is_file() or path.name.startswith("."):
-            return False
-        for part in path.parts:
-            if part == "__pycache__":
-                return False
-        return not any(d in path.parents for d in unpacked)
+    def containing_target(path: pathlib.Path) -> pathlib.Path | None:
+        """The unpack target this path sits inside, if any."""
+        for target in unpacked:
+            if target in path.parents:
+                return target
+        return None
 
-    found = {
-        str(p.relative_to(args.root))
-        for p in sorted(args.root.rglob("*"))
-        if is_artifact(p)
-    }
+    def is_noise(path: pathlib.Path) -> bool:
+        return (not path.is_file()
+                or path.name.startswith(".")
+                or "__pycache__" in path.parts)
+
+    found = set()
+    strays = []
+    for path in sorted(args.root.rglob("*")):
+        if is_noise(path):
+            continue
+        target = containing_target(path)
+        if target is None:
+            found.add(str(path.relative_to(args.root)))
+            continue
+        # Inside an unpack target. It is accounted for when it is a member of
+        # the archive that target came from, and a stray otherwise. Excluding
+        # the whole directory would hide a file someone dropped in there.
+        archive_rel = unpacked[target]
+        relative = str(path.relative_to(target))
+        if relative == UNPACK_STAMP:
+            continue
+        if relative not in on_disk_names(archive_rel):
+            strays.append(str(path.relative_to(args.root)))
 
     missing = sorted(declared - found)
     undeclared = sorted(found - declared)
-    if missing or undeclared:
+    if missing or undeclared or strays:
         for path in missing:
             print(f"declared in provenance but not on disk: {path}", file=sys.stderr)
         for path in undeclared:
             print(f"on disk but not declared in provenance: {path}", file=sys.stderr)
+        for path in strays:
+            print(f"inside an unpack target but not a member of its archive: "
+                  f"{path}", file=sys.stderr)
         return 1
 
     artifacts = {}
@@ -160,7 +197,7 @@ def main() -> int:
         entry = dict(provenance["artifacts"][rel])
         entry["bytes"] = path.stat().st_size
         entry["sha256"] = sha256_path(path)
-        members = inventory(path)
+        members = inventories.get(rel)
         if members is not None:
             entry["members"] = members
             entry["member_count"] = len(members)
@@ -186,7 +223,11 @@ def main() -> int:
     print(f"\n{len(artifacts)} artifacts, {total / 1e6:.0f} MB total")
     for key, size in sorted(by_collection.items()):
         print(f"  {key}: {size / 1e6:.0f} MB")
-    print(f"written to {args.output.relative_to(here)}")
+    try:
+        shown = args.output.relative_to(here)
+    except ValueError:
+        shown = args.output          # --output outside the repository
+    print(f"written to {shown}")
     return 0
 
 

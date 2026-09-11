@@ -10,6 +10,12 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
 authors = [
   { name = "Siavash Ghelichkhan", email = "siavash.ghelichkhan@anu.edu.au" },
 ]
@@ -26,13 +32,6 @@ dependencies = [
 test = ["pytest>=8", "pytest-timeout>=2.3"]
 plot = ["matplotlib>=3.8"]
 docs = ["jupyter>=1.0", "matplotlib>=3.8"]
-
-classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Science/Research",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Scientific/Engineering",
-]
 
 [project.urls]
 Homepage = "https://github.com/g-adopt/gia-mip"

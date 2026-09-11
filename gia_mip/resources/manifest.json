@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-11T05:54:03+00:00",
+ "generated": "2026-09-11T06:10:25+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/gia-mip/",
  "artifacts": {
@@ -12,6 +12,7 @@
    "received": "2026-09-11",
    "permission": "requested",
    "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged.",
+   "modified_from_supplied": "Converted from the supplied Word document to Markdown. The prose is unchanged and the two equation images are kept as base64 data URIs, but the sum is of our conversion and not of the .docx. The .docx was not kept; request it from the organisers if a byte-exact original is needed.",
    "bytes": 41130,
    "sha256": "277d584fb2e8d172c10b43bf7de05824fc72d32861a767e85d2883bf94ab90d6"
   },
@@ -626,6 +627,7 @@
    "received": "2023-07",
    "permission": "not_asked",
    "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record.",
+   "modified_from_supplied": "Packed into a tar archive from a directory tree, with forty-seven files removed: eighteen .DS_Store, fourteen .gmtcommands4, fourteen .gmtdefaults4 and one .GMT_bb_info. No file that was kept was changed. The 977 members and their individual sums are listed in the manifest and can be checked against the supplier's tree file by file.",
    "bytes": 14331092,
    "sha256": "96bfa337b600cdfcbcf4d2cb36d2f0a779442f1a6fc11da2f90608d50214face",
    "members": [

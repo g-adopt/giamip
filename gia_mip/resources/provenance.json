@@ -1,5 +1,5 @@
 {
-  "$comment": "Provenance is written by hand. Sizes and SHA-256 sums are generated into manifest.json by scripts/build_manifest.py and must never be edited here. `collection` says which body of work a file belongs to; `stage` says whether it is an untouched third-party file (`original`) or something this project derived (`converted`). The two are separate axes, so a request for the converted GIAMIP data can be expressed. `permission` records whether the supplier has agreed to redistribution through https://data.gadopt.org/gia-mip/: one of `granted`, `requested`, `not_asked`. An artifact whose permission is not `granted` is never uploaded and is never fetched.",
+  "$comment": "Provenance is written by hand. Sizes and SHA-256 sums are generated into manifest.json by scripts/build_manifest.py and must never be edited here. `collection` says which body of work a file belongs to; `stage` says whether the file is a third-party input (`original`) or something this project derived from one (`converted`). `modified_from_supplied` is set when an `original` artifact is not byte-identical to what the supplier sent, and says exactly what was changed; the SHA-256 then records our copy and cannot be checked against the supplier's. The two are separate axes, so a request for the converted GIAMIP data can be expressed. `permission` records whether the supplier has agreed to redistribution through https://data.gadopt.org/gia-mip/: one of `granted`, `requested`, `not_asked`. An artifact whose permission is not `granted` is never uploaded and is never fetched.",
   "base_url": "https://data.gadopt.org/gia-mip/",
   "artifacts": {
     "spada2011/spada2011-cost-es0701.tar.gz": {
@@ -11,7 +11,8 @@
       "supplier": "William Scott, Australian National University",
       "received": "2023-07",
       "permission": "not_asked",
-      "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record."
+      "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record.",
+      "modified_from_supplied": "Packed into a tar archive from a directory tree, with forty-seven files removed: eighteen .DS_Store, fourteen .gmtcommands4, fourteen .gmtdefaults4 and one .GMT_bb_info. No file that was kept was changed. The 977 members and their individual sums are listed in the manifest and can be checked against the supplier's tree file by file."
     },
     "martinec2018/benchmarkA.zip": {
       "collection": "martinec2018",
@@ -93,7 +94,8 @@
       "supplier": "GIAMIP organisers",
       "received": "2026-09-11",
       "permission": "requested",
-      "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged."
+      "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged.",
+      "modified_from_supplied": "Converted from the supplied Word document to Markdown. The prose is unchanged and the two equation images are kept as base64 data URIs, but the sum is of our conversion and not of the .docx. The .docx was not kept; request it from the organisers if a byte-exact original is needed."
     }
   }
 }

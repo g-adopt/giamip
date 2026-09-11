@@ -10,12 +10,22 @@ permissions:
   pages: write
   id-token: write
 
+# Two pushes in quick succession would otherwise race to deploy, and the
+# loser can overwrite the winner. Deployments are not cancelled in flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 # One job. Every page either needs nothing beyond the tracked `data/converted/`
 # reference data, or carries a committed `_freeze/` cache made on a machine
-# that had the originals. Nothing here fetches the 317 MB of GIAMIP input and
-# nothing here runs a solver, so `execute: freeze: true` in _quarto.yml is what
-# keeps this job honest: a page without a cache fails loudly instead of
-# quietly executing.
+# that had the originals.
+#
+# `execute: freeze: true` in _quarto.yml stops Quarto re-executing a page that
+# already has a cache entry. It does NOT protect a page that has no entry:
+# Quarto executes that one. So a new page whose code needs the originals will
+# run here and fail on the missing files. The guard is the review of a new
+# page, not the setting. Render such a page once locally with `--no-freeze`
+# and commit its `_freeze/` entry with it.
 jobs:
   render:
     runs-on: ubuntu-latest

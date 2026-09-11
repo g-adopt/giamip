@@ -37,10 +37,21 @@ def test_data_module_imports_only_the_standard_library():
     assert not outside, f"gia_mip.data imports non-standard modules: {sorted(outside)}"
 
 
-def test_data_module_runs_as_a_script_without_the_package_installed():
-    """`python -m gia_mip.data --list` works with nothing else importable."""
+def test_data_module_runs_with_no_dependencies_importable():
+    """`python -m gia_mip.data --list` works on a machine with nothing installed.
+
+    Run under `-I`, which ignores the user site directory and PYTHONPATH, with
+    the package's parent put back on the path explicitly. Without `-I` the
+    ambient environment supplies numpy and netCDF4 and the test proves nothing
+    about a bare runner.
+    """
+    package_parent = str(pathlib.Path(gia_mip.__file__).parent.parent)
     result = subprocess.run(
-        [sys.executable, "-m", "gia_mip.data", "--list"],
+        [sys.executable, "-I", "-c",
+         f"import sys; sys.path.insert(0, {package_parent!r}); "
+         "import runpy; sys.argv = ['gia_mip.data', '--list']; "
+         "runpy.run_module('gia_mip.data', run_name='__main__')"],
         capture_output=True, text=True, timeout=60,
     )
     assert result.returncode == 0, result.stderr
+    assert "numpy" not in result.stderr

@@ -40,8 +40,10 @@ reader.
 
 ## Adding a case
 
-A case is one JSON file in `cases/` and one page in `docs/results/`. The JSON
-is validated against a schema in `gia_mip/schemas/` by the test suite. State
+No case is written yet, and neither `cases/` nor `gia_mip/schemas/` is
+populated. When they are: a case is one JSON file in `cases/` and one page in
+`docs/results/`, and the JSON is validated against a schema in
+`gia_mip/schemas/` by the test suite. State
 the physical constants in the case file: they differ between the benchmarks
 and GIAMIP, and a shared module would silently give one of them the other's
 values.

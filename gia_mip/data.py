@@ -120,80 +120,136 @@ def unpack_target(archive: pathlib.Path) -> pathlib.Path:
     return archive.with_name(name + ".d")
 
 
-def _common_top(names: list[str]) -> str | None:
-    """The single top-level directory shared by every member, if there is one.
+def common_top(names: list[str]) -> str | None:
+    """The single top-level directory every member sits inside, if there is one.
 
-    Returns None when members sit at the archive root or under more than one
-    top-level directory, in which case nothing is stripped.
+    Returns None when members sit at the archive root, or under more than one
+    top-level directory, in which case nothing is stripped. A member that *is*
+    the candidate name, with nothing below it, means the candidate is a file
+    and not a directory, so None is returned there too: stripping it would
+    leave an empty path.
     """
-    tops = {n.split("/", 1)[0] for n in names if n not in (".", "")}
-    tops.discard(".")
+    cleaned = [n[2:] if n.startswith("./") else n for n in names]
+    tops = {n.split("/", 1)[0] for n in cleaned if n}
     if len(tops) != 1:
         return None
     top = tops.pop()
-    # Every member must be *inside* that directory, not be that directory's
-    # sibling with a shared prefix.
-    if all(n == top or n.startswith(top + "/") for n in names):
-        return top
-    return None
+    if not all(n.startswith(top + "/") for n in cleaned):
+        return None
+    return top
 
 
-def unpack(archive: pathlib.Path) -> pathlib.Path:
-    """Unpack an archive into its target directory, replacing what is there.
+def member_path(name: str, top: str | None) -> str:
+    """Where one archive member lands, relative to the unpack target.
 
-    Members are checked for paths that escape the target before anything is
-    written. A downloaded archive is verified by SHA-256 before this runs, so
-    the check guards against a manifest that was poisoned upstream, not
-    against an accident.
+    This is the single rule that maps a member name in the manifest to a path
+    on disk. A leading "./" is dropped, and the archive's one top-level
+    directory is removed when it has one, so
+    ``giamip/ice-history.zip`` member ``Ice History/iceHistory-ICE-6G_D.nc``
+    becomes ``iceHistory-ICE-6G_D.nc`` while
+    ``sbk_benchmark_data.tar.gz`` member ``l721j256/A_fig10_SBK.dat`` keeps
+    its directory, because that archive has no single top level to strip.
     """
-    target = unpack_target(archive)
-    if target.exists():
-        shutil.rmtree(target)
-    target.mkdir(parents=True)
-
-    if archive.suffix == ".zip":
-        with zipfile.ZipFile(archive) as z:
-            names = [i.filename for i in z.infolist() if not i.is_dir()]
-            _check_members(names)
-            top = _common_top([n.lstrip("./") for n in names])
-            for info in z.infolist():
-                if info.is_dir():
-                    continue
-                rel = info.filename.lstrip("./")
-                if top:
-                    rel = rel[len(top) + 1 :]
-                out = target / rel
-                out.parent.mkdir(parents=True, exist_ok=True)
-                with z.open(info) as src, open(out, "wb") as dst:
-                    shutil.copyfileobj(src, dst, CHUNK)
-    else:
-        with tarfile.open(archive, "r|*") as t:
-            # Streaming mode gives one pass, so the common-prefix decision has
-            # to be made from the manifest rather than from a first pass over
-            # the archive. Tar archives in this project are packed from inside
-            # the directory, so their members start with "./" and there is no
-            # top-level directory to strip.
-            for info in t:
-                if not info.isfile():
-                    continue
-                rel = info.name.lstrip("./")
-                _check_members([rel])
-                src = t.extractfile(info)
-                if src is None:
-                    continue
-                out = target / rel
-                out.parent.mkdir(parents=True, exist_ok=True)
-                with open(out, "wb") as dst:
-                    shutil.copyfileobj(src, dst, CHUNK)
-    return target
+    cleaned = name[2:] if name.startswith("./") else name
+    if top and cleaned.startswith(top + "/"):
+        return cleaned[len(top) + 1:]
+    return cleaned
 
 
-def _check_members(names: list[str]) -> None:
-    """Reject absolute paths and parent references in archive member names."""
+def check_member_names(names: list[str]) -> None:
+    """Reject absolute paths and parent references, before anything is stripped.
+
+    Checked on the raw names. Stripping first would let "../../evil.txt" pass,
+    because removing a leading "./" with str.lstrip removes characters and not
+    a prefix, turning "../../evil.txt" into "evil.txt".
+    """
     for name in names:
         p = pathlib.PurePosixPath(name)
         if p.is_absolute() or ".." in p.parts:
             raise ValueError(f"archive member escapes the target directory: {name}")
+
+
+# Written inside an unpack target, holding the SHA-256 of the archive it came
+# from. Its presence with a matching sum means the tree is current, so a
+# re-run neither re-extracts 317 MB nor destroys anything a user put there.
+STAMP = ".unpacked-from"
+
+
+def is_unpacked(archive: pathlib.Path, digest: str) -> bool:
+    """True when the archive's target already holds the contents of this archive."""
+    stamp = unpack_target(archive) / STAMP
+    try:
+        return stamp.read_text().strip() == digest
+    except OSError:
+        return False
+
+
+def unpack(archive: pathlib.Path, members: list[str], digest: str) -> pathlib.Path:
+    """Unpack an archive, replacing its target directory only once it succeeds.
+
+    Extraction goes to a scratch directory beside the target, and the target
+    is replaced only after every member is written. An archive that turns out
+    to be corrupt half way through therefore leaves the previous tree intact,
+    which matters because the previous tree may be the only copy.
+
+    Parameters
+    ----------
+    archive
+        The archive to unpack, already verified against its SHA-256.
+    members
+        Member names from the manifest. Used to decide the common top-level
+        directory in one pass, so the tar and zip branches agree.
+    digest
+        The archive's SHA-256, written into the target as a stamp.
+    """
+    check_member_names(members)
+    top = common_top(members)
+    target = unpack_target(archive)
+    scratch = target.with_name(target.name + f".unpacking-{os.getpid()}")
+    if scratch.exists():
+        shutil.rmtree(scratch)
+    scratch.mkdir(parents=True)
+
+    def write(relative: str, source) -> None:
+        out = scratch / relative
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, "wb") as dst:
+            shutil.copyfileobj(source, dst, CHUNK)
+
+    try:
+        if archive.suffix == ".zip":
+            with zipfile.ZipFile(archive) as z:
+                check_member_names([i.filename for i in z.infolist()])
+                for info in z.infolist():
+                    if info.is_dir():
+                        continue
+                    with z.open(info) as src:
+                        write(member_path(info.filename, top), src)
+        else:
+            with tarfile.open(archive, "r|*") as tar:
+                for info in tar:
+                    if not info.isfile():
+                        continue
+                    check_member_names([info.name])
+                    src = tar.extractfile(info)
+                    if src is None:
+                        continue
+                    write(member_path(info.name, top), src)
+        (scratch / STAMP).write_text(digest + "\n")
+    except BaseException:
+        shutil.rmtree(scratch, ignore_errors=True)
+        raise
+
+    # Swap. The old tree is moved aside first and removed afterwards, so a
+    # failure between the two leaves something recoverable on disk.
+    if target.exists():
+        stale = target.with_name(target.name + f".stale-{os.getpid()}")
+        target.rename(stale)
+        scratch.rename(target)
+        shutil.rmtree(stale, ignore_errors=True)
+    else:
+        scratch.rename(target)
+    return target
 
 
 def expand(names: list[str]) -> set[str]:
@@ -264,13 +320,24 @@ def main(argv: list[str] | None = None) -> int:
 
     # The destination is <root>/<stage>/<relative path>, so originals and
     # converted products never collide and one root holds both.
-    root = args.dest or pathlib.Path(
-        os.environ.get("GIA_MIP_DATA_ROOT", DEFAULT_DEST))
+    root = args.dest or (
+        pathlib.Path(os.environ["GIA_MIP_DATA_ROOT"])
+        if "GIA_MIP_DATA_ROOT" in os.environ
+        else DEFAULT_DEST
+    )
+    # An installed package sits in site-packages, where DEFAULT_DEST would
+    # scatter 341 MB among the dependencies. Refuse instead.
+    if args.dest is None and "GIA_MIP_DATA_ROOT" not in os.environ:
+        if not (ROOT / "pyproject.toml").exists():
+            raise SystemExit(
+                "gia_mip is installed rather than checked out, so there is no "
+                "repository to fill. Pass --dest DIR or set GIA_MIP_DATA_ROOT."
+            )
 
     def local(rel: str, entry: dict) -> pathlib.Path:
         return root / entry["stage"] / rel
 
-    if args.list:
+    if args.list and not args.verify:
         if not artifacts:
             print("no artifacts match that collection and stage")
         for rel, entry in artifacts.items():
@@ -281,20 +348,36 @@ def main(argv: list[str] | None = None) -> int:
                   f"permission={entry['permission']}")
         return 0
 
+    # A base URL without a trailing slash would give a mangled path, because
+    # the artifact key is joined to it directly.
     base = os.environ.get("GIA_MIP_BASE_URL", manifest["base_url"])
+    if not base.endswith("/"):
+        base += "/"
+
     failures = 0
+    # Only an artifact whose sum matched in this run is unpacked. Unpacking a
+    # corrupt archive would destroy the previous tree before failing.
+    verified: dict[str, dict] = {}
     for rel, entry in artifacts.items():
         path = local(rel, entry)
-        if path.exists() and path.stat().st_size == entry["bytes"]:
-            digest = sha256(path)
-            if digest == entry["sha256"]:
-                print(f"ok       {rel}")
-                continue
-            print(f"CORRUPT  {rel}: sha256 {digest[:16]} expected "
-                  f"{entry['sha256'][:16]}", file=sys.stderr)
-            if args.verify:
-                failures += 1
-                continue
+        if path.exists():
+            if path.stat().st_size != entry["bytes"]:
+                print(f"WRONG SIZE {rel}: {path.stat().st_size} bytes on disk, "
+                      f"{entry['bytes']} expected", file=sys.stderr)
+                if args.verify:
+                    failures += 1
+                    continue
+            else:
+                digest = sha256(path)
+                if digest == entry["sha256"]:
+                    print(f"ok       {rel}")
+                    verified[rel] = entry
+                    continue
+                print(f"CORRUPT  {rel}: sha256 {digest[:16]} expected "
+                      f"{entry['sha256'][:16]}", file=sys.stderr)
+                if args.verify:
+                    failures += 1
+                    continue
         elif args.verify:
             print(f"MISSING  {rel}", file=sys.stderr)
             failures += 1
@@ -321,13 +404,23 @@ def main(argv: list[str] | None = None) -> int:
                   f"{entry['sha256'][:16]}", file=sys.stderr)
             failures += 1
             continue
+        verified[rel] = entry
 
     if not args.no_unpack and not args.verify:
-        for rel, entry in artifacts.items():
+        for rel, entry in verified.items():
+            if "members" not in entry:
+                continue
             path = local(rel, entry)
-            if path.exists() and "members" in entry:
-                target = unpack(path)
-                print(f"unpack   {rel} -> {target.relative_to(root)}/")
+            if is_unpacked(path, entry["sha256"]):
+                continue
+            names = [m["name"] for m in entry["members"]]
+            try:
+                target = unpack(path, names, entry["sha256"])
+            except (ValueError, tarfile.TarError, zipfile.BadZipFile, OSError) as exc:
+                print(f"UNPACK FAILED {rel}: {exc}", file=sys.stderr)
+                failures += 1
+                continue
+            print(f"unpack   {rel} -> {target.relative_to(root)}/")
 
     if failures:
         print(f"\n{failures} artifact(s) unavailable or unverified.", file=sys.stderr)

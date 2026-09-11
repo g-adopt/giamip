@@ -20,7 +20,7 @@ Three collections are covered.
 
 ```
 pip install -e .
-python -m gia_mip.data --group benchmarks
+python -m gia_mip.data --collection benchmarks
 ```
 
 The second command downloads the original data files into `data/original/`
@@ -37,11 +37,12 @@ how, and `docs/data/manifest.qmd` records the state of every file.
 ## Layout
 
 ```
-gia_mip/     the package: data.py (fetch), grids.py (the Gauss-Legendre grid),
-             corrections.py (defects in the originals), benchmarks/ and mip/
-             (readers, schemas, the output writer), plotting/
-cases/       one JSON file per case, in benchmarks/ and giamip/
-models/      earth-model parameter tables referenced by the cases
+gia_mip/     the package. Written: data.py (fetch and verify), grids.py (the
+             Gauss-Legendre grid), corrections.py (known defects in the
+             originals). Planned: benchmarks/ and mip/ (readers, schemas, the
+             output writer) and plotting/
+cases/       planned. One JSON file per case, in benchmarks/ and giamip/
+models/      planned. Earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and
              per case, plus the data manifest and the list of corrections
 scripts/     conversion and upload scripts, run by hand
@@ -57,7 +58,8 @@ outputs/     gitignored. The output fields a solver produced for a case
 
 ## How to run a case
 
-Each case has a JSON file in `cases/` and a page in `docs/results/`. The page
+No case is written yet. When one is, it has a JSON file in `cases/` and a
+page in `docs/results/`. The page
 gives the full specification: the earth model, the load, the time interval, the
 grid, the physical constants, the variables to produce and the data to compare
 against. The JSON file gives the same information in machine-readable form.

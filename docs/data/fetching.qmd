@@ -53,6 +53,17 @@ them somewhere else. On a machine with several worktrees, or on a cluster
 where 341 MB does not belong in a checkout, point every worktree at one
 directory.
 
+An installed package has no checkout to fill, so `--dest` or
+`GIA_MIP_DATA_ROOT` is required there and the fetcher says so instead of
+writing into `site-packages`.
+
+Archives are unpacked into a directory named after the archive, with the
+archive's single top-level directory removed when it has one, so
+`giamip/ice-history.zip` gives
+`giamip/ice-history/iceHistory-ICE-6G_D.nc`. A stamp file inside the target
+records which archive it came from, so a second run neither re-extracts
+317 MB nor disturbs anything you put there.
+
 ## Checking what is there
 
 ```bash

@@ -53,7 +53,8 @@ the three stay apart in a sentence and on the command line.
 ## Where authority lives
 
 For GIAMIP output conventions, the authority is the compliance checker at
-`https://github.com/JanJereczek/GIA_SimulationChecker`, pinned by commit. Its
+`https://github.com/JanJereczek/GIA_SimulationChecker`, pinned to a commit
+recorded in `gia_mip/resources/checker.json`. Its
 `GIAMIP_VARIABLES` table transcribes the data request spreadsheet, and its
 `variables.md` documents it. Do not re-type the variable list from the
 protocol prose: generate it from the checker and test that the two agree.

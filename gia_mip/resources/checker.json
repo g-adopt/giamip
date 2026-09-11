@@ -1,0 +1,10 @@
+{
+  "$comment": "The GIAMIP compliance checker, which protocol section 6.3 requires every submission to pass. It is the authority on output variable names, units, long names, dtypes and plausible ranges: its GIAMIP_VARIABLES table transcribes the data request spreadsheet, which the protocol prose does not reproduce. Pinned so that a change upstream is a visible update here and not a silent change in what we validate against.",
+  "repository": "https://github.com/JanJereczek/GIA_SimulationChecker",
+  "licence": "MIT",
+  "commit": null,
+  "pinned_on": null,
+  "data_request_version": "3",
+  "data_request_dated": "2026-07-02",
+  "note": "commit is null until the checker is vendored or added as a submodule. Protocol v2.4 records that the checker was still incomplete on 13 July 2026 and that a finished version was expected by early September 2026, so pin only once the finished version is confirmed."
+}
