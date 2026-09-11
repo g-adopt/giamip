@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this repository, cite it with the metadata below. Cite the underlying data through the references in docs/data/manifest.qmd."
+title: "gia-mip: case definitions and reference data for GIA benchmarks and GIAMIP"
+type: software
+version: 0.1.0.dev0
+repository-code: "https://github.com/g-adopt/gia-mip"
+license: MIT
+abstract: >-
+  Machine-readable case definitions, converted reference data and output
+  conventions for two published glacial isostatic adjustment benchmarks (Spada
+  et al. 2011 and Martinec et al. 2018) and for the Glacial Isostatic Adjustment
+  Model Intercomparison Project. The repository specifies what to run and holds
+  what to compare against. It contains no solver.
+authors:
+  - family-names: Ghelichkhan
+    given-names: Siavash
+    affiliation: Australian National University

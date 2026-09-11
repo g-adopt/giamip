@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[test]"
+      # The default run excludes tests marked `data`. Those need the original
+      # files, which are fetched separately in the job below.
+      - name: Test without data
+        run: pytest -q
+
+  test-with-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[test]"
+      # Only the benchmark group, about 90 MB. The GIAMIP inputs are 320 MB and
+      # are fetched by the site build on the self-hosted runner.
+      - name: Fetch the benchmark originals
+        run: python -m gia_mip.data --group benchmarks
+      - name: Test with data
+        run: pytest -q -m data

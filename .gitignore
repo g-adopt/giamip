@@ -1,0 +1,25 @@
+# Working research notes. These are a private record and are never committed.
+NOTES/
+
+# Fetched and derived data. `data/original/` holds byte-identical third-party
+# files and `data/converted/` holds the NetCDF4 we build from them. Both come
+# from the object store with `python -m gia_mip.data`, so neither is tracked.
+data/
+
+# Simulation output produced by a solver against a case in `cases/`.
+outputs/
+
+# Quarto build products.
+_site/
+.quarto/
+_freeze/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# macOS
+.DS_Store

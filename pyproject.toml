@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gia-mip"
+version = "0.1.0.dev0"
+description = "Case definitions, reference data and output conventions for the Spada (2011) and Martinec (2018) GIA benchmarks and for GIAMIP."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+authors = [
+  { name = "Siavash Ghelichkhan", email = "siavash.ghelichkhan@anu.edu.au" },
+]
+# netCDF4 reads and writes every gridded product. jsonschema validates the case
+# files. numpy is used throughout. Nothing here imports a solver: this package
+# describes and checks work, and never performs it.
+dependencies = [
+  "numpy>=2.0",
+  "netCDF4>=1.7",
+  "jsonschema>=4.21",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-timeout>=2.3"]
+plot = ["matplotlib>=3.8"]
+docs = ["jupyter>=1.0", "matplotlib>=3.8"]
+
+[project.urls]
+Homepage = "https://github.com/g-adopt/gia-mip"
+
+[tool.setuptools.packages.find]
+include = ["gia_mip*"]
+
+# The case definitions, the earth-model decks and the JSON schemas travel with
+# an installed package, so a consumer that pip-installs gia-mip can resolve a
+# case without cloning the repository.
+[tool.setuptools.package-data]
+gia_mip = ["schemas/*.json", "resources/*.json"]
+
+[tool.pytest.ini_options]
+# The default run excludes tests marked `data`, because those need the fetched
+# originals in data/original/. Run them with `-m data` once `python -m
+# gia_mip.data` has filled that directory.
+addopts = "-m 'not data'"
+timeout = 600
+markers = [
+  "data: needs the fetched originals in data/original/",
+  "network: reaches the object store or an external service",
+]

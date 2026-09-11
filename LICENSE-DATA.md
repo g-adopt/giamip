@@ -1,0 +1,1 @@
+The licence in this repository applies to the code, the case definitions and the documentation. It does not apply to the third-party data in data/original/, which keeps the terms of whoever supplied it. See docs/data/manifest.qmd.

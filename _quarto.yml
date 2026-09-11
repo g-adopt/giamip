@@ -1,0 +1,44 @@
+project:
+  type: website
+  output-dir: _site
+
+# Pages that need the fetched originals or a solver run are frozen: they
+# execute on a machine that has the data, and CI rebuilds HTML from the cache.
+# Pages that need only `data/converted/` execute on every render.
+execute:
+  freeze: auto
+
+website:
+  title: "GIA model comparison"
+  description: "Case definitions, reference data and output conventions for the Spada (2011) and Martinec (2018) GIA benchmarks and for GIAMIP."
+  repo-url: https://github.com/g-adopt/gia-mip
+  repo-actions: [issue, source]
+  navbar:
+    left:
+      - text: "Collections"
+        menu:
+          - docs/collections/spada2011.qmd
+          - docs/collections/martinec2018.qmd
+          - docs/collections/giamip.qmd
+      - text: "Reference"
+        menu:
+          - docs/reference/solver-requirements.qmd
+          - docs/reference/earth-models.qmd
+          - docs/reference/loads-and-grids.qmd
+          - docs/reference/codes-and-contributors.qmd
+          - docs/reference/column-layouts.qmd
+      - text: "Cases"
+        href: docs/results/index.qmd
+      - text: "Data"
+        menu:
+          - docs/data/fetching.qmd
+          - docs/data/manifest.qmd
+          - docs/data/corrections.qmd
+      - text: "Protocol"
+        href: docs/protocol/giamip-v2.4.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
