@@ -6,5 +6,8 @@
   "pinned_on": null,
   "data_request_version": "3",
   "data_request_dated": "2026-07-02",
-  "note": "commit is null until the checker is vendored or added as a submodule. Protocol v2.4 records that the checker was still incomplete on 13 July 2026 and that a finished version was expected by early September 2026, so pin only once the finished version is confirmed."
+  "note": "`commit` is the pinned version and is null: protocol v2.4 records that the checker was incomplete on 13 July 2026 with a finished version due in early September, and the head commit read on 11 September 2026 is one day old and says 'final modifs before Daniele's second round'. Pinning now would fix us to a version that is explicitly mid-review. `read_commit` is the version the output writer and variables.json were built against, recorded so that the difference to whatever is pinned later can be read rather than guessed.",
+  "read_commit": "6207e0657dd921a7c2f4914bd18dbedcfe7c6843",
+  "read_commit_dated": "2026-09-10",
+  "read_on": "2026-09-11"
 }
