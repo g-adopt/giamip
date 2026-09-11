@@ -2,8 +2,57 @@
 title: "Corrections"
 ---
 
-::: {.callout-note}
-## Not written yet
+Defects and traps found in the original data files. The original files are
+never edited. Every entry here is applied by a reader at read time, so a
+correction is visible, survives a re-fetch, and cannot be quietly forgotten.
 
-Every known defect in an original file, with the evidence. The readers apply these. The original files are never edited.
-:::
+`kind` says what sort of problem it is.
+
+| Kind | Meaning |
+| --- | --- |
+| `metadata` | An attribute states something untrue. The data is fine. |
+| `trap` | The file is correct, and a natural way of reading it gives a wrong answer. |
+| `truncated` | Content is missing. |
+| `superseded` | A better copy of the same submission exists elsewhere. |
+| `naming` | The same thing carries different names in different places. |
+
+`status` is `confirmed` when the evidence is reproducible from what is in this
+repository, and `unverified` when it rests on something outside it.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from gia_mip import corrections
+from IPython.display import Markdown
+
+rows = ["| Id | Kind | Applies to | Status |", "| --- | --- | --- | --- |"]
+for e in corrections.load():
+    targets = "<br>".join(f"`{p}`" for p in e["applies_to"])
+    rows.append(f"| [{e['id']}](#{e['id']}) | {e['kind']} | {targets} | {e['status']} |")
+Markdown("\n".join(rows))
+```
+
+```{python}
+#| echo: false
+blocks = []
+for e in corrections.load():
+    blocks.append(f"## {e['id']} {{#{e['id']}}}\n")
+    blocks.append(f"*{e['kind']}, {e['status']}, found {e['discovered']}*\n")
+    blocks.append("Applies to:\n")
+    for p in e["applies_to"]:
+        blocks.append(f"- `{p}`\n")
+    if e.get("field"):
+        blocks.append(f"\n**Field** `{e['field']}`\n")
+    blocks.append(f"\n**As shipped** {e['as_shipped']}\n")
+    blocks.append(f"\n**Correct** {e['correct']}\n")
+    blocks.append(f"\n**Evidence** {e['evidence']}\n")
+    blocks.append(f"\n**What a reader does** {e['action']}\n")
+Markdown("\n".join(blocks))
+```
+
+## Reporting one
+
+Finding a defect is useful. Open an issue with the file, the field, what the
+file says, what you believe is true, and how you know. See
+[CONTRIBUTING.md](https://github.com/g-adopt/gia-mip/blob/main/CONTRIBUTING.md).

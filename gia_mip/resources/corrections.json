@@ -1,0 +1,110 @@
+{
+  "$comment": "Defects and traps in the original data files. Every entry is applied by a reader at read time; no original file is ever edited. `kind` is one of: `metadata` (an attribute states something untrue), `trap` (the file is correct but a natural way of reading it gives a wrong answer), `truncated` (content is missing), `superseded` (a better copy of the same submission exists elsewhere), `naming` (the same thing has different names in different places). `status` is `confirmed` when the evidence is in this repository and reproducible, `unverified` otherwise. Paths are relative to data/original/.",
+  "corrections": [
+    {
+      "id": "ice-year-longname",
+      "kind": "metadata",
+      "applies_to": ["giamip/ice-history/*.nc"],
+      "field": "year:long_name",
+      "as_shipped": "Calendar year (positive = CE, negative = BCE)",
+      "correct": "Year offset from 2000 CE, which the protocol defines as model year 0",
+      "evidence": "`time` is days since 2000-01-01 on a 365-day calendar, and time/365 equals `year` to 2e-12 over all 463 steps: time[-1] = 365000 days where year[-1] = 1000. Read as a calendar year the first step would be 122000 BCE, which is 124 ka before present, not the 122 ka the protocol prescribes in section 2.2.2. The compliance checker deliberately requires different wording on the output `year` variable.",
+      "action": "Report the variable as an offset from 2000 CE. Never convert it as a calendar year.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "ice-fillvalue-zero",
+      "kind": "trap",
+      "applies_to": ["giamip/ice-history/*.nc"],
+      "field": "ice_thickness:_FillValue, ice_thickness:missing_value",
+      "as_shipped": "0.0",
+      "correct": "Zero is a real value meaning no ice, not a missing value",
+      "evidence": "A default netCDF4 read returns a masked array in which every ice-free cell is masked, and xarray turns those into NaN. At the last time step of ICE-6G_D that is 117051 of 131841 cells. A load or a mass integral built from such an array is NaN or silently excludes the ocean.",
+      "action": "Call `Dataset.set_auto_mask(False)` on every read, or `mask_and_scale=False` in xarray. This is a standing rule in AGENTS.md and is tested.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "topography-source-attribute",
+      "kind": "metadata",
+      "applies_to": ["giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"],
+      "field": "source",
+      "as_shipped": "Merge: BedMachine Greenland (28-Jul-2022, v5.5), BedMachine Greenland (28-Jul-2022, v5.5), GEBCO (downloaded June 2025)",
+      "correct": "The first of the two Greenland entries should name the Antarctic dataset, BedMachine Antarctica v3",
+      "evidence": "The three topography files differ only in their Antarctic source, and the filename records it correctly. The Bedmap2 and Bedmap3 files name their Antarctic dataset correctly in the same attribute, so this affects one file only.",
+      "action": "Take the Antarctic dataset from the filename, never from the attribute.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "topography-missing-crs",
+      "kind": "metadata",
+      "applies_to": ["giamip/initial-topography/*.nc"],
+      "field": "topg:grid_mapping",
+      "as_shipped": "crs",
+      "correct": "No variable named `crs` exists in any of the three files",
+      "evidence": "A CF compliance checker flags a grid_mapping attribute that names a variable the file does not contain. The coordinates are plain geographic latitude and longitude, so nothing is actually ambiguous.",
+      "action": "Ignore the attribute. Treat the axes as geographic degrees.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "glac3-version-naming",
+      "kind": "naming",
+      "applies_to": ["giamip/ice-history/iceHistory-GLAC3c_profile*.nc"],
+      "field": "filename, title, source",
+      "as_shipped": "Filename says GLAC3c_profile1; title and source say GLAC3c_merge1; the protocol experiment table says GLAC3b (Profile 1)",
+      "correct": "Not established. Asked of the organisers on 2026-09-11.",
+      "evidence": "Protocol v2.4 experiment table, rows Exp03, Exp04 and Exp09 to Exp11. The compliance checker adds a fourth spelling, expecting iceHistory-GLAC3b_profile1_122ka.nc.",
+      "action": "Record the delivered filename in the case file, and do not label output GLAC3b until the organisers confirm the two are the same reconstruction.",
+      "status": "unverified",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-vega-truncated",
+      "kind": "truncated",
+      "applies_to": ["martinec2018/benchmarkA/Z_ZM_load.out"],
+      "as_shipped": "One row, colatitude 0, seven columns",
+      "correct": "The full VEGA reference profile over colatitude 0 to 180, as benchmark B's equivalent files have",
+      "evidence": "A_fig10_diff.gmt reads this file as the ZM curve across the whole range in two of its four panels. Benchmark B's Z_ZM_load.out and Z_ZM_basin.out are complete.",
+      "action": "Reconstruct VEGA by subtracting each contributor's difference file from that contributor's profile. Five contributors (GA, GS, KS, VK, WW) agree to better than 1e-3 m across the whole range and reproduce the surviving row, -302.59759412 m at colatitude 0, exactly. Mark the result as reconstructed. Requested from Martinec on 2026-09-11.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-sk-superseded",
+      "kind": "superseded",
+      "applies_to": ["martinec2018/benchmarkA/A_fig10_SBK.dat"],
+      "as_shipped": "360 rows on linspace(180, 0, 360), dated 2017-11-15",
+      "correct": "Use l721j256/A_fig10_SBK.dat from martinec2018/sbk_benchmark_data.tar.gz: 721 rows on a 0.25 degree grid, dated 2018-01-15",
+      "evidence": "Z_SK_load_diff.out has 721 rows on the same 0.25 degree descending grid as the superseding file, and is dated 2018-01-17. Subtracting it from that file with no interpolation reconstructs VEGA to a maximum of 1.7e-4 m and an RMS of 2.3e-5 m against the reconstruction from GA, which is print precision. The shipped 360-row file is on a different grid and cannot be the same submission. One consequence: the figure shipped in the archive draws the old SK profile in its left panel and the new SK difference in its right panel.",
+      "action": "Read the superseding file. Treat the shipped one as a stale copy.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-colatitude-ordering",
+      "kind": "trap",
+      "applies_to": ["martinec2018/benchmarkA/Z_SK_load_diff.out", "martinec2018/benchmarkA/Z_YS_load_diff.out", "martinec2018/benchmarkA/A_fig10_SBK.dat", "martinec2018/benchmarkA/A_fig10_YS.dat"],
+      "field": "colatitude column",
+      "as_shipped": "Descending, from 180 to 0",
+      "correct": "Every other file in the same directory ascends from 0 to 180",
+      "evidence": "Z_GA, Z_GS, Z_KS, Z_VB, Z_VK and both Z_WW difference files ascend; the SK and YS files descend. numpy.interp requires an ascending first argument and returns wrong values, with no warning, when given a descending one.",
+      "action": "Sort by colatitude on read, or subtract on the shared grid without interpolating. Every reader returns an ascending axis.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-fortran-exponent",
+      "kind": "trap",
+      "applies_to": ["martinec2018/benchmarkA/A_fig10_YS.dat"],
+      "as_shipped": "Fortran D exponents, for example -0.3024125086287D+03",
+      "correct": "The same numbers with an E exponent",
+      "evidence": "numpy.loadtxt raises `could not convert string '-0.3024125086287D+03' to float64`. awk, which the original GMT scripts used, accepts the leading digits and silently drops the exponent, so a naive re-run of those scripts plots this contributor 1000 times too small.",
+      "action": "Replace D with E before parsing.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    }
+  ]
+}
