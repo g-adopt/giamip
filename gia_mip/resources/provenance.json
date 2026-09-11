@@ -96,6 +96,17 @@
       "permission": "requested",
       "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged.",
       "modified_from_supplied": "Converted from the supplied Word document to Markdown. The prose is unchanged and the two equation images are kept as base64 data URIs, but the sum is of our conversion and not of the .docx. The .docx was not kept; request it from the organisers if a byte-exact original is needed."
+    },
+    "martinec2018/benchmarkA-Z_ZM_load-full.out": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "A full VEGA reference profile for benchmark A: 1441 rows of colatitude 0 to 180 at 0.125 degree spacing, seven columns, with a column header. Supplied to replace the single-row Z_ZM_load.out in benchmarkA.zip.",
+      "source_doi": "10.1093/gji/ggy280",
+      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "supplier": "Zdenek Martinec",
+      "received": "2026-09-11",
+      "permission": "not_asked",
+      "notes": "This is benchmark A: vertical displacement is -302.6 m at colatitude 0, and benchmark A is the only case whose cap sits at the pole. It is NOT the run behind published figure 3. Recomputing any contributor's difference against it misses the shipped difference file by an RMS of 0.057 m, and all four contributors tested miss by nearly the same amount, which places the discrepancy in this file and not in them. The disagreement is a smooth bump centred on the cap edge at colatitude 10, reaching 0.56 m there and falling to 0.003 m beyond 90 degrees. Degrees 0 and 1 explain 1.5 per cent of it, so it is not the degree-2 start the paper records for benchmark A. Section 5.1 of the paper says the cap edge converges extremely slowly with cut-off degree, which is the most likely cause. Kept alongside the reconstructed reference, not in place of it. Its header is the only documentation of the seven-column VEGA format used by twenty benchmark B files."
     }
   }
 }

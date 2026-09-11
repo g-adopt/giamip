@@ -78,9 +78,9 @@
         "martinec2018/benchmarkA/Z_ZM_load.out"
       ],
       "as_shipped": "One row, colatitude 0, seven columns",
-      "correct": "The full VEGA reference profile over colatitude 0 to 180, as benchmark B's equivalent files have",
+      "correct": "The full VEGA reference profile over colatitude 0 to 180, as benchmark B's equivalent files have. Martinec supplied one on 2026-09-11 as martinec2018/benchmarkA-Z_ZM_load-full.out, but it is a different run from the published one; see correction benchmarkA-vega-supplied-run-differs.",
       "evidence": "A_fig10_diff.gmt reads this file as the ZM curve across the whole range in two of its four panels. Benchmark B's Z_ZM_load.out and Z_ZM_basin.out are complete.",
-      "action": "Reconstruct VEGA by subtracting each contributor's difference file from that contributor's profile. Five contributors (GA, GS, KS, VK, WW) agree to better than 1e-3 m across the whole range and reproduce the surviving row, -302.59759412 m at colatitude 0, exactly. Mark the result as reconstructed. Requested from Martinec on 2026-09-11.",
+      "action": "For anything compared against the published difference files, use the reconstruction: subtract each contributor's difference file from that contributor's own profile. Five contributors (GA, GS, KS, VK, WW) agree to better than 1e-3 m across the whole range and reproduce the surviving row, -302.59759412 m at colatitude 0, exactly. The file supplied in September 2026 is a second VEGA run and is kept separately.",
       "status": "confirmed",
       "discovered": "2026-09-11"
     },
@@ -153,6 +153,20 @@
       "correct": "Positive geoid height, upward",
       "evidence": "Decoded from the plotting scripts by scripts/decode_gmt_layouts.py. For benchmark A, four series are plotted as they stand: A-fig10-TABOO_256.dat column 7, A_fig10_YS.dat column 5, caseA_0.25.lmax256_GA.dat column 6, and Z_ZM_load.out column 5, which holds the gravitational potential and is divided by the surface gravity 9.8155. Six are negated: A_fig10_KS_256.dat column 5, A_fig10_SBK.dat column 4, case_A_VILMA_uve.dat column 4, fig10_n_VB_256.dat column 2, n_10ka.dat column 2, and n_10ka_axi.dat column 2, which is both negated and divided by 9.8155.",
       "action": "Take the sign and any division by gravity from gia_mip/resources/column_layouts.json, never by assumption. A reader that guesses is wrong by a factor of minus one for six of the ten benchmark A contributors, and by a factor of 9.8155 for two.",
+      "status": "confirmed",
+      "discovered": "2026-09-11"
+    },
+    {
+      "id": "benchmarkA-vega-supplied-run-differs",
+      "kind": "superseded",
+      "applies_to": [
+        "martinec2018/benchmarkA-Z_ZM_load-full.out"
+      ],
+      "field": "column 2, vertical displacement",
+      "as_shipped": "A complete VEGA profile for benchmark A at 0.125 degree spacing",
+      "correct": "It is a different run from the one behind published figure 3 and the shipped difference files",
+      "evidence": "Recomputing each contributor's difference against this file misses the shipped difference file by an RMS of 0.0551 to 0.0574 m for GA, GS, KS and WW alike; the near-equality across four independent codes places the discrepancy in this file. Against the reconstruction from those same contributors it differs by a smooth bump centred on the cap edge: 0.023 m RMS inside 5 degrees, 0.474 m RMS between 9 and 11 degrees, peaking at 0.5615 m at exactly 10.00 degrees, and 0.003 m beyond 90 degrees. A least squares fit of a constant plus cos(colatitude), which is what a degree 0 and degree 1 difference would look like, explains 1.5 per cent of the variance, so this is not the degree-2 start the paper records for benchmark A in section 4.1. Section 5.1 states that the cap edge has infinite slope and converges extremely slowly with increasing cut-off degree, which is where a difference of this shape would come from.",
+      "action": "Do not use this file as the reference for scoring against the published difference files; use the reconstruction. Keep this file as a second VEGA run, useful for judging how much the cap-edge representation moves the answer. Its header is the only record of the seven-column VEGA format and is transcribed into column_layouts.json.",
       "status": "confirmed",
       "discovered": "2026-09-11"
     }

@@ -4957,5 +4957,60 @@
     }
    }
   ]
+ },
+ "vega_seven_column_format": {
+  "$comment": "The seven-column format VEGA writes, taken verbatim from the header of martinec2018/benchmarkA-Z_ZM_load-full.out, which is the only file in either archive that carries one. Twenty files use this format and none of the others documents it: both Z_ZM_*.out files, and the Z_*_diff.out files of benchmark B for GA, GS, KS, SK, VB, VK and YS. The benchmark A difference files and the two WW files of benchmark B hold four or five columns, which are a subset in the same order.",
+  "source": "the header of benchmarkA-Z_ZM_load-full.out",
+  "columns": [
+   {
+    "column": 1,
+    "name": "abscissa",
+    "units": "degrees",
+    "description": "Longitude in a figY_uvf cross-section, colatitude in a figZ_uvf one"
+   },
+   {
+    "column": 2,
+    "name": "U",
+    "units": "m",
+    "description": "Vertical displacement"
+   },
+   {
+    "column": 3,
+    "name": "V_theta",
+    "units": "m",
+    "description": "Colatitude component of horizontal displacement"
+   },
+   {
+    "column": 4,
+    "name": "V_phi",
+    "units": "m",
+    "description": "Longitude component of horizontal displacement. NaN at colatitude 0 and 180, where it is undefined."
+   },
+   {
+    "column": 5,
+    "name": "potential",
+    "units": "SI",
+    "description": "Gravitational potential increment. Divide by the surface gravity 9.8155 to obtain geoid height N, which is what the plotting scripts do."
+   },
+   {
+    "column": 6,
+    "name": "S",
+    "units": "m",
+    "description": "Sea-surface variation with respect to the uniform water layer h_UF"
+   },
+   {
+    "column": 7,
+    "name": "SLE",
+    "units": "m",
+    "description": "Sea level equation result"
+   }
+  ],
+  "applies_to": [
+   "martinec2018/benchmarkA-Z_ZM_load-full.out",
+   "martinec2018/benchmarkA/Z_ZM_load.out",
+   "martinec2018/benchmarkB/Z_ZM_load.out",
+   "martinec2018/benchmarkB/Z_ZM_basin.out",
+   "martinec2018/benchmarkB/Z_{GA,GS,KS,SK,VB,VK,YS}_{load,basin}_diff.out"
+  ]
  }
 }
