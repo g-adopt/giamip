@@ -3,6 +3,7 @@ message: "If you use this repository, cite it with the metadata below. Cite the 
 title: "gia-mip: case definitions and reference data for GIA benchmarks and GIAMIP"
 type: software
 version: 0.1.0.dev0
+date-released: 2026-09-11
 repository-code: "https://github.com/g-adopt/gia-mip"
 license: MIT
 abstract: >-

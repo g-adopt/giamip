@@ -16,12 +16,19 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: pip install -e ".[test]"
-      # The default run excludes tests marked `data`. Those need the original
-      # files, which are fetched separately in the job below.
-      - name: Test without data
+      # Tests marked `data` need the originals in data/original/ and are
+      # excluded by the default addopts in pyproject.toml. They are not run
+      # here: the third-party originals are not yet cleared for redistribution,
+      # so a runner cannot fetch them. Re-enable the job below once
+      # `permission` in the manifest reads `granted`.
+      - name: Test
         run: pytest -q
 
   test-with-data:
+    # Disabled until the suppliers have agreed to redistribution. Until then
+    # `python -m gia_mip.data` refuses to download, and this job would fail on
+    # every push. Run the same command locally, where the originals exist.
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -30,9 +37,7 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: pip install -e ".[test]"
-      # Only the benchmark group, about 90 MB. The GIAMIP inputs are 320 MB and
-      # are fetched by the site build on the self-hosted runner.
       - name: Fetch the benchmark originals
-        run: python -m gia_mip.data --group benchmarks
+        run: python -m gia_mip.data --collection benchmarks
       - name: Test with data
         run: pytest -q -m data

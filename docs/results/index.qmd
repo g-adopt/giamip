@@ -1,0 +1,9 @@
+---
+title: "Cases"
+---
+
+::: {.callout-note}
+## Not written yet
+
+One page per case: the full specification, and the data to compare against.
+:::

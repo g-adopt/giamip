@@ -20,17 +20,18 @@ data
     Fetch the original files from the object store and verify them by SHA-256.
     Imports only the standard library, so it runs before anything is installed.
 grids
-    The Gauss-Legendre quadrature grid that GIAMIP prescribes, and a validator
-    that checks a file's axes against it.
+    Planned. The Gauss-Legendre quadrature grid that GIAMIP prescribes, and a
+    validator that checks a file's axes against it.
 corrections
-    Known defects in the original files, applied when a file is read. The
-    original files themselves are never edited.
+    Planned. Known defects in the original files, applied when a file is read.
+    The original files themselves are never edited.
 benchmarks
-    Readers and case schema for Spada (2011) and Martinec (2018).
+    Planned. Readers and case schema for Spada (2011) and Martinec (2018).
 mip
-    Readers, case schema, output writer and compliance wrapper for GIAMIP.
+    Planned. Readers, case schema, output writer and compliance wrapper for
+    GIAMIP.
 plotting
-    Redraws of the published figures, and the comparison figures.
+    Planned. Redraws of the published figures, and the comparison figures.
 """
 
 __version__ = "0.1.0.dev0"

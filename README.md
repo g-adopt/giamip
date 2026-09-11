@@ -23,10 +23,16 @@ pip install -e .
 python -m gia_mip.data --group benchmarks
 ```
 
-The second command downloads the original data files from
-`https://data.gadopt.org/gia-mip/` into `data/original/`. It verifies every
-file against a SHA-256 index, so a fetched tree is the tree the conversions
-were made from. Use `--group giamip` for the GIAMIP inputs, which are larger.
+The second command downloads the original data files into `data/original/`
+and verifies every one against a SHA-256 index, so a fetched tree is the tree
+the conversions were made from. Use `--collection giamip` for the GIAMIP
+inputs, which are larger.
+
+The files are held in the gadopt object store. Redistribution has not yet been
+agreed with every supplier, and the fetcher refuses to download anything whose
+supplier has not agreed. Until then the originals are obtained from the
+supplier and placed in `data/original/` by hand. `docs/data/fetching.qmd` says
+how, and `docs/data/manifest.qmd` records the state of every file.
 
 ## Layout
 
@@ -39,10 +45,14 @@ models/      earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and
              per case, plus the data manifest and the list of corrections
 scripts/     conversion and upload scripts, run by hand
+submissions/ one directory per submission: its identity, its compliance
+             report and its scores. The output fields themselves stay in
+             outputs/
 tests/       the test suite
-data/        gitignored. original/ holds third-party files byte for byte;
-             converted/ holds the NetCDF4 built from them
-outputs/     gitignored. Solver output produced against a case
+data/        original/ holds third-party files byte for byte and is
+             gitignored; converted/ holds the NetCDF4 built from them and is
+             tracked, so the tests and the site need no network
+outputs/     gitignored. The output fields a solver produced for a case
 ```
 
 ## How to run a case

@@ -1,0 +1,36 @@
+---
+title: "GIA model comparison"
+---
+
+This site is the documentation for
+[`g-adopt/gia-mip`](https://github.com/g-adopt/gia-mip), a repository that
+specifies glacial isostatic adjustment (GIA) model comparison cases and holds
+the data to compare against.
+
+The repository contains no solver. It states what to run, provides the inputs,
+holds the published reference answers, and checks that a solver's output obeys
+the conventions. A solver reads a case file, produces output, and is scored
+here.
+
+## Three collections
+
+| Collection | What it is | Reference answer |
+| --- | --- | --- |
+| [Spada et al. (2011)](docs/collections/spada2011.qmd) | Ten tests of GIA codes: Love numbers, relaxation spectra, the polar motion transfer function, and surface deformation for analytic loads | Published, several codes per test |
+| [Martinec et al. (2018)](docs/collections/martinec2018.qmd) | Five cases (A to E) of the sea level equation, from no ocean to a moving coastline | Published. The VEGA solution is the reference |
+| [GIAMIP](docs/collections/giamip.qmd) | Twelve experiments with global ice histories and present-day topography | None. This is an open intercomparison |
+
+## Where to start
+
+If you want to run a case, read
+[what a solver must provide](docs/reference/solver-requirements.qmd) first,
+then the page for the case itself.
+
+If you want to know what a number in a data file means, read
+[the column layouts](docs/reference/column-layouts.qmd) and
+[the conventions](docs/reference/conventions.qmd).
+
+If you want the data, read [fetching](docs/data/fetching.qmd). Every file is
+listed with its origin and its SHA-256 sum in [the manifest](docs/data/manifest.qmd),
+and every known defect in an original file is listed in
+[the corrections](docs/data/corrections.qmd).

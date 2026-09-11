@@ -1,0 +1,99 @@
+{
+  "$comment": "Provenance is written by hand. Sizes and SHA-256 sums are generated into manifest.json by scripts/build_manifest.py and must never be edited here. `collection` says which body of work a file belongs to; `stage` says whether it is an untouched third-party file (`original`) or something this project derived (`converted`). The two are separate axes, so a request for the converted GIAMIP data can be expressed. `permission` records whether the supplier has agreed to redistribution through https://data.gadopt.org/gia-mip/: one of `granted`, `requested`, `not_asked`. An artifact whose permission is not `granted` is never uploaded and is never fetched.",
+  "base_url": "https://data.gadopt.org/gia-mip/",
+  "artifacts": {
+    "spada2011/spada2011-cost-es0701.tar.gz": {
+      "collection": "spada2011",
+      "stage": "original",
+      "description": "The COST Action ES0701 benchmark submission tree: contributor data, GMT plotting scripts, Fortran filters and PostScript figures for tests 1/1 to 7/1 and 1/2 to 3/2.",
+      "source_doi": "10.1111/j.1365-246X.2011.04952.x",
+      "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+      "supplier": "William Scott, Australian National University",
+      "received": "2023-07",
+      "permission": "not_asked",
+      "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record."
+    },
+    "martinec2018/benchmarkA.zip": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "Benchmark A: contributor profiles, difference files against the VEGA reference, and the GMT script that drew figure 3.",
+      "source_doi": "10.1093/gji/ggy280",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+      "supplier": "Zdenek Martinec",
+      "received": "2026-09",
+      "permission": "not_asked",
+      "notes": "Assembled 2022-10-20. Z_ZM_load.out holds one row, so the VEGA reference profile for benchmark A is absent and must be reconstructed. The benchmark page cited in the paper, geofjv.troja.mff.cuni.cz/GIABenchmark/, no longer answers."
+    },
+    "martinec2018/benchmarkB.zip": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "Benchmark B: contributor profiles through the ice centre and the basin centre, difference files, the GMT scripts for figures 5 and 6, and uprav.out, the VEGA sea-level grid used for figure 4.",
+      "source_doi": "10.1093/gji/ggy280",
+      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "supplier": "Zdenek Martinec",
+      "received": "2026-09",
+      "permission": "not_asked",
+      "notes": "Internal case code C2 is published case B. Both VEGA reference files are present, on two different colatitude grids."
+    },
+    "martinec2018/sbk_benchmark_data.tar.gz": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "Samuel Kachuck's giapy submission: internal case codes A, C2, D3, E2 and F1, each with four cross-sections.",
+      "source_doi": "10.1093/gji/ggy280",
+      "source_citation": "See martinec2018/benchmarkA.zip. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
+      "supplier": "unknown; obtained through the G-ADOPT reference collection",
+      "received": "2026-09-03",
+      "permission": "not_asked",
+      "notes": "Only two of the five internal case codes are tied to a published case letter. A is case A. C2 is case B, because two of its files are byte-identical to files in benchmarkB.zip. D3, E2 and F1 are unresolved. The A profile in this archive supersedes the one in benchmarkA.zip; see corrections.json."
+    },
+    "martinec2018/giapy_sle_test.py": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "Kachuck's driver script for the sea-level benchmark, dated 2017-09-19.",
+      "source_citation": "Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
+      "supplier": "unknown; obtained through the G-ADOPT reference collection",
+      "received": "2026-09-03",
+      "permission": "not_asked",
+      "notes": "Its load and time labels are shifted by one from the published tables, and its basin list holds a basin the paper does not use. It generates A, D1, D2, E1, E2 and F1, and contains no code for C2 or D3, so it cannot settle the case mapping on its own."
+    },
+    "martinec2018/giapy_mod_M3-L70-V01_lovenumbers.txt": {
+      "collection": "martinec2018",
+      "stage": "original",
+      "description": "Love numbers for the M3-L70-V01 earth model as used by giapy.",
+      "source_citation": "Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
+      "supplier": "unknown; obtained through the G-ADOPT reference collection",
+      "received": "2026-09-03",
+      "permission": "not_asked"
+    },
+    "giamip/ice-history.zip": {
+      "collection": "giamip",
+      "stage": "original",
+      "description": "Six global ice-thickness histories interpolated onto the prescribed Gauss-Legendre grid: ICE-6G_D, ICE-7G_NA, PaleoMIST 1a and GLAC3c profiles 1, 2 and 3.",
+      "source_citation": "GIAMIP input distribution. The underlying reconstructions are third-party and each carries its own terms: ICE-6G_D (Peltier, Argus and Drummond), ICE-7G_NA (Roy and Peltier), PaleoMIST (Gowan et al. 2021), GLAC3 (Tarasov, unpublished).",
+      "supplier": "GIAMIP organisers, through the shared input folder",
+      "received": "2026-09-11",
+      "permission": "requested",
+      "notes": "The protocol table names GLAC3b; the filenames say GLAC3c_profile; the internal title and source attributes say GLAC3c_merge. All six files declare _FillValue = 0.0 on ice_thickness. PaleoMIST starts at 80 ka with 379 steps; the other five start at 122 ka with 463."
+    },
+    "giamip/initial-topography.zip": {
+      "collection": "giamip",
+      "stage": "original",
+      "description": "Three present-day bed elevations on the prescribed grid, differing only in the Antarctic source: BedMachine Antarctica v3, Bedmap3 or Bedmap2, each merged with BedMachine Greenland v5.5 and GEBCO.",
+      "source_citation": "GIAMIP input distribution. Fretwell et al. (2013) Bedmap2; Pritchard et al. (2025) Bedmap3; Morlighem et al. (2020) BedMachine; GEBCO.",
+      "supplier": "GIAMIP organisers, through the shared input folder",
+      "received": "2026-09-11",
+      "permission": "requested",
+      "notes": "The source attribute of the BedMachine Antarctica v3 file names BedMachine Greenland twice and never names its Antarctic dataset. The other two files are correct. All three reference a grid_mapping variable named crs that does not exist in the file."
+    },
+    "giamip/giamip-protocol-v2.4.md": {
+      "collection": "giamip",
+      "stage": "original",
+      "description": "The GIAMIP experiment protocol, version 2.4, dated 2026-09-08, converted from the supplied Word document to Markdown.",
+      "source_citation": "GIAMIP protocol document. Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.",
+      "supplier": "GIAMIP organisers",
+      "received": "2026-09-11",
+      "permission": "requested",
+      "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged."
+    }
+  }
+}

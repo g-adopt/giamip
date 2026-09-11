@@ -1,0 +1,9 @@
+---
+title: "GIAMIP protocol v2.4"
+---
+
+::: {.callout-note}
+## Not written yet
+
+The protocol document as supplied, dated 8 September 2026, with our notes on the points where the delivered files and the protocol text disagree.
+:::

@@ -1,0 +1,9 @@
+---
+title: "Units, signs and datums"
+---
+
+::: {.callout-note}
+## Not written yet
+
+The sign and datum of every quantity in every collection. Two solvers that disagree on the sign of the geoid give answers that look wrong for no visible reason, so this page exists before any case does.
+:::

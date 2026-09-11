@@ -7,7 +7,8 @@ name = "gia-mip"
 version = "0.1.0.dev0"
 description = "Case definitions, reference data and output conventions for the Spada (2011) and Martinec (2018) GIA benchmarks and for GIAMIP."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 authors = [
   { name = "Siavash Ghelichkhan", email = "siavash.ghelichkhan@anu.edu.au" },
@@ -26,19 +27,35 @@ test = ["pytest>=8", "pytest-timeout>=2.3"]
 plot = ["matplotlib>=3.8"]
 docs = ["jupyter>=1.0", "matplotlib>=3.8"]
 
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+
 [project.urls]
 Homepage = "https://github.com/g-adopt/gia-mip"
 
 [tool.setuptools.packages.find]
 include = ["gia_mip*"]
 
-# The case definitions, the earth-model decks and the JSON schemas travel with
-# an installed package, so a consumer that pip-installs gia-mip can resolve a
-# case without cloning the repository.
+# The schemas, the manifest and the provenance record travel with an installed
+# package, so `python -m gia_mip.data` works without a checkout. `cases/` and
+# `models/` stay at the top level and are NOT installed: they are content for
+# people to read and browse on the repository page, and a consumer resolves a
+# case from a clone or from the object store.
 [tool.setuptools.package-data]
 gia_mip = ["schemas/*.json", "resources/*.json"]
 
 [tool.pytest.ini_options]
+# Collect from `tests/` only. Without this, pytest walks the whole tree from
+# the root and imports any third-party file whose name ends in `_test.py`.
+# `data/original/martinec2018/giapy_sle_test.py` is exactly such a file, and
+# importing it both fails (it needs giapy) and executes unvetted module-level
+# code from a file we have promised never to edit.
+testpaths = ["tests"]
+norecursedirs = ["data", "outputs", "_site", "_freeze", ".quarto"]
 # The default run excludes tests marked `data`, because those need the fetched
 # originals in data/original/. Run them with `-m data` once `python -m
 # gia_mip.data` has filled that directory.

@@ -1,0 +1,9 @@
+---
+title: "What a solver must provide"
+---
+
+::: {.callout-note}
+## Not written yet
+
+The capabilities a solver needs before it can run these cases, written against the protocol and the two papers. Tracks what is missing in sl1d and in G-ADOPT.
+:::

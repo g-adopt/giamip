@@ -1,0 +1,9 @@
+---
+title: "Corrections"
+---
+
+::: {.callout-note}
+## Not written yet
+
+Every known defect in an original file, with the evidence. The readers apply these. The original files are never edited.
+:::

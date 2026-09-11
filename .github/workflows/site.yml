@@ -5,13 +5,23 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# The site is split in two. The light job renders every page that needs only
-# `data/converted/`, which is a few megabytes. Pages that need the 320 MB
-# GIAMIP inputs or a solver run are frozen by Quarto, so this job rebuilds
-# their HTML from the committed cache and executes nothing.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One job. Every page either needs nothing beyond the tracked `data/converted/`
+# reference data, or carries a committed `_freeze/` cache made on a machine
+# that had the originals. Nothing here fetches the 317 MB of GIAMIP input and
+# nothing here runs a solver, so `execute: freeze: true` in _quarto.yml is what
+# keeps this job honest: a page without a cache fails loudly instead of
+# quietly executing.
 jobs:
   render:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
@@ -20,11 +30,11 @@ jobs:
       - uses: quarto-dev/quarto-actions/setup@v2
       - name: Install
         run: pip install -e ".[docs]"
-      - name: Fetch the converted reference data
-        run: python -m gia_mip.data --group converted
       - name: Render
         run: quarto render
-      - uses: actions/upload-artifact@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          name: site
           path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

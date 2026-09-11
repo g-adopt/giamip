@@ -1,12 +1,22 @@
 project:
   type: website
   output-dir: _site
+  # An explicit list, never the default sweep. Quarto renders every .qmd and
+  # .md it finds and does not read .gitignore, so the default would publish
+  # NOTES/, which is a private working record, together with AGENTS.md and
+  # LICENSE-DATA.md. Anything added to docs/ is picked up; anything outside it
+  # has to be named here.
+  render:
+    - index.qmd
+    - docs/**/*.qmd
 
-# Pages that need the fetched originals or a solver run are frozen: they
-# execute on a machine that has the data, and CI rebuilds HTML from the cache.
-# Pages that need only `data/converted/` execute on every render.
+# `freeze: true` and not `auto`. `auto` re-executes a page whenever its source
+# changes, which is exactly the case this is meant to prevent: a page that
+# needs the 317 MB of GIAMIP input or a solver run must never execute on a
+# GitHub runner. Pages are re-executed on a machine that has the data, with
+# `quarto render --no-freeze`, and the resulting `_freeze/` cache is committed.
 execute:
-  freeze: auto
+  freeze: true
 
 website:
   title: "GIA model comparison"
@@ -15,6 +25,8 @@ website:
   repo-actions: [issue, source]
   navbar:
     left:
+      - text: "Home"
+        href: index.qmd
       - text: "Collections"
         menu:
           - docs/collections/spada2011.qmd
@@ -23,6 +35,7 @@ website:
       - text: "Reference"
         menu:
           - docs/reference/solver-requirements.qmd
+          - docs/reference/conventions.qmd
           - docs/reference/earth-models.qmd
           - docs/reference/loads-and-grids.qmd
           - docs/reference/codes-and-contributors.qmd
@@ -41,4 +54,5 @@ format:
   html:
     theme: cosmo
     toc: true
-    code-fold: true
+    # Code is content here: the point of the site is to show what to run.
+    code-fold: false

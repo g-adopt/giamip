@@ -1,0 +1,9 @@
+---
+title: "GIAMIP"
+---
+
+::: {.callout-note}
+## Not written yet
+
+The twelve experiments, the inputs, the required output, and how a submission is assembled and checked.
+:::

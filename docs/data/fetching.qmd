@@ -1,0 +1,64 @@
+---
+title: "Fetching the data"
+---
+
+The third-party data this project depends on is 341 MB and belongs to the
+people who produced it, so it is not in the repository.
+
+```bash
+pip install -e .
+python -m gia_mip.data                         # both benchmarks, 24 MB
+python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
+python -m gia_mip.data --all
+```
+
+Every file is checked against the SHA-256 sum in
+`gia_mip/resources/manifest.json` after download, so a fetched tree is known
+to be the tree the conversions were made from. Archives are unpacked next to
+themselves.
+
+::: {.callout-important}
+## Redistribution is not yet agreed
+
+`python -m gia_mip.data` refuses to download any file whose `permission` is
+not `granted`, and prints which one and why. At present that is every file.
+
+The Spada and Martinec archives were supplied privately. The GIAMIP inputs
+came through the project's own shared folder, and the ice histories are
+re-gridded versions of third-party reconstructions that each carry their own
+terms. Until each supplier has agreed, the files are obtained from the
+supplier and placed in `data/original/` by hand, in the layout the manifest
+describes.
+
+[The manifest](manifest.qmd) records the permission state of every file.
+:::
+
+## Two axes
+
+A file is addressed by the body of work it belongs to and by whether it is
+untouched.
+
+`--collection` takes `spada2011`, `martinec2018` or `giamip`, and `benchmarks`
+as an alias for the first two. `--stage` takes `original` for an untouched
+third-party file, the default, or `converted` for something this project
+derived from one. The converted reference data is small and is tracked in the
+repository under `data/converted/`, so the tests and the site build with no
+network at all.
+
+## Where the files go
+
+The default destination is `data/` in the checkout, with `original/` and
+`converted/` beneath it. Set `GIA_MIP_DATA_ROOT`, or pass `--dest`, to put
+them somewhere else. On a machine with several worktrees, or on a cluster
+where 341 MB does not belong in a checkout, point every worktree at one
+directory.
+
+## Checking what is there
+
+```bash
+python -m gia_mip.data --list           # what exists, and what is local
+python -m gia_mip.data --verify --all   # re-check the sums, download nothing
+```
+
+`--verify` reports a file that is missing or whose sum has changed, and exits
+non-zero. Run it after copying a tree between machines.

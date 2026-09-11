@@ -1,0 +1,9 @@
+---
+title: "Column layouts"
+---
+
+::: {.callout-note}
+## Not written yet
+
+What every column of every benchmark data file holds, decoded from the GMT scripts that plotted the published figures. GMT 4 no longer runs, so for several files those scripts are the only record.
+:::

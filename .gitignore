@@ -1,18 +1,23 @@
-# Working research notes. These are a private record and are never committed.
+# Working research notes. A private record, never committed. Unanchored on
+# purpose: a NOTES/ at any depth is private.
 NOTES/
 
-# Fetched and derived data. `data/original/` holds byte-identical third-party
-# files and `data/converted/` holds the NetCDF4 we build from them. Both come
-# from the object store with `python -m gia_mip.data`, so neither is tracked.
-data/
+# Third-party originals and solver output. Anchored with a leading slash, so
+# `docs/data/` and any other directory called `data` further down is tracked.
+/data/*
+/outputs/
 
-# Simulation output produced by a solver against a case in `cases/`.
-outputs/
+# The converted reference data is the exception. It is small, it is derived by
+# our own scripts, and every plot, score and test depends on it, so tracking it
+# means the site builds and the tests run with no network and with no
+# permission to re-host anyone else's files.
+!/data/converted/
 
-# Quarto build products.
-_site/
-.quarto/
-_freeze/
+# Quarto build product. `_freeze/` is tracked, because it is the execution
+# cache that lets CI rebuild the heavy pages without the 317 MB of GIAMIP
+# input and without a solver.
+/_site/
+/.quarto/
 
 # Python
 __pycache__/

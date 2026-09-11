@@ -1,0 +1,9 @@
+---
+title: "Loads and grids"
+---
+
+::: {.callout-note}
+## Not written yet
+
+The analytic cap, disc and point loads, the exponential ocean basin, the time scenarios, and the Gauss-Legendre grid that GIAMIP prescribes.
+:::
