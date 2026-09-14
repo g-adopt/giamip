@@ -14,38 +14,16 @@
       "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record.",
       "modified_from_supplied": "Packed into a tar archive from a directory tree, with forty-seven files removed: eighteen .DS_Store, fourteen .gmtcommands4, fourteen .gmtdefaults4 and one .GMT_bb_info. No file that was kept was changed. The 977 members and their individual sums are listed in the manifest and can be checked against the supplier's tree file by file."
     },
-    "martinec2018/benchmarkA.zip": {
-      "collection": "martinec2018",
-      "stage": "original",
-      "description": "Benchmark A: contributor profiles, difference files against the VEGA reference, and the GMT script that drew figure 3.",
-      "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
-      "supplier": "Zdenek Martinec",
-      "received": "2026-09",
-      "permission": "not_asked",
-      "notes": "Assembled 2022-10-20. Z_ZM_load.out holds one row, so the VEGA reference profile for benchmark A is absent and must be reconstructed. The benchmark page cited in the paper, geofjv.troja.mff.cuni.cz/GIABenchmark/, no longer answers."
-    },
-    "martinec2018/benchmarkB.zip": {
-      "collection": "martinec2018",
-      "stage": "original",
-      "description": "Benchmark B: contributor profiles through the ice centre and the basin centre, difference files, the GMT scripts for figures 5 and 6, and uprav.out, the VEGA sea-level grid used for figure 4.",
-      "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
-      "supplier": "Zdenek Martinec",
-      "received": "2026-09",
-      "permission": "not_asked",
-      "notes": "Internal case code C2 is published case B. Both VEGA reference files are present, on two different colatitude grids."
-    },
     "martinec2018/sbk_benchmark_data.tar.gz": {
       "collection": "martinec2018",
       "stage": "original",
       "description": "Samuel Kachuck's giapy submission: internal case codes A, C2, D3, E2 and F1, each with four cross-sections.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
       "supplier": "unknown; obtained through the G-ADOPT reference collection",
       "received": "2026-09-03",
       "permission": "not_asked",
-      "notes": "A is case A. C2 is case B, because two of its files are byte-identical to files in benchmarkB.zip. D3, E2 and F1 are cases C, D and E, established from Martinec's archives resultsC_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the one in benchmarkA.zip; see corrections.json."
+      "notes": "A is case A. C2, D3, E2 and F1 are cases B, C, D and E, established from Martinec's archives resultsB_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the stale one in resultsA_2026.zip; see corrections.json."
     },
     "martinec2018/giapy_sle_test.py": {
       "collection": "martinec2018",
@@ -97,45 +75,34 @@
       "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged.",
       "modified_from_supplied": "Converted from the supplied Word document to Markdown. The prose is unchanged and the two equation images are kept as base64 data URIs, but the sum is of our conversion and not of the .docx. The .docx was not kept; request it from the organisers if a byte-exact original is needed."
     },
-    "martinec2018/benchmarkA-Z_ZM_load-full.out": {
-      "collection": "martinec2018",
-      "stage": "original",
-      "description": "A full VEGA reference profile for benchmark A: 1441 rows of colatitude 0 to 180 at 0.125 degree spacing, seven columns, with a column header. Supplied to replace the single-row Z_ZM_load.out in benchmarkA.zip.",
-      "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
-      "supplier": "Zdenek Martinec",
-      "received": "2026-09-11",
-      "permission": "not_asked",
-      "notes": "This is benchmark A: vertical displacement is -302.6 m at colatitude 0, and benchmark A is the only case whose cap sits at the pole. It is NOT the run behind published figure 3. Recomputing any contributor's difference against it misses the shipped difference file by an RMS of 0.057 m, and all four contributors tested miss by nearly the same amount, which places the discrepancy in this file and not in them. The disagreement is a smooth bump centred on the cap edge at colatitude 10, reaching 0.56 m there and falling to 0.003 m beyond 90 degrees. Degrees 0 and 1 explain 1.5 per cent of it, so it is not the degree-2 start the paper records for benchmark A. Section 5.1 of the paper says the cap edge converges extremely slowly with cut-off degree, which is the most likely cause. Kept alongside the reconstructed reference, not in place of it. Its header is the only documentation of the seven-column VEGA format used by twenty benchmark B files."
-    },
     "martinec2018/resultsA_2026.zip": {
       "collection": "martinec2018",
       "stage": "original",
       "description": "Case A: every contributor's profile through the ice centre, the difference files, the full-length VEGA profile Z_ZM_load.out, and the GMT script for figure 3.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
       "supplier": "Zdenek Martinec",
       "received": "2026-09-12",
       "permission": "granted",
-      "notes": "Assembled by Martinec on 2026-09-12. Z_ZM_load.out is byte-identical to benchmarkA-Z_ZM_load-full.out, the second VEGA run. The other shared files are byte-identical to benchmarkA.zip, and the GMT script differs only in the name of the PDF it writes. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository."
+      "notes": "Assembled by Martinec on 2026-09-12, in the last of several rounds, and the set this repository uses. Z_ZM_load.out is a full VEGA profile from a second run and does not reproduce the shipped difference files; see correction benchmarkA-vega-supplied-run-differs. A_fig10_SBK.dat is a stale copy; see benchmarkA-sk-superseded. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository."
     },
     "martinec2018/resultsB_2026.zip": {
       "collection": "martinec2018",
       "stage": "original",
       "description": "Case B (internal code C2): contributor profiles through the ice centre and the basin centre, difference files, VEGA profiles and the two GMT scripts for figures 5 and 6.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
       "supplier": "Zdenek Martinec",
       "received": "2026-09-12",
       "permission": "granted",
-      "notes": "Assembled by Martinec on 2026-09-12. 44 files are byte-identical to benchmarkB.zip. uprav.out and the figure 4 script are not included, so benchmarkB.zip is still needed for them. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository."
+      "notes": "Assembled by Martinec on 2026-09-12, in the last of several rounds, and the set this repository uses. It does not include uprav.out, the VEGA sea-level grid of figure 4, or the script that drew that figure. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository."
     },
     "martinec2018/resultsC_2026.zip": {
       "collection": "martinec2018",
       "stage": "original",
       "description": "Case C (internal code D3): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out, YS's ice mass, and the GMT scripts for the profiles, the ice mass and h_UF.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
       "supplier": "Zdenek Martinec",
       "received": "2026-09-12",
       "permission": "granted",
@@ -146,7 +113,7 @@
       "stage": "original",
       "description": "Case D (internal code E2): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out and secti.out, contributor time series of ice mass, ocean area and h_UF, and the GMT scripts.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
       "supplier": "Zdenek Martinec",
       "received": "2026-09-12",
       "permission": "granted",
@@ -157,7 +124,7 @@
       "stage": "original",
       "description": "Case E (internal code F1): the VEGA time series vega76.out, a case D run vega76_E2.out, contributor time series of ocean area and h_UF, and the GMT scripts.",
       "source_doi": "10.1093/gji/ggy280",
-      "source_citation": "See martinec2018/benchmarkA.zip.",
+      "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
       "supplier": "Zdenek Martinec",
       "received": "2026-09-12",
       "permission": "granted",

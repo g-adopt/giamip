@@ -72,28 +72,14 @@
    "discovered": "2026-09-11"
   },
   {
-   "id": "benchmarkA-vega-truncated",
-   "kind": "truncated",
-   "applies_to": [
-    "martinec2018/benchmarkA/Z_ZM_load.out"
-   ],
-   "as_shipped": "One row, colatitude 0, seven columns",
-   "correct": "The full VEGA reference profile over colatitude 0 to 180, as benchmark B's equivalent files have. Martinec supplied one on 2026-09-11 as martinec2018/benchmarkA-Z_ZM_load-full.out, but it is a different run from the published one; see correction benchmarkA-vega-supplied-run-differs.",
-   "evidence": "A_fig10_diff.gmt reads this file as the ZM curve across the whole range in two of its four panels. Benchmark B's Z_ZM_load.out and Z_ZM_basin.out are complete.",
-   "action": "For anything compared against the published difference files, use the reconstruction: subtract each contributor's difference file from that contributor's own profile. Five contributors (GA, GS, KS, VK, WW) agree to better than 1e-3 m across the whole range and reproduce the surviving row, -302.59759412 m at colatitude 0, exactly. The file supplied in September 2026 is a second VEGA run and is kept separately.",
-   "status": "confirmed",
-   "discovered": "2026-09-11"
-  },
-  {
    "id": "benchmarkA-sk-superseded",
    "kind": "superseded",
    "applies_to": [
-    "martinec2018/benchmarkA/A_fig10_SBK.dat",
     "martinec2018/resultsA_2026/A_fig10_SBK.dat"
    ],
    "as_shipped": "360 rows on linspace(180, 0, 360), dated 2017-11-15",
    "correct": "Use l721j256/A_fig10_SBK.dat from martinec2018/sbk_benchmark_data.tar.gz: 721 rows on a 0.25 degree grid, dated 2018-01-15",
-   "evidence": "Z_SK_load_diff.out has 721 rows on the same 0.25 degree descending grid as the superseding file, and is dated 2018-01-17. Subtracting it from that file with no interpolation reconstructs VEGA to a maximum of 1.7e-4 m and an RMS of 2.3e-5 m against the reconstruction from GA, which is print precision. The shipped 360-row file is on a different grid and cannot be the same submission. One consequence: the figure shipped in the archive draws the old SK profile in its left panel and the new SK difference in its right panel. The copy in resultsA_2026/ is byte-identical to the one in benchmarkA/.",
+   "evidence": "Z_SK_load_diff.out has 721 rows on the same 0.25 degree descending grid as the superseding file, and is dated 2018-01-17. Subtracting it from that file with no interpolation reconstructs VEGA to a maximum of 1.7e-4 m and an RMS of 2.3e-5 m against the reconstruction from GA, which is print precision. The shipped 360-row file is on a different grid and cannot be the same submission. One consequence: the figure shipped in the archive draws the old SK profile in its left panel and the new SK difference in its right panel.",
    "action": "Read the superseding file. Treat the shipped one as a stale copy.",
    "status": "confirmed",
    "discovered": "2026-09-11"
@@ -102,10 +88,6 @@
    "id": "benchmarkA-colatitude-ordering",
    "kind": "trap",
    "applies_to": [
-    "martinec2018/benchmarkA/Z_SK_load_diff.out",
-    "martinec2018/benchmarkA/Z_YS_load_diff.out",
-    "martinec2018/benchmarkA/A_fig10_SBK.dat",
-    "martinec2018/benchmarkA/A_fig10_YS.dat",
     "martinec2018/resultsA_2026/Z_SK_load_diff.out",
     "martinec2018/resultsA_2026/Z_YS_load_diff.out",
     "martinec2018/resultsA_2026/A_fig10_SBK.dat",
@@ -114,7 +96,7 @@
    "field": "colatitude column",
    "as_shipped": "Descending, from 180 to 0",
    "correct": "Every other file in the same directory ascends from 0 to 180",
-   "evidence": "Z_GA, Z_GS, Z_KS, Z_VB, Z_VK and both Z_WW difference files ascend; the SK and YS files descend. numpy.interp requires an ascending first argument and returns wrong values, with no warning, when given a descending one. The copies in resultsA_2026/ are byte-identical to the ones in benchmarkA/.",
+   "evidence": "Z_GA, Z_GS, Z_KS, Z_VB, Z_VK and both Z_WW difference files ascend; the SK and YS files descend. numpy.interp requires an ascending first argument and returns wrong values, with no warning, when given a descending one.",
    "action": "Sort by colatitude on read, or subtract on the shared grid without interpolating. Every reader returns an ascending axis.",
    "status": "confirmed",
    "discovered": "2026-09-11"
@@ -123,8 +105,6 @@
    "id": "benchmarkA-fortran-exponent",
    "kind": "trap",
    "applies_to": [
-    "martinec2018/benchmarkA/A_fig10_YS.dat",
-    "martinec2018/benchmarkB/*_YS.dat",
     "martinec2018/results?_2026/*_YS.dat"
    ],
    "as_shipped": "Fortran D exponents, for example -0.3024125086287D+03",
@@ -138,13 +118,12 @@
    "id": "benchmarkA-ww-axisymmetric-rescaled",
    "kind": "trap",
    "applies_to": [
-    "martinec2018/benchmarkA/Z_WW_axi_load_diff.out",
     "martinec2018/resultsA_2026/Z_WW_axi_load_diff.out"
    ],
    "field": "columns 2 and 4",
    "as_shipped": "The values as the contributor submitted them",
    "correct": "The published figure plots 9/10 of column 2 and 2/3 of column 4",
-   "evidence": "A_fig10_diff.gmt applies `9*$2/10` to the vertical displacement difference in panel 2 and `2*$4/3` to the geoid difference in panel 4. No other series in any of the four scripts carries a rescaling of this kind; the only other arithmetic is division by the surface gravity 9.8155 to turn a potential into a geoid height. The reason for the two factors is not recorded in the script or in the paper. The copy in resultsA_2026/ is byte-identical, and resultsA_2026/figZ_uvf_load_diff.gmt applies the same two factors.",
+   "evidence": "resultsA_2026/figZ_uvf_load_diff.gmt applies `9*$2/10` to the vertical displacement difference in panel 2 and `2*$4/3` to the geoid difference in panel 4. No other series in any of the four scripts carries a rescaling of this kind; the only other arithmetic is division by the surface gravity 9.8155 to turn a potential into a geoid height. The reason for the two factors is not recorded in the script or in the paper.",
    "action": "A redraw of published figure 3 must apply both factors to reproduce the figure. A comparison against the data must not: use the columns as submitted, and treat the discrepancy the factors imply as unexplained until the contributor confirms it.",
    "status": "confirmed",
    "discovered": "2026-09-11"
@@ -153,14 +132,12 @@
    "id": "benchmarkA-geoid-sign-varies",
    "kind": "trap",
    "applies_to": [
-    "martinec2018/benchmarkA/*",
-    "martinec2018/benchmarkB/*",
     "martinec2018/results?_2026/*"
    ],
    "field": "the geoid column",
    "as_shipped": "Different contributors store the geoid with opposite signs, and two store the gravitational potential",
    "correct": "Positive geoid height, upward",
-   "evidence": "Decoded from the plotting scripts by scripts/decode_gmt_layouts.py. For benchmark A, four series are plotted as they stand: A-fig10-TABOO_256.dat column 7, A_fig10_YS.dat column 5, caseA_0.25.lmax256_GA.dat column 6, and Z_ZM_load.out column 5, which holds the gravitational potential and is divided by the surface gravity 9.8155. Six are negated: A_fig10_KS_256.dat column 5, A_fig10_SBK.dat column 4, case_A_VILMA_uve.dat column 4, fig10_n_VB_256.dat column 2, n_10ka.dat column 2, and n_10ka_axi.dat column 2, which is both negated and divided by 9.8155. The same variety occurs in the September 2026 archives resultsA_2026/ to resultsD_2026/, whose scripts gia_mip/resources/column_layouts.json also decodes.",
+   "evidence": "Decoded from the plotting scripts by scripts/decode_gmt_layouts.py. For benchmark A, four series are plotted as they stand: A-fig10-TABOO_256.dat column 7, A_fig10_YS.dat column 5, caseA_0.25.lmax256_GA.dat column 6, and Z_ZM_load.out column 5, which holds the gravitational potential and is divided by the surface gravity 9.8155. Six are negated: A_fig10_KS_256.dat column 5, A_fig10_SBK.dat column 4, case_A_VILMA_uve.dat column 4, fig10_n_VB_256.dat column 2, n_10ka.dat column 2, and n_10ka_axi.dat column 2, which is both negated and divided by 9.8155.",
    "action": "Take the sign and any division by gravity from gia_mip/resources/column_layouts.json, never by assumption. A reader that guesses is wrong by a factor of minus one for six of the ten benchmark A contributors, and by a factor of 9.8155 for two.",
    "status": "confirmed",
    "discovered": "2026-09-11"
@@ -169,14 +146,13 @@
    "id": "benchmarkA-vega-supplied-run-differs",
    "kind": "superseded",
    "applies_to": [
-    "martinec2018/benchmarkA-Z_ZM_load-full.out",
     "martinec2018/resultsA_2026/Z_ZM_load.out"
    ],
    "field": "column 2, vertical displacement",
-   "as_shipped": "A complete VEGA profile for benchmark A at 0.125 degree spacing",
+   "as_shipped": "A complete VEGA profile for benchmark A at 0.125 degree spacing, 1441 rows.",
    "correct": "It is a different run from the one behind published figure 3 and the shipped difference files",
    "evidence": "Recomputing each contributor's difference against this file misses the shipped difference file by an RMS of 0.0551 to 0.0574 m for GA, GS, KS and WW alike; the near-equality across four independent codes places the discrepancy in this file. Against the reconstruction from those same contributors it differs by a smooth bump centred on the cap edge: 0.023 m RMS inside 5 degrees, 0.474 m RMS between 9 and 11 degrees, peaking at 0.5615 m at exactly 10.00 degrees, and 0.003 m beyond 90 degrees. A least squares fit of a constant plus cos(colatitude), which is what a degree 0 and degree 1 difference would look like, explains 1.5 per cent of the variance, so this is not the degree-2 start the paper records for benchmark A in section 4.1. Section 5.1 states that the cap edge has infinite slope and converges extremely slowly with increasing cut-off degree, which is where a difference of this shape would come from. Two further checks. Both files obey the same internal relations exactly: column 6 equals minus column 5 divided by 9.8155, and column 7 equals column 6 minus column 2. So the surviving single row is genuine, internally consistent VEGA output and not a corrupted fragment, and the two files are the same quantity computed twice. And at the cap edge the eight contributors span 1.354 m, from -47.83 for SK to -49.18 for YS, with a median of -49.023. The published reference sits 0.279 m below that median and the supplied file 0.283 m above it, so both lie inside the spread, on opposite sides. Beyond colatitude 14 both agree with the median to 0.01 m. martinec2018/resultsA_2026/Z_ZM_load.out is byte-identical to this file (SHA-256 ff99f78c0aea2532b96e7d63522c7a13021e05a9843ec4a1df363d78fb4d1660), so the archive Martinec sent in September 2026 carries the second run under the original filename.",
-   "action": "Do not use this file as the reference for scoring against the published difference files; use the reconstruction. Keep this file as a second VEGA run, useful for judging how much the cap-edge representation moves the answer. Its header is the only record of the seven-column VEGA format and is transcribed into column_layouts.json.",
+   "action": "Do not use this file as the reference for scoring against the published difference files. Recover the reference as a contributor's profile minus its own difference file: GA, GS, KS, VK and WW agree to better than 1e-3 m over the whole range and give -302.59759412 m at colatitude 0, the value of the one-row VEGA file in the first case A archive. Keep this file as a second VEGA run, useful for judging how much the cap-edge representation moves the answer. Its header is the only record of the seven-column VEGA format and is transcribed into column_layouts.json.",
    "status": "confirmed",
    "discovered": "2026-09-11",
    "open_question": "Martinec wrote on 2026-09-11 that the single-row file was 'incomplete (and incorrect)', that the error arose when he renamed the file, and that the attached file is the correct original. The first half is certain. The second does not fit the arithmetic: the surviving row is exactly the value every shipped difference file was computed against, to eight decimal places across five independent codes. If the supplied file is the correct reference, then the difference files in the archive are stale and the right-hand panels of published figure 3 are wrong by up to 0.56 m at the cap edge, which is a third of that panel's plotted range. Put to him on 2026-09-11."
@@ -358,7 +334,6 @@
    "applies_to": [
     "martinec2018/resultsD_2026/Z_ZM_load.out",
     "martinec2018/resultsD_2026/Z_ZM_basin.out",
-    "martinec2018/benchmarkB/Z_ZM_basin.out",
     "martinec2018/resultsB_2026/Z_ZM_basin.out"
    ],
    "field": "colatitude grid",
@@ -373,15 +348,13 @@
    "id": "benchmarkA-gs-repeated-last-row",
    "kind": "trap",
    "applies_to": [
-    "martinec2018/benchmarkA/A-fig10-TABOO_256.dat",
-    "martinec2018/benchmarkA/Z_GS_load_diff.out",
     "martinec2018/resultsA_2026/A-fig10-TABOO_256.dat",
     "martinec2018/resultsA_2026/Z_GS_load_diff.out"
    ],
    "field": "the last row",
    "as_shipped": "The row at colatitude 180 is written twice, with identical values, so the file has 1802 rows on a 1801-point grid.",
    "correct": "One row at colatitude 180.",
-   "evidence": "In A-fig10-TABOO_256.dat, rows 1801 and 1802 both read colatitude 180.0, U = -2.9071 m, geoid column -0.1803 m, and differ only in the row counter. Z_GS_load_diff.out repeats its last row in the same way. The copies in resultsA_2026/ are byte-identical to the ones in benchmarkA/. A NetCDF coordinate or an interpolation routine that requires a strictly increasing axis rejects the file.",
+   "evidence": "In A-fig10-TABOO_256.dat, rows 1801 and 1802 both read colatitude 180.0, U = -2.9071 m, geoid column -0.1803 m, and differ only in the row counter. Z_GS_load_diff.out repeats its last row in the same way. A NetCDF coordinate or an interpolation routine that requires a strictly increasing axis rejects the file.",
    "action": "Drop a point that repeats both the axis value and the data value. Raise if the axis value repeats with a different data value.",
    "status": "confirmed",
    "discovered": "2026-09-14"

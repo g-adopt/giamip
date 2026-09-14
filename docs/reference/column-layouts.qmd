@@ -3,8 +3,8 @@ title: "Column layouts"
 ---
 
 What each column of each Martinec et al. (2018) data file holds, for the
-archives first received (`benchmarkA/`, `benchmarkB/`) and for the set Martinec
-sent in September 2026 (`resultsA_2026/` to `resultsE_2026/`). Every file is
+archives Martinec sent in September 2026 (`resultsA_2026/` to
+`resultsE_2026/`). Every file is
 named by its path under `data/original/`, because the same filename holds
 different data in different directories.
 

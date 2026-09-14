@@ -98,8 +98,8 @@ LEGEND = re.compile(r"^\s*[-\d.]+\s+[-\d.]+\s+\d+\s+\d+\s+\d+\s+\w+\s+(\w+)\s*$"
 # E2, F1) to the published case letters.
 TITLE = re.compile(r"\bML\s+(Benchmark\b.*?)\s*$")
 
-# The directory an archive unpacked into names the case: `benchmarkA/` from
-# benchmarkA.zip, `resultsC_2026/` from resultsC_2026.zip.
+# The directory an archive unpacked into names the case: `resultsC_2026/` from
+# resultsC_2026.zip.
 CASE_DIRECTORY = re.compile(r"(?:^|/)(?:benchmark|results)([A-E])(?:_\d{4})?$")
 
 # GMT 4 writes Greek by switching font: @~q@~ is theta, @~l@~ lambda, @~p@~ pi,
@@ -371,13 +371,13 @@ def decode(path: pathlib.Path, root: pathlib.Path) -> dict:
 VEGA_SEVEN_COLUMN_FORMAT = {
     "$comment": (
         "The seven-column format VEGA writes for a cross-section, taken "
-        "verbatim from the header of martinec2018/benchmarkA-Z_ZM_load-full.out, "
+        "verbatim from the header of martinec2018/resultsA_2026/Z_ZM_load.out, "
         "which is the only file that carries one. The same format is used by "
         "every Z_ZM_{load,basin}.out and by the Z_*_diff.out files of cases B, "
         "C and D, where column n is the contributor minus VEGA. The case A "
         "difference files and the two WW files of case B hold four or five "
         "columns, which are a subset in the same order."),
-    "source": "the header of benchmarkA-Z_ZM_load-full.out",
+    "source": "the header of resultsA_2026/Z_ZM_load.out",
     "columns": [
         {"column": 1, "name": "abscissa", "units": "degrees",
          "description": "Longitude in a figY_uvf cross-section, colatitude in a figZ_uvf one"},
@@ -393,11 +393,6 @@ VEGA_SEVEN_COLUMN_FORMAT = {
         {"column": 7, "name": "SLE", "units": "m", "description": "Sea level equation result"},
     ],
     "applies_to": [
-        "martinec2018/benchmarkA-Z_ZM_load-full.out",
-        "martinec2018/benchmarkA/Z_ZM_load.out",
-        "martinec2018/benchmarkB/Z_ZM_load.out",
-        "martinec2018/benchmarkB/Z_ZM_basin.out",
-        "martinec2018/benchmarkB/Z_{GA,GS,KS,SK,VB,VK,YS}_{load,basin}_diff.out",
         "martinec2018/results{A,B,C,D}_2026/Z_ZM_{load,basin}.out",
         "martinec2018/results{B,C,D}_2026/Z_*_{load,basin}_diff.out",
     ],
@@ -620,12 +615,9 @@ def main() -> int:
     args = ap.parse_args()
     root = args.root.resolve()
 
-    # The archives as first received (benchmarkA/, benchmarkB/) and the set
-    # Martinec sent in September 2026 (resultsA_2026/ to resultsE_2026/). Both
-    # are decoded: the two case B scripts are identical in both, and the case
-    # A script differs only in the name of the PDF it writes.
-    scripts = (sorted(root.glob("martinec2018/benchmark*/*.gmt"))
-               + sorted(root.glob("martinec2018/results?_2026/*.gmt")))
+    # The archives Martinec sent in the last round, resultsA_2026/ to
+    # resultsE_2026/, which are the set this repository uses.
+    scripts = sorted(root.glob("martinec2018/results?_2026/*.gmt"))
     if not scripts:
         print(f"no GMT scripts under {root}/martinec2018/. "
               f"Fetch and unpack the benchmark archives first.", file=sys.stderr)

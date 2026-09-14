@@ -56,8 +56,7 @@
       "WWa"
     ],
     "archive": "martinec2018/resultsA_2026.zip",
-    "earlier_archive": "martinec2018/benchmarkA.zip",
-    "reference": "resultsA_2026/Z_ZM_load.out is a second VEGA run, not the one behind figure 3, and benchmarkA/Z_ZM_load.out holds one row. Recover the published reference as a contributor's profile minus its difference file. See corrections benchmarkA-vega-truncated and benchmarkA-vega-supplied-run-differs.",
+    "reference": "resultsA_2026/Z_ZM_load.out is a second VEGA run, not the one behind figure 3. Recover the published reference as a contributor's profile minus its difference file. See correction benchmarkA-vega-supplied-run-differs.",
     "published_figure": "Figure 3",
     "cross_sections": [
       "through the ice centre at (0, 0)"

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-14T07:10:53+00:00",
+ "generated": "2026-09-14T12:21:25+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/gia-mip/",
  "artifacts": {
@@ -91,421 +91,6 @@
    ],
    "member_count": 3
   },
-  "martinec2018/benchmarkA-Z_ZM_load-full.out": {
-   "collection": "martinec2018",
-   "stage": "original",
-   "description": "A full VEGA reference profile for benchmark A: 1441 rows of colatitude 0 to 180 at 0.125 degree spacing, seven columns, with a column header. Supplied to replace the single-row Z_ZM_load.out in benchmarkA.zip.",
-   "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
-   "supplier": "Zdenek Martinec",
-   "received": "2026-09-11",
-   "permission": "not_asked",
-   "notes": "This is benchmark A: vertical displacement is -302.6 m at colatitude 0, and benchmark A is the only case whose cap sits at the pole. It is NOT the run behind published figure 3. Recomputing any contributor's difference against it misses the shipped difference file by an RMS of 0.057 m, and all four contributors tested miss by nearly the same amount, which places the discrepancy in this file and not in them. The disagreement is a smooth bump centred on the cap edge at colatitude 10, reaching 0.56 m there and falling to 0.003 m beyond 90 degrees. Degrees 0 and 1 explain 1.5 per cent of it, so it is not the degree-2 start the paper records for benchmark A. Section 5.1 of the paper says the cap edge converges extremely slowly with cut-off degree, which is the most likely cause. Kept alongside the reconstructed reference, not in place of it. Its header is the only documentation of the seven-column VEGA format used by twenty benchmark B files.",
-   "bytes": 168955,
-   "sha256": "ff99f78c0aea2532b96e7d63522c7a13021e05a9843ec4a1df363d78fb4d1660"
-  },
-  "martinec2018/benchmarkA.zip": {
-   "collection": "martinec2018",
-   "stage": "original",
-   "description": "Benchmark A: contributor profiles, difference files against the VEGA reference, and the GMT script that drew figure 3.",
-   "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
-   "supplier": "Zdenek Martinec",
-   "received": "2026-09",
-   "permission": "not_asked",
-   "notes": "Assembled 2022-10-20. Z_ZM_load.out holds one row, so the VEGA reference profile for benchmark A is absent and must be reconstructed. The benchmark page cited in the paper, geofjv.troja.mff.cuni.cz/GIABenchmark/, no longer answers.",
-   "bytes": 291311,
-   "sha256": "8c6386555427e178cf9556db0c5c7ea101c42a70ec666f8666f0cfcdfdf70aa6",
-   "members": [
-    {
-     "name": "benchmarkA/A-fig10-TABOO_256.dat",
-     "bytes": 151452,
-     "sha256": "42680333eecbabd69460ccd94ad200d4787d800b5d8848ba326aeadeed0b3fa0"
-    },
-    {
-     "name": "benchmarkA/A_fig10_KS_256.dat",
-     "bytes": 19847,
-     "sha256": "7cc9b9272e5a9ff5e2ee0d7d3161853f9acc5edc9eb1c0bad82a88660e6dc1e0"
-    },
-    {
-     "name": "benchmarkA/A_fig10_SBK.dat",
-     "bytes": 36599,
-     "sha256": "3e205f5f1f662040a8628b926150d55366fd5e9c33248403f55ce8ca2175d897"
-    },
-    {
-     "name": "benchmarkA/A_fig10_YS.dat",
-     "bytes": 206848,
-     "sha256": "4ced46ad7fd8c4537129994dc7a4135f3c56998a19bc164902dae143a0d49364"
-    },
-    {
-     "name": "benchmarkA/A_fig10_diff.gmt",
-     "bytes": 7232,
-     "sha256": "05146c4b65c03844488ca4217bb5542c1adde292a9fa031f76bc73b064af2360"
-    },
-    {
-     "name": "benchmarkA/A_fig10_diff.pdf",
-     "bytes": 21091,
-     "sha256": "ba14bd8c1b0e03a68b9b4d9e74398ca7c0c98c5bc0a4a102199c3d25f55571fe"
-    },
-    {
-     "name": "benchmarkA/Z_GA_load_diff.out",
-     "bytes": 59843,
-     "sha256": "a9193ef41945b613e1181b305f15ac9223b75779f6ca71419be182200a72fb98"
-    },
-    {
-     "name": "benchmarkA/Z_GS_load_diff.out",
-     "bytes": 149566,
-     "sha256": "99abf1874517446cff8509e190dd60c556b6f5e2a643fe45fb97f5c18c85352b"
-    },
-    {
-     "name": "benchmarkA/Z_KS_load_diff.out",
-     "bytes": 23465,
-     "sha256": "5b955711aff49e0dea7eaf39acf230cbcf0debbb7667b97f5f8b7f9ec680bf2d"
-    },
-    {
-     "name": "benchmarkA/Z_SK_load_diff.out",
-     "bytes": 46865,
-     "sha256": "19ab80bab32cf3767bde163dfa2c6504100dd652c2bd28abccdad32a8edf9a6d"
-    },
-    {
-     "name": "benchmarkA/Z_VB_load_diff.out",
-     "bytes": 23465,
-     "sha256": "2c690e6e0853ae5288eaae74bb2eb28eac0e41c9dd46dd94bb5afab314e4a283"
-    },
-    {
-     "name": "benchmarkA/Z_VK_load_diff.out",
-     "bytes": 29963,
-     "sha256": "5fc575ccf8f36cda4992d924f73bc65ed99dd062953f374a509846d1411d8535"
-    },
-    {
-     "name": "benchmarkA/Z_WW_axi_load_diff.out",
-     "bytes": 46865,
-     "sha256": "f709fff88ad411c5dcfd54231b792db779935bd3e210f5c708ffb0d889c7daaf"
-    },
-    {
-     "name": "benchmarkA/Z_WW_load_diff.out",
-     "bytes": 23465,
-     "sha256": "1f74fde1bb900e67d187280a07b1ea730f2473e54bf947cef5ce19bc4f73b557"
-    },
-    {
-     "name": "benchmarkA/Z_YS_load_diff.out",
-     "bytes": 133120,
-     "sha256": "37c621bb88c6af5dc46698314fad0044d935f4981175f45c1753467cec80b3dc"
-    },
-    {
-     "name": "benchmarkA/Z_ZM_load.out",
-     "bytes": 119,
-     "sha256": "f5287a8ebb8f50ed46f4a7874af706d0b222faaf54ce89d069c9227dbe5d115c"
-    },
-    {
-     "name": "benchmarkA/caseA_0.25.lmax256_GA.dat",
-     "bytes": 64259,
-     "sha256": "af052d0c66d8dd4c26053d312e13eace69074852284378f86115f6e664bba8ca"
-    },
-    {
-     "name": "benchmarkA/case_A_VILMA_uve.dat",
-     "bytes": 11239,
-     "sha256": "f7e6734282fcd8a0bcf55c7548d40cc60028dc502f7705feee0dd86d254b63af"
-    },
-    {
-     "name": "benchmarkA/fig10_n_VB_256.dat",
-     "bytes": 6447,
-     "sha256": "9dfb71e942d21811fa99838579d4c0b5e4b71e633eb82d22613ddd252c12cc96"
-    },
-    {
-     "name": "benchmarkA/fig10_u_VB_256.dat",
-     "bytes": 6485,
-     "sha256": "53b5ce9b30c04d3a0dbfdb9c1461eb2fbc93bddfc0e8f3b0fc342ddb22c93c58"
-    },
-    {
-     "name": "benchmarkA/n_10ka.dat",
-     "bytes": 7220,
-     "sha256": "cff4b01935a427d24191b8008721e3bd1806f86161734eea0589e3b13fa0906a"
-    },
-    {
-     "name": "benchmarkA/n_10ka_axi.dat",
-     "bytes": 12978,
-     "sha256": "46157c5f2ca5655442158dc19664c9266eb64c1cca6e9f19e3a9db97b092fca6"
-    },
-    {
-     "name": "benchmarkA/u_10ka.dat",
-     "bytes": 7220,
-     "sha256": "2083ce71ccf8d9033b6413ceb14bac58dfbbc271cfcd63a98c848821971c3168"
-    },
-    {
-     "name": "benchmarkA/u_10ka_axi.dat",
-     "bytes": 12978,
-     "sha256": "739c8764b17ea711287134f423e57681f4b9afb098dd7c7866f8068e014758f5"
-    },
-    {
-     "name": "benchmarkA/v_10ka.dat",
-     "bytes": 7220,
-     "sha256": "f91bc64dac64b8b10c36232987f3281e0a017df7bde5b1c98ecbfbadc4b6c77d"
-    }
-   ],
-   "member_count": 25
-  },
-  "martinec2018/benchmarkB.zip": {
-   "collection": "martinec2018",
-   "stage": "original",
-   "description": "Benchmark B: contributor profiles through the ice centre and the basin centre, difference files, the GMT scripts for figures 5 and 6, and uprav.out, the VEGA sea-level grid used for figure 4.",
-   "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
-   "supplier": "Zdenek Martinec",
-   "received": "2026-09",
-   "permission": "not_asked",
-   "notes": "Internal case code C2 is published case B. Both VEGA reference files are present, on two different colatitude grids.",
-   "bytes": 8442007,
-   "sha256": "c0d68560cd9865752411ef552334030e0344b75e4b25fdb64d74c7b5806ac7f0",
-   "members": [
-    {
-     "name": "benchmarkB/C2-figure-10-L256-CAP-REV.dat",
-     "bytes": 69708,
-     "sha256": "c73092670260e865faba5383d536831147b4c41d02e79035b7e31b2781a2f435"
-    },
-    {
-     "name": "benchmarkB/C2-figure-12-L256-CAP-REV.dat",
-     "bytes": 69708,
-     "sha256": "ddfb33cc334160e61251e90201020f914b17b5e1d589a926d86219cbf671568c"
-    },
-    {
-     "name": "benchmarkB/C2_GA_Fig10_0.25.lmax256.txt",
-     "bytes": 74880,
-     "sha256": "a702fa584ce199fb2d44616e433c3c286f6afb949b8a3274a836c131db08f44c"
-    },
-    {
-     "name": "benchmarkB/C2_GA_Fig12_0.25.lmax256.txt",
-     "bytes": 74880,
-     "sha256": "8713f28fd5c820da496031712a02e23a6b885adb2a9641bfc4b041a5a526f5c3"
-    },
-    {
-     "name": "benchmarkB/C2_VK_fig10_1_e.dat",
-     "bytes": 10727,
-     "sha256": "2cf6c9ac380cc85c5dbff19a7c56300da31dc0d4965c100154f1f1e04c9b3b9b"
-    },
-    {
-     "name": "benchmarkB/C2_VK_fig10_1_u.dat",
-     "bytes": 11029,
-     "sha256": "7ce51ff3a044109c42b7a67a3eb9e419848fc4be2b5c0896bc0efbfe16411d07"
-    },
-    {
-     "name": "benchmarkB/C2_VK_fig12_1_e.dat",
-     "bytes": 10565,
-     "sha256": "a1746b3be8ddbf4c6d69f6134a31ef0b0cfdd512a495ba222304d393a9372475"
-    },
-    {
-     "name": "benchmarkB/C2_VK_fig12_1_u.dat",
-     "bytes": 10925,
-     "sha256": "21d964d1be6ba4e546680124479ba6c6ea3fbe16e82248a14001fcd830b936f9"
-    },
-    {
-     "name": "benchmarkB/C2_WW_n_10ka_phi320.dat",
-     "bytes": 7200,
-     "sha256": "b906f81e202b5b3c6ba0d048cca0e4b1bcae748befc83af87c2b878fea7bbeb8"
-    },
-    {
-     "name": "benchmarkB/C2_WW_n_10ka_phi75.dat",
-     "bytes": 7200,
-     "sha256": "1187c94fb6d002ac77ce5b2c17388e5607fef952ea0c929fa5ddda6f6b93657f"
-    },
-    {
-     "name": "benchmarkB/C2_WW_u_10ka_phi320.dat",
-     "bytes": 7200,
-     "sha256": "642f1bbbf4b92e01f1213e2c80327773ea3c7968852cf11913e248fce9205f18"
-    },
-    {
-     "name": "benchmarkB/C2_WW_u_10ka_phi75.dat",
-     "bytes": 7200,
-     "sha256": "5559f4459c41af50904ec094ac2a2c837b6a0203a6a45c8b95249f05fff070b2"
-    },
-    {
-     "name": "benchmarkB/C2_fig10_KS.dat",
-     "bytes": 198158,
-     "sha256": "0354d059843645f6ef875f23de3fa1973b562fe4bad653198ff1098d1f3c9dc9"
-    },
-    {
-     "name": "benchmarkB/C2_fig10_SBK.dat",
-     "bytes": 65042,
-     "sha256": "71d2eb53bd385151ccabbafb5388d2ca6db3b758dc2b27045729d53a7a33558d"
-    },
-    {
-     "name": "benchmarkB/C2_fig10_YS.dat",
-     "bytes": 350208,
-     "sha256": "b1695312535091c62142345396b949e665015709cb6869ebd2b69eabf89fefe0"
-    },
-    {
-     "name": "benchmarkB/C2_fig12_KS.dat",
-     "bytes": 198158,
-     "sha256": "6e123a4b133e7affd7153f1d7facc5d1e9e7802f99c538a5817493b2ad94e3ae"
-    },
-    {
-     "name": "benchmarkB/C2_fig12_SBK.dat",
-     "bytes": 65049,
-     "sha256": "8340ed0977e5665aadca983ba810fa4bf2c2936ff373bbb8494ad0ee7b1a367c"
-    },
-    {
-     "name": "benchmarkB/C2_fig12_YS.dat",
-     "bytes": 350208,
-     "sha256": "a201a00fc4a4fe8ac5000533f7b6f0a165c0fd62cf01747ebfe9977dad8172bf"
-    },
-    {
-     "name": "benchmarkB/C2_fig14_1_ssv3.dat",
-     "bytes": 10405,
-     "sha256": "1d195ba0d725cab3a1a92d14b452de732602695f63572f5f8d1479a1d3b7114d"
-    },
-    {
-     "name": "benchmarkB/Z_GA_basin_diff.out",
-     "bytes": 85561,
-     "sha256": "e1efc33f387b30d154bbef5f1e6ebaf1238810f491ea958608134493dcff4c97"
-    },
-    {
-     "name": "benchmarkB/Z_GA_load_diff.out",
-     "bytes": 85561,
-     "sha256": "bfa65e8d4151fd9cc3ccecead934abec5a9a61e9c589e6983c777981a9c1999a"
-    },
-    {
-     "name": "benchmarkB/Z_GS_basin_diff.out",
-     "bytes": 71400,
-     "sha256": "8fa435455b1d9f913ac4dad8d21917af08e66b85520a570b96018da5c954b882"
-    },
-    {
-     "name": "benchmarkB/Z_GS_load_diff.out",
-     "bytes": 71400,
-     "sha256": "f9396356fbb3b28d65a98239f5d74c12cafee3bc0e9eb3886f479b7363fc4e75"
-    },
-    {
-     "name": "benchmarkB/Z_KS_basin_diff.out",
-     "bytes": 214319,
-     "sha256": "1221057c1725b88716cbfeb63f4bc7f97eb1b17e932773989ea3c33ae360d462"
-    },
-    {
-     "name": "benchmarkB/Z_KS_load_diff.out",
-     "bytes": 214319,
-     "sha256": "bbf4583e3d7fc90d0bf265bdf4bf59ee59fb03055cd9b2b6147728d16d1bcc62"
-    },
-    {
-     "name": "benchmarkB/Z_SK_basin_diff.out",
-     "bytes": 42840,
-     "sha256": "ab0af44a0d8917a78e385b23771e4add6233dbf0a1e5a6461a1eebff7b993dd2"
-    },
-    {
-     "name": "benchmarkB/Z_SK_load_diff.out",
-     "bytes": 42840,
-     "sha256": "c79c830df6d9d48d5f0bd0d480c70eb631118fa655c06c5aecafdc179c6aad3f"
-    },
-    {
-     "name": "benchmarkB/Z_VB_basin_diff.out",
-     "bytes": 42721,
-     "sha256": "ab40eed85f3305379563def2cdad596094ef234c6174232ca99f33c8a236b96f"
-    },
-    {
-     "name": "benchmarkB/Z_VB_load_diff.out",
-     "bytes": 42721,
-     "sha256": "1ecef60d22316aa69348af5b19c39cb6ae19c4451efeb7d9c09ba853a6431d19"
-    },
-    {
-     "name": "benchmarkB/Z_VK_basin_diff.out",
-     "bytes": 85561,
-     "sha256": "21b6179959ff2f16c3b4261862f1ef45e6f09525e0a4a7c5dc3e2011f673ad81"
-    },
-    {
-     "name": "benchmarkB/Z_VK_load_diff.out",
-     "bytes": 85561,
-     "sha256": "e532ae838b846caf24bf4bb525d38e12277f7ac35369767c3c4410f6483e029c"
-    },
-    {
-     "name": "benchmarkB/Z_WW_basin_diff.out",
-     "bytes": 29880,
-     "sha256": "63843bb75451c16cf7778e7712448e62945d251beff55c73bd93bf629763fb2f"
-    },
-    {
-     "name": "benchmarkB/Z_WW_load_diff.out",
-     "bytes": 29880,
-     "sha256": "6f9d26e72d219faf0f92663c319c2bd71d7975bc7984768acaf90f9addf7f71c"
-    },
-    {
-     "name": "benchmarkB/Z_YS_basin_diff.out",
-     "bytes": 243712,
-     "sha256": "ed743107efd2bbbddc42bc368bd45e4e0fa0e7d6480e796719d44a122103a1b9"
-    },
-    {
-     "name": "benchmarkB/Z_YS_load_diff.out",
-     "bytes": 243712,
-     "sha256": "92126851c4c9b44d4bda8dc11e9630a10abe67f34e6e20086bd24b836ff07284"
-    },
-    {
-     "name": "benchmarkB/Z_ZM_basin.out",
-     "bytes": 42721,
-     "sha256": "8a73693fd0b9397372db8330d110a804192eff05b6546f4d8ac43c4a38ee45ea"
-    },
-    {
-     "name": "benchmarkB/Z_ZM_load.out",
-     "bytes": 243712,
-     "sha256": "cf85756e950d7bddf1a8906e82a24ffb456908165be19aafb02120d02de6d3fc"
-    },
-    {
-     "name": "benchmarkB/figZ_uvf_basin_diff.gmt",
-     "bytes": 8112,
-     "sha256": "0c1fdab7da015cdfd6a33e530246709dea2fc2377c4145ca51248921d1a5a62a"
-    },
-    {
-     "name": "benchmarkB/figZ_uvf_basin_diff.pdf",
-     "bytes": 71825,
-     "sha256": "017ddf779f774696d54d9f367d41fae3fb5c5c7425d8172c3f8260ce3190f376"
-    },
-    {
-     "name": "benchmarkB/figZ_uvf_load_diff.gmt",
-     "bytes": 6363,
-     "sha256": "b920ff00e0edae3a381eb9159184ba21c9741fc9bb6457f0bcc8d4ccf38ca4e0"
-    },
-    {
-     "name": "benchmarkB/figZ_uvf_load_diff.pdf",
-     "bytes": 33165,
-     "sha256": "61fb0d80c308fdfb585c2432f95d72fc95f57f76cd7f72c0ce013e24a6a26e57"
-    },
-    {
-     "name": "benchmarkB/g-C2-VB_256_fig10.txt",
-     "bytes": 6095,
-     "sha256": "6d4905a748c4c4933a83e069c949c7f30a686524351ce7a510873067cf139576"
-    },
-    {
-     "name": "benchmarkB/g-C2-VB_256_fig12.txt",
-     "bytes": 6443,
-     "sha256": "2f471d8f0eb22b70729150ce0eb613b1d1352e80f9a392c79c0bdfa65d38c886"
-    },
-    {
-     "name": "benchmarkB/ssv-C2-VB_256_fig12.txt",
-     "bytes": 6209,
-     "sha256": "e9e56bb7c2b029299845171d053a641c3a739603d63e608f2f11e1c93efc3865"
-    },
-    {
-     "name": "benchmarkB/u-C2-VB_256_fig10.txt",
-     "bytes": 8175,
-     "sha256": "5954513f877f600e7aafd449b8506b283415bad12a3b4b49b94f040c8d430797"
-    },
-    {
-     "name": "benchmarkB/u-C2-VB_256_fig12.txt",
-     "bytes": 8489,
-     "sha256": "d015f3043eebad25cbf48724b0624c3547055083006341553ca43b57f058c8d1"
-    },
-    {
-     "name": "benchmarkB/uprav.out",
-     "bytes": 94371840,
-     "sha256": "722788aeffbd1e2963754ba6ef8364bcac1e1c3809a919052cd11137c005c5dc"
-    },
-    {
-     "name": "benchmarkB/vega1D_iceB.gmt",
-     "bytes": 2434,
-     "sha256": "365d5f45c04f357e253fac778c244252fe71a0c61409a04b760f958e9dcfa58c"
-    },
-    {
-     "name": "benchmarkB/vega1D_iceB.pdf",
-     "bytes": 45530,
-     "sha256": "0781d7eb278a1f10b3be1b69d659966a2065da240aa9e927df8acdce7d00b57c"
-    }
-   ],
-   "member_count": 49
-  },
   "martinec2018/giapy_mod_M3-L70-V01_lovenumbers.txt": {
    "collection": "martinec2018",
    "stage": "original",
@@ -534,11 +119,11 @@
    "stage": "original",
    "description": "Case A: every contributor's profile through the ice centre, the difference files, the full-length VEGA profile Z_ZM_load.out, and the GMT script for figure 3.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
    "supplier": "Zdenek Martinec",
    "received": "2026-09-12",
    "permission": "granted",
-   "notes": "Assembled by Martinec on 2026-09-12. Z_ZM_load.out is byte-identical to benchmarkA-Z_ZM_load-full.out, the second VEGA run. The other shared files are byte-identical to benchmarkA.zip, and the GMT script differs only in the name of the PDF it writes. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "notes": "Assembled by Martinec on 2026-09-12, in the last of several rounds, and the set this repository uses. Z_ZM_load.out is a full VEGA profile from a second run and does not reproduce the shipped difference files; see correction benchmarkA-vega-supplied-run-differs. A_fig10_SBK.dat is a stale copy; see benchmarkA-sk-superseded. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
    "bytes": 352331,
    "sha256": "73d32d129bb66f47e8eb8ccb0ad4cf4c4c9f032bf067721de6c63c4a24635f32",
    "members": [
@@ -690,11 +275,11 @@
    "stage": "original",
    "description": "Case B (internal code C2): contributor profiles through the ice centre and the basin centre, difference files, VEGA profiles and the two GMT scripts for figures 5 and 6.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
    "supplier": "Zdenek Martinec",
    "received": "2026-09-12",
    "permission": "granted",
-   "notes": "Assembled by Martinec on 2026-09-12. 44 files are byte-identical to benchmarkB.zip. uprav.out and the figure 4 script are not included, so benchmarkB.zip is still needed for them. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "notes": "Assembled by Martinec on 2026-09-12, in the last of several rounds, and the set this repository uses. It does not include uprav.out, the VEGA sea-level grid of figure 4, or the script that drew that figure. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
    "bytes": 1120097,
    "sha256": "5ae1b4d786c2c671a6e3af5b56d0106fbb065db0e6e5fe53e5227cd3387eca13",
    "members": [
@@ -961,7 +546,7 @@
    "stage": "original",
    "description": "Case C (internal code D3): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out, YS's ice mass, and the GMT scripts for the profiles, the ice mass and h_UF.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
    "supplier": "Zdenek Martinec",
    "received": "2026-09-12",
    "permission": "granted",
@@ -1152,7 +737,7 @@
    "stage": "original",
    "description": "Case D (internal code E2): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out and secti.out, contributor time series of ice mass, ocean area and h_UF, and the GMT scripts.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
    "supplier": "Zdenek Martinec",
    "received": "2026-09-12",
    "permission": "granted",
@@ -1393,7 +978,7 @@
    "stage": "original",
    "description": "Case E (internal code F1): the VEGA time series vega76.out, a case D run vega76_E2.out, contributor time series of ocean area and h_UF, and the GMT scripts.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
    "supplier": "Zdenek Martinec",
    "received": "2026-09-12",
    "permission": "granted",
@@ -1464,11 +1049,11 @@
    "stage": "original",
    "description": "Samuel Kachuck's giapy submission: internal case codes A, C2, D3, E2 and F1, each with four cross-sections.",
    "source_doi": "10.1093/gji/ggy280",
-   "source_citation": "See martinec2018/benchmarkA.zip. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
    "supplier": "unknown; obtained through the G-ADOPT reference collection",
    "received": "2026-09-03",
    "permission": "not_asked",
-   "notes": "A is case A. C2 is case B, because two of its files are byte-identical to files in benchmarkB.zip. D3, E2 and F1 are cases C, D and E, established from Martinec's archives resultsC_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the one in benchmarkA.zip; see corrections.json.",
+   "notes": "A is case A. C2, D3, E2 and F1 are cases B, C, D and E, established from Martinec's archives resultsB_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the stale one in resultsA_2026.zip; see corrections.json.",
    "bytes": 641258,
    "sha256": "5ec150908bb1453d48015af477e82091d40d43e6a44cfff985569119615d41d1",
    "members": [

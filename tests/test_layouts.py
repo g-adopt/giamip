@@ -26,12 +26,10 @@ QUANTITIES = {
     "U(theta,t) (m)", "delta U(theta,t) (m)",
     "N(theta,t) (m)", "delta N(theta,t) (m)",
     "S(theta,t) (m)", "delta S(theta,t) (m)",
-    "m",
     "huf (m)", "Ice mass (10^17 kg)", "Ocean area (% of 4pi)",
 }
 
-CASE_A_SCRIPTS = ("martinec2018/benchmarkA/A_fig10_diff.gmt",
-                  "martinec2018/resultsA_2026/figZ_uvf_load_diff.gmt")
+CASE_A_SCRIPTS = ("martinec2018/resultsA_2026/figZ_uvf_load_diff.gmt",)
 
 
 @pytest.fixture(scope="module")
@@ -42,10 +40,6 @@ def layouts():
 def test_every_script_was_decoded(layouts):
     names = {s["script"] for s in layouts["scripts"]}
     assert names == {
-        "martinec2018/benchmarkA/A_fig10_diff.gmt",
-        "martinec2018/benchmarkB/figZ_uvf_load_diff.gmt",
-        "martinec2018/benchmarkB/figZ_uvf_basin_diff.gmt",
-        "martinec2018/benchmarkB/vega1D_iceB.gmt",
         "martinec2018/resultsA_2026/figZ_uvf_load_diff.gmt",
         "martinec2018/resultsB_2026/figZ_uvf_load_diff.gmt",
         "martinec2018/resultsB_2026/figZ_uvf_basin_diff.gmt",
@@ -106,17 +100,6 @@ def test_every_cross_section_names_exactly_one_ordinate_column(layouts):
                 f"{file_name}: ordinate {entry['ordinate']}")
 
 
-def test_the_one_map_names_three_columns(layouts):
-    """vega1D_iceB.gmt draws a map, so it prints longitude, latitude and a value."""
-    entries = [e for v in layouts["by_file"].values() for e in v
-               if e["kind"] == "map"]
-    assert len(entries) == 1
-    entry = entries[0]
-    assert entry["abscissa"]["column"] == 1     # longitude
-    assert entry["ordinate"]["column"] == 2     # latitude
-    assert entry["value"]["column"] == 5        # the display field
-
-
 def test_each_directory_is_the_case_its_figure_titles_name(layouts):
     """The title is the evidence tying D3, E2 and F1 to published C, D and E.
 
@@ -126,7 +109,7 @@ def test_each_directory_is_the_case_its_figure_titles_name(layouts):
     counts as evidence.
     """
     for script in layouts["scripts"]:
-        if "figZ_uvf" not in script["script"] and "A_fig10" not in script["script"]:
+        if "figZ_uvf" not in script["script"]:
             continue
         drawn = [t["text"] for t in script["titles"] if t["drawn"]]
         assert len(drawn) == 1, script["script"]
@@ -140,9 +123,7 @@ def test_the_geoid_sign_split_is_recorded(layouts, script_path):
 
     Pinned by name, so that a re-decode which loses a negation fails here
     instead of silently flipping a curve. One file, n_10ka_axi.dat, is both
-    negated and divided by gravity, so the two sets below overlap. The case A
-    script in resultsA_2026/ differs from the one in benchmarkA/ only in the
-    name of the PDF it writes, so both must give the same split.
+    negated and divided by gravity, so the two sets below overlap.
     """
     negated = set()
     plain = set()

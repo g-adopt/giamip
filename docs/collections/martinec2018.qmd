@@ -39,8 +39,8 @@ Case A does not solve the sea level equation and coincides with Spada et al.
 
 Martinec's archives for all five cases, `resultsA_2026.zip` to
 `resultsE_2026.zip`, with every contributor's curves, the VEGA reference and
-the scripts that drew the published figures. The first archives for cases A
-and B and Kachuck's giapy submission are kept as well. The converted data are
+the scripts that drew the published figures, and Kachuck's giapy submission.
+Earlier rounds from Martinec are withdrawn. The converted data are
 in `data/converted/martinec2018/`; see [the column layouts](../reference/column-layouts.qmd).
 
 ```{python}
@@ -64,17 +64,17 @@ Markdown("\n".join(rows))
 
 **The files use internal case codes.** Cases B, C, D and E are `C2`, `D3`,
 `E2` and `F1` inside the files. B is certain, because two of Kachuck's `C2`
-files are byte-identical to files in `benchmarkB.zip`. C and D are certain,
+files are byte-identical to files in `resultsB_2026.zip`. C and D are certain,
 because Martinec's `resultsC_2026.zip` and `resultsD_2026.zip` hold only `D3`
 and `E2` files and their cross-section scripts are titled "Benchmark C" and
 "Benchmark D". E rests on `resultsE_2026.zip`, which holds only `F1` files
 and compares the ocean area and h_UF, as the paper does for case E.
 
-**Benchmark A's reference is one row.** `Z_ZM_load.out` holds a single line at
-colatitude 0. It is recoverable: every `Z_<code>_load_diff.out` is that
-contributor minus VEGA, so adding a contributor's profile back onto its own
-difference file returns the reference. Five contributors agree to better than
-one millimetre across the whole range and reproduce the surviving row exactly.
+**Benchmark A's VEGA file is not the published reference.** `Z_ZM_load.out`
+is a second VEGA run. The published reference is recoverable: every
+`Z_<code>_load_diff.out` is that contributor minus VEGA, so adding a
+contributor's profile back onto its own difference file returns it. Five
+contributors agree to better than one millimetre across the whole range.
 See [the corrections](../data/corrections.qmd).
 
 ## Figures
@@ -82,7 +82,7 @@ See [the corrections](../data/corrections.qmd).
 | Figure | Shows |
 | --- | --- |
 | 3 | Case A, cross-section through the ice centre, and the differences |
-| 4 | The case B ice cap and ocean basin, drawn from `uprav.out` |
+| 4 | The case B ice cap and ocean basin |
 | 5 | Case B through the ice centre, longitude 75 |
 | 6 | Case B through the basin centre, longitude 320 |
 | 7 to 11 | Case C |

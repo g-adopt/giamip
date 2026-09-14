@@ -66,7 +66,6 @@
       "GA"
     ],
     "archive": "martinec2018/resultsB_2026.zip",
-    "earlier_archive": "martinec2018/benchmarkB.zip",
     "internal_case_code": "C2",
     "reference": "VEGA, in resultsB_2026/Z_ZM_load.out and Z_ZM_basin.out. The basin profile has 359 rows and is a coarse copy; see correction martinec2018-caseD-vega-profile-grid.",
     "published_figure": "Figures 5 and 6, with figure 4 showing the ice and basin geometry",

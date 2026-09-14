@@ -30,7 +30,7 @@ the M3-L70-V01 gravity profile.
 Both benchmarks work in colatitude, measured from the north pole, from 0 to
 180 degrees. GIAMIP works in latitude, from -90 to 90, ordered south to
 north. Longitude is 0 to 360 eastward in GIAMIP; the benchmarks use the same
-range, except `uprav.out`, which is -180 to 180.
+range.
 
 Colatitude does not run the same way in every benchmark file. Six of the
 benchmark A difference files ascend from 0 and two descend from 180. See
