@@ -18,7 +18,7 @@
   "loads": {
     "cap": {
       "name": "Spherical cap, parabolic cross-section",
-      "surface_mass_density": "sigma(theta) = rho_ice * h * (cos(theta) - cos(alpha)) / (1 - cos(alpha)) for 0 <= theta <= alpha, and 0 beyond",
+      "surface_mass_density": "sigma(theta) = rho_ice * h * sqrt((cos(theta) - cos(alpha)) / (1 - cos(alpha))) for 0 <= theta <= alpha, and 0 beyond",
       "legendre_coefficients": "sigma_n = -rho_ice*h/(4*(1-cos(alpha))) * [ (T_{n+1}(alpha) - T_{n+2}(alpha))/(n + 3/2) - (T_{n-1}(alpha) - T_n(alpha))/(n - 1/2) ], for n >= 1, where T_n(alpha) = cos(n*alpha) is the Chebyshev polynomial of the second kind as defined in table 2",
       "thickness_m": 1500,
       "angular_radius_deg": 10,
