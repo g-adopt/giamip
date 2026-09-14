@@ -23,6 +23,19 @@ Entries have a ``kind``:
 
 and a ``status``: ``confirmed`` when the evidence is reproducible from what is
 in this repository, ``unverified`` when it rests on something outside it.
+
+Files that change under the same name
+-------------------------------------
+A supplier can replace a file with a fixed version that keeps its name. A
+correction that describes the content of a file therefore names the versions
+it was found in, by SHA-256, in ``sha256``. It applies to those versions and to
+no other, so a repaired file is never "corrected" a second time. Versions that
+someone checked and found free of the defect go in ``checked_clean_sha256``.
+When a new version arrives, ``tests/test_corrections.py`` fails until every
+pinned correction names it in one of the two lists, which is the moment a
+person looks at the new file. A correction that describes a safe way of
+reading, such as turning NetCDF masking off, has no pins and applies to every
+version.
 """
 
 from __future__ import annotations
@@ -63,7 +76,7 @@ def by_id(correction_id: str) -> dict:
     )
 
 
-def applying_to(relative_path: str) -> list[dict]:
+def applying_to(relative_path: str, sha256: str | None = None) -> list[dict]:
     """Corrections whose `applies_to` patterns match a path.
 
     Parameters
@@ -71,6 +84,16 @@ def applying_to(relative_path: str) -> list[dict]:
     relative_path
         A path relative to ``data/original/``, using forward slashes, for
         example ``giamip/ice-history/iceHistory-ICE-6G_D.nc``.
+    sha256
+        The SHA-256 of the file being read. Required when a matching
+        correction is pinned to file versions, because the answer depends on
+        which version it is; a pinned correction applies only when this sum is
+        in its ``sha256`` list.
+
+    Raises
+    ------
+    ValueError
+        If a matching correction is pinned and no ``sha256`` is given.
 
     Notes
     -----
@@ -79,11 +102,21 @@ def applying_to(relative_path: str) -> list[dict]:
     well, which is loose, and every pattern in the table names its directory
     explicitly so that looseness never comes into play.
     """
-    return [
-        entry for entry in load()
-        if any(fnmatch.fnmatch(relative_path, pattern)
-               for pattern in entry["applies_to"])
-    ]
+    found = []
+    for entry in load():
+        if not any(fnmatch.fnmatch(relative_path, pattern)
+                   for pattern in entry["applies_to"]):
+            continue
+        pins = entry.get("sha256")
+        if pins is not None:
+            if sha256 is None:
+                raise ValueError(
+                    f"{relative_path}: correction {entry['id']} applies only to "
+                    f"named versions of this file. Pass the file's sha256.")
+            if sha256 not in pins:
+                continue
+        found.append(entry)
+    return found
 
 
 def fortran_exponents(text: str) -> str:

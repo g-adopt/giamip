@@ -13,7 +13,15 @@
    "evidence": "`time` is days since 2000-01-01 on a 365-day calendar, and time/365 equals `year` to 2e-12 over all 463 steps: time[-1] = 365000 days where year[-1] = 1000. Read as a calendar year the first step would be 122000 BCE, which is 124 ka before present, not the 122 ka the protocol prescribes in section 2.2.2. The compliance checker deliberately requires different wording on the output `year` variable.",
    "action": "Report the variable as an offset from 2000 CE. Never convert it as a calendar year.",
    "status": "confirmed",
-   "discovered": "2026-09-11"
+   "discovered": "2026-09-11",
+   "sha256": [
+    "16e7ed216415808b8f46aaff92ad604d1a594922cd7cd43523c210997556f81d",
+    "252ad8a3404b5d0f97d9691c29a0f2728b818743931d36ed8a85f37fb58f4bc4",
+    "5347981a930866246a150cc609f51f44e1140dc61f2cefa6c5ad3343f972b3fa",
+    "5b28b99c9e12954d759f8a46d032819697a863916264a64da0fcf083591b818f",
+    "91f1875e7200921676052c633b5003ec7a4a6ed78bf062ea72e28e4b6847f169",
+    "d12b4a6520ab6de33563922e384c7c26f1e2720ade33156bc3a32fd0d721f7a0"
+   ]
   },
   {
    "id": "ice-fillvalue-zero",
@@ -41,7 +49,10 @@
    "evidence": "The three topography files differ only in their Antarctic source, and the filename records it correctly. The Bedmap2 and Bedmap3 files name their Antarctic dataset correctly in the same attribute, so this affects one file only.",
    "action": "Take the Antarctic dataset from the filename, never from the attribute.",
    "status": "confirmed",
-   "discovered": "2026-09-11"
+   "discovered": "2026-09-11",
+   "sha256": [
+    "046934c34ca18249addb4d5d72cc9f5e4b8cc4e3e93725894bd89698e324fba8"
+   ]
   },
   {
    "id": "topography-missing-crs",
@@ -55,7 +66,12 @@
    "evidence": "A CF compliance checker flags a grid_mapping attribute that names a variable the file does not contain. The coordinates are plain geographic latitude and longitude, so nothing is actually ambiguous.",
    "action": "Ignore the attribute. Treat the axes as geographic degrees.",
    "status": "confirmed",
-   "discovered": "2026-09-11"
+   "discovered": "2026-09-11",
+   "sha256": [
+    "046934c34ca18249addb4d5d72cc9f5e4b8cc4e3e93725894bd89698e324fba8",
+    "3de8b5d08bdf3fe0ae2799a10e2e4e0c46b5abf8a942742e61a7c4751d07262b",
+    "ba2d48a045436c00108345489e5ebd5efa2d7b2554090796742980e2fc0d014e"
+   ]
   },
   {
    "id": "glac3-version-naming",
@@ -69,7 +85,12 @@
    "evidence": "Protocol v2.4 experiment table, rows Exp03, Exp04 and Exp09 to Exp11. The compliance checker adds a fourth spelling, expecting iceHistory-GLAC3b_profile1_122ka.nc.",
    "action": "Record the delivered filename in the case file, and do not label output GLAC3b until the organisers confirm the two are the same reconstruction.",
    "status": "unverified",
-   "discovered": "2026-09-11"
+   "discovered": "2026-09-11",
+   "sha256": [
+    "16e7ed216415808b8f46aaff92ad604d1a594922cd7cd43523c210997556f81d",
+    "252ad8a3404b5d0f97d9691c29a0f2728b818743931d36ed8a85f37fb58f4bc4",
+    "5347981a930866246a150cc609f51f44e1140dc61f2cefa6c5ad3343f972b3fa"
+   ]
   },
   {
    "id": "benchmarkA-sk-superseded",

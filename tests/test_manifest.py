@@ -94,3 +94,26 @@ def test_member_names_map_to_a_path_on_disk(manifest):
         paths = {data.member_path(m["name"], top) for m in members}
         assert "" not in paths, f"{rel}: a member maps to an empty path"
         assert len(paths) == len(members), f"{rel}: two members share a path"
+
+
+def test_a_changed_file_keeps_the_sum_of_its_earlier_version():
+    """build_manifest.carry_history records the version that is replaced."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "build_manifest", pathlib.Path(__file__).resolve().parent.parent / "scripts" / "build_manifest.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    old = {"generated": "2026-09-11", "artifacts": {
+        "giamip/t.zip": {"sha256": "a" * 64, "bytes": 1, "members": [{"name": "T/x.nc", "sha256": "b" * 64, "bytes": 1}]}}}
+    new = {"giamip/t.zip": {"sha256": "c" * 64, "bytes": 2, "members": [{"name": "T/x.nc", "sha256": "d" * 64, "bytes": 2}]}}
+    module.carry_history(old, new)
+    assert new["giamip/t.zip"]["previous_versions"] == [{
+        "sha256": "a" * 64, "bytes": 1, "recorded_in_manifest_of": "2026-09-11",
+        "members": [{"name": "T/x.nc", "sha256": "b" * 64}]}]
+    versions = data.file_versions({"artifacts": new})
+    assert versions["giamip/t/x.nc"] == {"sha256": "d" * 64, "previous": ["b" * 64]}
+    # A second rebuild with no change carries the history forward unchanged.
+    again = {"giamip/t.zip": dict(new["giamip/t.zip"])}
+    again["giamip/t.zip"].pop("previous_versions")
+    module.carry_history({"generated": "2026-09-14", "artifacts": new}, again)
+    assert again["giamip/t.zip"]["previous_versions"] == new["giamip/t.zip"]["previous_versions"]

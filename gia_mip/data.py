@@ -84,6 +84,44 @@ def sha256(path: pathlib.Path) -> str:
     return h.hexdigest()
 
 
+def file_versions(manifest: dict | None = None) -> dict[str, dict]:
+    """Every file the manifest describes, with its current and previous SHA-256.
+
+    An archive's members are listed under the path they unpack to, so
+    ``giamip/ice-history.zip`` member ``Ice History/iceHistory-ICE-6G_D.nc`` is
+    ``giamip/ice-history/iceHistory-ICE-6G_D.nc``, which is the path a reader
+    opens and the path a correction names.
+
+    Parameters
+    ----------
+    manifest
+        The manifest. Default: the one in the package resources.
+
+    Returns
+    -------
+    dict
+        Relative path to ``{"sha256": current sum, "previous": [older sums]}``.
+        The older sums come from ``previous_versions``, which
+        scripts/build_manifest.py appends to whenever a file changes.
+    """
+    manifest = manifest or load_manifest()
+    out: dict[str, dict] = {}
+    for rel, entry in manifest["artifacts"].items():
+        previous = entry.get("previous_versions", [])
+        out[rel] = {"sha256": entry["sha256"], "previous": [v["sha256"] for v in previous]}
+        members = entry.get("members")
+        if not members:
+            continue
+        top = common_top([m["name"] for m in members])
+        target = unpack_target(pathlib.PurePosixPath(rel))
+        for m in members:
+            path = f"{target}/{member_path(m['name'], top)}"
+            older = [x["sha256"] for v in previous for x in v.get("members", [])
+                     if member_path(x["name"], common_top([y["name"] for y in v["members"]])) == member_path(m["name"], top)]
+            out[path] = {"sha256": m["sha256"], "previous": older}
+    return out
+
+
 def fetch(url: str, dest: pathlib.Path) -> None:
     """Download one file, writing to a temporary name first.
 

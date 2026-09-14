@@ -109,6 +109,41 @@ def inventory(path: pathlib.Path) -> list[dict] | None:
     return None
 
 
+def carry_history(old: dict | None, artifacts: dict[str, dict]) -> None:
+    """Keep the record of every earlier version of a file, in place.
+
+    A supplier can replace a file with a new version under the same name. The
+    manifest describes the version on disk, and without this step the sum of
+    the version that earlier results were computed from would be overwritten
+    and lost. So when a file's sum differs from the previous manifest, the old
+    sum, size and member sums are appended to ``previous_versions``, and a
+    history already recorded is carried forward unchanged.
+
+    Parameters
+    ----------
+    old
+        The previous manifest, or None when there is none.
+    artifacts
+        The new manifest entries, which are updated.
+    """
+    if not old:
+        return
+    for rel, entry in artifacts.items():
+        before = old.get("artifacts", {}).get(rel)
+        if before is None:
+            continue
+        history = list(before.get("previous_versions", []))
+        if before["sha256"] != entry["sha256"]:
+            record = {"sha256": before["sha256"], "bytes": before["bytes"],
+                      "recorded_in_manifest_of": old.get("generated")}
+            if before.get("members"):
+                record["members"] = [{"name": m["name"], "sha256": m["sha256"]}
+                                     for m in before["members"]]
+            history.append(record)
+        if history:
+            entry["previous_versions"] = history
+
+
 def main() -> int:
     here = pathlib.Path(__file__).resolve().parent.parent
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
@@ -206,6 +241,9 @@ def main() -> int:
         count = entry.get("member_count")
         suffix = f", {count} members" if count else ""
         print(f"{rel:52s} {size_mb:8.1f} MB  {entry['sha256'][:16]}{suffix}")
+
+    carry_history(json.loads(args.output.read_text()) if args.output.exists() else None,
+                  artifacts)
 
     manifest = {
         "generated": datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds"),

@@ -40,6 +40,13 @@ recorded in `docs/reference/conventions.qmd` and in the column layout table. A
 solver that guesses gives a result that is wrong by a factor of minus one and
 looks plausible.
 
+**A correction about file content names the file versions.** The GIAMIP
+inputs change under the same name. A correction that describes what a file
+contains lists the SHA-256 of each version it was found in, and a reader passes
+the sum of the file it opens. A new version fails the test suite until someone
+has checked every pinned correction against it. See
+`docs/data/corrections.qmd`.
+
 **`gia_mip/data.py` imports only the standard library.** It runs on a bare CI
 runner before anything is installed, and `tests/test_import.py` checks this by
 reading the source.

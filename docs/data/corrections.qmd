@@ -19,6 +19,22 @@ correction is visible, survives a re-fetch, and cannot be quietly forgotten.
 `status` is `confirmed` when the evidence is reproducible from what is in this
 repository, and `unverified` when it rests on something outside it.
 
+## When a supplier replaces a file
+
+The GIAMIP inputs are not frozen. The organisers can replace a file with a
+fixed version under the same name, and this repository works with whatever
+version is current. Three rules keep that safe.
+
+1. `scripts/build_manifest.py` records the SHA-256 of the replaced version
+   under `previous_versions` in the manifest, so the version an earlier
+   result was computed from stays on record.
+2. A correction that describes the content of a file lists, in `sha256`, the
+   versions it was found in, and applies to no other. A reader passes the sum
+   of the file it opens. A repaired file is therefore never corrected twice.
+3. When a new version arrives, the test suite fails until each pinned
+   correction names the new sum, in `sha256` if the defect is still there or
+   in `checked_clean_sha256` if it is gone.
+
 ```{python}
 #| echo: false
 import sys, pathlib
@@ -44,6 +60,8 @@ for e in corrections.load():
         blocks.append(f"- `{p}`\n")
     if e.get("field"):
         blocks.append(f"\n**Field** `{e['field']}`\n")
+    if e.get("sha256"):
+        blocks.append("\n**File versions with the defect** " + ", ".join(f"`{d[:16]}`" for d in e["sha256"]) + "\n")
     blocks.append(f"\n**As shipped** {e['as_shipped']}\n")
     blocks.append(f"\n**Correct** {e['correct']}\n")
     blocks.append(f"\n**Evidence** {e['evidence']}\n")
