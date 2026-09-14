@@ -1,0 +1,632 @@
+---
+title: "Martinec et al. (2018) benchmark specification"
+---
+
+> Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun,
+> Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James,
+> T. S. (2018). A benchmark study of numerical implementations of the sea
+> level equation in GIA modelling. *Geophysical Journal International* 215(1),
+> 389-414. doi:[10.1093/gji/ggy280](https://doi.org/10.1093/gji/ggy280)
+
+This page tells a solver developer what to run for benchmark cases A to E and
+what to compare the result against. The facts come from the paper. The text,
+the order and the tables are our own. Page numbers refer to the journal
+pagination, and equation, table and figure numbers refer to the paper.
+
+::: {.callout-note}
+## Where this page is not the authority
+
+The repository records the case facts in files that a program can read. Where
+this page and those files disagree, report it, and use the files until the
+disagreement is settled.
+
+- The five cases: `cases/benchmarks/martinec2018/A.json` to `E.json`, shown in
+  [the Martinec (2018) collection page](../collections/martinec2018.qmd).
+- The earth model: `models/m3-l70-v01.json`, shown in
+  [the earth models](../reference/earth-models.qmd).
+- The ice heights, time scenarios and ocean basins: `loads/martinec2018.json`,
+  shown in [the loads and grids](../reference/loads-and-grids.qmd).
+- The signs and datums of each quantity:
+  [the conventions](../reference/conventions.qmd).
+- The known defects in the benchmark data:
+  [the corrections](../data/corrections.qmd).
+:::
+
+## Notation
+
+Positions on the sphere are $\Omega = (\theta, \lambda)$, with colatitude
+$\theta$ and longitude $\lambda$ in degrees. Time $t$ starts at $t_0 = 0$,
+when the load is first applied, and ends at the terminal time $t_f$. The
+symbols follow [the conventions](../reference/conventions.qmd): $U$ is the
+vertical displacement of the solid surface, $N$ the geoid displacement, $S$
+the sea-surface variation, $\zeta$ the solid Earth topography and $h_{UF}$ the
+thickness of the uniform water layer. The relative sea level (RSL in the
+conventions table) is written $s$ in the equations. The ocean function
+$\mathcal{O}(\Omega, t)$ is 1 over the ocean and 0 over land. The ice density
+is $\rho_{ice}$ and the water density is $\rho_w$. $\Omega_0$ is the full
+solid angle, $4\pi$.
+
+## Physical assumptions
+
+All five cases share these assumptions (p. 390):
+
+- The reference frame is the centre of mass frame.
+- The earth model is incompressible and does not rotate. There is no
+  rotational feedback.
+- There is no ocean circulation, so the sea surface stays an equipotential
+  surface at all times.
+- Water moves between ice and ocean immediately. No water is stored on land or
+  in the atmosphere.
+- The ice and water densities are constant.
+- The Earth is in isostatic equilibrium at $t_0$ (p. 390).
+
+## Earth model
+
+All cases use M3-L70-V01, the model of Spada et al. (2011), table 3 (p. 393,
+section 3.1). It is spherically symmetric, self-gravitating and
+incompressible, with five layers. The lithosphere is elastic, the three mantle
+layers are Maxwell viscoelastic, and the core is a uniform inviscid fluid. The
+paper does not repeat the layer values. The table below is generated from
+`models/m3-l70-v01.json`.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+from gia_mip import cases
+
+# The earth model is read from the JSON file so that this page and the model
+# file cannot disagree. The paper only names the model (section 3.1).
+model = cases.earth_model("m3-l70-v01")
+rows = ["| Layer | Top radius (km) | Bottom radius (km) | Density (kg/m3) | Shear modulus (Pa) | Viscosity (Pa s) | Rheology |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | --- |"]
+for layer in model["layers"]:
+    # A null viscosity marks the elastic lithosphere, which has no viscous flow.
+    eta = layer["viscosity_pa_s"]
+    eta_text = "none (elastic)" if eta is None else f"{eta:.1e}"
+    rows.append(f"| {layer['role']} | {layer['top_radius_km']} | "
+                f"{layer['bottom_radius_km']} | {layer['density_kg_m3']} | "
+                f"{layer['shear_modulus_pa']:.4e} | {eta_text} | {layer['rheology']} |")
+rows.append("")
+rows.append(f"Compressible: {model['compressible']}. "
+            f"Self-gravitating: {model['self_gravitating']}.")
+Markdown("\n".join(rows))
+```
+
+## Load
+
+### Densities
+
+The ice load is a surface mass density (p. 393, eq. 28):
+
+$$
+\sigma_{ice}(\Omega, t) = \rho_{ice}\, h_{ice}(\Omega, t)
+$$ {#eq-m18-ice-load}
+
+(Martinec et al. 2018, eq. 28.) The total surface load is the ice plus the
+water that the sea level equation puts on the ocean, both relative to $t_0$:
+
+$$
+\sigma(\Omega, t) = \sigma_{ice}(\Omega, t) + \rho_w\, s(\Omega, t)
+$$ {#eq-m18-total-load}
+
+(Martinec et al. 2018, eq. 2.)
+
+The benchmark densities are $\rho_{ice} = 931$ kg/m3 and $\rho_w = 1000$
+kg/m3 (p. 390). They differ from the GIAMIP values. A solver must read the
+densities from the case, never from a shared constant.
+
+```{python}
+#| echo: false
+# Both columns come from the repository files, so a change to either file
+# shows here. The benchmark values are also stated on p. 390 of the paper.
+m18 = cases.loads("martinec2018")["constants"]
+giamip = cases.case("giamip-exp01")["constants"]
+Markdown(f"""
+| Quantity | Martinec (2018) | GIAMIP |
+| --- | ---: | ---: |
+| Ice density (kg/m3) | {m18['ice_density_kg_m3']} | {giamip['ice_density_kg_m3']} |
+| Ocean water density (kg/m3) | {m18['water_density_kg_m3']} | {giamip['ocean_water_density_kg_m3']} |
+""")
+```
+
+### Spherical cap
+
+Every case uses one spherical cap shape, the cap of Spada et al. (2011),
+table 4, row 1, with maximum height $h_0$ and angular radius $\alpha_0 =
+10^\circ$ (p. 393). The paper does not write the height profile of the cap. It
+states that the cap has an infinite slope at its edge, and that this slope
+causes spikes in the differences at the cap edge (p. 399). Three placements
+and heights are defined.
+
+Ice height models. Source: Martinec et al. (2018), table 1.
+
+```{python}
+#| echo: false
+# Table 1 of the paper, read from loads/martinec2018.json.
+loads = cases.loads("martinec2018")
+rows = ["| Model | Centre colatitude $\\theta_0$ | Centre longitude $\\lambda_0$ | $h_0$ (m) | Angular radius $\\alpha_0$ |",
+        "| --- | ---: | ---: | ---: | ---: |"]
+for name in ["L0", "L1", "L2"]:
+    m = loads["ice_height_models"][name]
+    rows.append(f"| {name} | {m['centre_colatitude_deg']}° | {m['centre_longitude_deg']}° | "
+                f"{m['height_m']} | {loads['load_shape']['angular_radius_deg']}° |")
+Markdown("\n".join(rows))
+```
+
+L1 is thick, so it never floats. L2 is 500 m high, so it satisfies the
+floating condition (@eq-m18-hw-star) when it reaches the coast of basin B2
+(p. 394).
+
+### Time scenarios
+
+Both the height $h(t)$ and the angular radius $\alpha(t)$ of the cap change
+with time. Source: Martinec et al. (2018), table 2.
+
+| Scenario | $t_0$ to $t_1$ | $t_1$ to $t_2$ | Terminal time $t_f$ |
+| --- | --- | --- | ---: |
+| T0 | Step load at $t_0$: $h = h_0$ and $\alpha = \alpha_0$ for $t \in (t_0, t_1]$, $t_1 = 10$ kyr | not used | $t_1 = 10$ kyr |
+| T1 | $h$ and $\alpha$ increase linearly from 0 at $t_0$ to $h_0$ and $\alpha_0$ at $t_1 = 10$ kyr | $h = h_0$ and $\alpha = \alpha_0$ for $t \in (t_1, t_2]$ | $t_2 = 15$ kyr |
+
+For case C, the paper reports that the grounded ice mass grows approximately
+as the cube of time up to 10 kyr and is constant after that (p. 403, Fig. 8).
+
+## Initial topography and ocean basins
+
+The solid Earth topography at $t_0$ is an exponential basin with its centre at
+$(\theta_b, \lambda_b)$ (p. 395):
+
+$$
+\zeta^{(0)}(\Omega) = b_{max} - b_0 \exp\!\left(-\frac{\psi^2}{2\sigma_b^2}\right)
+$$ {#eq-m18-basin}
+
+(Martinec et al. 2018, eq. 29.) Here $\psi$ is the angular distance from the
+basin centre,
+
+$$
+\cos\psi = \cos\theta \cos\theta_b + \sin\theta \sin\theta_b \cos(\lambda - \lambda_b)
+$$ {#eq-m18-psi}
+
+(Martinec et al. 2018, eq. 30), and $\sigma_b = 26^\circ$ in all cases. The
+minimum of $\zeta^{(0)}$ is $b_{max} - b_0$ at the basin centre and the maximum
+is $b_{max}$ at the antipode. The initial ocean function follows from the
+topography:
+
+$$
+\mathcal{O}^{(0)}(\Omega) =
+\begin{cases}
+1 & \text{if } \zeta^{(0)}(\Omega) < 0, \\
+0 & \text{otherwise}
+\end{cases}
+$$ {#eq-m18-ocean-initial}
+
+(Martinec et al. 2018, eq. 1.) The basin radius, where $\zeta^{(0)} = 0$, is
+$\psi_0 = 24.85^\circ$ for both B1 and B2 (p. 395). This value equals
+$\sigma_b \sqrt{2 \ln(b_0 / b_{max})}$. For B2 the paper gives the radius as
+$24.8503^\circ$ and the initial ocean area as $(1 - \cos\psi_0)/2 = 0.0462956$
+of the full sphere (p. 409, Fig. 17).
+
+Ocean basin parameters at $t_0$. Source: Martinec et al. (2018), table 3.
+
+```{python}
+#| echo: false
+# Table 3 of the paper, read from loads/martinec2018.json. The minimum
+# topography b_max - b_0 is computed here and is the (negative) ocean depth
+# at the basin centre.
+basins = loads["ocean_basins"]
+rows = ["| Model | $\\theta_b$ | $\\lambda_b$ | $b_{max}$ (m) | $b_0$ (m) | $\\sigma_b$ | $b_{max} - b_0$ (m) |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+for name in ["B0", "B1", "B2"]:
+    b = basins[name]
+    rows.append(f"| {name} | {b['centre_colatitude_deg']}° | {b['centre_longitude_deg']}° | "
+                f"{b['bmax_m']} | {b['b0_m']} | {basins['sigma_b_deg']}° | {b['bmax_m'] - b['b0_m']} |")
+Markdown("\n".join(rows))
+```
+
+B0 has no ocean. B1 lies far from the ice. B2 is deep and lies next to the ice
+cap, so a growing L2 cap reaches its coast. B2\* has the B2 parameters, but
+@eq-m18-basin then gives the topography at $t_f$ (case E).
+
+## Sea level equation
+
+### Definitions
+
+The sea level height $h_w$ is the water column from the ocean bottom to the
+sea surface. The relative sea level is its change since $t_0$:
+
+$$
+s(\Omega, t) = h_w(\Omega, t) - h_w(\Omega, t_0)
+$$ {#eq-m18-rsl-def}
+
+(Martinec et al. 2018, eq. 3.) The paper defines $S(\Omega, t)$ "as the radial
+distance of the sea surface at time $t$ relative to the radial distance of the
+sea surface at time $t_0$" (p. 391):
+
+$$
+S(\Omega, t) = r_w(\Omega, t) - r_w(\Omega, t_0)
+$$ {#eq-m18-sea-surface}
+
+(Martinec et al. 2018, eq. 4), with $r_w$ the distance from the geocentre to
+the sea surface. With $U$ the vertical displacement of the ocean bottom,
+
+$$
+s(\Omega, t) = S(\Omega, t) - U(\Omega, t)
+$$ {#eq-m18-rsl}
+
+(Martinec et al. 2018, eq. 5.) The geoid displacement is
+
+$$
+N(\Omega, t) = -\frac{\Phi(\Omega, t)}{g_0}
+$$ {#eq-m18-geoid}
+
+(Martinec et al. 2018, eq. 9), where $\Phi$ is the increment of the
+gravitational potential and $g_0$ is the unperturbed gravity at the surface.
+
+The sea level equation splits $s$ into a uniform layer over the ocean and a
+part that varies in space:
+
+$$
+s(\Omega, t) = h_{UF}(t)\, \mathcal{O}(\Omega, t) + s_{NU}(\Omega, t)
+$$ {#eq-m18-sle}
+
+(Martinec et al. 2018, eq. 6.) $s_{NU}$ follows from the condition that the
+sea surface is an equipotential surface. $h_{UF}$ follows from conservation
+of mass in the ice and ocean system:
+
+$$
+\int_{\Omega_0} \sigma(\Omega, t)\, d\Omega = 0
+$$ {#eq-m18-mass}
+
+(Martinec et al. 2018, eq. 10.)
+
+### Variants
+
+The cases use three levels of the sea level equation (p. 395, section 3.4).
+
+| SLE | Ocean function | Ice over the ocean | Equations | Cases |
+| ---: | --- | --- | --- | --- |
+| 0 | No ocean | Not applicable | Load is $\sigma_{ice}$ only | A |
+| 1 | Fixed at $\mathcal{O}^{(0)}$ | Removed at the coast | @eq-m18-fixed-ice, @eq-m18-fixed-snu, @eq-m18-fixed-huf | B, C |
+| 2 | Changes with time, with grounded and floating ice | Grounded or floating | @eq-m18-hw, @eq-m18-hw-star, @eq-m18-ocean-float, @eq-m18-float-snu, @eq-m18-moving-huf | D, E |
+
+### SLE = 1: fixed ocean geometry
+
+The ocean function is $\mathcal{O}(\Omega, t) = \mathcal{O}^{(0)}(\Omega)$ at
+all times. Ice is not allowed on the ocean. Any ice over the ocean function is
+deleted before the load is applied:
+
+$$
+\sigma_{ice}(\Omega, t) = \sigma_{ice}(\Omega, t) \left[1 - \mathcal{O}^{(0)}(\Omega)\right]
+$$ {#eq-m18-fixed-ice}
+
+(Martinec et al. 2018, eq. 7.) This is how case C removes ("calves") the part
+of the cap that reaches the coast. The non-uniform part is
+
+$$
+s_{NU}(\Omega, t) = \left[N(\Omega, t) - U(\Omega, t)\right] \mathcal{O}^{(0)}(\Omega)
+$$ {#eq-m18-fixed-snu}
+
+(Martinec et al. 2018, eq. 8.) Mass conservation gives the uniform layer:
+
+$$
+h_{UF}(t) = -\frac{1}{\bar{\mathcal{O}}^{(0)}} \left[\frac{1}{\rho_w}\, \bar{\sigma}_{ice}(t) + \overline{NU}(t)\right]
+$$ {#eq-m18-fixed-huf}
+
+(Martinec et al. 2018, eq. 12), with the integrals
+
+$$
+\bar{\sigma}_{ice}(t) = \int_{\Omega_0} \sigma_{ice}(\Omega, t)\left[1 - \mathcal{O}^{(0)}(\Omega)\right] d\Omega,
+\qquad
+\overline{NU}(t) = \int_{\Omega_0} \left[N(\Omega, t) - U(\Omega, t)\right] \mathcal{O}^{(0)}(\Omega)\, d\Omega
+$$ {#eq-m18-fixed-integrals}
+
+(Martinec et al. 2018, eq. 13) and the ocean area
+
+$$
+\bar{\mathcal{O}}^{(0)} = \int_{\Omega_0} \mathcal{O}^{(0)}(\Omega)\, d\Omega
+$$ {#eq-m18-fixed-area}
+
+(Martinec et al. 2018, eq. 14.) In @eq-m18-fixed-huf the first term is the
+water taken from the ocean to build the ice, and the second term is the water
+that the change of $N - U$ over the ocean needs. The paper plots the two terms
+separately for case C (p. 405, Fig. 11).
+
+### SLE = 2: moving coastline and floating ice
+
+The water column at time $t$ is computed from the initial topography:
+
+$$
+h_w(\Omega, t) = h_{UF}(t) + N(\Omega, t) - U(\Omega, t) - \zeta^{(0)}(\Omega)
+$$ {#eq-m18-hw}
+
+(Martinec et al. 2018, eq. 15.) The water column left after the ice has
+displaced water is
+
+$$
+h_w^*(\Omega, t) = h_w(\Omega, t) - \frac{1}{\rho_w}\, \sigma_{ice}(\Omega, t)
+$$ {#eq-m18-hw-star}
+
+(Martinec et al. 2018, eq. 22.) The ice is grounded where $h_w^* \le 0$ and
+floats where $h_w^* > 0$. The ocean function is
+
+$$
+\mathcal{O}(\Omega, t) =
+\begin{cases}
+1 & \text{if } h_w(\Omega, t) > 0 \text{ and } h_w^*(\Omega, t) > 0, \\
+0 & \text{otherwise}
+\end{cases}
+$$ {#eq-m18-ocean-float}
+
+(Martinec et al. 2018, eq. 23.) The non-uniform part is
+
+$$
+s_{NU}(\Omega, t) = \left[N(\Omega, t) - U(\Omega, t) - \frac{1}{\rho_w}\, \sigma_{ice}(\Omega, t)\right] \mathcal{O}(\Omega, t) - \zeta^{(0)}(\Omega)\left[\mathcal{O}(\Omega, t) - \mathcal{O}^{(0)}(\Omega)\right]
+$$ {#eq-m18-float-snu}
+
+(Martinec et al. 2018, eq. 24.) Without floating ice, the $\sigma_{ice}$ term
+is absent and the expression reduces to eq. 17 of the paper. The second term
+acts only where the coastline has moved since $t_0$. Mass conservation gives
+
+$$
+h_{UF}(t) = -\frac{1}{\bar{\mathcal{O}}(t)} \left[\frac{1}{\rho_w}\, \bar{\sigma}_{ice}(t) + \overline{NU}(t) - \bar{\zeta}^{(0)}(t)\right]
+$$ {#eq-m18-moving-huf}
+
+(Martinec et al. 2018, eq. 19.) Here $\bar{\sigma}_{ice}$ and $\overline{NU}$
+are the integrals of @eq-m18-fixed-integrals with $\mathcal{O}^{(0)}(\Omega)$
+replaced by $\mathcal{O}(\Omega, t)$, and
+
+$$
+\bar{\zeta}^{(0)}(t) = \int_{\Omega_0} \zeta^{(0)}(\Omega)\left[\mathcal{O}(\Omega, t) - \mathcal{O}^{(0)}(\Omega)\right] d\Omega
+$$ {#eq-m18-moving-zeta}
+
+(Martinec et al. 2018, eq. 20),
+
+$$
+\bar{\mathcal{O}}(t) = \int_{\Omega_0} \mathcal{O}(\Omega, t)\, d\Omega
+$$ {#eq-m18-moving-area}
+
+(Martinec et al. 2018, eq. 21.) @eq-m18-moving-huf holds with and without
+floating ice, because the mass of ice removed at the coast equals the mass of
+water that floating ice displaces (p. 393, eqs 26 and 27).
+
+$h_{UF}$, $s_{NU}$ and $\mathcal{O}$ depend on $U$ and $N$, and $U$ and $N$
+depend on the load. The solver must therefore find the load, the ocean
+geometry and the response together.
+
+### Case E: topography prescribed at the terminal time
+
+In case E, @eq-m18-basin with the B2 parameters is the topography that the
+solution must reach at $t_f$:
+
+$$
+\zeta^{(t),des}(\Omega) = b_{max} - b_0 \exp\!\left(-\frac{\psi^2}{2\sigma_b^2}\right)
+$$ {#eq-m18-e-target}
+
+(Martinec et al. 2018, eq. 32.) The topography at $t_f$ follows from the
+initial topography and the solution:
+
+$$
+\zeta^{(t)}(\Omega) = \zeta^{(0)}(\Omega) + U(\Omega, t_f) - N(\Omega, t_f) - h_{UF}(t_f)
+$$ {#eq-m18-e-terminal}
+
+(Martinec et al. 2018, eq. 33.) The ocean geometry depends on $\zeta^{(0)}$,
+so @eq-m18-e-terminal cannot be inverted in one step. The paper updates the
+initial topography after each full run $k$:
+
+$$
+\zeta^{(0),k+1} = \zeta^{(0),k} + \zeta^{(t),des} - \zeta^{(t),k}
+$$ {#eq-m18-e-iteration}
+
+(Martinec et al. 2018, eq. 34.) The iteration stops when the L2 norm of
+$\zeta^{(t),des} - \zeta^{(t),k}$ is less than 0.01 m. In the paper this
+took at most six iterations (p. 409).
+
+## The five cases
+
+```{python}
+#| echo: false
+# The option columns and the terminal time come from the case files, which
+# transcribe table 4 and table 2 of the paper. The last two columns are what
+# the paper compares for each case (section 5 and figures 3 to 19); they are
+# written here from the paper because the case files do not record them per
+# profile.
+compared = {
+    "A": ("U, N on the ice profile", "none"),
+    "B": ("U, N on the ice profile; U, N, S on the basin profile", "none"),
+    "C": ("U, N on the ice profile; U, N, S on the basin profile",
+          "grounded ice mass; h_UF(t) (reference solution only)"),
+    "D": ("U, N on the ice profile; U, N, S on the basin profile",
+          "grounded and floating ice mass; h_UF(t); ocean area"),
+    "E": ("none", "ocean area; h_UF(t)"),
+}
+rows = ["| Case | SLE | Ice height | Time | Basin | $t_f$ (kyr) | Profiles at $t_f$ | Time series |",
+        "| --- | ---: | --- | --- | --- | ---: | --- | --- |"]
+for c in cases.cases("martinec2018"):
+    s = c["specification"]
+    letter = c["published_name"].split()[-1]
+    profiles, series = compared[letter]
+    rows.append(f"| {letter} | {s['sea_level_equation']} | {s['ice_height_model']} | "
+                f"{s['time_scenario']} | {s['ocean_basin']} | {s['terminal_time_kyr']} | "
+                f"{profiles} | {series} |")
+Markdown("\n".join(rows))
+```
+
+Option columns source: Martinec et al. (2018), table 4. Terminal times
+source: table 2.
+
+**Case A.** Cap L0 sits on the north pole and is applied as a step (T0). There
+is no ocean and the sea level equation is not solved. The run is the cap-load
+case of Spada et al. (2011) test 1/2. The degree 0 and degree 1 components of
+the load are left out (p. 399). Compare $U$ and $N$ at 10 kyr.
+
+**Case B.** Cap L1 (1500 m) at $(25^\circ, 75^\circ)$ is applied as a step
+(T0). Basin B1 at $(100^\circ, 320^\circ)$ is far away, and the ice never
+reaches it. Solve the sea level equation with the fixed ocean function
+(SLE = 1). The load includes spherical harmonic degrees 0 to 256 (p. 401).
+Compare at 10 kyr.
+
+**Case C.** Cap L2 (500 m) at $(25^\circ, 75^\circ)$ grows to full size over
+10 kyr and then stays constant to 15 kyr (T1). Basin B2 at $(35^\circ,
+25^\circ)$ is close, and the cap reaches its coast. The ocean function stays
+fixed (SLE = 1), so ice that crosses the coast is removed by
+@eq-m18-fixed-ice. Compare at 15 kyr.
+
+**Case D.** As case C, with SLE = 2. The ocean function is recomputed from
+@eq-m18-ocean-float, so the coast moves and ice past the coast can ground or
+float. Compare at 15 kyr. The paper reports that $U$ and $N$ are about 10 per
+cent larger than in case C, because grounded ice now loads the shelf (p. 405).
+
+**Case E.** As case D, with basin B2\*. The B2 topography is the target at
+$t_f = 15$ kyr, and the initial topography is found with
+@eq-m18-e-iteration. Compare the ocean area and $h_{UF}(t)$ with case D. The
+paper reports a larger ocean area and less water taken from the ocean than in
+case D (p. 409).
+
+## Numerical settings
+
+The paper prescribes no common truncation degree, grid, time step or number of
+iterations. Each code used its own settings. The reference solution uses the
+VEGA settings in the first row. Source: Martinec et al. (2018), table 5 for
+the parametrisation and section 4 (pp. 396 to 398) for the settings. A blank
+cell means that the paper does not state the value.
+
+| Code (label) | Parametrisation | Spherical harmonic truncation | Spatial grid for load and topography | Time step | Iterations of the sea level equation |
+| --- | --- | --- | --- | --- | --- |
+| VEGA (ZM), reference | time domain, radial finite elements, spherical harmonics | degree 0 to 256; case A from degree 2 | Gauss-Legendre, 1024 latitudes by 2048 longitudes | 20 yr | explicit time differencing, no iteration |
+| VILMA (VK) | time domain, radial finite elements, spherical harmonics | 256 for cases A and E, 128 for B, C and D | Gauss-Legendre, 1024 by 2048 | 20 yr | explicit time differencing, no iteration |
+| TABOO and SELEN 4 (MS) | Laplace domain, normal modes | | case A analytic; B to E equal-area icosahedral grid, 75 692 pixels of radius 46.3 km | 0.5 kyr | 5 |
+| TUDSLE (WW) | Laplace domain, pseudo-spectral | | equal-angle, 0.03125° for A, 0.25° for B | 1 kyr | until the mean relative change is below a threshold, at most 6 per time step |
+| MUSSEL (YS) | Laplace domain, pseudo-spectral | 256 | Gaussian, 1024 by 2048 | 100 yr | |
+| PGCcalc (KS) | Laplace domain, pseudo-spectral | 256 | equal-angle, 0.125°, fixed shorelines | | |
+| TSec02 (VB) | Laplace domain, pseudo-spectral with TABOO Love numbers | | | | |
+| A13 (GA) | Laplace domain, semi-analytic | | | | until converged, usually fewer than 3 |
+| AFCAL (WWa), case A only | time domain, axisymmetric finite elements, spherical harmonics for the potential | 120 | elements of 0.25°, Poisson ratio 0.495 | | 4 |
+| giapy (SK) | time domain with TABOO Love numbers | | equal-angle, 721 latitudes by 512 longitudes | 20 yr | until one more iteration changes the surface by less than 1 per cent on average |
+
+Radial discretisation, where stated: VEGA uses 165 linear elements with steps
+of 5, 10 and 40 km in the lithosphere, upper mantle and lower mantle. VILMA
+uses 248 elements with steps of 2.5 km in the lithosphere and upper mantle,
+10 km in the transition zone and 40 km in the lower mantle (p. 396). VILMA
+cannot run with a fixed coastline, so for cases B and C it replaces the
+bathymetry with a step of 500 m water depth or 500 m land height (p. 396).
+
+The VEGA convergence test uses case D with four resolutions. Source: Martinec
+et al. (2018), table A1.
+
+| Run | Truncation degree $j_{max}$ | Gauss-Legendre grid for the sea level equation |
+| --- | ---: | --- |
+| C1 | 64 | 256 by 512 |
+| C2 | 128 | 256 by 512 |
+| C3 | 128 | 512 by 1024 |
+| C4 | 256 | 512 by 1024 |
+
+## Outputs
+
+All quantities are in metres and are changes since $t_0$, except the
+topography, the ocean area and the ice mass. Upward means away from the
+geocentre. See [the conventions](../reference/conventions.qmd) for how the
+stored data files depart from these definitions.
+
+| Quantity | Definition | Positive direction | Datum |
+| --- | --- | --- | --- |
+| $U$ | Vertical displacement of the solid surface (the ocean bottom in the ocean) | Upward | Surface at $t_0$ |
+| $N$ | Geoid displacement, $-\Phi/g_0$ (@eq-m18-geoid) | Upward | Geoid at $t_0$ |
+| $S$ | Sea-surface variation (@eq-m18-sea-surface) | Upward | Sea surface at $t_0$ |
+| $s$ | Relative sea level, $S - U$ (@eq-m18-rsl) | Sea level rising against the bottom | Water column at $t_0$ |
+| $h_{UF}$ | Uniform water layer (@eq-m18-fixed-huf, @eq-m18-moving-huf) | Water added to the ocean; negative while ice grows | Zero at $t_0$ |
+| $\zeta^{(0)}$ | Solid Earth topography at $t_0$ | Upward; negative in the ocean | Sea surface at $t_0$ |
+| $\bar{\mathcal{O}}(t)$ | Ocean area (@eq-m18-moving-area) | Not signed | Plotted as a percentage of $4\pi$ |
+| Ice mass | Grounded ice, and floating ice in case D | Not signed | Plotted in units of $10^{17}$ kg |
+
+## Comparison method
+
+**Reference.** The paper has no analytic solution. Each code is compared with
+the VEGA solution computed with the settings above (p. 399). The paper calls
+it VEGA^ref^.
+
+**Profiles.** All profiles run along a meridian, as a function of colatitude
+from 0 to 180 degrees. The differences are measured only over a colatitude
+interval.
+
+| Case | Meridian | Passes through | Epoch | Quantities | Difference interval | Figure |
+| --- | --- | --- | --- | --- | --- | --- |
+| A | $\lambda = 0^\circ$ | ice centre at the pole | 10 kyr | $U$, $N$ | 0° to 20° | 3 |
+| B | $\lambda = 75^\circ$ | ice centre $(25^\circ, 75^\circ)$ | 10 kyr | $U$, $N$ | 5° to 45° | 5 |
+| B | $\lambda = 320^\circ$ | basin centre $(100^\circ, 320^\circ)$ | 10 kyr | $U$, $N$, $S$ | 65° to 135° | 6 |
+| C | $\lambda = 75^\circ$ | ice centre | 15 kyr | $U$, $N$ | 5° to 45° | 9 |
+| C | $\lambda = 25^\circ$ | basin centre $(35^\circ, 25^\circ)$ | 15 kyr | $U$, $N$, $S$ | 0° to 70° | 10 |
+| D | $\lambda = 75^\circ$ | ice centre | 15 kyr | $U$, $N$ | 5° to 45° | 14 |
+| D | $\lambda = 25^\circ$ | basin centre | 15 kyr | $U$, $N$, $S$ | 0° to 70° | 15 |
+
+**Time series.** Grounded ice mass for case C (Fig. 8); grounded and floating
+ice mass for case D (Fig. 13); $h_{UF}(t)$ for cases C, D and E (Figs 11, 16
+and 19); ocean area for cases D and E (Figs 17 and 18). All run from 0 to
+15 kyr.
+
+**Metrics.** For a quantity $q$ sampled at $n$ points $i$ inside the
+difference interval at a fixed time, with $q^{ref}$ the reference value:
+
+$$
+\epsilon_q^{RMS} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(q_i - q_i^{ref}\right)^2},
+\qquad
+\epsilon_q^{MAX} = \max_i \left|q_i - q_i^{ref}\right|
+$$ {#eq-m18-metrics}
+
+(Martinec et al. 2018, eq. 31.) The paper plots these metrics for the ice
+profiles of cases A to D in Fig. 20 and for the basin profiles of cases B to D
+in Fig. 21.
+
+**Features to check.** In case A, the maximum of $U$ (the peripheral bulge) is
+14.1° from the ice centre (p. 399). In case B, the same maximum is about
+14.1° from the ice centre. The basin edge is at $\theta = 75.7^\circ$, with
+bulges at $70.4^\circ$ outside and $80.6^\circ$ inside the basin (p. 402).
+
+## Reported agreement
+
+The numbers below are the largest differences from VEGA^ref^ that the paper
+reports. Source: section 5 and section 6 (pp. 399 to 410).
+
+| Case and profile | Solutions | Max $\lvert\Delta U\rvert$ (m) | Max $\lvert\Delta N\rvert$ (m) | RMS $\Delta U$ (m) | RMS $\Delta N$ (m) | Other |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| A, ice | all except SK | 0.7 | 0.03 | 0.2 | 0.01 | about 1.5 per cent of the signal |
+| A, ice | AFCAL | 1.7 at the cap edge; 0.3 at the maximum | 0.11 | | | $\Delta N$ oscillates with a wavelength of about 300 km |
+| B, basin | eight solutions | 4 | 0.20 | 0.8 | 0.03 | offset in $S$ from $h_{UF}$ up to 0.12 m |
+| C, basin | five solutions | | | | | smaller than case B; offset in $S$ of 0.2 m |
+| E | SK | | | | | $S$ differs by 0.2 m; $h_{UF}(t)$ differs from ZM, VK and YS |
+| All cases | all | 1.5 | 0.1 | 0.5 | 0.02 | about 1.5 per cent; offset in $S$ up to 0.2 m |
+| D, ice, VEGA C4 against VEGA^ref^ | VEGA | 0.23 | 0.02 | 0.06 | 0.004 | offset of 1 cm in $S$ from the quadrature for $h_{UF}$ |
+
+For case B on the ice profile, the paper gives no numbers. It reports that
+the differences are similar to case A, except for VB, and larger than in case
+A for MS, VB and WW (p. 401). For case D, it reports that the differences are
+similar to case C (p. 406). For the Laplace-domain codes, the paper reports
+time steps between 0.1 and 1 kyr, at most six iterations, and a relative
+precision better than 1 per cent (p. 411).
+
+## Values the paper leaves unstated or ambiguous
+
+1. **Cap profile.** The paper does not write the height of the cap as a
+   function of distance from its centre. It refers to Spada et al. (2011),
+   table 4, row 1.
+2. **Cap growth in T1.** Table 2 makes both $h(t)$ and $\alpha(t)$ linear in
+   time. The paper does not state how the cap profile scales with $\alpha(t)$,
+   or whether the load changes continuously or in steps.
+3. **Basin radius formula.** On p. 395 the formula for $\psi_0$ is printed as
+   $\sigma_b\sqrt{\ln(b_0/b_{max})^2}$, which gives $11.88^\circ$. The stated
+   value $24.85^\circ$, and the $24.8503^\circ$ of Fig. 17, match
+   $\sigma_b\sqrt{2\ln(b_0/b_{max})}$.
+4. **Degree 0 and 1.** Case A leaves out load degrees 0 and 1, and case B
+   includes degrees 0 to 256. The paper does not state the treatment of
+   degrees 0 and 1 for cases C, D and E, apart from the centre of mass frame.
+5. **Constants.** The paper does not give $g_0$ in @eq-m18-geoid or the Earth
+   radius. It does not state the sign convention of $\Phi$.
+6. **Case E iteration.** The paper does not state the initial estimate
+   $\zeta^{(0),0}$, or the domain and normalisation of the L2 norm in the
+   stopping test.
+7. **Case E contributors.** Table 6 lists five codes for case E, including MS.
+   Figs 18 and 19 show only four: ZM, VK, YS and SK.
+8. **Output sampling.** The paper does not state the colatitude spacing of the
+   profiles or the time spacing of the time series.
+9. **Case E profiles.** The paper shows no profile comparison of $U$, $N$ or
+   $S$ for case E.

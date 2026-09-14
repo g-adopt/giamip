@@ -48,7 +48,9 @@ website:
           - docs/data/manifest.qmd
           - docs/data/corrections.qmd
       - text: "Protocol"
-        href: docs/protocol/giamip-v2.4.qmd
+        menu:
+          - docs/protocol/giamip-v2.4.qmd
+          - docs/protocol/martinec2018.qmd
 
 format:
   html:
