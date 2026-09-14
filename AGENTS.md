@@ -65,10 +65,12 @@ the only record of what the columns contain.
 
 ## Case identity
 
-A case file states which published case it is. Where the published identity is
-not established, the field says so. Kachuck's benchmark submissions use
-internal codes whose mapping to the published letters A to E is confirmed for
-two of the five. Do not guess the other three.
+A case file states which published case it is, and records the evidence for
+any internal code. The benchmark files use internal codes C2, D3, E2 and F1
+for the published cases B, C, D and E. B rests on byte-identical files, C and
+D on the titles of Martinec's own figure scripts, and E on Martinec's archive
+`resultsE_2026.zip`, which holds only F1 files. Where a new identity is not
+established in the same way, the field says so. Do not guess.
 
 ## Redistribution
 

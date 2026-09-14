@@ -8,6 +8,8 @@ title: "Martinec et al. (2018)"
 > level equation in GIA modelling. *Geophysical Journal International* 215(1),
 > 389-414. doi:[10.1093/gji/ggy280](https://doi.org/10.1093/gji/ggy280)
 
+The licence of the paper is recorded on [its protocol page](../protocol/martinec2018.qmd).
+
 Ten codes, five cases of increasing complexity, all on the same incompressible
 earth model as Spada et al. (2011) and all using the same spherical cap of
 angular radius 10 degrees, moved and rescaled. The sea level equation has no
@@ -35,9 +37,11 @@ Case A does not solve the sea level equation and coincides with Spada et al.
 
 ## What we hold
 
-The archives for cases A and B, and Kachuck's giapy submission for all five.
-Nothing for C, D or E from the other four contributors, and no reference
-solution for them.
+Martinec's archives for all five cases, `resultsA_2026.zip` to
+`resultsE_2026.zip`, with every contributor's curves, the VEGA reference and
+the scripts that drew the published figures. The first archives for cases A
+and B and Kachuck's giapy submission are kept as well. The converted data are
+in `data/converted/martinec2018/`; see [the column layouts](../reference/column-layouts.qmd).
 
 ```{python}
 #| echo: false
@@ -58,12 +62,13 @@ Markdown("\n".join(rows))
 
 ## Two things to know before reading the data
 
-**Case B is called C2 inside the files.** Every filename in `benchmarkB.zip`
-begins `C2_`. The identification is certain, because two of Kachuck's `C2`
-files are byte-identical to files in that archive. His other internal codes,
-`D3`, `E2` and `F1`, are not yet tied to published case letters, and the
-driver he shipped generates neither `C2` nor `D3`, so it cannot settle the
-question. The case files say so instead of guessing.
+**The files use internal case codes.** Cases B, C, D and E are `C2`, `D3`,
+`E2` and `F1` inside the files. B is certain, because two of Kachuck's `C2`
+files are byte-identical to files in `benchmarkB.zip`. C and D are certain,
+because Martinec's `resultsC_2026.zip` and `resultsD_2026.zip` hold only `D3`
+and `E2` files and their cross-section scripts are titled "Benchmark C" and
+"Benchmark D". E rests on `resultsE_2026.zip`, which holds only `F1` files
+and compares the ocean area and h_UF, as the paper does for case E.
 
 **Benchmark A's reference is one row.** `Z_ZM_load.out` holds a single line at
 colatitude 0. It is recoverable: every `Z_<code>_load_diff.out` is that

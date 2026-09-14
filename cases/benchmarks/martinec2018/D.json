@@ -20,16 +20,65 @@
   "outputs": [
     "U",
     "N",
-    "S"
+    "S",
+    "ice_mass_grounded",
+    "ice_mass_floating",
+    "h_UF",
+    "ocean_area"
   ],
-  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation, all along meridional cross-sections at the terminal time. h_UF is the thickness of the uniform water layer, ice_mass_grounded and ice_mass_floating are ice masses, and ocean_area is the ocean area as a fraction of 4 pi, all as functions of time. The list holds what the paper compares for this case.",
   "comparison": {
     "reference_solution": "VEGA (contributor ZM)",
     "metrics": [
       "root mean square difference",
       "maximum difference"
     ],
-    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+    "profiles": [
+      {
+        "profile": "through the ice centre, longitude 75",
+        "quantities": [
+          "U",
+          "N"
+        ],
+        "interval": "colatitude 5 to 45 degrees",
+        "figure": 14
+      },
+      {
+        "profile": "through the basin centre, longitude 25",
+        "quantities": [
+          "U",
+          "N",
+          "S"
+        ],
+        "interval": "colatitude 0 to 70 degrees",
+        "figure": 15
+      }
+    ],
+    "time_series": [
+      {
+        "quantities": [
+          "ice_mass_grounded",
+          "ice_mass_floating"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 13
+      },
+      {
+        "quantities": [
+          "h_UF"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 16
+      },
+      {
+        "quantities": [
+          "ocean_area"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 17
+      }
+    ],
+    "$comment": "Source: Martinec et al. (2018), section 5, figures 3 to 19. Difference intervals apply to the profiles at the terminal time. See docs/protocol/martinec2018.qmd, section Comparison method."
   },
   "reference_data": {
     "contributors": [
@@ -39,9 +88,11 @@
       "MS",
       "SK"
     ],
-    "archive": null,
-    "reference": "Not held.",
-    "published_figure": "Figures 12 onward"
+    "archive": "martinec2018/resultsD_2026.zip",
+    "internal_case_code": "E2",
+    "internal_case_code_evidence": "Martinec's archive resultsD_2026.zip holds only E2 contributor files, and its two cross-section scripts, which read them, are titled 'Benchmark D'.",
+    "reference": "VEGA, in resultsD_2026/Z_ZM_load.out, Z_ZM_basin.out, vega76.out and secti.out. Both profiles have 359 rows and are coarse copies; see correction martinec2018-caseD-vega-profile-grid.",
+    "published_figure": "Figures 12 to 17"
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "specified; converted to data/converted/martinec2018/martinec2018-D.nc"
 }

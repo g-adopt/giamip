@@ -18,18 +18,34 @@
     "terminal_time_kyr": 15
   },
   "outputs": [
-    "U",
-    "N",
-    "S"
+    "ocean_area",
+    "h_UF"
   ],
-  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation, all along meridional cross-sections at the terminal time. h_UF is the thickness of the uniform water layer, ice_mass_grounded and ice_mass_floating are ice masses, and ocean_area is the ocean area as a fraction of 4 pi, all as functions of time. The list holds what the paper compares for this case.",
   "comparison": {
     "reference_solution": "VEGA (contributor ZM)",
     "metrics": [
       "root mean square difference",
       "maximum difference"
     ],
-    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+    "profiles": [],
+    "time_series": [
+      {
+        "quantities": [
+          "ocean_area"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 18
+      },
+      {
+        "quantities": [
+          "h_UF"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 19
+      }
+    ],
+    "$comment": "Source: Martinec et al. (2018), section 5, figures 3 to 19. Difference intervals apply to the profiles at the terminal time. See docs/protocol/martinec2018.qmd, section Comparison method."
   },
   "reference_data": {
     "contributors": [
@@ -39,9 +55,11 @@
       "MS",
       "SK"
     ],
-    "archive": null,
-    "reference": "Not held.",
-    "published_figure": "Figures 17 onward"
+    "archive": "martinec2018/resultsE_2026.zip",
+    "internal_case_code": "F1",
+    "internal_case_code_evidence": "Martinec's archive resultsE_2026.zip holds only F1 contributor files, and its figures compare the ocean area and h_UF, which is what the paper compares for case E (Figs 18 and 19). Its two scripts overlay a curve labelled 'Benchmark D' from vega76_E2.out. No script carries a title for case E itself.",
+    "reference": "VEGA, in resultsE_2026/vega76.out. vega76_E2.out is a case D run that the case E figures overlay.",
+    "published_figure": "Figures 18 and 19"
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "specified; converted to data/converted/martinec2018/martinec2018-E.nc"
 }

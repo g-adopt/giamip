@@ -22,14 +22,36 @@
     "N",
     "S"
   ],
-  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation, all along meridional cross-sections at the terminal time. h_UF is the thickness of the uniform water layer, ice_mass_grounded and ice_mass_floating are ice masses, and ocean_area is the ocean area as a fraction of 4 pi, all as functions of time. The list holds what the paper compares for this case.",
   "comparison": {
     "reference_solution": "VEGA (contributor ZM)",
     "metrics": [
       "root mean square difference",
       "maximum difference"
     ],
-    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+    "profiles": [
+      {
+        "profile": "through the ice centre, longitude 75",
+        "quantities": [
+          "U",
+          "N"
+        ],
+        "interval": "colatitude 5 to 45 degrees",
+        "figure": 5
+      },
+      {
+        "profile": "through the basin centre, longitude 320",
+        "quantities": [
+          "U",
+          "N",
+          "S"
+        ],
+        "interval": "colatitude 65 to 135 degrees",
+        "figure": 6
+      }
+    ],
+    "time_series": [],
+    "$comment": "Source: Martinec et al. (2018), section 5, figures 3 to 19. Difference intervals apply to the profiles at the terminal time. See docs/protocol/martinec2018.qmd, section Comparison method."
   },
   "reference_data": {
     "contributors": [
@@ -43,13 +65,15 @@
       "KS",
       "GA"
     ],
-    "archive": "martinec2018/benchmarkB.zip",
+    "archive": "martinec2018/resultsB_2026.zip",
+    "earlier_archive": "martinec2018/benchmarkB.zip",
     "internal_case_code": "C2",
+    "reference": "VEGA, in resultsB_2026/Z_ZM_load.out and Z_ZM_basin.out. The basin profile has 359 rows and is a coarse copy; see correction martinec2018-caseD-vega-profile-grid.",
     "published_figure": "Figures 5 and 6, with figure 4 showing the ice and basin geometry",
     "cross_sections": [
       "through the ice centre at longitude 75",
       "through the basin centre at longitude 320"
     ]
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "specified; converted to data/converted/martinec2018/martinec2018-B.nc"
 }

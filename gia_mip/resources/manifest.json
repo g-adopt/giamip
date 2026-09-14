@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-11T11:26:53+00:00",
+ "generated": "2026-09-14T07:10:53+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/gia-mip/",
  "artifacts": {
@@ -529,6 +529,936 @@
    "bytes": 15029,
    "sha256": "7c5a7bf47940c96cc104c704249325ab45715a7d9d627a42cf080423aceacd14"
   },
+  "martinec2018/resultsA_2026.zip": {
+   "collection": "martinec2018",
+   "stage": "original",
+   "description": "Case A: every contributor's profile through the ice centre, the difference files, the full-length VEGA profile Z_ZM_load.out, and the GMT script for figure 3.",
+   "source_doi": "10.1093/gji/ggy280",
+   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "supplier": "Zdenek Martinec",
+   "received": "2026-09-12",
+   "permission": "granted",
+   "notes": "Assembled by Martinec on 2026-09-12. Z_ZM_load.out is byte-identical to benchmarkA-Z_ZM_load-full.out, the second VEGA run. The other shared files are byte-identical to benchmarkA.zip, and the GMT script differs only in the name of the PDF it writes. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "bytes": 352331,
+   "sha256": "73d32d129bb66f47e8eb8ccb0ad4cf4c4c9f032bf067721de6c63c4a24635f32",
+   "members": [
+    {
+     "name": "resultsA_2026/.gmt_bb_info",
+     "bytes": 52,
+     "sha256": "88f55cc1e19b4b8e53e2e30181c0fc2ccec02f548a14682a09019f9f1eccc5b6"
+    },
+    {
+     "name": "resultsA_2026/.gmtcommands4",
+     "bytes": 160,
+     "sha256": "0aaf2ab5a8fbf27fde6d85542aba2761d6749080c75a1f89da3586390b455c70"
+    },
+    {
+     "name": "resultsA_2026/.gmtdefaults4",
+     "bytes": 2679,
+     "sha256": "c004191e81e31c9404105acab0a4bd40e9707076a21800fc91e7d76c21020d0c"
+    },
+    {
+     "name": "resultsA_2026/A-fig10-TABOO_256.dat",
+     "bytes": 151452,
+     "sha256": "42680333eecbabd69460ccd94ad200d4787d800b5d8848ba326aeadeed0b3fa0"
+    },
+    {
+     "name": "resultsA_2026/A_fig10_KS_256.dat",
+     "bytes": 19847,
+     "sha256": "7cc9b9272e5a9ff5e2ee0d7d3161853f9acc5edc9eb1c0bad82a88660e6dc1e0"
+    },
+    {
+     "name": "resultsA_2026/A_fig10_SBK.dat",
+     "bytes": 36599,
+     "sha256": "3e205f5f1f662040a8628b926150d55366fd5e9c33248403f55ce8ca2175d897"
+    },
+    {
+     "name": "resultsA_2026/A_fig10_YS.dat",
+     "bytes": 206848,
+     "sha256": "4ced46ad7fd8c4537129994dc7a4135f3c56998a19bc164902dae143a0d49364"
+    },
+    {
+     "name": "resultsA_2026/Z_GA_load_diff.out",
+     "bytes": 59843,
+     "sha256": "a9193ef41945b613e1181b305f15ac9223b75779f6ca71419be182200a72fb98"
+    },
+    {
+     "name": "resultsA_2026/Z_GS_load_diff.out",
+     "bytes": 149566,
+     "sha256": "99abf1874517446cff8509e190dd60c556b6f5e2a643fe45fb97f5c18c85352b"
+    },
+    {
+     "name": "resultsA_2026/Z_KS_load_diff.out",
+     "bytes": 23465,
+     "sha256": "5b955711aff49e0dea7eaf39acf230cbcf0debbb7667b97f5f8b7f9ec680bf2d"
+    },
+    {
+     "name": "resultsA_2026/Z_SK_load_diff.out",
+     "bytes": 46865,
+     "sha256": "19ab80bab32cf3767bde163dfa2c6504100dd652c2bd28abccdad32a8edf9a6d"
+    },
+    {
+     "name": "resultsA_2026/Z_VB_load_diff.out",
+     "bytes": 23465,
+     "sha256": "2c690e6e0853ae5288eaae74bb2eb28eac0e41c9dd46dd94bb5afab314e4a283"
+    },
+    {
+     "name": "resultsA_2026/Z_VK_load_diff.out",
+     "bytes": 29963,
+     "sha256": "5fc575ccf8f36cda4992d924f73bc65ed99dd062953f374a509846d1411d8535"
+    },
+    {
+     "name": "resultsA_2026/Z_WW_axi_load_diff.out",
+     "bytes": 46865,
+     "sha256": "f709fff88ad411c5dcfd54231b792db779935bd3e210f5c708ffb0d889c7daaf"
+    },
+    {
+     "name": "resultsA_2026/Z_WW_load_diff.out",
+     "bytes": 23465,
+     "sha256": "1f74fde1bb900e67d187280a07b1ea730f2473e54bf947cef5ce19bc4f73b557"
+    },
+    {
+     "name": "resultsA_2026/Z_YS_load_diff.out",
+     "bytes": 133120,
+     "sha256": "37c621bb88c6af5dc46698314fad0044d935f4981175f45c1753467cec80b3dc"
+    },
+    {
+     "name": "resultsA_2026/Z_ZM_load.out",
+     "bytes": 168955,
+     "sha256": "ff99f78c0aea2532b96e7d63522c7a13021e05a9843ec4a1df363d78fb4d1660"
+    },
+    {
+     "name": "resultsA_2026/caseA_0.25.lmax256_GA.dat",
+     "bytes": 64259,
+     "sha256": "af052d0c66d8dd4c26053d312e13eace69074852284378f86115f6e664bba8ca"
+    },
+    {
+     "name": "resultsA_2026/case_A_VILMA_uve.dat",
+     "bytes": 11239,
+     "sha256": "f7e6734282fcd8a0bcf55c7548d40cc60028dc502f7705feee0dd86d254b63af"
+    },
+    {
+     "name": "resultsA_2026/fig10_n_VB_256.dat",
+     "bytes": 6447,
+     "sha256": "9dfb71e942d21811fa99838579d4c0b5e4b71e633eb82d22613ddd252c12cc96"
+    },
+    {
+     "name": "resultsA_2026/fig10_u_VB_256.dat",
+     "bytes": 6485,
+     "sha256": "53b5ce9b30c04d3a0dbfdb9c1461eb2fbc93bddfc0e8f3b0fc342ddb22c93c58"
+    },
+    {
+     "name": "resultsA_2026/figZ_uvf_load_diff.gmt",
+     "bytes": 7243,
+     "sha256": "bd25b55cbcf13717506d89281bd89863f024a07eb71a12bf2efcc86eeccaf6ee"
+    },
+    {
+     "name": "resultsA_2026/figZ_uvf_load_diff.pdf",
+     "bytes": 21591,
+     "sha256": "ac7eabeade19d9bfbc930ae046a971e5289fc5240b67326f45ad1998decf3c99"
+    },
+    {
+     "name": "resultsA_2026/n_10ka.dat",
+     "bytes": 7220,
+     "sha256": "cff4b01935a427d24191b8008721e3bd1806f86161734eea0589e3b13fa0906a"
+    },
+    {
+     "name": "resultsA_2026/n_10ka_axi.dat",
+     "bytes": 12978,
+     "sha256": "46157c5f2ca5655442158dc19664c9266eb64c1cca6e9f19e3a9db97b092fca6"
+    },
+    {
+     "name": "resultsA_2026/pom.ps",
+     "bytes": 98953,
+     "sha256": "347ac02fb1229d146b9c0e6ccbd80cf046b8d452db29044b12bdbfdcb6e7f4bf"
+    },
+    {
+     "name": "resultsA_2026/u_10ka.dat",
+     "bytes": 7220,
+     "sha256": "2083ce71ccf8d9033b6413ceb14bac58dfbbc271cfcd63a98c848821971c3168"
+    },
+    {
+     "name": "resultsA_2026/u_10ka_axi.dat",
+     "bytes": 12978,
+     "sha256": "739c8764b17ea711287134f423e57681f4b9afb098dd7c7866f8068e014758f5"
+    }
+   ],
+   "member_count": 28
+  },
+  "martinec2018/resultsB_2026.zip": {
+   "collection": "martinec2018",
+   "stage": "original",
+   "description": "Case B (internal code C2): contributor profiles through the ice centre and the basin centre, difference files, VEGA profiles and the two GMT scripts for figures 5 and 6.",
+   "source_doi": "10.1093/gji/ggy280",
+   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "supplier": "Zdenek Martinec",
+   "received": "2026-09-12",
+   "permission": "granted",
+   "notes": "Assembled by Martinec on 2026-09-12. 44 files are byte-identical to benchmarkB.zip. uprav.out and the figure 4 script are not included, so benchmarkB.zip is still needed for them. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "bytes": 1120097,
+   "sha256": "5ae1b4d786c2c671a6e3af5b56d0106fbb065db0e6e5fe53e5227cd3387eca13",
+   "members": [
+    {
+     "name": "resultsB_2026/.gmt_bb_info",
+     "bytes": 52,
+     "sha256": "4071bb04b0abb5b562b4405ce3f896a50a4835013e1f305373cabe994c38ebaf"
+    },
+    {
+     "name": "resultsB_2026/.gmtcommands4",
+     "bytes": 161,
+     "sha256": "7bb4d4355ecbff7d8cac945e68933eb0dce15337be4b7f779a6f8caf7f31a5c5"
+    },
+    {
+     "name": "resultsB_2026/.gmtdefaults4",
+     "bytes": 2679,
+     "sha256": "c004191e81e31c9404105acab0a4bd40e9707076a21800fc91e7d76c21020d0c"
+    },
+    {
+     "name": "resultsB_2026/C2-figure-10-L256-CAP-REV.dat",
+     "bytes": 69708,
+     "sha256": "c73092670260e865faba5383d536831147b4c41d02e79035b7e31b2781a2f435"
+    },
+    {
+     "name": "resultsB_2026/C2-figure-12-L256-CAP-REV.dat",
+     "bytes": 69708,
+     "sha256": "ddfb33cc334160e61251e90201020f914b17b5e1d589a926d86219cbf671568c"
+    },
+    {
+     "name": "resultsB_2026/C2_GA_Fig10_0.25.lmax256.txt",
+     "bytes": 74880,
+     "sha256": "a702fa584ce199fb2d44616e433c3c286f6afb949b8a3274a836c131db08f44c"
+    },
+    {
+     "name": "resultsB_2026/C2_GA_Fig12_0.25.lmax256.txt",
+     "bytes": 74880,
+     "sha256": "8713f28fd5c820da496031712a02e23a6b885adb2a9641bfc4b041a5a526f5c3"
+    },
+    {
+     "name": "resultsB_2026/C2_VK_fig10_1_e.dat",
+     "bytes": 10727,
+     "sha256": "2cf6c9ac380cc85c5dbff19a7c56300da31dc0d4965c100154f1f1e04c9b3b9b"
+    },
+    {
+     "name": "resultsB_2026/C2_VK_fig10_1_u.dat",
+     "bytes": 11029,
+     "sha256": "7ce51ff3a044109c42b7a67a3eb9e419848fc4be2b5c0896bc0efbfe16411d07"
+    },
+    {
+     "name": "resultsB_2026/C2_VK_fig12_1_e.dat",
+     "bytes": 10565,
+     "sha256": "a1746b3be8ddbf4c6d69f6134a31ef0b0cfdd512a495ba222304d393a9372475"
+    },
+    {
+     "name": "resultsB_2026/C2_VK_fig12_1_u.dat",
+     "bytes": 10925,
+     "sha256": "21d964d1be6ba4e546680124479ba6c6ea3fbe16e82248a14001fcd830b936f9"
+    },
+    {
+     "name": "resultsB_2026/C2_WW_n_10ka_phi320.dat",
+     "bytes": 7200,
+     "sha256": "b906f81e202b5b3c6ba0d048cca0e4b1bcae748befc83af87c2b878fea7bbeb8"
+    },
+    {
+     "name": "resultsB_2026/C2_WW_n_10ka_phi75.dat",
+     "bytes": 7200,
+     "sha256": "1187c94fb6d002ac77ce5b2c17388e5607fef952ea0c929fa5ddda6f6b93657f"
+    },
+    {
+     "name": "resultsB_2026/C2_WW_u_10ka_phi320.dat",
+     "bytes": 7200,
+     "sha256": "642f1bbbf4b92e01f1213e2c80327773ea3c7968852cf11913e248fce9205f18"
+    },
+    {
+     "name": "resultsB_2026/C2_WW_u_10ka_phi75.dat",
+     "bytes": 7200,
+     "sha256": "5559f4459c41af50904ec094ac2a2c837b6a0203a6a45c8b95249f05fff070b2"
+    },
+    {
+     "name": "resultsB_2026/C2_fig10_KS.dat",
+     "bytes": 198158,
+     "sha256": "0354d059843645f6ef875f23de3fa1973b562fe4bad653198ff1098d1f3c9dc9"
+    },
+    {
+     "name": "resultsB_2026/C2_fig10_SBK.dat",
+     "bytes": 65042,
+     "sha256": "71d2eb53bd385151ccabbafb5388d2ca6db3b758dc2b27045729d53a7a33558d"
+    },
+    {
+     "name": "resultsB_2026/C2_fig10_YS.dat",
+     "bytes": 350208,
+     "sha256": "b1695312535091c62142345396b949e665015709cb6869ebd2b69eabf89fefe0"
+    },
+    {
+     "name": "resultsB_2026/C2_fig11_KS.dat",
+     "bytes": 158510,
+     "sha256": "a0c09adc1e6c7542c461d1f6aeb82e8c74612c4a1d39a424c03fcbec5eae76f3"
+    },
+    {
+     "name": "resultsB_2026/C2_fig12_KS.dat",
+     "bytes": 198158,
+     "sha256": "6e123a4b133e7affd7153f1d7facc5d1e9e7802f99c538a5817493b2ad94e3ae"
+    },
+    {
+     "name": "resultsB_2026/C2_fig12_SBK.dat",
+     "bytes": 65049,
+     "sha256": "8340ed0977e5665aadca983ba810fa4bf2c2936ff373bbb8494ad0ee7b1a367c"
+    },
+    {
+     "name": "resultsB_2026/C2_fig12_YS.dat",
+     "bytes": 350208,
+     "sha256": "a201a00fc4a4fe8ac5000533f7b6f0a165c0fd62cf01747ebfe9977dad8172bf"
+    },
+    {
+     "name": "resultsB_2026/C2_fig14_1_ssv3.dat",
+     "bytes": 10405,
+     "sha256": "1d195ba0d725cab3a1a92d14b452de732602695f63572f5f8d1479a1d3b7114d"
+    },
+    {
+     "name": "resultsB_2026/Z_GA_basin_diff.out",
+     "bytes": 85561,
+     "sha256": "e1efc33f387b30d154bbef5f1e6ebaf1238810f491ea958608134493dcff4c97"
+    },
+    {
+     "name": "resultsB_2026/Z_GA_load_diff.out",
+     "bytes": 85561,
+     "sha256": "bfa65e8d4151fd9cc3ccecead934abec5a9a61e9c589e6983c777981a9c1999a"
+    },
+    {
+     "name": "resultsB_2026/Z_GS_basin_diff.out",
+     "bytes": 71400,
+     "sha256": "8fa435455b1d9f913ac4dad8d21917af08e66b85520a570b96018da5c954b882"
+    },
+    {
+     "name": "resultsB_2026/Z_GS_load_diff.out",
+     "bytes": 71400,
+     "sha256": "f9396356fbb3b28d65a98239f5d74c12cafee3bc0e9eb3886f479b7363fc4e75"
+    },
+    {
+     "name": "resultsB_2026/Z_KS_basin_diff.out",
+     "bytes": 214319,
+     "sha256": "1221057c1725b88716cbfeb63f4bc7f97eb1b17e932773989ea3c33ae360d462"
+    },
+    {
+     "name": "resultsB_2026/Z_KS_load_diff.out",
+     "bytes": 214319,
+     "sha256": "bbf4583e3d7fc90d0bf265bdf4bf59ee59fb03055cd9b2b6147728d16d1bcc62"
+    },
+    {
+     "name": "resultsB_2026/Z_SK_basin_diff.out",
+     "bytes": 42840,
+     "sha256": "ab0af44a0d8917a78e385b23771e4add6233dbf0a1e5a6461a1eebff7b993dd2"
+    },
+    {
+     "name": "resultsB_2026/Z_SK_load_diff.out",
+     "bytes": 42840,
+     "sha256": "c79c830df6d9d48d5f0bd0d480c70eb631118fa655c06c5aecafdc179c6aad3f"
+    },
+    {
+     "name": "resultsB_2026/Z_VB_basin_diff.out",
+     "bytes": 42721,
+     "sha256": "ab40eed85f3305379563def2cdad596094ef234c6174232ca99f33c8a236b96f"
+    },
+    {
+     "name": "resultsB_2026/Z_VB_load_diff.out",
+     "bytes": 42721,
+     "sha256": "1ecef60d22316aa69348af5b19c39cb6ae19c4451efeb7d9c09ba853a6431d19"
+    },
+    {
+     "name": "resultsB_2026/Z_VK_basin_diff.out",
+     "bytes": 85561,
+     "sha256": "21b6179959ff2f16c3b4261862f1ef45e6f09525e0a4a7c5dc3e2011f673ad81"
+    },
+    {
+     "name": "resultsB_2026/Z_VK_load_diff.out",
+     "bytes": 85561,
+     "sha256": "e532ae838b846caf24bf4bb525d38e12277f7ac35369767c3c4410f6483e029c"
+    },
+    {
+     "name": "resultsB_2026/Z_WW_basin_diff.out",
+     "bytes": 29880,
+     "sha256": "63843bb75451c16cf7778e7712448e62945d251beff55c73bd93bf629763fb2f"
+    },
+    {
+     "name": "resultsB_2026/Z_WW_load_diff.out",
+     "bytes": 29880,
+     "sha256": "6f9d26e72d219faf0f92663c319c2bd71d7975bc7984768acaf90f9addf7f71c"
+    },
+    {
+     "name": "resultsB_2026/Z_YS_basin_diff.out",
+     "bytes": 243712,
+     "sha256": "ed743107efd2bbbddc42bc368bd45e4e0fa0e7d6480e796719d44a122103a1b9"
+    },
+    {
+     "name": "resultsB_2026/Z_YS_load_diff.out",
+     "bytes": 243712,
+     "sha256": "92126851c4c9b44d4bda8dc11e9630a10abe67f34e6e20086bd24b836ff07284"
+    },
+    {
+     "name": "resultsB_2026/Z_ZM_basin.out",
+     "bytes": 42721,
+     "sha256": "8a73693fd0b9397372db8330d110a804192eff05b6546f4d8ac43c4a38ee45ea"
+    },
+    {
+     "name": "resultsB_2026/Z_ZM_load.out",
+     "bytes": 243712,
+     "sha256": "cf85756e950d7bddf1a8906e82a24ffb456908165be19aafb02120d02de6d3fc"
+    },
+    {
+     "name": "resultsB_2026/figZ_uvf_basin_diff.gmt",
+     "bytes": 8112,
+     "sha256": "0c1fdab7da015cdfd6a33e530246709dea2fc2377c4145ca51248921d1a5a62a"
+    },
+    {
+     "name": "resultsB_2026/figZ_uvf_basin_diff.pdf",
+     "bytes": 68778,
+     "sha256": "2fe2984ffff85597063b1197425b80123f179a1ea20180b474c34e12c62bf12e"
+    },
+    {
+     "name": "resultsB_2026/figZ_uvf_load_diff.gmt",
+     "bytes": 6363,
+     "sha256": "b920ff00e0edae3a381eb9159184ba21c9741fc9bb6457f0bcc8d4ccf38ca4e0"
+    },
+    {
+     "name": "resultsB_2026/figZ_uvf_load_diff.pdf",
+     "bytes": 30452,
+     "sha256": "863574942b00e6d56b8a967b258240111f008f368becfcd301583b0f8f4899ba"
+    },
+    {
+     "name": "resultsB_2026/g-C2-VB_256_fig10.txt",
+     "bytes": 6095,
+     "sha256": "6d4905a748c4c4933a83e069c949c7f30a686524351ce7a510873067cf139576"
+    },
+    {
+     "name": "resultsB_2026/g-C2-VB_256_fig12.txt",
+     "bytes": 6443,
+     "sha256": "2f471d8f0eb22b70729150ce0eb613b1d1352e80f9a392c79c0bdfa65d38c886"
+    },
+    {
+     "name": "resultsB_2026/pom.ps",
+     "bytes": 113632,
+     "sha256": "021b7c0bffd44598130b29d599d68beca15bffbb19eae94b3279a61c8fef9c92"
+    },
+    {
+     "name": "resultsB_2026/ssv-C2-VB_256_fig12.txt",
+     "bytes": 6209,
+     "sha256": "e9e56bb7c2b029299845171d053a641c3a739603d63e608f2f11e1c93efc3865"
+    },
+    {
+     "name": "resultsB_2026/u-C2-VB_256_fig10.txt",
+     "bytes": 8175,
+     "sha256": "5954513f877f600e7aafd449b8506b283415bad12a3b4b49b94f040c8d430797"
+    },
+    {
+     "name": "resultsB_2026/u-C2-VB_256_fig12.txt",
+     "bytes": 8489,
+     "sha256": "d015f3043eebad25cbf48724b0624c3547055083006341553ca43b57f058c8d1"
+    }
+   ],
+   "member_count": 51
+  },
+  "martinec2018/resultsC_2026.zip": {
+   "collection": "martinec2018",
+   "stage": "original",
+   "description": "Case C (internal code D3): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out, YS's ice mass, and the GMT scripts for the profiles, the ice mass and h_UF.",
+   "source_doi": "10.1093/gji/ggy280",
+   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "supplier": "Zdenek Martinec",
+   "received": "2026-09-12",
+   "permission": "granted",
+   "notes": "Assembled by Martinec on 2026-09-12. The first source for case C data from contributors other than SK. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "bytes": 788597,
+   "sha256": "ce8545e8eb54b74a6ff87863fd91c168a91ca1a65093c48db0e723070b9885e0",
+   "members": [
+    {
+     "name": "resultsC_2026/.gmt_bb_info",
+     "bytes": 50,
+     "sha256": "a3a3cbfbc1e00178954c016e292961bf409aeb719ce23138121f1a8a1f46e34d"
+    },
+    {
+     "name": "resultsC_2026/.gmtcommands4",
+     "bytes": 160,
+     "sha256": "49a565276e0243497f77e51fac2e95955828c95c2d9fbce24456c57705c4a37d"
+    },
+    {
+     "name": "resultsC_2026/.gmtdefaults4",
+     "bytes": 2678,
+     "sha256": "78fc6957b32cc9f0e34571432dab63e6e58b0776d3fcc9a8c6b94800ca18f711"
+    },
+    {
+     "name": "resultsC_2026/D3-figure-10-L256-CAP-REV.dat",
+     "bytes": 69708,
+     "sha256": "dcd2cac43fe7d23fce7e3cba6729962fa85ad07f86c4ffdb72364b067d0f0b50"
+    },
+    {
+     "name": "resultsC_2026/D3-figure-12-L256-CAP-REV.dat",
+     "bytes": 69708,
+     "sha256": "0ab1b92af70ceb772bee11965370c33c8afacccdbdc1a5f20307051dd073e9c5"
+    },
+    {
+     "name": "resultsC_2026/D3_fig06_YS.dat",
+     "bytes": 4983,
+     "sha256": "8322f7617c969316d11f1cf593dd88eb8fcc3436e07035cceccc739cbaf30d3f"
+    },
+    {
+     "name": "resultsC_2026/D3_fig10_1_e.dat",
+     "bytes": 10856,
+     "sha256": "d2be567b2cbe4264a9394b7a58c9563b0e5a0c3f5b681c4a4a20564883962243"
+    },
+    {
+     "name": "resultsC_2026/D3_fig10_1_u.dat",
+     "bytes": 10977,
+     "sha256": "2315642fe1d4b87f1dc2639b5afaaf34e3e5bd1ecd073f91092081bcaea20aee"
+    },
+    {
+     "name": "resultsC_2026/D3_fig10_SBK.dat",
+     "bytes": 65084,
+     "sha256": "e462e3071d73596102117ff032b7094047d8f77eea3ecc03081c19896f6de37c"
+    },
+    {
+     "name": "resultsC_2026/D3_fig10_YS.dat",
+     "bytes": 350208,
+     "sha256": "9babe86d1601dfcfd3286849226f2c3813c40247f98ea1380002fb295726316e"
+    },
+    {
+     "name": "resultsC_2026/D3_fig12_1_e.dat",
+     "bytes": 10815,
+     "sha256": "e3416d0f1f7de6910bd34d37dbdbe07f47c16d0ee73639313cae63e8d9987503"
+    },
+    {
+     "name": "resultsC_2026/D3_fig12_1_u.dat",
+     "bytes": 10617,
+     "sha256": "48850d2fb318f731f06b5bcc4449f386198b8ae6aef5e574a392107b2712688f"
+    },
+    {
+     "name": "resultsC_2026/D3_fig12_SBK.dat",
+     "bytes": 65141,
+     "sha256": "d851bbff844035e3bf6adb1941e88b4b6a19fc1f54d29b6637ff9e2ae748d67c"
+    },
+    {
+     "name": "resultsC_2026/D3_fig12_YS.dat",
+     "bytes": 350208,
+     "sha256": "c3297c517537634da97e5608d626752f24e2c1c218ea4f384bcbd727f0889f35"
+    },
+    {
+     "name": "resultsC_2026/D3_fig14_1_ssv3.dat",
+     "bytes": 10421,
+     "sha256": "2b8cd0d732c45eb013030ea2cf33827bad407ce2c6a2aa0be4b7840b28182b51"
+    },
+    {
+     "name": "resultsC_2026/Z_GS_basin_diff.out",
+     "bytes": 71400,
+     "sha256": "d6fe9c7711b53846626bc7a3ecddb59ae8a0ca7ce9580f95152616579faded7d"
+    },
+    {
+     "name": "resultsC_2026/Z_GS_load_diff.out",
+     "bytes": 71400,
+     "sha256": "208bdbfee970c254ed22e3f34636f352f4456e613ef99420a94e380fdcd1145c"
+    },
+    {
+     "name": "resultsC_2026/Z_SK_basin_diff.out",
+     "bytes": 42840,
+     "sha256": "0f5d723c7ffbad7118ad9788a3b3bab13ed2b0ff648af7d6746da2e0a59a3365"
+    },
+    {
+     "name": "resultsC_2026/Z_SK_load_diff.out",
+     "bytes": 42840,
+     "sha256": "5666eb309f1c55a19193ae5922aa02133b3a5b53614c5718685ff1bb57a604f2"
+    },
+    {
+     "name": "resultsC_2026/Z_VK_basin_diff.out",
+     "bytes": 85561,
+     "sha256": "3ca22891be6505b2e4daa0b6ffe0e650759c8f0f24fe54f545f82e49748102ca"
+    },
+    {
+     "name": "resultsC_2026/Z_VK_load_diff.out",
+     "bytes": 85561,
+     "sha256": "ed5ed71b451f352599d609ef145206c823289b92f44d3a595a3a5840e511b91d"
+    },
+    {
+     "name": "resultsC_2026/Z_YS_basin_diff.out",
+     "bytes": 243712,
+     "sha256": "0f0cb41a016cf1b18e4d2f91d9e3bc4ddac5a5278d6e0fb7764901c613bfa071"
+    },
+    {
+     "name": "resultsC_2026/Z_YS_load_diff.out",
+     "bytes": 243712,
+     "sha256": "ca841f9262b2d9b7637c1794a4dd9f6758555e783bdd342132b69a2229972e64"
+    },
+    {
+     "name": "resultsC_2026/Z_ZM_basin.out",
+     "bytes": 243712,
+     "sha256": "4a89309b2f132bb0cdc788ea4778c96566d7b54e260e3e585ea5c1b60b5b094b"
+    },
+    {
+     "name": "resultsC_2026/Z_ZM_load.out",
+     "bytes": 243712,
+     "sha256": "e6a6f2016b1c24f6bb6ffe418d7b30f736a6439349f0c1826857669d0e51ad8a"
+    },
+    {
+     "name": "resultsC_2026/figZ_uvf_basin_diff.gmt",
+     "bytes": 5661,
+     "sha256": "0f53f953ed1af37c1194b601129ccd704c8c0bc66904db8b49814c78cf73aa73"
+    },
+    {
+     "name": "resultsC_2026/figZ_uvf_basin_diff.pdf",
+     "bytes": 40973,
+     "sha256": "344c3047ff82c8eff6cd89cef612dc6d5dbfecf295e9aa6d1b7a2d2b4259c4f5"
+    },
+    {
+     "name": "resultsC_2026/figZ_uvf_load_diff.gmt",
+     "bytes": 4467,
+     "sha256": "9b247471c3e8b01965bf2bfbe93cca36e0ead8cd3880b925bc92d07184416d11"
+    },
+    {
+     "name": "resultsC_2026/figZ_uvf_load_diff.pdf",
+     "bytes": 21333,
+     "sha256": "30d8c517235888746afe56f54bfce140a8c10ac1010ab96e4dfd4b67d42cf068"
+    },
+    {
+     "name": "resultsC_2026/fig_hufC.gmt",
+     "bytes": 1313,
+     "sha256": "8b36d711382243cc3bcf147000141e74dceeab6de2c3718300150c12416bbd48"
+    },
+    {
+     "name": "resultsC_2026/fig_hufC.pdf",
+     "bytes": 9686,
+     "sha256": "eb8d636c437b09c3989953b9d33e806d863853654a27ee1184068925ecf75f13"
+    },
+    {
+     "name": "resultsC_2026/fig_mass_iceC.gmt",
+     "bytes": 2199,
+     "sha256": "d6c2aa2ac5ae2da8a2ce650c9535e795980b2c1d46b4f4ba3df38bf055abd2d9"
+    },
+    {
+     "name": "resultsC_2026/fig_mass_iceC.pdf",
+     "bytes": 8367,
+     "sha256": "e9a795d47e06edc66c560d5f74d9d81b55f01d50a35ec316cb40736f23839051"
+    },
+    {
+     "name": "resultsC_2026/pom.ps",
+     "bytes": 34248,
+     "sha256": "24d2fef4a3919c7bf740979045d599db723096a4d4790155e7d476dd040ed332"
+    },
+    {
+     "name": "resultsC_2026/vega76.out",
+     "bytes": 98763,
+     "sha256": "224d629e8a82d3ebdcda6f717380f33260876d3d55e4b18d8e40af0b936de511"
+    }
+   ],
+   "member_count": 35
+  },
+  "martinec2018/resultsD_2026.zip": {
+   "collection": "martinec2018",
+   "stage": "original",
+   "description": "Case D (internal code E2): contributor profiles, difference files, VEGA profiles, the VEGA time series vega76.out and secti.out, contributor time series of ice mass, ocean area and h_UF, and the GMT scripts.",
+   "source_doi": "10.1093/gji/ggy280",
+   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "supplier": "Zdenek Martinec",
+   "received": "2026-09-12",
+   "permission": "granted",
+   "notes": "Assembled by Martinec on 2026-09-12. The first source for case D data from contributors other than SK. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "bytes": 746018,
+   "sha256": "e093dd444c1846a41b475abcf25640b3c8467b1d5cb4c7e69bd01f9ee20bf6b4",
+   "members": [
+    {
+     "name": "resultsD_2026/.gmt_bb_info",
+     "bytes": 50,
+     "sha256": "a3a3cbfbc1e00178954c016e292961bf409aeb719ce23138121f1a8a1f46e34d"
+    },
+    {
+     "name": "resultsD_2026/.gmtcommands4",
+     "bytes": 160,
+     "sha256": "2ea3e20f75b7164e02889d7565a565940deddcfe8b3e6a68c063e89c1813f46c"
+    },
+    {
+     "name": "resultsD_2026/.gmtdefaults4",
+     "bytes": 2678,
+     "sha256": "78fc6957b32cc9f0e34571432dab63e6e58b0776d3fcc9a8c6b94800ca18f711"
+    },
+    {
+     "name": "resultsD_2026/E2-figure-10-L256-CAP.dat",
+     "bytes": 69708,
+     "sha256": "73217227556f839f72fd9f3d7cf0326884419f5357b3a1b20f647425e1194651"
+    },
+    {
+     "name": "resultsD_2026/E2-figure-12-L256-CAP.dat",
+     "bytes": 69708,
+     "sha256": "b9fdcf06b49ec02c4309384325b1c55439a636a18d051f18b200f42125f3cb1a"
+    },
+    {
+     "name": "resultsD_2026/E2_fig06_1_VK.dat",
+     "bytes": 2385,
+     "sha256": "655d58859c240450d95fe7222ca75bea6b17f973d4ff7af22a09a57a2b70e278"
+    },
+    {
+     "name": "resultsD_2026/E2_fig06_YS.dat",
+     "bytes": 6946,
+     "sha256": "f30fe3737e357f0c5a9e8bc256cc7353b70cd08a5093cea310e9ed35f90dbecc"
+    },
+    {
+     "name": "resultsD_2026/E2_fig07_1_VK.dat",
+     "bytes": 1166,
+     "sha256": "7952ebf1a83bacdd4f11ec6794886e228624c7b2b4be6c6a7e18fed69f5a7dcf"
+    },
+    {
+     "name": "resultsD_2026/E2_fig07_SBK.dat",
+     "bytes": 83397,
+     "sha256": "0096ae1c9d8f9b4f7776e82d6d7e57a205f90570daa8a6ca05f5a4149c086a06"
+    },
+    {
+     "name": "resultsD_2026/E2_fig07_YS.dat",
+     "bytes": 8607,
+     "sha256": "fe87a3581f0f2b09103e56ab9f182835bd6f30a95338c231ee03d32ad60271ca"
+    },
+    {
+     "name": "resultsD_2026/E2_fig08_YS.dat",
+     "bytes": 5436,
+     "sha256": "db3b88d4fe8a945d7756abbe72668d2a8df021a8ede4287e97ed299ba71aa939"
+    },
+    {
+     "name": "resultsD_2026/E2_fig10_1_e.dat",
+     "bytes": 10850,
+     "sha256": "86cd5ca80dd8eb3c56e5f19b0d33e5e093c3abc66b9dbaf7d2e22acafc2ab8e6"
+    },
+    {
+     "name": "resultsD_2026/E2_fig10_1_u.dat",
+     "bytes": 10977,
+     "sha256": "3839f04cfc29c29711239883657ab6320f2cd8f94e64373240b552b667710087"
+    },
+    {
+     "name": "resultsD_2026/E2_fig10_SBK.dat",
+     "bytes": 65086,
+     "sha256": "8a293916ac4ed22e3d211b6d89dd311160de91dc58e99c7b96dbff492daf8d3c"
+    },
+    {
+     "name": "resultsD_2026/E2_fig10_YS.dat",
+     "bytes": 350208,
+     "sha256": "ad9a603fe1b4cd867df45b55ab71c6040aed37232161718304aaeddffa6ec1b2"
+    },
+    {
+     "name": "resultsD_2026/E2_fig12_1_e.dat",
+     "bytes": 10818,
+     "sha256": "8258dc07bc6a8076185013f45d11538e4a8ce65ea545476a16023c0d1d0772b8"
+    },
+    {
+     "name": "resultsD_2026/E2_fig12_1_u.dat",
+     "bytes": 10619,
+     "sha256": "765c7c301283bc47cf89de12e677cba32bfb1fcf852aa7c71163b47c5917628c"
+    },
+    {
+     "name": "resultsD_2026/E2_fig12_SBK.dat",
+     "bytes": 65142,
+     "sha256": "2e9c7598cf58b8e844e6f40cd710b705375565d39c365eb4e5a9c0e0eed98d90"
+    },
+    {
+     "name": "resultsD_2026/E2_fig12_YS.dat",
+     "bytes": 350208,
+     "sha256": "42964d8d405a1a5ec2564e82e47b033abf3d079465e4245babf679fa287a581e"
+    },
+    {
+     "name": "resultsD_2026/E2_fig14_1_ssv3.dat",
+     "bytes": 10406,
+     "sha256": "b17cb83f86b5c5b7daaff6955083c703143463302aefbf646929e02cc8c24860"
+    },
+    {
+     "name": "resultsD_2026/GS_hUF-E2.dat",
+     "bytes": 1408,
+     "sha256": "28b53f9724c1d199b970565abb92893edbe2fbd3882b3e6c37f1432d40f95ce2"
+    },
+    {
+     "name": "resultsD_2026/GS_mass-E2.dat",
+     "bytes": 2240,
+     "sha256": "6505b069513701062f30a3134489367865a6f9670ed86b492028f15f87ea27ea"
+    },
+    {
+     "name": "resultsD_2026/GS_ocean-area-E2.dat",
+     "bytes": 1408,
+     "sha256": "0c526492f2c6da316f2ec878c90f688ceae510225d8ffe24d8453f221a3d8bde"
+    },
+    {
+     "name": "resultsD_2026/Z_GS_basin_diff.out",
+     "bytes": 71400,
+     "sha256": "1e514049dabb3e9f53920e634de2b97e11de500199736072fc50ec5e1697ae18"
+    },
+    {
+     "name": "resultsD_2026/Z_GS_load_diff.out",
+     "bytes": 71400,
+     "sha256": "2ba9ff29787c19d8c2e39d08cdb8bef2a6a244ee64f8537a027ba714d36a3c03"
+    },
+    {
+     "name": "resultsD_2026/Z_SK_basin_diff.out",
+     "bytes": 42840,
+     "sha256": "79363ec1e4ef3535c1ff023be14f25609dcf69c89d959902ab6dd0286a291ecc"
+    },
+    {
+     "name": "resultsD_2026/Z_SK_load_diff.out",
+     "bytes": 42840,
+     "sha256": "c2462b92d861ee174486f69474a3ec9399b074075b1ed2a02a2843e1471d05e3"
+    },
+    {
+     "name": "resultsD_2026/Z_VK_basin_diff.out",
+     "bytes": 85561,
+     "sha256": "1f51b79c45ce95e59832384b90edb62760133715bacd1d2916e0f652d91cf6fd"
+    },
+    {
+     "name": "resultsD_2026/Z_VK_load_diff.out",
+     "bytes": 85561,
+     "sha256": "7fcadaf5511b46fbfe03d7692c345b8e2a85f63970a7de1cd873d541ad8e24dc"
+    },
+    {
+     "name": "resultsD_2026/Z_YS_basin_diff.out",
+     "bytes": 243712,
+     "sha256": "f592413230bdb16fe49bb37ab752bdfbe947b0247fcb466750833d574e7a3fc2"
+    },
+    {
+     "name": "resultsD_2026/Z_YS_load_diff.out",
+     "bytes": 243712,
+     "sha256": "6b522d01ab4e14d4853dd40fb5d4a0cdd3d685bcb0656176efa81b25893baadd"
+    },
+    {
+     "name": "resultsD_2026/Z_ZM_basin.out",
+     "bytes": 42721,
+     "sha256": "db34310abdef60c0d501563c63fb9cdfbbe8fb803162404eec6681d65c584fd1"
+    },
+    {
+     "name": "resultsD_2026/Z_ZM_load.out",
+     "bytes": 42721,
+     "sha256": "7bb58d9c68626ad648d81f7729bbf0617eef7e4fa96d8cc0d53eaa01d4d2e5e3"
+    },
+    {
+     "name": "resultsD_2026/figZ_uvf_basin_diff.gmt",
+     "bytes": 5658,
+     "sha256": "c8fa360465fadfbec92651edea374140f17b651bf8c70627268a4e70b8381b26"
+    },
+    {
+     "name": "resultsD_2026/figZ_uvf_basin_diff.pdf",
+     "bytes": 37605,
+     "sha256": "90dd33a0d10d91b4e94b1064cb87d2126a2402e6def0ff720ecb3212c43ef9a5"
+    },
+    {
+     "name": "resultsD_2026/figZ_uvf_load_diff.gmt",
+     "bytes": 4463,
+     "sha256": "ee76bfffbc3664cb4085ddf28f66af3022c8f9fb8dec536fac3cfbf091279c0e"
+    },
+    {
+     "name": "resultsD_2026/figZ_uvf_load_diff.pdf",
+     "bytes": 20402,
+     "sha256": "b3b9d2b17e3bbcc3aa211909979972d30128e641239fd681406a7c20aab3ceda"
+    },
+    {
+     "name": "resultsD_2026/fig_hufD_secti_detail.gmt",
+     "bytes": 3370,
+     "sha256": "e0b550917d688cbf4886a58324fd9091dffcabff3a297bfec2d43637c1dc5de1"
+    },
+    {
+     "name": "resultsD_2026/fig_hufD_secti_detail.pdf",
+     "bytes": 11692,
+     "sha256": "e58dff7ae80107bed5acb4f816f38e9858c220d524a7a7724fc73c428ef91c91"
+    },
+    {
+     "name": "resultsD_2026/fig_mass_iceD.gmt",
+     "bytes": 2298,
+     "sha256": "438ed3fc6c65f9a61a618dc5418f64504e5dde6fe369d068076f586dc42833e0"
+    },
+    {
+     "name": "resultsD_2026/fig_mass_iceD.pdf",
+     "bytes": 10418,
+     "sha256": "13f880dd791641a00db55266f1ed098a1eaa215041fd9c71b52f85ad6d660352"
+    },
+    {
+     "name": "resultsD_2026/fig_of00D.gmt",
+     "bytes": 2272,
+     "sha256": "10f8078603074d4003018c8e314b4f085c58ac8a3194381953614a3d8a7d7bb4"
+    },
+    {
+     "name": "resultsD_2026/fig_of00D.pdf",
+     "bytes": 10358,
+     "sha256": "4f9816cf48967cddb76e63c722ce5548dac0bc0f8fe64bcb1bcb278aba37ef99"
+    },
+    {
+     "name": "resultsD_2026/secti.out",
+     "bytes": 98381,
+     "sha256": "530575f65f3e6e184b3bc081150df85305040de0a433e4995d1a91f0c55436bd"
+    },
+    {
+     "name": "resultsD_2026/vega76.out",
+     "bytes": 98763,
+     "sha256": "522c10e7ff29f524238d2b01d14e81691f17b79143a317343fa54919ef1786f2"
+    }
+   ],
+   "member_count": 45
+  },
+  "martinec2018/resultsE_2026.zip": {
+   "collection": "martinec2018",
+   "stage": "original",
+   "description": "Case E (internal code F1): the VEGA time series vega76.out, a case D run vega76_E2.out, contributor time series of ocean area and h_UF, and the GMT scripts.",
+   "source_doi": "10.1093/gji/ggy280",
+   "source_citation": "See martinec2018/benchmarkA.zip.",
+   "supplier": "Zdenek Martinec",
+   "received": "2026-09-12",
+   "permission": "granted",
+   "notes": "Assembled by Martinec on 2026-09-12. The case E comparison has no profiles. Sia Ghelichkhani recorded on 2026-09-14 that Martinec supplied the full data for publication with this repository.",
+   "bytes": 93844,
+   "sha256": "f1ff20c32d0154c9a4470f6679f94776a22f9fdcafc0a052d37ffd9c202fce46",
+   "members": [
+    {
+     "name": "resultsE_2026/F1_fig07_1_VK.dat",
+     "bytes": 1169,
+     "sha256": "932d18ab35b5b62502ec187e23838601f576b4c9de1fdd5b42c02c41633c51de"
+    },
+    {
+     "name": "resultsE_2026/F1_fig07_SBK.dat",
+     "bytes": 83390,
+     "sha256": "f92a2c3cef91bf57adf64fb34312b13a567670e3bd823b73a50af39a3b747460"
+    },
+    {
+     "name": "resultsE_2026/F1_fig07_YS.dat",
+     "bytes": 9211,
+     "sha256": "d018b6fbbf39ee2f77c7e5f5571c0968c74744c864a1bc1a33d696e0614f3091"
+    },
+    {
+     "name": "resultsE_2026/F1_fig08_1.dat",
+     "bytes": 3040,
+     "sha256": "af377f08c20e73a688d201bfc1c9d088bcf5d5349d3e890ced8d7447ce5888bc"
+    },
+    {
+     "name": "resultsE_2026/F1_fig08_YS.dat",
+     "bytes": 5436,
+     "sha256": "478628472186f46478788c756db849a4f5735ab2096a4fe505539df820796f58"
+    },
+    {
+     "name": "resultsE_2026/fig_hufE.gmt",
+     "bytes": 2618,
+     "sha256": "42a7b3e407a867f13bd2021e12066ca5b048cd2e6a0f1aabe106063072d0300e"
+    },
+    {
+     "name": "resultsE_2026/fig_hufE.pdf",
+     "bytes": 11156,
+     "sha256": "a5ce6557dbb31c2cc17be4f2e872b11d6414334f6ab1f3cefa9e7f1b93eceac1"
+    },
+    {
+     "name": "resultsE_2026/fig_of00E.gmt",
+     "bytes": 2128,
+     "sha256": "11ef733fbd4d1b141753c70c9eee4454a47e8e32f821cb869f5c7cb184dbe26f"
+    },
+    {
+     "name": "resultsE_2026/fig_of00E.pdf",
+     "bytes": 10966,
+     "sha256": "6b860141d2b0e2fed503d9ed33f2828c56ce6717033ed3527dbd76a01df62ca3"
+    },
+    {
+     "name": "resultsE_2026/vega76.out",
+     "bytes": 98763,
+     "sha256": "5666d64ba305a6fc275ff700fcfec3a6af66f7d37a98f9994b111d42f5ffc9c1"
+    },
+    {
+     "name": "resultsE_2026/vega76_E2.out",
+     "bytes": 39813,
+     "sha256": "5e40e332240b429d9f634fe91c4ede14dca04ad8b22142d557f8dd8df050a573"
+    }
+   ],
+   "member_count": 11
+  },
   "martinec2018/sbk_benchmark_data.tar.gz": {
    "collection": "martinec2018",
    "stage": "original",
@@ -538,7 +1468,7 @@
    "supplier": "unknown; obtained through the G-ADOPT reference collection",
    "received": "2026-09-03",
    "permission": "not_asked",
-   "notes": "Only two of the five internal case codes are tied to a published case letter. A is case A. C2 is case B, because two of its files are byte-identical to files in benchmarkB.zip. D3, E2 and F1 are unresolved. The A profile in this archive supersedes the one in benchmarkA.zip; see corrections.json.",
+   "notes": "A is case A. C2 is case B, because two of its files are byte-identical to files in benchmarkB.zip. D3, E2 and F1 are cases C, D and E, established from Martinec's archives resultsC_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the one in benchmarkA.zip; see corrections.json.",
    "bytes": 641258,
    "sha256": "5ec150908bb1453d48015af477e82091d40d43e6a44cfff985569119615d41d1",
    "members": [

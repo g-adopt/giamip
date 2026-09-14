@@ -20,16 +20,56 @@
   "outputs": [
     "U",
     "N",
-    "S"
+    "S",
+    "ice_mass_grounded",
+    "h_UF"
   ],
-  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation. The paper compares these along latitudinal cross-sections, plus the thickness of the uniform water layer h_UF(t) where the sea level equation is solved.",
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation, all along meridional cross-sections at the terminal time. h_UF is the thickness of the uniform water layer, ice_mass_grounded and ice_mass_floating are ice masses, and ocean_area is the ocean area as a fraction of 4 pi, all as functions of time. The list holds what the paper compares for this case.",
   "comparison": {
     "reference_solution": "VEGA (contributor ZM)",
     "metrics": [
       "root mean square difference",
       "maximum difference"
     ],
-    "interval": "colatitude 0 to 20 degrees for the ice-centre cross-section"
+    "profiles": [
+      {
+        "profile": "through the ice centre, longitude 75",
+        "quantities": [
+          "U",
+          "N"
+        ],
+        "interval": "colatitude 5 to 45 degrees",
+        "figure": 9
+      },
+      {
+        "profile": "through the basin centre, longitude 25",
+        "quantities": [
+          "U",
+          "N",
+          "S"
+        ],
+        "interval": "colatitude 0 to 70 degrees",
+        "figure": 10
+      }
+    ],
+    "time_series": [
+      {
+        "quantities": [
+          "ice_mass_grounded"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 8
+      },
+      {
+        "quantities": [
+          "h_UF"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 11,
+        "note": "The paper shows the reference solution only."
+      }
+    ],
+    "$comment": "Source: Martinec et al. (2018), section 5, figures 3 to 19. Difference intervals apply to the profiles at the terminal time. See docs/protocol/martinec2018.qmd, section Comparison method."
   },
   "reference_data": {
     "contributors": [
@@ -39,9 +79,11 @@
       "MS",
       "SK"
     ],
-    "archive": null,
-    "reference": "Not held. Only Kachuck's submission is available, under an internal code that is not yet tied to this case letter.",
+    "archive": "martinec2018/resultsC_2026.zip",
+    "internal_case_code": "D3",
+    "internal_case_code_evidence": "Martinec's archive resultsC_2026.zip holds only D3 contributor files, and its two cross-section scripts, which read them, are titled 'Benchmark C'.",
+    "reference": "VEGA, in resultsC_2026/Z_ZM_load.out, Z_ZM_basin.out and vega76.out. The case C basin script divides the VEGA potential by 10; see correction martinec2018-caseC-basin-gravity-factor.",
     "published_figure": "Figures 7 to 11"
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "specified; converted to data/converted/martinec2018/martinec2018-C.nc"
 }

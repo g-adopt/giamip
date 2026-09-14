@@ -48,7 +48,7 @@
     "2": "Solved with a time-varying ocean geometry, so the coastline moves and ice may float."
   },
   "notes": [
-    "The basin radius psi0 = sigma_b * sqrt(ln(b0/bmax)) is 24.85 degrees for both B1 and B2.",
+    "The basin radius psi0 = sigma_b * sqrt(2 * ln(b0/bmax)) is 24.85 degrees for both B1 and B2, where zeta0 = 0. The paper prints the square root of ln(b0/bmax)^2 on p. 395, which gives 11.88 degrees; its figure 17 gives 24.8503 degrees, which only the form here reproduces.",
     "Benchmark E uses basin B2*, which has the same parameters as B2 but prescribes the topography at the terminal time instead of the initial time, so the initial topography is the unknown."
   ]
 }
