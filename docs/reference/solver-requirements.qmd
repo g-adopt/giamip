@@ -69,14 +69,14 @@ member, group or model name contains an underscore.
 
 Recorded so the gap is visible. Neither is work for this repository.
 
-### sl1d
+### radopt
 
 A one-dimensional Love number and sea level code in Python and JAX,
-at [g-adopt/sl1d](https://github.com/g-adopt/sl1d).
+at [g-adopt/radopt](https://github.com/g-adopt/radopt). It was called sl1d before September 2026.
 
 | Requirement | State |
 | --- | --- |
-| M3-L70-V01 | Missing. `sl1d/models/` ships PREM variants only, so the deck has to be written. |
+| M3-L70-V01 | Missing. radopt ships PREM variants only, so the deck has to be written. |
 | Incompressible earth | The kernel has an incompressible matrix, so this is a deck and a code path, not new physics. |
 | 513 longitudes | Missing. `GaussLegendreGrid.build` raises `ValueError("nlon must be even")`. |
 | The six scalar integrals | Missing. `SeaLevelResult` returns displacement, geoid and relative sea level. It holds the grounded ice mask internally and returns neither it nor any integral. |

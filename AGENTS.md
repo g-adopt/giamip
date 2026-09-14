@@ -4,7 +4,7 @@
 
 It specifies GIA model comparison cases and holds the data to compare against.
 It contains no solver. If a change would make this repository compute a
-viscoelastic response, the change belongs in `sl1d` or in G-ADOPT.
+viscoelastic response, the change belongs in `radopt` or in G-ADOPT.
 
 ## The rules that do not bend
 

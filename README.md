@@ -28,22 +28,23 @@ and verifies every one against a SHA-256 index, so a fetched tree is the tree
 the conversions were made from. Use `--collection giamip` for the GIAMIP
 inputs, which are larger.
 
-The files are held in the gadopt object store. Redistribution has not yet been
-agreed with every supplier, and the fetcher refuses to download anything whose
-supplier has not agreed. Until then the originals are obtained from the
-supplier and placed in `data/original/` by hand. `docs/data/fetching.qmd` says
-how, and `docs/data/manifest.qmd` records the state of every file.
+The files are held in the gadopt object store at data.gadopt.org. The
+fetcher downloads only files whose supplier has agreed to redistribution,
+which today is the Martinec archives. The Spada and GIAMIP originals are
+obtained from the supplier and placed in `data/original/` by hand.
+`docs/data/fetching.qmd` says how, and `docs/data/manifest.qmd` records the
+state of every file.
 
 ## Layout
 
 ```
-gia_mip/     the package. Written: data.py (fetch and verify), grids.py (the
+gia_mip/     the package: data.py (fetch and verify), grids.py (the
              Gauss-Legendre grid), corrections.py (known defects in the
-             originals), benchmarks/martinec2018.py (the Martinec archives
-             to NetCDF). Planned: Spada readers, mip/ (readers, schemas,
-             the output writer) and plotting/
-cases/       planned. One JSON file per case, in benchmarks/ and giamip/
-models/      planned. Earth-model parameter tables referenced by the cases
+             originals), benchmarks/ (Martinec case set-up, results, scores
+             and conversion) and mip/ (GIAMIP input readers). Not written:
+             Spada readers, the GIAMIP output writer and plotting/
+cases/       one JSON file per case, in benchmarks/ and giamip/
+models/      earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and
              per case, plus the data manifest and the list of corrections
 scripts/     conversion and upload scripts, run by hand
@@ -59,14 +60,14 @@ outputs/     gitignored. The output fields a solver produced for a case
 
 ## How to run a case
 
-No case is written yet. When one is, it has a JSON file in `cases/` and a
-page in `docs/results/`. The page
+Each case has a JSON file in `cases/` and a page in `docs/results/`. The page
 gives the full specification: the earth model, the load, the time interval, the
 grid, the physical constants, the variables to produce and the data to compare
 against. The JSON file gives the same information in machine-readable form.
 
-Start with `docs/reference/solver-requirements.qmd`. It lists what a solver
-must be able to do before it can run these cases.
+Start with `docs/reference/solver-requirements.qmd`, which lists what a solver
+must be able to do, and `docs/reference/python-interface.qmd`, which shows how
+a solver reads a case and writes a result that can be scored.
 
 ## Data
 

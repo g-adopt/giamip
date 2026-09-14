@@ -20,19 +20,21 @@ data
     Fetch the original files from the object store and verify them by SHA-256.
     Imports only the standard library, so it runs before anything is installed.
 grids
-    Planned. The Gauss-Legendre quadrature grid that GIAMIP prescribes, and a
-    validator that checks a file's axes against it.
+    The Gauss-Legendre quadrature grid that GIAMIP prescribes, and a validator
+    that checks a file's axes against it.
 corrections
-    Planned. Known defects in the original files, applied when a file is read.
-    The original files themselves are never edited.
+    Known defects in the original files, applied when a file is read. The
+    original files themselves are never edited.
+cases
+    Look up a case, an earth model or a load table.
 benchmarks
-    Readers for the two benchmarks. ``benchmarks.martinec2018`` converts the
-    Martinec (2018) archives to NetCDF. Spada (2011) readers are planned.
+    Martinec (2018) case set-up, results, scores and conversion to NetCDF.
+    Spada (2011) readers are not written.
 mip
-    Planned. Readers, case schema, output writer and compliance wrapper for
-    GIAMIP.
+    GIAMIP input readers. The output writer and compliance wrapper are not
+    written.
 plotting
-    Planned. Redraws of the published figures, and the comparison figures.
+    Empty. Redraws of the published figures, and the comparison figures.
 """
 
 __version__ = "0.1.0.dev0"

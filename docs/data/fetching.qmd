@@ -7,7 +7,7 @@ people who produced it, so it is not in the repository.
 
 ```bash
 pip install -e .
-python -m gia_mip.data                         # both benchmarks, 24 MB
+python -m gia_mip.data                         # both benchmarks
 python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
 python -m gia_mip.data --all
 ```
@@ -18,12 +18,13 @@ to be the tree the conversions were made from. Archives are unpacked next to
 themselves.
 
 ::: {.callout-important}
-## Redistribution is not yet agreed
+## Redistribution is agreed for some files only
 
 `python -m gia_mip.data` refuses to download any file whose `permission` is
-not `granted`, and prints which one and why. At present that is every file.
+not `granted`, and prints which one and why. The Martinec archives are
+granted and public. Everything else is not yet.
 
-The Spada and Martinec archives were supplied privately. The GIAMIP inputs
+The Spada archive and Kachuck's giapy files were supplied privately. The GIAMIP inputs
 came through the project's own shared folder, and the ice histories are
 re-gridded versions of third-party reconstructions that each carry their own
 terms. Until each supplier has agreed, the files are obtained from the

@@ -17,4 +17,5 @@ A submission directory holds:
 - `scores/`: for a benchmark submission, the difference metrics against every
   contributor.
 
-Two submissions are planned: `ANU_sl1d` and `ANU_G-ADOPT`.
+The GIAMIP identity is institute ANU and group G-ADOPT, with two models, `radopt`
+and `g-adopt`. The directories are therefore `G-ADOPT_radopt` and `G-ADOPT_g-adopt`.

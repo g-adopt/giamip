@@ -41,7 +41,7 @@ from gia_mip.data import (  # noqa: E402
 )
 
 # Read files in one-megabyte pieces so a 300 MB archive is never held whole in
-# memory. The same chunk size is used by sl1d.data, for no reason beyond
+# memory. The same chunk size is used by radopt.data, for no reason beyond
 # consistency between the two fetchers.
 CHUNK = 1 << 20
 
