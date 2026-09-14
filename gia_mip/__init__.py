@@ -26,7 +26,8 @@ corrections
     Planned. Known defects in the original files, applied when a file is read.
     The original files themselves are never edited.
 benchmarks
-    Planned. Readers and case schema for Spada (2011) and Martinec (2018).
+    Readers for the two benchmarks. ``benchmarks.martinec2018`` converts the
+    Martinec (2018) archives to NetCDF. Spada (2011) readers are planned.
 mip
     Planned. Readers, case schema, output writer and compliance wrapper for
     GIAMIP.

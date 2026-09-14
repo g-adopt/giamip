@@ -39,8 +39,9 @@ how, and `docs/data/manifest.qmd` records the state of every file.
 ```
 gia_mip/     the package. Written: data.py (fetch and verify), grids.py (the
              Gauss-Legendre grid), corrections.py (known defects in the
-             originals). Planned: benchmarks/ and mip/ (readers, schemas, the
-             output writer) and plotting/
+             originals), benchmarks/martinec2018.py (the Martinec archives
+             to NetCDF). Planned: Spada readers, mip/ (readers, schemas,
+             the output writer) and plotting/
 cases/       planned. One JSON file per case, in benchmarks/ and giamip/
 models/      planned. Earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and

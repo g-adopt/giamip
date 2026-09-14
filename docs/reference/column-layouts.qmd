@@ -2,7 +2,11 @@
 title: "Column layouts"
 ---
 
-What each column of each Martinec et al. (2018) data file holds.
+What each column of each Martinec et al. (2018) data file holds, for the
+archives first received (`benchmarkA/`, `benchmarkB/`) and for the set Martinec
+sent in September 2026 (`resultsA_2026/` to `resultsE_2026/`). Every file is
+named by its path under `data/original/`, because the same filename holds
+different data in different directories.
 
 Most of these files have no header. The only surviving record of their
 contents is the GMT 4 script that drew the published figure, in lines like
@@ -81,6 +85,45 @@ for name, entries in d["by_file"].items():
     out.append("")
 Markdown("\n".join(out))
 ```
+
+## Time-series units
+
+The time-series scripts of cases C, D and E say which column they plot and the
+factor they apply, but not the unit the column is stored in, and the
+contributors use different units: ice mass in kg, 1e17 kg or 1e18 kg, ocean
+area as a fraction, a percentage or ten times a fraction. The table below is
+transcribed from the file headers and from arithmetic on the files, with the
+evidence for each entry. `si_factor` converts the stored value to kg, to a
+fraction of 4 pi, or to metres. `tests/test_layouts.py` checks every factor
+against the scale the script applies and the unit on the axis, so an entry
+that disagrees with the published figure fails a test. See correction
+`martinec2018-time-series-units`.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import json, pathlib
+d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+                / "column_layouts.json").read_text())
+rows = ["| File | Time column | Column | Holds | Stored unit | si_factor | Evidence |",
+        "| --- | ---: | ---: | --- | --- | ---: | --- |"]
+for path, entry in d["time_series_columns"].items():
+    for column, c in sorted(entry["columns"].items(), key=lambda kv: int(kv[0])):
+        rows.append(f"| `{path}` | {entry['time_column']} | {column} | `{c['name']}` | "
+                    f"{c['units']} | {c['si_factor']:g} | {c.get('evidence', 'VEGA header')} |")
+Markdown("\n".join(rows))
+```
+
+## Converted data
+
+`gia_mip.benchmarks.martinec2018` reads every curve that a script draws, with
+the column, sign and scale from this page and the fixes from
+[the corrections](../data/corrections.qmd), and writes one NetCDF4 file per
+case to `data/converted/martinec2018/`. Run `scripts/convert_martinec2018.py`
+after `scripts/decode_gmt_layouts.py`. The module docstring describes the
+groups and attributes of the output.
 
 ## What is not decoded
 
