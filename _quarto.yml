@@ -40,6 +40,7 @@ website:
           - docs/reference/loads-and-grids.qmd
           - docs/reference/codes-and-contributors.qmd
           - docs/reference/column-layouts.qmd
+          - docs/reference/python-interface.qmd
       - text: "Cases"
         href: docs/results/index.qmd
       - text: "Data"

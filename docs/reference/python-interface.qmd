@@ -1,0 +1,77 @@
+---
+title: "Python interface for solvers"
+---
+
+The package gives radopt, G-ADOPT and any other solver one way to read what a
+case prescribes and one way to hold and score what the solver produced. None
+of it computes a response.
+
+## Martinec (2018): setting up a case
+
+`gia_mip.benchmarks.inputs.MartinecCase` reads the case file, the load table
+and the earth model, and evaluates the load and the topography at the points
+a solver chooses.
+
+```python
+from gia_mip.benchmarks.inputs import MartinecCase
+
+case = MartinecCase("D")
+case.earth_layers()                          # radii, densities, moduli, viscosities
+case.ice_density, case.water_density         # 931 and 1000 kg/m3
+h = case.ice_thickness(colat, lon, t_kyr)    # the cap, in metres, at any points
+grid = case.ice_on_grid(lat_north_first, lon, times_kyr)   # (times, lat, lon)
+zeta = case.topography(colat, lon)           # the basin, eq. 29
+case.topography_time                         # "initial", or "terminal" for case E
+case.profiles, case.time_series              # what to output and compare
+```
+
+The cap is the square-root profile of Spada et al. (2011). In scenario T1 the
+height and the radius grow together and the profile stays the same shape; the
+total mass then equals VEGA's to 2e-4 at every time, which a test checks.
+
+## Martinec (2018): results and scores
+
+`gia_mip.benchmarks.results.BenchmarkResult` holds the curves of one code for
+one case, in the same layout as the converted reference files, so a solver's
+output and a published contributor are read, plotted and scored the same way.
+
+```python
+from gia_mip.benchmarks.results import BenchmarkResult
+from gia_mip.benchmarks import metrics
+
+run = BenchmarkResult("D", "radopt")
+run.add_profile("load", "U", colatitude_deg, u_m)
+run.add_time_series("h_UF", time_kyr, h_uf_m)
+run.write("outputs/martinec2018/radopt/martinec2018-D.nc")
+
+vega = BenchmarkResult.reference("D", "ZM")
+metrics.score(run)        # RMS and maximum difference per profile and time series
+```
+
+`metrics.score` uses the colatitude intervals of the case file. Where the VEGA
+file Martinec shipped is not the published reference (case A, the case B
+basin and case D), it recovers the reference from a contributor's profile and
+difference file; each row says which reference it used.
+
+## GIAMIP: inputs
+
+`gia_mip.mip.inputs.GiamipExperiment` opens the ice history and the topography
+an experiment prescribes, with NetCDF masking off, the grid checked, and the
+corrections for the version of the file on disk.
+
+```python
+from gia_mip.mip.inputs import GiamipExperiment, grounded_thickness
+
+exp = GiamipExperiment("Exp01")
+ice = exp.ice_history                       # IceHistory
+ice.years                                   # years from 2000 CE
+h = ice.thickness(step, north_first=True)   # (257, 513), metres
+bed = exp.topography.elevation(north_first=True)
+steps = exp.forcing_steps()                 # the steps inside the period, 80 ka for Exp06 and Exp07
+grounded = grounded_thickness(h, bed, exp.constants["ice_density_kg_m3"],
+                              exp.constants["ocean_water_density_kg_m3"])
+```
+
+The GIAMIP grid has 257 latitudes and 513 longitudes. A solver that assumes
+`nlat` by `2 nlat` longitudes, as the radopt sea-level solver does, cannot take
+it without regridding.
