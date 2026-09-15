@@ -49,7 +49,7 @@ for m in cases.earth_models():
             visc = "elastic" if L["viscosity_pa_s"] is None else f"{L['viscosity_pa_s']:.3g}"
             out.append(f"| {L['role']} | {L['top_radius_km']} | {L['bottom_radius_km']} | "
                        f"{L['density_kg_m3']} | {L['shear_modulus_pa']:.4g} | {visc} | "
-                       f"{L['rheology']} | {L['gravity_at_top_m_s2']} |")
+                       f"{L['rheology']} | {L.get('gravity_at_top_m_s2', '—')} |")
         out.append("")
     elif layers and m["kind"] == "viscosity_profile":
         out.append("\n| Top depth (km) | Bottom depth (km) | Viscosity (Pa s) |")

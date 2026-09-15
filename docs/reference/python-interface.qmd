@@ -64,7 +64,7 @@ output.
 from gia_mip.benchmarks.inputs import SpadaCase
 
 case = SpadaCase("t02-01")
-case.earth_layers()                          # M3-L70-V01; VSS96 (test 6/1) has no layer table yet
+case.earth_layers()                          # M3-L70-V01, or VSS96 in test 6/1
 case.ice_density, case.water_density         # 931 and 1000 kg/m3, from the load table
 case.loads                                   # ("cap", "disc", "point")
 case.load_centre                             # (0.0, 0.0), or (25.0, 75.0) in test 3/2

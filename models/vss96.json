@@ -8,11 +8,50 @@
   "used_by": ["spada2011 test 6/1", "spada2011 test 7/1 (as an alternative to M3-L70-V01)"],
   "source": {
     "citation": "Vermeersen, L. L. A., Sabadini, R. and Spada, G. (1996). Analytical visco-elastic relaxation models. Geophysical Research Letters 23, 697-700. The layer table used by the benchmark is the file VSS96.dat distributed from the COST ES0701 benchmark page.",
-    "doi": "10.1029/96GL00620"
+    "doi": "10.1029/96GL00620",
+    "transcribed_from": {
+      "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+      "file": "T01-06/VSS96.dat",
+      "sha256": "8158ff7132f141fc494b33dcc5f5db3c0d35625073f2a106f125547cb466a2a7"
+    }
   },
-  "layers": null,
+  "layers": [
+    {"role": "lithosphere", "top_radius_km": 6371, "bottom_radius_km": 6251, "thickness_km": 120, "density_kg_m3": 3184.3, "shear_modulus_pa": 6.02e10, "viscosity_pa_s": null, "rheology": "elastic"},
+    {"role": "mantle layer 1", "top_radius_km": 6251, "bottom_radius_km": 6151.5, "thickness_km": 99.5, "density_kg_m3": 3367.1, "shear_modulus_pa": 6.65e10, "viscosity_pa_s": 2e20, "rheology": "maxwell"},
+    {"role": "mantle layer 2", "top_radius_km": 6151.5, "bottom_radius_km": 6150.5, "thickness_km": 1, "density_kg_m3": 3359.5, "shear_modulus_pa": 6.56e10, "viscosity_pa_s": 5.5e20, "rheology": "maxwell"},
+    {"role": "mantle layer 3", "top_radius_km": 6150.5, "bottom_radius_km": 6061, "thickness_km": 89.5, "density_kg_m3": 3435.78, "shear_modulus_pa": 7.41e10, "viscosity_pa_s": 6e20, "rheology": "maxwell"},
+    {"role": "mantle layer 4", "top_radius_km": 6061, "bottom_radius_km": 6016, "thickness_km": 45, "density_kg_m3": 3489.51, "shear_modulus_pa": 7.73e10, "viscosity_pa_s": 1e21, "rheology": "maxwell"},
+    {"role": "mantle layer 5", "top_radius_km": 6016, "bottom_radius_km": 5970.5, "thickness_km": 45.5, "density_kg_m3": 3516.39, "shear_modulus_pa": 7.9e10, "viscosity_pa_s": 1.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 6", "top_radius_km": 5970.5, "bottom_radius_km": 5951, "thickness_km": 19.5, "density_kg_m3": 3723.78, "shear_modulus_pa": 9.06e10, "viscosity_pa_s": 2e21, "rheology": "maxwell"},
+    {"role": "mantle layer 7", "top_radius_km": 5951, "bottom_radius_km": 5821, "thickness_km": 130, "density_kg_m3": 3786.78, "shear_modulus_pa": 9.77e10, "viscosity_pa_s": 2.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 8", "top_radius_km": 5821, "bottom_radius_km": 5771.5, "thickness_km": 49.5, "density_kg_m3": 3912.82, "shear_modulus_pa": 1.128e11, "viscosity_pa_s": 4e21, "rheology": "maxwell"},
+    {"role": "mantle layer 9", "top_radius_km": 5771.5, "bottom_radius_km": 5736, "thickness_km": 35.5, "density_kg_m3": 3975.84, "shear_modulus_pa": 1.21e11, "viscosity_pa_s": 4.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 10", "top_radius_km": 5736, "bottom_radius_km": 5701, "thickness_km": 35, "density_kg_m3": 3983.99, "shear_modulus_pa": 1.224e11, "viscosity_pa_s": 5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 11", "top_radius_km": 5701, "bottom_radius_km": 5650, "thickness_km": 51, "density_kg_m3": 3992.14, "shear_modulus_pa": 1.239e11, "viscosity_pa_s": 5.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 12", "top_radius_km": 5650, "bottom_radius_km": 5600.5, "thickness_km": 49.5, "density_kg_m3": 4412.41, "shear_modulus_pa": 1.639e11, "viscosity_pa_s": 6e21, "rheology": "maxwell"},
+    {"role": "mantle layer 13", "top_radius_km": 5600.5, "bottom_radius_km": 5500, "thickness_km": 100.5, "density_kg_m3": 4443.16, "shear_modulus_pa": 1.73e11, "viscosity_pa_s": 6.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 14", "top_radius_km": 5500, "bottom_radius_km": 5400, "thickness_km": 100, "density_kg_m3": 4503.72, "shear_modulus_pa": 1.794e11, "viscosity_pa_s": 7e21, "rheology": "maxwell"},
+    {"role": "mantle layer 15", "top_radius_km": 5400, "bottom_radius_km": 5200, "thickness_km": 200, "density_kg_m3": 4563.07, "shear_modulus_pa": 1.856e11, "viscosity_pa_s": 8e21, "rheology": "maxwell"},
+    {"role": "mantle layer 16", "top_radius_km": 5200, "bottom_radius_km": 5100, "thickness_km": 100, "density_kg_m3": 4678.44, "shear_modulus_pa": 1.979e11, "viscosity_pa_s": 1.3e22, "rheology": "maxwell"},
+    {"role": "mantle layer 17", "top_radius_km": 5100, "bottom_radius_km": 4900, "thickness_km": 200, "density_kg_m3": 4734.6, "shear_modulus_pa": 2.039e11, "viscosity_pa_s": 1.8e22, "rheology": "maxwell"},
+    {"role": "mantle layer 18", "top_radius_km": 4900, "bottom_radius_km": 4800, "thickness_km": 100, "density_kg_m3": 4844.22, "shear_modulus_pa": 2.157e11, "viscosity_pa_s": 2.5e22, "rheology": "maxwell"},
+    {"role": "mantle layer 19", "top_radius_km": 4800, "bottom_radius_km": 4600, "thickness_km": 200, "density_kg_m3": 4897.83, "shear_modulus_pa": 2.215e11, "viscosity_pa_s": 3e22, "rheology": "maxwell"},
+    {"role": "mantle layer 20", "top_radius_km": 4600, "bottom_radius_km": 4500, "thickness_km": 100, "density_kg_m3": 5002.99, "shear_modulus_pa": 2.331e11, "viscosity_pa_s": 4.5e22, "rheology": "maxwell"},
+    {"role": "mantle layer 21", "top_radius_km": 4500, "bottom_radius_km": 4300, "thickness_km": 200, "density_kg_m3": 5054.69, "shear_modulus_pa": 2.388e11, "viscosity_pa_s": 5e22, "rheology": "maxwell"},
+    {"role": "mantle layer 22", "top_radius_km": 4300, "bottom_radius_km": 4200, "thickness_km": 100, "density_kg_m3": 5156.69, "shear_modulus_pa": 2.502e11, "viscosity_pa_s": 6e22, "rheology": "maxwell"},
+    {"role": "mantle layer 23", "top_radius_km": 4200, "bottom_radius_km": 4000, "thickness_km": 200, "density_kg_m3": 5207.13, "shear_modulus_pa": 2.559e11, "viscosity_pa_s": 5e22, "rheology": "maxwell"},
+    {"role": "mantle layer 24", "top_radius_km": 4000, "bottom_radius_km": 3900, "thickness_km": 100, "density_kg_m3": 5307.24, "shear_modulus_pa": 2.675e11, "viscosity_pa_s": 4e22, "rheology": "maxwell"},
+    {"role": "mantle layer 25", "top_radius_km": 3900, "bottom_radius_km": 3700, "thickness_km": 200, "density_kg_m3": 5357.06, "shear_modulus_pa": 2.734e11, "viscosity_pa_s": 3e22, "rheology": "maxwell"},
+    {"role": "mantle layer 26", "top_radius_km": 3700, "bottom_radius_km": 3630.5, "thickness_km": 69.5, "density_kg_m3": 5456.57, "shear_modulus_pa": 2.855e11, "viscosity_pa_s": 9e21, "rheology": "maxwell"},
+    {"role": "mantle layer 27", "top_radius_km": 3630.5, "bottom_radius_km": 3600, "thickness_km": 30.5, "density_kg_m3": 5491.45, "shear_modulus_pa": 2.899e11, "viscosity_pa_s": 8.5e21, "rheology": "maxwell"},
+    {"role": "mantle layer 28", "top_radius_km": 3600, "bottom_radius_km": 3480, "thickness_km": 120, "density_kg_m3": 5506.42, "shear_modulus_pa": 2.933e11, "viscosity_pa_s": 8e21, "rheology": "maxwell"},
+    {"role": "core", "top_radius_km": 3480, "bottom_radius_km": 0, "thickness_km": 3480, "density_kg_m3": 10925, "shear_modulus_pa": 0, "viscosity_pa_s": 0, "rheology": "inviscid fluid"}
+  ],
   "notes": [
-    "The 28 layer values are not reproduced here. The distributed file VSS96.dat is the authority and is inside the spada2011 archive; figure 1 of Spada et al. (2011) plots the profile against M3-L70-V01.",
-    "Reading VSS96.dat out of the archive and recording the table here is outstanding work."
+    "Transcribed from T01-06/VSS96.dat in the Spada et al. (2011) archive. `source.transcribed_from` gives the file and its SHA-256. A row of that file gives the top radius of a layer and the properties of that layer, which extends down to the radius of the next row. The last row is the core.",
+    "Figure 1 of Spada et al. (2011) draws the viscosity from T01-06/vis-vss96.dat, sampled at 5001 radii (script T01-06/visco.gmt). Every sample equals the viscosity of the layer it lies in, to 3e-16 relative, with a sample at an interface in the layer below it. Read with the radius as the bottom of a layer, the samples disagree. tests/test_vss96.py checks this and the transcription.",
+    "The lithosphere is purely elastic. VSS96.dat writes its viscosity as 'infinity', stored here as null, as for M3-L70-V01. The profile of figure 1 writes it as 1e35 Pa s.",
+    "VSS96.dat gives no gravity, so these layers carry no gravity_at_top_m_s2.",
+    "Mantle layer 2 is 1 km thick, from 6151.5 to 6150.5 km, as in the file."
   ]
 }

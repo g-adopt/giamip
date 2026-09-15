@@ -43,5 +43,5 @@
       "VK": "T01-06/ holds the I106-*-VK.mod and I107-*.dat files, with older copies in OLD-DATA/ and newer ones in NEW-DATA-FROM-VK/, and which set the paper used is not established. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet."
     }
   },
-  "status": "not converted: no result class holds time-domain Love numbers, and models/vss96.json has no layer table."
+  "status": "not converted: no result class holds time-domain Love numbers."
 }

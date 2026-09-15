@@ -400,8 +400,9 @@ class SpadaCase:
         constants = self.load_table["constants"]
         self.ice_density: float = float(constants["ice_density_kg_m3"])
         self.water_density: float = float(constants["water_density_kg_m3"])
-        # 6371 km, table 2 of the paper. Taken from the load table and not from
-        # the earth model, because VSS96 has no layer table here.
+        # 6371 km, table 2 of the paper. Taken from the load table, which holds
+        # the constants of every test, and not from the top radius of the earth
+        # model, so that every test uses the one value of the paper.
         self.earth_radius_m: float = float(constants["earth_radius_m"])
         parameters = self.definition["parameters"]
         self.parameters = parameters
@@ -450,9 +451,10 @@ class SpadaCase:
     def earth_layers(self) -> dict[str, np.ndarray]:
         """The layers of the earth model as arrays, surface first.
 
-        Same layout as `MartinecCase.earth_layers`. VSS96, the model of test
-        6/1, has no layer table in ``models/vss96.json`` yet, and asking for its
-        layers raises instead of returning a wrong model.
+        Same layout as `MartinecCase.earth_layers`. M3-L70-V01 has five layers,
+        and VSS96, the model of test 6/1, has thirty: an elastic lithosphere,
+        28 Maxwell layers and the core. An earth model without a layer table
+        raises instead of returning a wrong model.
         """
         layers = self.earth_model.get("layers")
         if not layers:
