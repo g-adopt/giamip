@@ -27,11 +27,17 @@ from gia_mip import cases
 rows = ["| Case | Published as | Directory | Title | Contributors |",
         "| --- | --- | --- | --- | --- |"]
 for c in cases.cases("spada2011"):
+    # The published name links to the test's own page, which shows its inputs.
+    page = c["id"].removeprefix("spada2011-")
     rows.append(f"| [`{c['id']}`](../results/index.qmd#{c['id']}) | "
-                f"{c['published_name']} | `{c['reference_data']['directory']}` | "
+                f"[{c['published_name']}](../cases/spada2011/{page}.py) | "
+                f"`{c['reference_data']['directory']}` | "
                 f"{c['title']} | {', '.join(c['reference_data']['contributors'])} |")
 Markdown("\n".join(rows))
 ```
+
+Each test has its own page, linked from the second column, which shows the
+settings of its case file and its inputs: the loads and the earth model.
 
 Test 6/1 is the only one that uses a different earth model, the 28-layer
 VSS96, chosen because the many layers make the root-finding of the normal

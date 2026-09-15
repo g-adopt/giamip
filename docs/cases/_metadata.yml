@@ -1,0 +1,16 @@
+# Settings for the pages of single tests. Each page is a Python file in the
+# percent format of jupytext, and Quarto renders the file directly.
+#
+# Two output formats: the HTML page, and the executed notebook. The page links
+# to the notebook under "Other formats", so a reader can download it and run
+# it. The HTML format keeps the theme and the table of contents of _quarto.yml.
+format:
+  html: default
+  ipynb: default
+
+# These pages execute on every render, CI included, so that their figures come
+# from the current code and data. With the project-level `freeze: true`, a
+# render reuses a `_freeze/` entry when one exists. The pages read only tracked
+# files and execute in seconds, so freeze is off here.
+execute:
+  freeze: false

@@ -13,11 +13,17 @@ NOTES/
 # permission to re-host anyone else's files.
 !/data/converted/
 
-# Quarto build product. `_freeze/` is tracked, because it is the execution
-# cache that lets CI rebuild the heavy pages without the 317 MB of GIAMIP
-# input and without a solver.
+# Quarto build products. `_freeze/` is the execution cache that a local render
+# writes. It is not committed: CI executes every page on each render, and no
+# page reads the third-party originals.
 /_site/
 /.quarto/
+/_freeze/
+
+# Quarto writes a `.quarto_ipynb` file beside each page while it executes the
+# page. It adds this pattern to .gitignore when the pattern is absent, so the
+# pattern is here to keep a local render from changing this file.
+**/*.quarto_ipynb
 
 # Python
 __pycache__/

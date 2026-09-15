@@ -46,7 +46,9 @@ gia_mip/     the package: data.py (fetch and verify), grids.py (the
 cases/       one JSON file per case, in benchmarks/ and giamip/
 models/      earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and
-             per case, plus the data manifest and the list of corrections
+             per case, plus the data manifest and the list of corrections.
+             docs/cases/ holds the pages for single tests as percent-format
+             Python files, which the site executes and plots
 scripts/     conversion and upload scripts, run by hand
 submissions/ one directory per submission: its identity, its compliance
              report and its scores. The output fields themselves stay in

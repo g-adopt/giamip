@@ -53,15 +53,33 @@ pip install -e ".[docs]"
 quarto render
 ```
 
-Pages execute from the committed `_freeze/` cache. A page that needs the
-third-party originals or a solver run is re-executed only on a machine that
-has them:
+A render executes the code of every page. A local render writes the execution
+cache `_freeze/` and reuses it on the next render. `_freeze/` is gitignored, so
+CI executes every page from the checked-out files, and a page must read only
+tracked files. To execute every page again locally, ignore the cache:
 
 ```bash
-quarto render docs/path/to/page.qmd --no-freeze
+quarto render --no-freeze
 ```
 
-Commit the updated `_freeze/` with the page.
+## Adding a page for a test
+
+A page for a single test is a Python file in the percent format of jupytext, at
+`docs/cases/<collection>/<case>.py`. A `# %% [markdown]` line starts a text
+cell, and a `# %%` line starts a code cell. The first cell is a `# %% [raw]`
+cell with the YAML front matter, which gives the title.
+
+Quarto renders the file directly, as the HTML page and as an executed notebook
+that the page links to. `docs/cases/_metadata.yml` holds these settings. The
+pages execute on every render, on CI too, so a page reads only tracked files.
+
+To add a page:
+
+1. Copy `docs/cases/spada2011/t02-01.py` and change the case.
+2. Add the file to the "Cases" menu in `_quarto.yml`.
+3. Run `pytest -q tests/test_pages.py`. The test converts each page with
+   jupytext and executes it in a Jupyter kernel.
+4. To see the page, run `quarto preview docs/cases/<collection>/<case>.py`.
 
 ## Reporting a problem with the data
 

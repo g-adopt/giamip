@@ -16,16 +16,15 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-# One job. Every page either needs nothing beyond the tracked `data/converted/`
-# reference data, or carries a committed `_freeze/` cache made on a machine
-# that had the originals.
+# One job. Every page needs nothing beyond the tracked files, the
+# `data/converted/` reference data included. `_freeze/` is gitignored, so the
+# runner has no execution cache and Quarto executes every page. A new page
+# whose code needs the third-party originals therefore fails here, on the
+# missing files.
 #
-# `execute: freeze: true` in _quarto.yml stops Quarto re-executing a page that
-# already has a cache entry. It does NOT protect a page that has no entry:
-# Quarto executes that one. So a new page whose code needs the originals will
-# run here and fail on the missing files. The guard is the review of a new
-# page, not the setting. Render such a page once locally with `--no-freeze`
-# and commit its `_freeze/` entry with it.
+# The pages of single tests in docs/cases/ are Python files that Quarto renders
+# directly, as a page and as an executed notebook. The Test workflow executes
+# the same pages through tests/test_pages.py.
 jobs:
   render:
     runs-on: ubuntu-latest

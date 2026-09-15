@@ -29,7 +29,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8", "pytest-timeout>=2.3", "ipython>=8"]
+# The pages for single tests in docs/cases/ are percent-format Python files.
+# tests/test_pages.py converts each one with jupytext and executes it in a
+# kernel through nbclient. The pages draw their figures with matplotlib, so the
+# test extra carries everything a page needs to execute. Quarto reads the
+# percent format itself, so the docs extra needs no jupytext.
+test = ["pytest>=8", "pytest-timeout>=2.3", "ipython>=8", "jupytext>=1.16",
+        "nbclient>=0.10", "ipykernel>=6.29", "matplotlib>=3.8"]
 plot = ["matplotlib>=3.8"]
 docs = ["jupyter>=1.0", "matplotlib>=3.8"]
 

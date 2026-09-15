@@ -9,12 +9,22 @@ project:
   render:
     - index.qmd
     - docs/**/*.qmd
+    # The pages for single tests, written as percent-format Python files.
+    # Quarto renders each one as a page and as an executed notebook. The
+    # settings are in docs/cases/_metadata.yml, and CONTRIBUTING.md describes
+    # how to add a page.
+    - docs/cases/**/*.py
 
-# `freeze: true` and not `auto`. `auto` re-executes a page whenever its source
-# changes, which is exactly the case this is meant to prevent: a page that
-# needs the 317 MB of GIAMIP input or a solver run must never execute on a
-# GitHub runner. Pages are re-executed on a machine that has the data, with
-# `quarto render --no-freeze`, and the resulting `_freeze/` cache is committed.
+# `freeze: true` makes a local render reuse the `_freeze/` cache of a page that
+# has one, so that a second render does not execute every page again.
+# `_freeze/` is gitignored, so a CI runner has no cache and executes every
+# page. Every page reads only tracked files, which is what lets it execute
+# there. A page that needs the 317 MB of GIAMIP input or a solver run cannot
+# execute on a runner.
+#
+# The pages under docs/cases/ execute on every render, local renders included.
+# docs/cases/_metadata.yml turns freeze off for them, so that their figures
+# always come from the current code. They execute in seconds.
 execute:
   freeze: true
 
@@ -42,7 +52,31 @@ website:
           - docs/reference/column-layouts.qmd
           - docs/reference/python-interface.qmd
       - text: "Cases"
-        href: docs/results/index.qmd
+        menu:
+          - text: "All cases"
+            href: docs/results/index.qmd
+          - text: "---"
+          - text: "Spada et al. (2011)"
+          - text: "Test 1/1: relaxation times"
+            href: docs/cases/spada2011/t01-01.py
+          - text: "Test 2/1: loading Love numbers"
+            href: docs/cases/spada2011/t01-02.py
+          - text: "Test 3/1: tidal Love numbers"
+            href: docs/cases/spada2011/t01-03.py
+          - text: "Test 4/1: polar motion transfer function"
+            href: docs/cases/spada2011/t01-04.py
+          - text: "Test 5/1: Love numbers in the time domain"
+            href: docs/cases/spada2011/t01-05.py
+          - text: "Test 6/1: Love numbers for VSS96"
+            href: docs/cases/spada2011/t01-06.py
+          - text: "Test 7/1: degree-one Love numbers"
+            href: docs/cases/spada2011/t01-07.py
+          - text: "Test 1/2: geodetic quantities"
+            href: docs/cases/spada2011/t02-01.py
+          - text: "Test 2/2: rates of geodetic quantities"
+            href: docs/cases/spada2011/t02-02.py
+          - text: "Test 3/2: polar motion and length of day"
+            href: docs/cases/spada2011/t02-03.py
       - text: "Data"
         menu:
           - docs/data/fetching.qmd
