@@ -37,11 +37,8 @@
     ],
     "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of gia_mip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
     "not_converted": {
-      "GS": "No file in T01-06/ carries GS in its path. The banner comments of love_PAP.gmt name GS for I106-M3-VSCAb-LLN-[hlk]-VK.mod, whose path says VK (attribution_disagreements in spada_column_layouts.json), and which of the two produced them is not established. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet.",
-      "GSA": "T01-06/ holds h.dat, l.dat, k.dat and the .mod files, attributed to GSA by the decoder. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet.",
-      "RR": "T01-06/ holds h_RR.dat, l_RR.dat and k_RR.dat. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet.",
-      "VK": "T01-06/ holds the I106-*-VK.mod and I107-*.dat files, with older copies in OLD-DATA/ and newer ones in NEW-DATA-FROM-VK/, and which set the paper used is not established. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet."
+      "GS": "Table 1 of the paper lists GS, but figure 7 shows only Vk, Gsa and Rr, and the archive holds no GS result for VSS96. The lines of T01-06/love_PAP.gmt that read GS's files are commented out, and the files whose banner comments name GS are VK's (correction spada-t01-06-banner-names-gs-for-vk-files)."
     }
   },
-  "status": "not converted: no result class holds time-domain Love numbers."
+  "status": "converted: GSA, RR and VK in data/converted/spada2011/spada2011-t01-06.nc, for the degrees figure 7 draws: 2 to 9, 12 to 96 at 12, and 128 to 254 at 18. VK's curves start at the second or third time of VK's run (correction spada-vk-first-rows-read-as-header). No GS data exists for this test."
 }

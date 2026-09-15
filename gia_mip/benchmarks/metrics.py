@@ -29,6 +29,8 @@ this module scores against each contributor separately.
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 from gia_mip.benchmarks.inputs import MartinecCase, SpadaCase
@@ -161,6 +163,9 @@ def score(result: BenchmarkResult) -> list[dict]:
 # produced. `spada_score` therefore scores a result against each reference
 # contributor separately and labels every row with the contributor's code. A
 # reader who wants one number chooses the contributor and says so.
+#
+# Every row carries the same keys, whatever its kind, so the rows form one
+# table: a key that does not apply to a kind is None.
 
 def _restricted(curve: Curve, keep: np.ndarray) -> Curve:
     """A curve on a subset of its axis values."""
@@ -179,6 +184,38 @@ def _degree_rows(candidate_degrees, reference_degrees, excluded) -> np.ndarray:
     """The degrees both hold, less those the reference marks as not to score."""
     common = np.intersect1d(np.asarray(candidate_degrees), np.asarray(reference_degrees))
     return common[~np.isin(common, np.asarray(excluded, dtype=int))]
+
+
+def _row(kind: str, quantity: str, interval, code: str, metrics: dict, *, load=None,
+         epoch_kyr=None, degree=None, chandler_wobble=None) -> dict:
+    """One score row with every key present, None where a key does not apply."""
+    return {"kind": kind, "load": load, "quantity": quantity, "epoch_kyr": epoch_kyr,
+            "degree": degree, "chandler_wobble": chandler_wobble, "interval": interval,
+            "reference": code, **metrics}
+
+
+def _log_time(curve: Curve) -> Curve:
+    """The curve against log10 of time in kyr, with the times at or below zero left out.
+
+    Love numbers in the time domain are sampled logarithmically from 1e-3 to
+    1e6 kyr. Interpolating linearly in t between such points misses the
+    relaxation, and a coverage rule of 1 per cent of the interval would be
+    1e4 kyr wide on a linear axis, so the comparison runs in log10 t. The
+    elastic value at t = 0 has no logarithm and is not part of it.
+    """
+    keep = curve.axis > 0
+    return Curve(np.log10(curve.axis[keep]), curve.values[keep], dict(curve.attributes))
+
+
+def _time_domain_interval(window: tuple[float, float] | None, reference: Curve) -> tuple[float, float]:
+    """The times compared, in kyr: the reference's positive times, inside the case's window if it has one."""
+    positive = reference.axis[reference.axis > 0]
+    if positive.size == 0:
+        raise ValueError("the reference has no time after the loading")
+    lo, hi = float(positive[0]), float(positive[-1])
+    if window is not None:
+        lo, hi = max(lo, window[0]), min(hi, window[1])
+    return lo, hi
 
 
 def _excluded_degrees(attributes: dict) -> list[int]:
@@ -200,9 +237,25 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
     and one over the whole meridian (0 to 180 degrees), measured at the
     reference's points. Love numbers are compared per degree over the degrees
     both hold: elastic and fluid for each of h, l and k. The relaxation
-    spectrum is compared mode by mode over the common degrees. Residues are not
+    spectrum is compared mode by mode over the common degrees. Modes pair by
+    position, so a spectrum is scored only when both results hold the same
+    number of modes; otherwise it adds no rows and a warning names the two
+    counts. Residues are not
     scored, because their size spans twenty orders of magnitude over the
     degrees and a difference in one number says little.
+
+    Love numbers in the time domain are compared per quantity and degree in
+    log10 t, at the reference's times after the loading that lie inside the
+    case's time window (tests 5/1 and 6/1) or over the whole reference (test
+    7/1); the interval, ``at`` and ``covered`` are reported in kyr. Polar
+    motion is compared per load, Chandler wobble setting and quantity, and
+    the length of day per load, both linearly in time over the whole
+    reference. With the Chandler wobble included, polar motion oscillates
+    with a period of about 1.2 years, and the references are sampled once a
+    year, so a candidate is compared meaningfully only at the reference's own
+    times. The transfer function scores A_e and A_s as single values, and
+    a_j and A_j mode by mode when both results hold the same number of modes;
+    otherwise the modes add no rows and a warning names both counts.
 
     Parameters
     ----------
@@ -215,15 +268,19 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
     Returns
     -------
     list of dict
-        One row per comparison: ``kind`` (``spatial``, ``love_numbers`` or
-        ``relaxation_spectrum``), ``load`` (None unless spatial), ``quantity``
-        (for Love numbers ``h_elastic`` and so on, for the spectrum ``s_1``
-        and so on), ``epoch_kyr`` (None unless spatial), ``interval``,
+        One row per comparison: ``kind`` (``spatial``, ``love_numbers``,
+        ``relaxation_spectrum``, ``time_domain_love_numbers``,
+        ``polar_motion``, ``length_of_day`` or
+        ``polar_motion_transfer_function``), ``load``, ``quantity`` (for Love
+        numbers ``h_elastic`` and so on, for the spectrum ``s_1`` and so on,
+        for the transfer function ``frequency_real`` and so on),
+        ``epoch_kyr``, ``degree``, ``chandler_wobble``, ``interval``,
         ``reference`` (the member code), and the entries of
-        `difference_metrics`.
+        `difference_metrics`. A key that does not apply to a kind is None.
     """
     rows: list[dict] = []
     intervals = _spatial_intervals(result.case) if result.fields else []
+    window = SpadaCase(result.case).time_window_kyr if result.time_domain else None
     for code, reference in references.items():
         # Surface fields, per load, quantity and epoch.
         for (load, quantity, epoch), curve in sorted(result.fields.items()):
@@ -232,9 +289,63 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
             ref = reference.fields[(load, quantity, epoch)]
             for interval in intervals:
                 m = difference_metrics(curve, ref, interval)
-                rows.append({"kind": "spatial", "load": load, "quantity": quantity,
-                             "epoch_kyr": epoch, "interval": interval,
-                             "reference": code, **m})
+                rows.append(_row("spatial", quantity, interval, code, m, load=load, epoch_kyr=epoch))
+        # Love numbers in the time domain, per quantity and degree, in log10 t.
+        for (quantity, degree), curve in sorted(result.time_domain.items()):
+            if (quantity, degree) not in reference.time_domain:
+                continue
+            ref = reference.time_domain[(quantity, degree)]
+            lo, hi = _time_domain_interval(window, ref)
+            m = difference_metrics(_log_time(curve), _log_time(ref), (np.log10(lo), np.log10(hi)))
+            # Back from log10 t to kyr, so every time in a row reads in kyr.
+            m["at"] = float(10.0 ** m["at"])
+            m["covered"] = tuple(float(10.0 ** c) for c in m["covered"])
+            rows.append(_row("time_domain_love_numbers", quantity, (lo, hi), code, m,
+                             degree=degree))
+        # Polar motion, per load, wobble setting and quantity.
+        for (load, setting, quantity), curve in sorted(result.polar.items()):
+            if (load, setting, quantity) not in reference.polar:
+                continue
+            ref = reference.polar[(load, setting, quantity)]
+            m = difference_metrics(curve, ref)
+            rows.append(_row("polar_motion", quantity, (float(ref.axis[0]), float(ref.axis[-1])),
+                             code, m, load=load, chandler_wobble=setting))
+        # The length of day, per load.
+        for load, curve in sorted(result.lod.items()):
+            if load not in reference.lod:
+                continue
+            ref = reference.lod[load]
+            m = difference_metrics(curve, ref)
+            rows.append(_row("length_of_day", "delta_lod", (float(ref.axis[0]), float(ref.axis[-1])),
+                             code, m, load=load))
+        # The polar motion transfer function, per wobble setting.
+        for setting, mine in sorted(result.pmtf.items()):
+            if setting not in reference.pmtf:
+                continue
+            ref = reference.pmtf[setting]
+            for name in ("elastic", "secular"):
+                for part in ("real", "imag"):
+                    d = abs(getattr(getattr(mine, name), part) - getattr(getattr(ref, name), part))
+                    single = {"rms": d, "max": d, "n": 1, "at": None, "covered": None}
+                    rows.append(_row("polar_motion_transfer_function", f"{name}_{part}", None,
+                                     code, single, chandler_wobble=setting))
+            if mine.frequencies.size != ref.frequencies.size:
+                # Modes pair by position, slowest first, as in the spectrum.
+                # GS keeps three Maxwell modes that VB leaves out, so no
+                # pairing by position is right between those two.
+                warnings.warn(
+                    f"{result.member} has {mine.frequencies.size} rotational modes and {code} has "
+                    f"{ref.frequencies.size}; the modes of the transfer function are not scored "
+                    f"against {code}", stacklevel=2)
+                continue
+            modes = np.arange(1, mine.frequencies.size + 1, dtype=float)
+            for name, values, ref_values in (("frequency", mine.frequencies, ref.frequencies),
+                                             ("residue", mine.residues, ref.residues)):
+                for part in ("real", "imag"):
+                    m = difference_metrics(Curve(modes, getattr(values, part)),
+                                           Curve(modes, getattr(ref_values, part)))
+                    rows.append(_row("polar_motion_transfer_function", f"{name}_{part}",
+                                     (1.0, float(modes[-1])), code, m, chandler_wobble=setting))
         # Love numbers, per degree.
         for quantity, love in sorted(result.love.items()):
             if quantity not in reference.love:
@@ -248,13 +359,20 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
                 candidate = _restricted(Curve(love.degrees, getattr(love, part)), degrees)
                 reference_curve = _restricted(Curve(ref.degrees, getattr(ref, part)), degrees)
                 m = difference_metrics(candidate, reference_curve, interval)
-                rows.append({"kind": "love_numbers", "load": None,
-                             "quantity": f"{quantity}_{part}", "epoch_kyr": None,
-                             "interval": interval, "reference": code, **m})
+                rows.append(_row("love_numbers", f"{quantity}_{part}", interval, code, m))
         # Relaxation spectrum, per mode.
         if result.spectrum is not None and reference.spectrum is not None:
             mine, ref = result.spectrum, reference.spectrum
-            if mine.s_per_kyr.shape[1] == ref.s_per_kyr.shape[1]:
+            if mine.s_per_kyr.shape[1] != ref.s_per_kyr.shape[1]:
+                # Modes pair by position, s_1 with s_1 and so on, both slowest
+                # first. With different mode counts no pairing is right, so the
+                # spectrum gets no rows. The warning names both counts, because
+                # a missing group of rows in a long score table is easy to miss.
+                warnings.warn(
+                    f"{result.member} has {mine.s_per_kyr.shape[1]} relaxation modes and "
+                    f"{code} has {ref.s_per_kyr.shape[1]}; the relaxation spectrum is not "
+                    f"scored against {code}", stacklevel=2)
+            else:
                 degrees = _degree_rows(mine.degrees, ref.degrees, _excluded_degrees(ref.attributes))
                 if degrees.size:
                     interval = (float(degrees[0]), float(degrees[-1]))
@@ -263,7 +381,5 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
                             _restricted(Curve(mine.degrees, mine.s_per_kyr[:, j]), degrees),
                             _restricted(Curve(ref.degrees, ref.s_per_kyr[:, j]), degrees),
                             interval)
-                        rows.append({"kind": "relaxation_spectrum", "load": None,
-                                     "quantity": f"s_{j + 1}", "epoch_kyr": None,
-                                     "interval": interval, "reference": code, **m})
+                        rows.append(_row("relaxation_spectrum", f"s_{j + 1}", interval, code, m))
     return rows

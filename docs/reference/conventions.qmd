@@ -28,6 +28,22 @@ difference; both agree in sign with the displacements. Residues of the Love
 numbers are in 1/kyr with the sign of the paper, h_f = h_e - sum r_j / s_j,
 which VB's files reverse.
 
+Tests 5/1, 6/1 and 7/1 hold the Heaviside Love numbers h(t), l(t) and k(t),
+dimensionless, against the time in kyr since the load was applied. The value
+at t = 0 is the elastic value.
+
+In test 3/2, polar motion is m = m_x + i m_y in degrees (eq. 3 of the paper).
+The x axis points to longitude 0 and the y axis to longitude 90 degrees east.
+The evidence is eq. 31: for the load centroid at longitude 75 degrees east, the
+phase of m in the files of GS and VB is 75 - 180 = -105 degrees. The rate of
+polar motion is in degrees per Myr, the unit of table 14. The change in length
+of day is in ms, and a positive value is a longer day.
+
+In test 4/1, the rotational frequencies a_j, the residues A_j and the secular
+residue A_s of the polar motion transfer function are in 1/kyr. The elastic
+residue A_e is dimensionless. The real part of a_j is negative, and the mode
+that carries the Chandler wobble has an imaginary part of about 5e3 per kyr.
+
 `N` is a height, and several benchmark contributors store the gravitational
 potential perturbation instead. Dividing the potential by the surface gravity
 gives the height; the Martinec scripts use 9.8155 m/s², the surface value of

@@ -68,21 +68,31 @@ fluid limit of the normal mode sum at degree 2.
 
 `gia_mip.benchmarks.spada2011` reads those files and writes one NetCDF file per
 test to `data/converted/spada2011/`, in the layout of `SpadaResult`. Run
-`scripts/convert_spada2011.py` after the decoder. Five tests are converted:
+`scripts/convert_spada2011.py` after the decoder. All ten tests are converted:
 
 | Test | Converted | Not in the archive |
 | --- | --- | --- |
 | 1/1 relaxation spectra | GS, RR, VB, ZM | |
-| 2/1 loading Love numbers | GS, RR, VB, ZM | |
+| 2/1 loading Love numbers | GS, RR, VB, ZM (degrees 2 and 5) | ZM's other degrees |
 | 3/1 tidal Love numbers | GS, RR, VB | ZM |
+| 4/1 polar motion transfer function | GS, VB, with and without the Chandler wobble | |
+| 5/1 Love numbers against time | GS, GSA, VK | |
+| 6/1 Love numbers against time, VSS96 | GSA, RR, VK | GS |
+| 7/1 degree-one Love numbers against time | GS, GSA, RR, VB, VK | |
 | 1/2 U, V, N | GS (cap, disc, point), VK (cap, disc) | BL, PG, ZM |
 | 2/2 rates of U, V, N | GS (cap, disc, point), VK (cap, disc) | BL, PG |
+| 3/2 polar motion and length of day | GS, VB (cap, disc, point); length of day of the cap for GS, GSA, VK | |
 
-Tests 4/1, 5/1, 6/1, 7/1 and 3/2 are not converted. Their quantities, the polar
-motion transfer function, Love numbers as functions of time, degree-one Love
-numbers, polar motion and length of day, are not held by the result class, and
-several of their files are not decoded. Each case file records the reason per
-contributor in `reference_data.not_converted`.
+Where table 1 of the paper lists a contributor that has no data in the
+archive, the case file gives the reason in `reference_data.not_converted`. For
+test 6/1 the paper itself shows no GS result.
+
+For tests 5/1, 6/1 and 7/1 the converter reads the files that the scripts of
+figures 6, 7 and 8 draw. For test 5/1 these are the files of `T01-05/PAPER/`,
+and the degrees are 2 to 9, 12 to 96 at 12, and 128 to 254 at 18. For test 4/1
+and test 3/2 it also reads files that no script draws: the transfer functions
+of table 8, and the polar motion tables of table 14 for both codes, all three
+loads and both settings of the Chandler wobble.
 
 ## Which contributor is the reference
 
@@ -127,3 +137,29 @@ GS's last epoch is a run at 1000 kyr, not the fluid limit, and is stored at 1000
 
 The point load files in `T02/` are summed to degree 512, where the case
 prescribes 128.
+
+In test 5/1, VK's k exists in **two copies**. `T01-05/k_L_T01-05_VK.mod`
+holds the column of the VILMA run as it stands, which is -(1 + k). The copy in
+`T01-05/PAPER/` holds k, and figure 6 and the length of day of figure 13c use
+it.
+
+The Fortran programs that cut VK's files for figures 6 to 8 write **t = 0 as
+1e-12 kyr**. For test 6/1 and for VK's degree-one l they also read the first
+data rows of VK's run as header, so those curves start after t = 0. The
+converted files hold t = 0 as 0, and they do not hold the lost rows.
+
+GS's degree-one l file of test 7/1 has three columns. Column 2 is zero and
+column 3 is l. The script plots column 2, so figure 8 shows no GS curve of l.
+
+The curves of RR and VB in test 7/1 are GS's sums of their normal modes, and
+the sum for RR uses six of RR's nine modes. The difference is at most 2.3e-5.
+
+In test 3/2 the files `k2_*.dat` hold the **length of day in ms**, not k_2. The
+GS tables named `PM_table_<setting>_<load>.dat` hold twice the values of the
+tables named `PM_table_<load>_<setting>.dat`, and only the second agree with
+table 14. VB's point load files state a mass of 10.e18 kg, and their values are
+for the 1e18 kg of table 4. VB writes the disc as `disk`.
+
+Table 14 of the paper prints GS's disc rate without the Chandler wobble at 5
+and 10 kyr with the power of ten 1. The values are 0.713 and 0.528 degrees per
+Myr, as VB's values in the same row show.

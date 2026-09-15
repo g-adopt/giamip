@@ -448,6 +448,20 @@ class SpadaCase:
             return (n, n)
         return None
 
+    @property
+    def time_window_kyr(self) -> tuple[float, float] | None:
+        """The time window a result in the time domain must cover, in kyr, or None.
+
+        Tests 5/1 and 6/1 prescribe 1e-2 to 1e6 kyr with a logarithmic spacing
+        (section 2.1.5 of the paper). Tests 7/1 and 3/2 prescribe no window,
+        and a comparison then runs over the whole reference curve.
+        """
+        window = self.parameters.get("time_window_kyr")
+        if window is None:
+            return None
+        lo, hi = window
+        return (float(lo), float(hi))
+
     def earth_layers(self) -> dict[str, np.ndarray]:
         """The layers of the earth model as arrays, surface first.
 

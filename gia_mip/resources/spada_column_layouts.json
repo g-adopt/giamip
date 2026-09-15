@@ -94964,6 +94964,2778 @@
     }
    }
   },
+  "spada2011/spada2011-cost-es0701/T01-04/GS-ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion_transfer_function",
+   "cases": [
+    "t01-04"
+   ],
+   "chandler_wobble": "excluded",
+   "format": "labelled_blocks",
+   "blocks": {
+    "ELA": [
+     "elastic_real"
+    ],
+    "SEC": [
+     "secular_real"
+    ],
+    "ROT": [
+     "frequency_real",
+     "frequency_imag",
+     "residue_real",
+     "residue_imag"
+    ]
+   },
+   "modes": 11,
+   "units": {
+    "elastic": "1",
+    "secular": "1/kyr",
+    "frequency": "1/kyr",
+    "residue": "1/kyr"
+   },
+   "evidence": "T01-04/GS-ncw.dat: header `Number of isostatic/rotational modes:           12 /          11`, so the Chandler wobble is excluded (eqs. 13 and 14); blocks labelled ELA A_E, SEC A_0, ROT Re(a_i) Im(a_i) Re(A_i) Im(A_i); the ISO block's s(i) contain the degree-2 frequencies of T01-01/spec_T01_01_GS.dat, in 1/kyr; an unlabelled imaginary part is not printed and is zero; drawn by no script, the values of table 8"
+  },
+  "spada2011/spada2011-cost-es0701/T01-04/GS-ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion_transfer_function",
+   "cases": [
+    "t01-04"
+   ],
+   "chandler_wobble": "included",
+   "format": "labelled_blocks",
+   "blocks": {
+    "ELA": [
+     "elastic_real",
+     "elastic_imag"
+    ],
+    "SEC": [
+     "secular_real",
+     "secular_imag"
+    ],
+    "ROT": [
+     "frequency_real",
+     "frequency_imag",
+     "residue_real",
+     "residue_imag"
+    ]
+   },
+   "modes": 12,
+   "units": {
+    "elastic": "1",
+    "secular": "1/kyr",
+    "frequency": "1/kyr",
+    "residue": "1/kyr"
+   },
+   "evidence": "T01-04/GS-ycw.dat: header `Number of isostatic/rotational modes:           12 /          12`, so the Chandler wobble is included (eqs. 13 and 14); blocks labelled ELA Re(A_E) Im(A_E), SEC Re(A_0) Im(A_0), ROT Re(a_i) Im(a_i) Re(A_i) Im(A_i); the ISO block's s(i) contain the degree-2 frequencies of T01-01/spec_T01_01_GS.dat, in 1/kyr; an unlabelled imaginary part is not printed and is zero; drawn by no script, the values of table 8"
+  },
+  "spada2011/spada2011-cost-es0701/T01-04/VB-ncw.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion_transfer_function",
+   "cases": [
+    "t01-04"
+   ],
+   "chandler_wobble": "excluded",
+   "format": "rows",
+   "header_lines": 8,
+   "rows": {
+    "1": [
+     "elastic_real",
+     "elastic_imag"
+    ],
+    "2": [
+     "secular_real",
+     "secular_imag"
+    ],
+    "3 and later": [
+     "frequency_real",
+     "frequency_imag",
+     "residue_real",
+     "residue_imag"
+    ]
+   },
+   "modes": 8,
+   "units": {
+    "elastic": "1",
+    "secular": "1/kyr",
+    "frequency": "1/kyr",
+    "residue": "1/kyr"
+   },
+   "evidence": "T01-04/VB-ncw.txt: header `Chandler wobble term is not included`; no labels, so the rows are read by agreement with GS-ncw.dat: row 2 equals GS's A_s to 1e-7 and each mode's first value equals one of GS's frequencies to 1e-6; drawn by no script, the values of table 8"
+  },
+  "spada2011/spada2011-cost-es0701/T01-04/VB-ycw.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion_transfer_function",
+   "cases": [
+    "t01-04"
+   ],
+   "chandler_wobble": "included",
+   "format": "rows",
+   "header_lines": 8,
+   "rows": {
+    "1": [
+     "elastic_real",
+     "elastic_imag"
+    ],
+    "2": [
+     "secular_real",
+     "secular_imag"
+    ],
+    "3 and later": [
+     "frequency_real",
+     "frequency_imag",
+     "residue_real",
+     "residue_imag"
+    ]
+   },
+   "modes": 9,
+   "units": {
+    "elastic": "1",
+    "secular": "1/kyr",
+    "frequency": "1/kyr",
+    "residue": "1/kyr"
+   },
+   "evidence": "T01-04/VB-ycw.txt: header `Chandler wobble term is included`; no labels, so the rows are read by agreement with GS-ycw.dat: row 2 equals GS's A_s to 1e-7 and each mode's first value equals one of GS's frequencies to 1e-6; drawn by no script, the values of table 8"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-05/PAPER/h.mod: ALMA header `h load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) h(t) for degrees l= 2 ... 9` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-05/PAPER/h.mod2: ALMA header `h load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) h(t) for degrees l= 12 ... 96` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-05/PAPER/h.mod22: ALMA header `h load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) h(t) for degrees l= 128 ... 254` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_GS.mod": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/h_L_T01-05_GS.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_GS.mod2": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/h_L_T01-05_GS.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_GS.mod22": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/h_L_T01-05_GS.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/h_L_T01-05_VK.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/h_L_T01-05_VK.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/h_L_T01-05_VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/h_L_T01-05_VK.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of h_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-05/PAPER/k.mod: ALMA header `k load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) k(t) for degrees l= 2 ... 9` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-05/PAPER/k.mod2: ALMA header `k load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) k(t) for degrees l= 12 ... 96` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-05/PAPER/k.mod22: ALMA header `k load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) k(t) for degrees l= 128 ... 254` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_GS.mod": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/k_L_T01-05_GS.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of k_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_GS.mod2": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/k_L_T01-05_GS.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of k_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_GS.mod22": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/k_L_T01-05_GS.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of k_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/k_L_T01-05_VK.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are -1 minus the columns of k_L_T01-05_VK.dat, whose k column holds -(1 + k) (correction spada-t01-05-vk-k-column-holds-minus-one-minus-k); the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/k_L_T01-05_VK.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are -1 minus the columns of k_L_T01-05_VK.dat, whose k column holds -(1 + k) (correction spada-t01-05-vk-k-column-holds-minus-one-minus-k); the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/k_L_T01-05_VK.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are -1 minus the columns of k_L_T01-05_VK.dat, whose k column holds -(1 + k) (correction spada-t01-05-vk-k-column-holds-minus-one-minus-k); the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-05/PAPER/l.mod: ALMA header `l load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) l(t) for degrees l= 2 ... 9` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-05/PAPER/l.mod2: ALMA header `l load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) l(t) for degrees l= 12 ... 96` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-05/PAPER/l.mod22: ALMA header `l load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) l(t) for degrees l= 128 ... 254` and `Time points: 17`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_GS.mod": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/l_L_T01-05_GS.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_GS.mod2": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/l_L_T01-05_GS.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_GS.mod22": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-05/PAPER/l_L_T01-05_GS.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_GS.dat for those degrees; the time is in kyr, as the axis `time, kyr` scales no column; drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/l_L_T01-05_VK.mod: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/l_L_T01-05_VK.mod2: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-05/PAPER/l_L_T01-05_VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-05"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T01-05/PAPER/l_L_T01-05_VK.mod22: written by T01-05/PAPER/filter.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of l_L_T01-05_VK.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the first time, 1e-12 kyr, is t = 0 written by the program's `if(time(i)==0.0) time(i)=1E-9` (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-05/PAPER/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-h-VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 1,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-h-VK.mod: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-h.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 1 data row(s) of I107-M3-VSCAb-LLN-h.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-h-VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 1,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-h-VK.mod2: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-h.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 1 data row(s) of I107-M3-VSCAb-LLN-h.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-h-VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 1,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-h-VK.mod22: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-h.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 1 data row(s) of I107-M3-VSCAb-LLN-h.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-k-VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-k-VK.mod: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-k.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-k.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-k-VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-k-VK.mod2: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-k.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-k.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-k-VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-k-VK.mod22: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-k.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-k.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-l-VK.mod": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-l-VK.mod: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-l.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-l.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-l-VK.mod2": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-l-VK.mod2: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-l.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-l.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-l-VK.mod22": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_column",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "degree",
+     "units": "1"
+    }
+   },
+   "rows_lost_at_the_top": 2,
+   "evidence": "T01-06/I106-M3-VSCAb-LLN-l-VK.mod22: written by T01-06/FRUFRU.f90 (`time(i), love_number(l,i), l`), one segment per degree after a `>` line with the degree in column 3; the values are the columns of I107-M3-VSCAb-LLN-l.dat for those degrees; the time is in kyr, as the program divides VK's years by 1000; the program read the first 2 data row(s) of I107-M3-VSCAb-LLN-l.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/h.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-06/h.mod: ALMA header `h load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) h(t) for degrees l= 2 ... 9` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/h.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-06/h.mod2: ALMA header `h load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) h(t) for degrees l= 12 ... 96` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/h.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-06/h.mod22: ALMA header `h load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) h(t) for degrees l= 128 ... 254` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/k.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-06/k.mod: ALMA header `k load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) k(t) for degrees l= 2 ... 9` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/k.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-06/k.mod2: ALMA header `k load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) k(t) for degrees l= 12 ... 96` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/k.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "k",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-06/k.mod22: ALMA header `k load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) k(t) for degrees l= 128 ... 254` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/l.mod": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 2
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 3
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 4
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 5
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 6
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 7
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 8
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 9
+    }
+   },
+   "evidence": "T01-06/l.mod: ALMA header `l load Love number`, `Range of harmonic degrees: 2 - 9`, `time (kyrs) l(t) for degrees l= 2 ... 9` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/l.mod2": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 12
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 24
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 36
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 48
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 60
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 72
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 84
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 96
+    }
+   },
+   "evidence": "T01-06/l.mod2: ALMA header `l load Love number`, `Range of harmonic degrees: 12 - 96`, `time (kyrs) l(t) for degrees l= 12 ... 96` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/l.mod22": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 128
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 146
+    },
+    "4": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 164
+    },
+    "5": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 182
+    },
+    "6": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 200
+    },
+    "7": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 218
+    },
+    "8": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 236
+    },
+    "9": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 254
+    }
+   },
+   "evidence": "T01-06/l.mod22: ALMA header `l load Love number`, `Range of harmonic degrees: 128 - 254`, `time (kyrs) l(t) for degrees l= 128 ... 254` and `Time points: 202`; 8 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time1-h.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_marker",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time1-h.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time1-k.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_marker",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time1-k.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time1-l.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_marker",
+   "degrees": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time1-l.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time2-h.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_marker",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time2-h.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time2-k.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_marker",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time2-k.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time2-l.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_marker",
+   "degrees": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time2-l.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time3-h.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "h",
+   "format": "segments_degree_marker",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time3-h.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time3-k.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "k",
+   "format": "segments_degree_marker",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "k",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time3-k.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-06/res-RR-time3-l.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-06"
+   ],
+   "quantity": "l",
+   "format": "segments_degree_marker",
+   "degrees": [
+    128,
+    146,
+    164,
+    182,
+    200,
+    218,
+    236,
+    254
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1"
+    }
+   },
+   "evidence": "T01-06/res-RR-time3-l.dat: one segment per degree, the degree on its `>` line, two columns; the script plots columns 1 and 2 on the axis `time, kyr`; drawn by T01-06/love_PAP.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/Gs/h_time_domain.dat": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "h",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/Gs/h_time_domain.dat: TABOO header `These h numbers are of loading type` and `Lmin, Lmax 1 1`; the time is in kyr on the axis `time, kyr`; drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/Gs/l_time_domain.dat": {
+   "contributor": "GS",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "l",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "zero",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/Gs/l_time_domain.dat: TABOO header `These l numbers are of loading type` and `Lmin, Lmax 1 1`; the time is in kyr on the axis `time, kyr`; column 2 is zero at every time and column 3 is l, while the script plots column 2, off the axis of figure 8 (correction spada-t01-07-gs-l-in-column-3); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/Gsa/h-alma-deg1.dat": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "h",
+   "format": "columns_per_degree",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/Gsa/h-alma-deg1.dat: ALMA header `h load Love number`, `Range of harmonic degrees: 1 - 1`, `time (kyrs) h(t) for degrees l= 1 ... 1` and `Time points: 202`; 1 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/Gsa/l-alma-deg1.dat": {
+   "contributor": "GSA",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "l",
+   "format": "columns_per_degree",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/Gsa/l-alma-deg1.dat: ALMA header `l load Love number`, `Range of harmonic degrees: 1 - 1`, `time (kyrs) l(t) for degrees l= 1 ... 1` and `Time points: 202`; 1 value column(s), degrees at a fixed step as ALMA computes them (T01-05/PAPER/alma.inc: `min and max degrees, and step`); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/h_Rr.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "h",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/h_Rr.dat: written by T01-07/filter.f90 (`time, hhh(i)`) from the degree-one normal modes of RR in riva-T01-deg1_inc/, summed by eq. 19 over the first MVB = 6 of RR's nine modes (correction spada-t01-07-rr-six-of-nine-modes); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/h_Vb.dat": {
+   "contributor": "VB",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "h",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/h_Vb.dat: written by T01-07/filter.f90 (`time, hhh(i)`) from the six degree-one normal modes of Vb/M3-L70-V01_t01-07-VALE.txt, summed by eq. 19; drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/h_Vk.dat": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "h",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "time_zero_written_as_kyr": 1e-12,
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "h",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/h_Vk.dat: written by T01-07/filter.f90 (`time, hhh(i)`) from VK's VILMA run Vk/I106-M3-L70-V01-f1-LLN-h.dat, with the time divided by 1000; the first time, 1e-12 kyr, is t = 0 (correction spada-vk-time-zero-written-as-1e-12-kyr); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/l_Rr.dat": {
+   "contributor": "RR",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "l",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/l_Rr.dat: written by T01-07/filter.f90 (`time, lll(i)`) from the degree-one normal modes of RR in riva-T01-deg1_inc/, summed by eq. 19 over the first MVB = 6 of RR's nine modes (correction spada-t01-07-rr-six-of-nine-modes); drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/l_Vb.dat": {
+   "contributor": "VB",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "l",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/l_Vb.dat: written by T01-07/filter.f90 (`time, lll(i)`) from the six degree-one normal modes of Vb/M3-L70-V01_t01-07-VALE.txt, summed by eq. 19; drawn by T01-07/degree1.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T01-07/l_Vk.dat": {
+   "contributor": "VK",
+   "kind": "time_domain_love_numbers",
+   "cases": [
+    "t01-07"
+   ],
+   "quantity": "l",
+   "format": "value_column",
+   "degrees": [
+    1
+   ],
+   "rows_lost_at_the_top": 1,
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "l",
+     "units": "1",
+     "degree": 1
+    }
+   },
+   "evidence": "T01-07/l_Vk.dat: written by T01-07/filter.f90 (`time, lll(i)`) from VK's VILMA run Vk/I106-M3-L70-V01-f1-LLN-l.dat, with the time divided by 1000; the program read the first 1 data row(s) of I106-M3-L70-V01-f1-LLN-l.dat as header (correction spada-vk-first-rows-read-as-header); drawn by T01-07/degree1.gmt"
+  },
   "spada2011/spada2011-cost-es0701/T02-01/disp_t0_cap.dat": {
    "contributor": "GS",
    "kind": "spatial",
@@ -96919,6 +99691,714 @@
      "epoch_kyr": 5.0
     }
    }
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_cap_cwoff.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_cap_cwoff.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_cap_cwon.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_cap_cwon.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_disc_cwoff.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_disc_cwoff.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_disc_cwon.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_disc_cwon.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_point_cwoff.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_point_cwoff.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_point_cwon.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/M3-L70-V01_t02-03_point_cwon.txt: VB header lines `Contributor: Valentina R. Barletta`, the Chandler wobble line and the load; the column label `time(kyrs)     |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_cap-ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_cap-ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by T02-03/m.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_cap-ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_cap-ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by T02-03/m.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_dis-ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_dis-ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_dis-ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_dis-ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_poi-ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_poi-ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/PM_plot_poi-ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "m_1, deg"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "m_2, deg"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m|, deg"
+    },
+    "5": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "dm_1, deg/Ma"
+    },
+    "6": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "dm_2, deg/Ma"
+    },
+    "7": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|dm|, deg/Ma"
+    }
+   },
+   "evidence": "T02-03/PM_plot_poi-ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time kyrs            m_1, deg             m_2, deg             |m|, deg             dm_1, deg/Ma         dm_2, deg/Ma         |dm|, deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/Rot_cwoff_GRID_cap_m.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_x",
+     "units": "degrees",
+     "header_label": "mx(t) (deg)"
+    },
+    "3": {
+     "quantity": "m_y",
+     "units": "degrees",
+     "header_label": "my(t) (deg)"
+    },
+    "4": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| (deg)"
+    }
+   },
+   "evidence": "T02-03/Rot_cwoff_GRID_cap_m.txt: T02-03/m.gmt reads it under `Cw OFF - From Valentina` and draws it with the legend `Vb`; the file name says cap and cwoff; the column label `t (kyr)    mx(t) (deg)            my(t) (deg)           |m(t)| (deg)`; drawn by T02-03/m.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/Rot_cwoff_GRID_cap_mdot.txt": {
+   "contributor": "VB",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_rate_x",
+     "units": "degrees/Myr",
+     "header_label": "mdotx (deg/Myr)"
+    },
+    "3": {
+     "quantity": "m_rate_y",
+     "units": "degrees/Myr",
+     "header_label": "mdoty (deg/Myr)"
+    },
+    "4": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|mdot| (deg/Myr)"
+    }
+   },
+   "evidence": "T02-03/Rot_cwoff_GRID_cap_mdot.txt: T02-03/m.gmt reads it under `Cw OFF - From Valentina` and draws it with the legend `Vb`; the file name says cap and cwoff; the column label `t (kyr)  mdotx (deg/Myr)       mdoty (deg/Myr)         |mdot| (deg/Myr)`; drawn by T02-03/m.gmt"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/lod_GS.dat": {
+   "contributor": "GS",
+   "kind": "length_of_day",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "delta_lod",
+     "units": "ms"
+    }
+   },
+   "evidence": "T02-03/lod_GS.dat: written by T02-03/LOD/lod.f90 (`DLOD=(1.+ k2)*gfactor(1)*1000.`, gfactor(1) the cap) from k_L_T01-05_GS.mod, the degree-2 segment of GS's test 5/1; drawn by T02-03/m.gmt as `LOD (ms) for GS`"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/lod_GSA.dat": {
+   "contributor": "GSA",
+   "kind": "length_of_day",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "delta_lod",
+     "units": "ms"
+    }
+   },
+   "evidence": "T02-03/lod_GSA.dat: written by T02-03/LOD/lod.f90 (`DLOD=(1.+ k2)*gfactor(1)*1000.`, gfactor(1) the cap) from LOD/k.mod, an ALMA run of k from 10^-1.5 kyr, not the T01-05/PAPER/k.mod of figure 6; drawn by T02-03/m.gmt as `LOD (ms) for GSA`"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/lod_VK.dat": {
+   "contributor": "VK",
+   "kind": "length_of_day",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "delta_lod",
+     "units": "ms"
+    }
+   },
+   "time_zero_written_as_kyr": 1e-12,
+   "evidence": "T02-03/lod_VK.dat: written by T02-03/LOD/lod.f90 (`DLOD=(1.+ k2)*gfactor(1)*1000.`, gfactor(1) the cap) from k_L_T01-05_VK.mod, the degree-2 segment of VK's test 5/1 as T01-05/PAPER/ holds it; drawn by T02-03/m.gmt as `LOD (ms) for VK`; the first time, 1e-12 kyr, is t = 0 (correction spada-vk-time-zero-written-as-1e-12-kyr)"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_cap_ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_cap_ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_cap_ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "cap",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_cap_ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_dis_ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_dis_ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_dis_ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "disc",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_dis_ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_poi_ncw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "excluded",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_poi_ncw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
+  },
+  "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_poi_ycw.dat": {
+   "contributor": "GS",
+   "kind": "polar_motion",
+   "cases": [
+    "t02-03"
+   ],
+   "load": "point",
+   "chandler_wobble": "included",
+   "columns": {
+    "1": {
+     "quantity": "time",
+     "units": "kyr"
+    },
+    "2": {
+     "quantity": "m_modulus",
+     "units": "degrees",
+     "header_label": "|m(t)| deg"
+    },
+    "3": {
+     "quantity": "m_rate_modulus",
+     "units": "degrees/Myr",
+     "header_label": "|Dm(t)| deg/Ma"
+    }
+   },
+   "evidence": "T02-03/other_data/PM_table_poi_ycw.dat: GS header lines `Contributor: Giorgio Spada`, `CW is ...` and the load; the column label `time(kyrs)           |m(t)| deg         |Dm(t)| deg/Ma`; drawn by no script; its epochs are those of table 14"
   },
   "spada2011/spada2011-cost-es0701/T02/disp_t0_point.dat": {
    "contributor": "GS",

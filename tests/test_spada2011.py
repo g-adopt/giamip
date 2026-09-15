@@ -34,6 +34,7 @@ solver's result is.
 
 import fnmatch
 import json
+import math
 import os
 import pathlib
 import re
@@ -46,11 +47,12 @@ from gia_mip import cases, corrections, data
 PREFIX = "spada2011/spada2011-cost-es0701"
 RESOURCES = pathlib.Path(data.__file__).parent / "resources"
 
-# The five cases whose data the result class is built for: relaxation spectra
-# (1/1), loading and tidal Love numbers (2/1, 3/1), displacements (1/2) and
-# their rates (2/2). The other five may or may not be converted, and say so
-# in their case files either way.
-REQUIRED_CASES = ("t01-01", "t01-02", "t01-03", "t02-01", "t02-02")
+# All ten tests: relaxation spectra (1/1), loading and tidal Love numbers (2/1,
+# 3/1), the polar motion transfer function (4/1), Love numbers as functions of
+# time (5/1, 6/1 and the degree-one 7/1), displacements (1/2), their rates
+# (2/2), and polar motion with the length of day (3/2).
+REQUIRED_CASES = ("t01-01", "t01-02", "t01-03", "t01-04", "t01-05", "t01-06", "t01-07",
+                  "t02-01", "t02-02", "t02-03")
 
 
 def _spada2011():
@@ -111,8 +113,8 @@ def test_every_spada_correction_pattern_matches_a_file():
 # corrections table records one for it; which id and which wording is the
 # implementer's decision.
 KNOWN_DEFECTS = {
-    # .ela/.flu/.res hold absolute values of the residues, for a log plot.
-    "T01-02/h_L_T01-02_GS.ela": "absolute values",
+    # .res holds absolute values of the residues, for a log plot.
+    "T01-02/h_L_T01-02_GS.res": "absolute values",
     # Twelve residues for nine modes; positions 6, 9, 12 are Maxwell modes.
     "T01-02/h_L_T01-02_GS.dat": "twelve residues",
     # tau_j in years, not s_j in 1/kyr.
@@ -134,6 +136,25 @@ KNOWN_DEFECTS = {
     "T02/disp_t0_point.dat": "truncation degree 512",
     # VK stores rates in m/yr, GS in mm/yr; the script multiplies VK by 1000.
     "T02-02/output_sec2parab/udt2cost.dat": "rate unit",
+    # The working copy holds the raw column of k_L_T01-05_VK.dat, -(1 + k).
+    "T01-05/k_L_T01-05_VK.mod": "a different quantity from the PAPER copy",
+    # VILMA's k column is -(1 + k); the PAPER .mod files hold -1 minus it.
+    "T01-05/PAPER/k_L_T01-05_VK.dat": "column holds -(1 + k)",
+    # filter.f90 writes t = 0 as 1e-9 yr, which is 1e-12 kyr.
+    "T01-05/PAPER/h_L_T01-05_VK.mod": "time zero written as 1e-12 kyr",
+    "T01-07/h_Vk.dat": "time zero written as 1e-12 kyr",
+    # FRUFRU.f90 reads 11 header lines where the VILMA file has 9.
+    "T01-06/I106-M3-VSCAb-LLN-l-VK.mod": "first two rows lost to the header",
+    # The banner comments name GS for VK's files.
+    "T01-06/love_PAP.gmt": "banner names GS for VK's files",
+    # filter.f90 sums RR's first six degree-one modes of nine.
+    "T01-07/h_Rr.dat": "six of nine modes",
+    # Column 2 is zero; l is in column 3, and the script plots column 2.
+    "T01-07/Gs/l_time_domain.dat": "l in column 3",
+    # Named for k2 and holding the change in length of day.
+    "T02-03/k2_GS.dat": "holds the length of day",
+    # Every value is twice that of PM_table_cap_ycw.dat.
+    "T02-03/other_data/PM_table_ycw_cap.dat": "twice the values",
 }
 
 
@@ -293,9 +314,12 @@ def test_every_file_the_converter_reads_has_a_layout(converted):
 
     The source files are collected from the converted NetCDF, not from a list
     in this test: every spatial curve of every member, load, quantity and
-    epoch, and the `source_file` field of every Love number table (t01-02,
-    t01-03) and relaxation spectrum (t01-01). A file read without a decoded
-    layout fails here. It would also be missing from the HANDLING check in
+    epoch, the `source_file` field of every Love number table (t01-02,
+    t01-03) and relaxation spectrum (t01-01), every time-domain curve (t01-05
+    to t01-07), both transfer functions (t01-04), and every polar motion and
+    length of day curve (t02-03), with the files a joined curve lists in
+    `joined_from`. A file read without a decoded layout fails here. It would
+    also be missing from the HANDLING check in
     test_every_correction_on_a_file_with_a_layout_has_a_decision, which loops
     over `files`.
     """
@@ -303,6 +327,12 @@ def test_every_file_the_converter_reads_has_a_layout(converted):
     layouts = json.loads((RESOURCES / "spada_column_layouts.json").read_text())
     files = layouts.get("files", {})
     sources: dict[str, tuple] = {}
+
+    def record(curve, *where):
+        sources[curve.attributes["source_file"]] = where
+        for joined in str(curve.attributes.get("joined_from", "")).split():
+            sources[joined] = where
+
     for case, path in converted.items():
         for member in SpadaResult.members(path):
             result = SpadaResult.read(path, member, case=case)
@@ -311,6 +341,20 @@ def test_every_file_the_converter_reads_has_a_layout(converted):
             elif case in ("t01-02", "t01-03"):
                 for quantity in "hlk":
                     sources[result.love_numbers(quantity).source_file] = (case, member, quantity)
+            elif case in ("t01-05", "t01-06", "t01-07"):
+                for quantity in "hlk":
+                    for degree in result.time_domain_degrees(quantity):
+                        record(result.time_domain_love_numbers(quantity, degree),
+                               case, member, quantity, degree)
+            elif case == "t01-04":
+                for setting in ("included", "excluded"):
+                    pmtf = result.polar_motion_transfer_function(setting)
+                    sources[pmtf.source_file] = (case, member, setting)
+            elif case == "t02-03":
+                for key, curve in result.polar.items():
+                    record(curve, case, member, *key)
+                for load, curve in result.lod.items():
+                    record(curve, case, member, load, "length_of_day")
             else:
                 for load in ("cap", "disc", "point"):
                     for quantity in SPATIAL_QUANTITIES[case]:
@@ -321,7 +365,11 @@ def test_every_file_the_converter_reads_has_a_layout(converted):
     # 4 spectra and 21 Love tables, and per spatial case 18 GS files (one per
     # load and epoch, each holding U, V and N or their rates) and 6 VK files
     # (one per quantity and load; a merged curve names one of its two grids).
-    assert len(sources) >= 25 + 2 * (18 + 6), len(sources)
+    # Tests 5/1 and 6/1 read 27 files each (three members, three quantities,
+    # three degree ranges), test 7/1 ten, test 4/1 four, and test 3/2 at least
+    # fifteen: six GS curves files with six tables, VB's six tables and two
+    # grids, and three length of day files.
+    assert len(sources) >= 25 + 2 * (18 + 6) + 27 + 27 + 10 + 4 + 15, len(sources)
     missing = {source: where for source, where in sources.items() if source not in files}
     assert not missing, missing
 
@@ -405,7 +453,7 @@ def test_the_fluid_limit_is_elastic_minus_the_residues_over_the_frequencies(
 
     This ties the elastic, fluid and residue columns to the spectrum of the
     same code, in the convention of Spada et al. (2011), eq. 17. It fails for
-    each trap: the absolute values in .ela/.flu/.res files, VB's opposite
+    each trap: the absolute values in .res files, VB's opposite
     residue sign, a residue aligned with the wrong mode, and s in the wrong
     unit. The spectrum is the same code's test 1/1 result, because the
     relaxation frequencies depend only on the earth model.
@@ -529,7 +577,7 @@ def test_the_maxwell_modes_are_dropped_by_position_at_degree_128(converted):
 
 @pytest.mark.data
 def test_the_love_numbers_come_from_the_signed_file(converted):
-    """l_e at degree 2 is -0.12822149; the .ela file stores its absolute value."""
+    """l_e at degree 2 is -0.12822149, with the sign that the .dat file prints."""
     love = _result(converted, "t01-02", "GS").love_numbers("l")
     assert love.elastic[list(love.degrees).index(2)] == pytest.approx(-0.12822149, abs=1e-8)
 
@@ -678,3 +726,403 @@ def test_the_point_load_is_on_the_one_degree_grid(converted):
     curve = _result(converted, "t02-01", "GS").spatial("point", "U", 0.0)
     np.testing.assert_allclose(curve.axis, np.arange(181.0), atol=1e-9)
     assert curve.values[0] == pytest.approx(-973.28409, abs=1e-5)
+
+
+# ----------------------------------------- tests 5/1, 6/1 and 7/1, Love numbers in time
+
+# The degrees each published figure draws: figures 6 and 7 split them into the
+# panels 2 to 9, 12 to 96 at 12 and 128 to 254 at 18, and figure 8 is degree 1.
+PANELS = ([2, 3, 4, 5, 6, 7, 8, 9], list(range(12, 97, 12)), list(range(128, 255, 18)))
+TIME_DOMAIN_DEGREES = {"t01-05": [n for panel in PANELS for n in panel],
+                       "t01-06": [n for panel in PANELS for n in panel],
+                       "t01-07": [1]}
+TIME_DOMAIN_MEMBERS = [("t01-05", m) for m in ("GS", "GSA", "VK")] + \
+                      [("t01-06", m) for m in ("GSA", "RR", "VK")] + \
+                      [("t01-07", m) for m in ("GS", "GSA", "RR", "VB", "VK")]
+
+
+def _quantities(case: str) -> str:
+    """Figure 8 of test 7/1 draws h and l; k of degree one is -1 in the centre of mass frame."""
+    return "hl" if case == "t01-07" else "hlk"
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("case,member", TIME_DOMAIN_MEMBERS)
+def test_the_time_domain_degrees_are_those_the_figure_draws(converted, case, member):
+    result = _result(converted, case, member)
+    for quantity in _quantities(case):
+        assert result.time_domain_degrees(quantity) == TIME_DOMAIN_DEGREES[case], (quantity,)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("quantity", "hlk")
+def test_the_gs_heaviside_love_numbers_follow_from_its_normal_modes(converted, quantity):
+    """Test 5/1 of GS equals eq. 19 built from GS's own tests 2/1 and 1/1.
+
+    h(t) = h_e - sum_j (r_j / s_j) (1 - exp(s_j t)), with the elastic value and
+    the residues of the converted test 2/1 and the frequencies of test 1/1.
+    This ties the time column to kyr, the value column to the quantity and
+    the column of degrees to the right degree, with no number shared with the
+    converter's reading of test 5/1. TABOO computes the time-domain numbers by
+    convolution and prints eight digits; the measured misfit is at most 1.4e-6
+    (h at degree 96, where h is about 33). The tolerance is 1e-5. A time in
+    years misses by order one, and a neighbouring degree by more than 1e-2.
+    """
+    love = _result(converted, "t01-02", "GS").love_numbers(quantity)
+    spectrum = _result(converted, "t01-01", "GS").relaxation_spectrum()
+    result = _result(converted, "t01-05", "GS")
+    for degree in TIME_DOMAIN_DEGREES["t01-05"]:
+        curve = result.time_domain_love_numbers(quantity, degree)
+        i, j = list(love.degrees).index(degree), list(spectrum.degrees).index(degree)
+        s, r = np.asarray(spectrum.s_per_kyr)[j], np.asarray(love.residues)[i]
+        expected = love.elastic[i] - np.sum((r / s)[None, :] * (1.0 - np.exp(np.outer(curve.axis, s))),
+                                            axis=1)
+        np.testing.assert_allclose(curve.values, expected, rtol=0, atol=1e-5,
+                                   err_msg=f"{quantity} degree {degree}")
+
+
+def _log_time_misfit(curve, reference) -> float:
+    """The largest difference of a curve from a reference, at the curve's times inside the reference's.
+
+    Both are Love numbers against time in kyr on logarithmic grids, so the
+    reference is interpolated linearly in log10 t. Times at or below zero have
+    no logarithm and are left out.
+    """
+    t_ref = reference.axis[reference.axis > 0]
+    v_ref = reference.values[reference.axis > 0]
+    inside = (curve.axis >= t_ref[0]) & (curve.axis <= t_ref[-1])
+    assert inside.sum() >= 5, (curve.axis, t_ref)
+    return float(np.max(np.abs(np.interp(np.log10(curve.axis[inside]), np.log10(t_ref), v_ref)
+                               - curve.values[inside])))
+
+
+# Member, reference, and the allowed misfit as a fraction of the largest
+# |value| of the reference in the same panel of the figure. Measured: in test
+# 5/1 GSA is within 0.05 per cent of GS and VK within 1.8 per cent; in test 6/1
+# GSA and VK are within 3.9 per cent of RR. The working copy of VK's k in test
+# 5/1, which holds -(1 + k), misses by 90 per cent.
+AGREEMENT = [("t01-05", "GSA", "GS", 0.002), ("t01-05", "VK", "GS", 0.05),
+             ("t01-06", "GSA", "RR", 0.05), ("t01-06", "VK", "RR", 0.05)]
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("case,member,reference,fraction", AGREEMENT)
+def test_the_time_domain_contributors_agree_as_the_figures_show(converted, case, member,
+                                                                reference, fraction):
+    """Figures 6 and 7: three independent methods on one curve per degree."""
+    mine = _result(converted, case, member)
+    theirs = _result(converted, case, reference)
+    for quantity in "hlk":
+        for panel in PANELS:
+            peak = max(np.max(np.abs(theirs.time_domain_love_numbers(quantity, n).values))
+                       for n in panel)
+            for degree in panel:
+                misfit = _log_time_misfit(mine.time_domain_love_numbers(quantity, degree),
+                                          theirs.time_domain_love_numbers(quantity, degree))
+                assert misfit < fraction * peak, (quantity, degree, misfit, peak)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member", ["GS", "RR", "VB", "VK"])
+@pytest.mark.parametrize("quantity", "hl")
+def test_the_degree_one_curves_agree_with_gsa(converted, member, quantity):
+    """Figure 8 draws five codes on one line; the measured misfits are 1e-3 or less, 4.6e-3 for VK's l.
+
+    GS's l(t) is in column 3 of l_time_domain.dat, and column 2, which the
+    published script plots, is zero: read from column 2 it misses by 1.08.
+    """
+    gsa = _result(converted, "t01-07", "GSA").time_domain_love_numbers(quantity, 1)
+    curve = _result(converted, "t01-07", member).time_domain_love_numbers(quantity, 1)
+    assert _log_time_misfit(curve, gsa) < 1e-2
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("quantity", "hl")
+def test_the_vb_degree_one_curve_follows_from_its_normal_modes(converted, quantity):
+    """h_Vb.dat is eq. 19 over the six modes of Vb/M3-L70-V01_t01-07-VALE.txt, table 9 of the paper.
+
+    The measured misfit is 5e-8, from eight printed digits; the tolerance is 1e-6.
+    """
+    lines = (ARCHIVE_DIR / "T01-07" / "Vb" / "M3-L70-V01_t01-07-VALE.txt").read_text().splitlines()
+    elastic = [float(v) for v in next(l for l in lines if "ELA" in l).split()[:2]]
+    modes = np.array([[float(v) for v in l.split()] for l in lines if re.match(r"\s*\d+\s", l)])
+    column = {"h": 2, "l": 3}[quantity]
+    e = elastic[0] if quantity == "h" else elastic[1]
+    s, r = modes[:, 1], modes[:, column]
+    curve = _result(converted, "t01-07", "VB").time_domain_love_numbers(quantity, 1)
+    expected = e - np.sum((r / s)[None, :] * (1.0 - np.exp(np.outer(curve.axis, s))), axis=1)
+    np.testing.assert_allclose(curve.values, expected, rtol=0, atol=1e-6)
+
+
+@pytest.mark.data
+def test_the_gs_degree_one_l_comes_from_column_3(converted):
+    """l(1e-3 kyr) = -1.0814841 in column 3; column 2 is zero at every time."""
+    curve = _result(converted, "t01-07", "GS").time_domain_love_numbers("l", 1)
+    assert curve.axis[0] == pytest.approx(1e-3)
+    assert curve.values[0] == pytest.approx(-1.0814841, abs=1e-8)
+
+
+@pytest.mark.data
+def test_the_vk_k_of_test_5_1_is_k_and_its_first_time_is_zero(converted):
+    """VK's k at t = 0 and degree 2 is -0.24398425; GS's elastic k is -0.24398316.
+
+    The raw VILMA column holds -(1 + k), -0.75601575 at the same point, so a
+    converter that reads the working copy is wrong by 0.51 here. filter.f90
+    wrote t = 0 as 1e-12 kyr, and the converted time is 0.
+    """
+    curve = _result(converted, "t01-05", "VK").time_domain_love_numbers("k", 2)
+    elastic = _result(converted, "t01-02", "GS").love_numbers("k").elastic[0]
+    assert curve.axis[0] == 0.0
+    assert curve.values[0] == pytest.approx(elastic, abs=1e-5)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("quantity", "hlk")
+def test_the_vk_values_of_test_6_1_are_the_columns_of_its_vilma_run(converted, quantity):
+    """I107-M3-VSCAb-LLN-<q>.dat holds time in years and one column per degree from 1.
+
+    Every converted value of VK must be that file's value for the same degree,
+    at the file's time divided by 1000. This checks the degree taken from the
+    third column of the .mod files and the unit of time against the run the
+    .mod files were cut from, which the converter does not read.
+    """
+    path = ARCHIVE_DIR / "T01-06" / f"I107-M3-VSCAb-LLN-{quantity}.dat"
+    rows = np.array([[float(v) for v in line.split()] for line in path.read_text().splitlines()
+                     if line.strip() and not line.lstrip().startswith("#")])
+    result = _result(converted, "t01-06", "VK")
+    for degree in TIME_DOMAIN_DEGREES["t01-06"]:
+        curve = result.time_domain_love_numbers(quantity, degree)
+        for t, value in zip(curve.axis, curve.values):
+            i = int(np.argmin(np.abs(rows[:, 0] / 1000.0 - t)))
+            assert rows[i, 0] / 1000.0 == pytest.approx(t, rel=1e-7), (degree, t)
+            assert rows[i, degree] == pytest.approx(value, rel=1e-7, abs=1e-12), (degree, t)
+
+
+# ------------------------------------------------------- test 4/1, the transfer function
+
+# Table 8 of the paper, the Chandler wobble included: frequencies a_j and residues
+# A_j, real and imaginary parts in 1/kyr, in the order the table prints them.
+# Transcribed from the text of the PDF, where each number carries its power of
+# ten as a final digit, and checked against the sign of the exponent in the page.
+TABLE_8 = {
+    "VB": {"secular": 0.94383621e-1 - 0.11860755e-5j, "modes": [
+        (-0.33579270e1 + 0.66576000e-7j, 0.14891092e-3 + 0.12669300e-6j),
+        (-0.33362237e1 + 0.11656200e-6j, 0.26241206e-3 + 0.22535900e-6j),
+        (-0.23722351e1 + 0.20065580e-5j, 0.63529424e-2 + 0.27102200e-5j),
+        (-0.22522607e1 + 0.25454680e-5j, 0.84884795e-2 + 0.38384180e-5j),
+        (-0.10215217e1 + 0.51530193e4j, -0.14889041e1 - 0.75107087e4j),
+        (-0.55558484e0 + 0.50653187e-4j, 0.68475833e0 - 0.59731148e-4j),
+        (-0.50476490e-1 + 0.29121517e-6j, 0.43331703e-1 - 0.81492987e-5j),
+        (-0.61597140e-2 + 0.47965693e-6j, 0.58485889e0 - 0.67138771e-4j),
+        (-0.62667448e-4 + 0.55334765e-9j, 0.66318849e-1 - 0.21422907e-5j)]},
+    "GS": {"secular": 0.94383621e-1 - 0.11794529e-5j, "modes": [
+        (-0.33579278e1 - 0.35045867e-5j, 0.14809338e-3 - 0.33146014e-5j),
+        (-0.33362209e1 + 0.14107693e-4j, 0.26561296e-3 + 0.14102796e-4j),
+        (-0.23722351e1 + 0.20287687e-5j, 0.63529473e-2 + 0.27205139e-5j),
+        (-0.22522608e1 + 0.24288159e-5j, 0.84884577e-2 + 0.37204042e-5j),
+        (-0.10215217e1 + 0.51819534e4j, -0.14889041e1 - 0.75528812e4j),
+        (-0.55558484e0 + 0.50370358e-4j, 0.68475833e0 - 0.59397631e-4j),
+        (-0.50476490e-1 + 0.28958913e-6j, 0.43331703e-1 - 0.81037959e-5j),
+        (-0.61597140e-2 + 0.47697870e-6j, 0.58485889e0 - 0.66763892e-4j),
+        (-0.62667448e-4 + 0.55025796e-9j, 0.66318849e-1 - 0.21303289e-5j),
+        (-0.22204874e1 + 0.72586462e-7j, 0.14408894e-7 + 0.72530149e-7j),
+        (-0.33290133e1 - 0.10441102e-4j, -0.24027290e-5 - 0.10452601e-4j),
+        (-0.36029312e1 + 0.16550529e-7j, 0.52326859e-8 + 0.16559364e-7j)]},
+}
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member", ["GS", "VB"])
+def test_the_transfer_function_with_the_chandler_wobble_is_table_8(converted, member):
+    """Every coefficient of table 8, in 1/kyr, and the modes stored slowest first.
+
+    Eight printed digits on both sides, so the tolerance is rounding only. A
+    residue paired with the wrong frequency fails, and so does a frequency in
+    1/yr, which is 1000 times smaller.
+    """
+    pmtf = _result(converted, "t01-04", member).polar_motion_transfer_function("included")
+    table = TABLE_8[member]
+    modes = sorted(table["modes"], key=lambda mode: -mode[0].real)
+    assert pmtf.elastic == 0.0
+    assert pmtf.secular == pytest.approx(table["secular"], rel=1e-12)
+    np.testing.assert_allclose(pmtf.frequencies, [m[0] for m in modes], rtol=1e-12)
+    np.testing.assert_allclose(pmtf.residues, [m[1] for m in modes], rtol=1e-12)
+    assert np.all(np.diff(pmtf.frequencies.real) < 0)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member,modes", [("GS", 11), ("VB", 8)])
+def test_without_the_chandler_wobble_one_mode_less_and_an_elastic_residue(converted, member, modes):
+    """Eqs. 13 and 14: with the Chandler wobble neglected A_e is not zero and M' = M - 1.
+
+    Both codes give A_e = 1.4575355 and a real secular residue 0.094383621.
+    """
+    pmtf = _result(converted, "t01-04", member).polar_motion_transfer_function("excluded")
+    assert pmtf.frequencies.size == modes
+    assert pmtf.elastic == pytest.approx(1.4575355, rel=1e-12)
+    assert pmtf.secular == pytest.approx(0.094383621, rel=1e-12)
+
+
+# ------------------------------------------------ test 3/2, polar motion and length of day
+
+# Table 14 of the paper, truncated to three significant digits: |m| in degrees
+# and |dm/dt| in degrees per Myr, at t = 0, 1, 2, 5, 10 and 20 kyr. Transcribed
+# from the text of the PDF and the exponents of the page.
+TABLE_14_EPOCHS = (0.0, 1.0, 2.0, 5.0, 10.0, 20.0)
+TABLE_14 = {
+    ("cap", "included", "m_modulus", "VB"): (0, 0.133e-1, 0.182e-1, 0.211e-1, 0.240e-1, 0.292e-1),
+    ("cap", "included", "m_modulus", "GS"): (0, 0.173e-1, 0.197e-1, 0.211e-1, 0.240e-1, 0.292e-1),
+    ("cap", "included", "m_rate_modulus", "VB"): (0.681e5, 0.245e5, 0.883e4, 0.411e3, 0.299e1, 0.486),
+    ("cap", "included", "m_rate_modulus", "GS"): (0.684e5, 0.246e5, 0.887e4, 0.413e3, 0.297e1, 0.503),
+    ("cap", "excluded", "m_modulus", "VB"): (0.132e-1, 0.161e-1, 0.180e-1, 0.211e-1, 0.240e-1, 0.292e-1),
+    ("cap", "excluded", "m_modulus", "GS"): (0.132e-1, 0.161e-1, 0.180e-1, 0.211e-1, 0.240e-1, 0.292e-1),
+    ("cap", "excluded", "m_rate_modulus", "VB"): (0.371e1, 0.232e1, 0.155e1, 0.717, 0.530, 0.503),
+    ("cap", "excluded", "m_rate_modulus", "GS"): (0.371e1, 0.232e1, 0.155e1, 0.717, 0.530, 0.503),
+    ("disc", "included", "m_modulus", "VB"): (0, 0.132e-1, 0.181e-1, 0.210e-1, 0.239e-1, 0.290e-1),
+    ("disc", "included", "m_modulus", "GS"): (0, 0.172e-1, 0.196e-1, 0.210e-1, 0.239e-1, 0.290e-1),
+    ("disc", "included", "m_rate_modulus", "VB"): (0.677e5, 0.244e5, 0.879e4, 0.409e3, 0.298e1, 0.484),
+    ("disc", "included", "m_rate_modulus", "GS"): (0.681e5, 0.245e5, 0.883e4, 0.411e3, 0.296e1, 0.501),
+    ("disc", "excluded", "m_modulus", "VB"): (0.131e-1, 0.160e-1, 0.179e-1, 0.210e-1, 0.239e-1, 0.290e-1),
+    ("disc", "excluded", "m_modulus", "GS"): (0.131e-1, 0.160e-1, 0.179e-1, 0.210e-1, 0.239e-1, 0.290e-1),
+    ("disc", "excluded", "m_rate_modulus", "VB"): (0.369e1, 0.231e1, 0.154e1, 0.713, 0.528, 0.501),
+    # The paper prints the values at 5 and 10 kyr with the power of ten 1, as
+    # 0.713 x 10 and 0.528 x 10. That is a misprint: VB's values in the same
+    # row are 0.713 and 0.528, and GS's file equals VB's to five digits there.
+    ("disc", "excluded", "m_rate_modulus", "GS"): (0.369e1, 0.231e1, 0.154e1, 0.713, 0.528, 0.501),
+    ("point", "included", "m_modulus", "VB"): (0, 0.376e-2, 0.514e-2, 0.598e-2, 0.679e-2, 0.824e-2),
+    ("point", "included", "m_modulus", "GS"): (0, 0.488e-2, 0.557e-2, 0.597e-2, 0.679e-2, 0.824e-2),
+    ("point", "included", "m_rate_modulus", "VB"): (0.192e5, 0.692e4, 0.249e4, 0.116e3, 0.846, 0.137),
+    ("point", "included", "m_rate_modulus", "GS"): (0.193e5, 0.696e4, 0.250e4, 0.116e3, 0.840, 0.142),
+    ("point", "excluded", "m_modulus", "VB"): (0.373e-2, 0.456e-2, 0.510e-2, 0.596e-2, 0.679e-2, 0.824e-2),
+    ("point", "excluded", "m_modulus", "GS"): (0.373e-2, 0.456e-2, 0.510e-2, 0.596e-2, 0.679e-2, 0.824e-2),
+    ("point", "excluded", "m_rate_modulus", "VB"): (0.104e1, 0.655, 0.438, 0.202, 0.149, 0.142),
+    ("point", "excluded", "m_rate_modulus", "GS"): (0.104e1, 0.655, 0.438, 0.202, 0.149, 0.142),
+}
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("key", sorted(TABLE_14))
+def test_the_polar_motion_is_table_14(converted, key):
+    """Each converted value at a table epoch is within one unit of the third digit of table 14.
+
+    The paper truncates to three significant digits, so the converted value
+    lies in [T, T + unit) for a positive entry T. The test allows [T - unit,
+    T + unit), which also passes a value the paper rounded. A zero entry is
+    the exact zero of the Chandler wobble case at t = 0 (eq. 9). The rate in
+    degrees per kyr would be 1000 times smaller, and GS's other tables, which
+    hold twice these values, fail by a factor of two.
+    """
+    load, setting, quantity, member = key
+    curve = _result(converted, "t02-03", member).polar_motion(load, setting, quantity)
+    for epoch, entry in zip(TABLE_14_EPOCHS, TABLE_14[key]):
+        i = int(np.argmin(np.abs(curve.axis - epoch)))
+        assert curve.axis[i] == pytest.approx(epoch, abs=1e-9), (epoch, curve.axis[:5])
+        value = curve.values[i]
+        if entry == 0:
+            assert value == 0.0, (epoch, value)
+            continue
+        unit = 10.0 ** (math.floor(math.log10(abs(entry))) - 2)
+        assert abs(value - entry) < unit, (epoch, value, entry)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member,load,setting", [("GS", l, s) for l in ("cap", "disc", "point")
+                                                 for s in ("included", "excluded")]
+                         + [("VB", "cap", "excluded")])
+def test_the_modulus_of_polar_motion_is_the_length_of_its_components(converted, member, load, setting):
+    """|m| = sqrt(m_x^2 + m_y^2), and the same for the rate, at the times of the components.
+
+    This ties the three columns of each file to their quantities. The measured
+    misfit is 1e-9 degrees for |m| and 1e-7 of the value for the rate, from
+    printed digits.
+    """
+    result = _result(converted, "t02-03", member)
+    for prefix, rtol, atol in (("m", 0, 1e-8), ("m_rate", 1e-6, 1e-10)):
+        x = result.polar_motion(load, setting, f"{prefix}_x")
+        y = result.polar_motion(load, setting, f"{prefix}_y")
+        modulus = result.polar_motion(load, setting, f"{prefix}_modulus")
+        shared = np.isin(modulus.axis, x.axis)
+        np.testing.assert_array_equal(x.axis, y.axis)
+        assert shared.sum() == x.axis.size
+        np.testing.assert_allclose(np.hypot(x.values, y.values), modulus.values[shared],
+                                   rtol=rtol, atol=atol, err_msg=prefix)
+
+
+@pytest.mark.data
+def test_gs_and_vb_give_the_same_polar_motion_without_the_chandler_wobble(converted):
+    """Figure 13 a and b draws VB's points on GS's curves; they agree to 1e-7 of |m| in each component.
+
+    The tolerance is 1e-5 of the modulus. An exchanged x and y, or a sign,
+    misses by order one.
+    """
+    gs = _result(converted, "t02-03", "GS")
+    vb = _result(converted, "t02-03", "VB")
+    for prefix in ("m", "m_rate"):
+        scale = vb.polar_motion("cap", "excluded", f"{prefix}_modulus")
+        for component in ("x", "y"):
+            a = gs.polar_motion("cap", "excluded", f"{prefix}_{component}")
+            b = vb.polar_motion("cap", "excluded", f"{prefix}_{component}")
+            inside = b.axis <= a.axis[-1]
+            assert inside.sum() >= 15
+            got = np.interp(b.axis[inside], a.axis, a.values)
+            limit = 1e-5 * np.interp(b.axis[inside], scale.axis, scale.values)
+            assert np.all(np.abs(got - b.values[inside]) < limit), (prefix, component)
+
+
+def _lod_factor_ms(case) -> float:
+    """The factor G of eq. 33 in ms: Delta LOD = G (1 + k_2(t)) for the cap of test 3/2.
+
+    Delta LOD / LOD = 4 pi a^4 sigma_2 (3 cos^2 theta_c - 1) (1 + k_2) / (15 C),
+    with LOD = 86400 s, sigma_2 the degree-2 coefficient of the cap in kg/m2,
+    theta_c = 25 degrees, and C the polar moment of inertia of table 2. The
+    constants come from the case, not from the converter.
+    """
+    constants = case.load_table["constants"]
+    a = constants["earth_radius_m"]
+    sigma_2 = case.legendre_coefficients("cap", [2])[0]
+    theta = math.radians(case.load_centre[0])
+    ratio = 4 * math.pi * a ** 4 * sigma_2 * (3 * math.cos(theta) ** 2 - 1) / (
+        15 * constants["polar_moment_of_inertia_kg_m2"])
+    return 86400.0 * 1000.0 * ratio
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member", ["GS", "VK"])
+def test_the_length_of_day_follows_from_the_k2_of_test_5_1(converted, member):
+    """lod_<member>.dat is eq. 33 applied to the member's k_2(t) of test 5/1, for the cap.
+
+    G is 75.403 ms. The measured misfit is 1.6e-6 ms; the tolerance is 1e-5
+    ms. The working copy of VK's k, which holds -(1 + k), misses by 67 ms.
+    """
+    from gia_mip.benchmarks.inputs import SpadaCase
+    factor = _lod_factor_ms(SpadaCase("t02-03"))
+    lod = _result(converted, "t02-03", member).length_of_day("cap")
+    k2 = _result(converted, "t01-05", member).time_domain_love_numbers("k", 2)
+    np.testing.assert_allclose(lod.axis, k2.axis[:lod.axis.size], rtol=1e-7, atol=0)
+    np.testing.assert_allclose(lod.values, factor * (1.0 + k2.values[:lod.axis.size]),
+                               rtol=0, atol=1e-5)
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("member", ["GSA", "VK"])
+def test_the_three_length_of_day_curves_match_within_2_ms(converted, member):
+    """Section 4.2.4: the three solutions of figure 13c match to within 2 ms. Measured: GSA 0.012 ms, VK 0.71 ms."""
+    gs = _result(converted, "t02-03", "GS").length_of_day("cap")
+    curve = _result(converted, "t02-03", member).length_of_day("cap")
+    assert _log_time_misfit(curve, gs) < 2.0
+
+
+@pytest.mark.data
+def test_the_members_of_test_3_2(converted):
+    """GS and VB, table 1, and GSA and VK for the length of day of figure 13c."""
+    from gia_mip.benchmarks.results import SpadaResult
+    assert SpadaResult.members(converted["t02-03"]) == ["GS", "GSA", "VB", "VK"]
+
+
+@pytest.mark.data
+@pytest.mark.parametrize("case", REQUIRED_CASES)
+def test_no_converted_contributor_keeps_a_reason_for_not_being_converted(converted, case):
+    """A reason left in `not_converted` for a contributor the file holds is stale."""
+    from gia_mip.benchmarks.results import SpadaResult
+    reasons = cases.case(f"spada2011-{case}")["reference_data"].get("not_converted", {})
+    assert not set(reasons) & set(SpadaResult.members(converted[case])), (case, sorted(reasons))

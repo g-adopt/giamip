@@ -2,9 +2,9 @@
 
 Run it after unpacking spada2011-cost-es0701.tar.gz into
 data/original/spada2011/ and after running scripts/decode_spada_layouts.py.
-It writes data/converted/spada2011/spada2011-<case>.nc for the five tests
-whose data a reader exists for. The work is done in
-gia_mip.benchmarks.spada2011, whose docstring describes the rules.
+It writes data/converted/spada2011/spada2011-<case>.nc for each of the ten
+tests. The work is done in gia_mip.benchmarks.spada2011, whose docstring
+describes the rules and lists the files it reads per test.
 
 Usage::
 

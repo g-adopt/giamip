@@ -117,6 +117,16 @@ def test_a_result_round_trips_through_netcdf(tmp_path):
         r.write(path)
 
 
+def test_reading_a_result_under_another_case_raises(tmp_path):
+    """The file records case C, so a read as case D is refused; another spelling of C is not."""
+    r = BenchmarkResult("C", "radopt")
+    r.add_time_series("h_UF", [0, 5, 15], [0.0, -10.0, -25.0])
+    path = r.write(tmp_path / "out.nc")
+    assert BenchmarkResult.read(path, "radopt", case="martinec2018-c").case == "C"
+    with pytest.raises(ValueError, match="holds case C, not D"):
+        BenchmarkResult.read(path, "radopt", case="D")
+
+
 def test_difference_metrics_on_known_curves():
     ref = Curve([0, 1, 2, 3, 4], [0, 0, 0, 0, 0])
     cand = Curve([0, 4], [1, 5])                  # 1 + x

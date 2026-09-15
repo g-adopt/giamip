@@ -134,6 +134,13 @@ layout of every file `gia_mip.benchmarks.spada2011` reads, keyed by the path
 under `data/original/`. Eleven README files inside the `T02` directories
 document the VILMA submissions: `u` is vertical displacement, `v` is
 horizontal, `e` is geoid, in metres and metres per year, with `*cost` holding
-the fine grid, `*costg` the global grid, and both poles omitted. The files of
-tests 4/1 to 7/1 and 3/2 are decoded only as far as the scripts draw them, in
-`by_file`.
+the fine grid, `*costg` the global grid, and both poles omitted.
+
+The `files` table covers all ten tests. For tests 5/1, 6/1 and 7/1 it holds the
+files that the scripts of figures 6, 7 and 8 draw. The evidence for their
+columns is the write statements of the Fortran programs that cut them, a
+replay of those programs on VK's and GS's larger runs, and the ALMA headers.
+For test 4/1 the table holds GS's labelled files and VB's unlabelled ones, which
+are read by agreement with GS's values of the same setting. For test 3/2 it
+holds the files of figure 13 and the tables of table 14, from their headers,
+and the length of day files with the formula of `T02-03/LOD/lod.f90`.

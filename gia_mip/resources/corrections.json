@@ -81,10 +81,10 @@
    ],
    "field": "filename, title, source",
    "as_shipped": "Filename says GLAC3c_profile1; title and source say GLAC3c_merge1; the protocol experiment table says GLAC3b (Profile 1)",
-   "correct": "Not established. Asked of the organisers on 2026-09-11.",
-   "evidence": "Protocol v2.4 experiment table, rows Exp03, Exp04 and Exp09 to Exp11. The compliance checker adds a fourth spelling, expecting iceHistory-GLAC3b_profile1_122ka.nc.",
-   "action": "Record the delivered filename in the case file, and do not label output GLAC3b until the organisers confirm the two are the same reconstruction.",
-   "status": "unverified",
+   "correct": "The delivered files are the intended inputs. Holly Han, the lead of the protocol, confirmed on 2026-09-12 that each file combines GLAC3 versions a, b and c, with different versions for different ice sheets.",
+   "evidence": "Protocol v2.4 experiment table, rows Exp03, Exp04 and Exp09 to Exp11. The compliance checker adds a fourth spelling, expecting iceHistory-GLAC3b_profile1_122ka.nc. The answer of the organisers is recorded in README.md, section \"Correspondence about the GIAMIP inputs\".",
+   "action": "Record the delivered filename in the case file, and give the ice history as GLAC3_p1, GLAC3_p2 or GLAC3_p3, with no version letter.",
+   "status": "confirmed",
    "discovered": "2026-09-11",
    "sha256": [
     "16e7ed216415808b8f46aaff92ad604d1a594922cd7cd43523c210997556f81d",
@@ -217,12 +217,12 @@
    "applies_to": [
     "spada2011/spada2011-cost-es0701/T01-05/k_L_T01-05_VK.mod"
    ],
-   "field": "whole file",
-   "as_shipped": "The copy in T01-05/ and the copy in T01-05/PAPER/ have the same 603 lines and different numbers in every one of them",
-   "correct": "Not established. The two are different runs.",
-   "evidence": "All 584 data rows differ. The largest difference in the Love number column is 0.934, which is 28 times the value itself at its worst point, so this is a different run and not a difference of print precision. The other 40 data files of T01-05 that exist in both directories are byte identical, and only the plotting script h_love_time.gmt differs alongside it.",
-   "action": "Name the directory in the case file. Redrawing the published figure of test 1/5 and comparing it against the PostScript shipped in the archive is what decides which copy the paper used.",
-   "status": "unverified",
+   "field": "column 2, the Love number",
+   "as_shipped": "The copy in T01-05/ and the copy in T01-05/PAPER/ have the same 603 lines and different numbers in every one of them. The working copy holds the column of k_L_T01-05_VK.dat as it stands, which is -(1 + k).",
+   "correct": "The copy in T01-05/PAPER/ holds k, and it is the one the paper used.",
+   "evidence": "k_L_T01-05_VK.dat is the same file in both directories. Replaying T01-05/PAPER/filter.f90 on it reproduces the working copy exactly, and gives the PAPER copy as -1 minus the column to 5e-9. The PAPER copy agrees with GS's k of test 5/1 to 9.4e-3 at degrees 2 to 9, and the working copy misses it by 0.88 to 0.93. T01-05/PAPER/love_PAP.gmt, the script of figure 6, reads the PAPER copy. The length of day of figure 13c, T02-03/lod_VK.dat, is (1 + k_2) times 75.403 ms to 1.6e-6 ms with k_2 from the PAPER copy, and misses by 67 ms with the working copy. The other 40 data files of T01-05 that exist in both directories are byte identical.",
+   "action": "Read T01-05/PAPER/k_L_T01-05_VK.mod and the other files that T01-05/PAPER/love_PAP.gmt draws. Do not read the working copy.",
+   "status": "confirmed",
    "discovered": "2026-09-13",
    "sha256": [
     "5fdee3227c5279b2834fcddaf368d1ad71972cecb3866578a87c3cc40bf16202"
@@ -258,7 +258,7 @@
    ],
    "field": "time axis",
    "as_shipped": "GS writes one file per epoch and VK writes one column per epoch",
-   "correct": "Both hold the same five epochs, 0, 1, 2, 5 and 10 kyr",
+   "correct": "Both hold the epochs 0, 1, 2, 5 and 10 kyr. GS also ships a run at 1000 kyr, which VK does not",
    "evidence": "GS ships disp_t0_cap.dat, disp_t1_cap.dat, disp_t2_cap.dat, disp_t5_cap.dat, disp_t10_cap.dat and disp_t1000_cap.dat, each with colatitude in column 1 and the three quantities in columns 2, 3 and 5. Column 4 is read by no panel of the published figure. VK ships u2cost.dat, v2cost.dat and e2cost.dat, each with colatitude in column 1 and one column per epoch in columns 2 to 6, as the file header states: `# Epoch (kyr): 0 1 2 5 10`. Its README adds that *cost.dat is the fine grid and *costg.dat the global one, and that the poles are omitted.",
    "action": "The reader presents both as colatitude by epoch. Do not assume that the three quantities are columns 2, 3 and 4 of the GS files: the geoid is column 5.",
    "status": "confirmed",
@@ -322,71 +322,33 @@
    "id": "spada-t01-residue-files-absolute",
    "kind": "trap",
    "applies_to": [
-    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.ela",
-    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.flu",
     "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.res"
    ],
    "field": "whole file",
-   "as_shipped": "Each contributor's Love numbers of tests 2/1 and 3/1 exist twice: a signed table in the .dat file, and a plotting copy split into .ela, .flu and .res files. The .res files hold the absolute value of every residue, one (degree, residue) pair per line, and each of the three files starts with a line such as `*** ELASTIC    # File <<h.dat>>` that is not a comment.",
-   "correct": "The signed residues are in the .dat file. The .ela and .flu columns equal columns 2 and 3 of the .dat file, sign included.",
-   "evidence": "Measured on the 18 top-level plotting copies of GS, RR and VB in T01-02 and T01-03: no .res value is negative, while the .dat residues carry both signs, and GS's .res files have 12 lines per degree (3060 for 255 degrees), the Maxwell modes included. Every .ela and .flu value equals the .dat value with its sign. Residues read from .res reconstruct h, which has residues of one sign, and give l and k wrong in the fluid limit h_f = h_e - sum r_j / s_j.",
+   "as_shipped": "Each contributor's Love numbers of tests 2/1 and 3/1 exist twice: a signed table in the .dat file, and a plotting copy split into .ela, .flu and .res files. The .res files hold the absolute value of every residue, one (degree, residue) pair per line, and start with a line such as `*** RESIDUES   # File <<l.dat>>` that is not a comment.",
+   "correct": "The signed residues are in the .dat file.",
+   "evidence": "Measured on the 18 .res files of GS, RR and VB in T01-02 and T01-03: no .res value is negative, while the .dat residues carry both signs, and GS's .res files have 12 lines per degree (3060 for 255 degrees), the Maxwell modes included. The .ela and .flu copies keep the sign: every value equals the .dat value, so they are not covered here. Residues read from .res reconstruct h, which has residues of one sign, and give l and k wrong in the fluid limit h_f = h_e - sum r_j / s_j.",
    "action": "Read the .dat file. The converter reads no .ela, .flu or .res file.",
    "status": "confirmed",
    "discovered": "2026-09-13",
    "sha256": [
-    "014f9d4836150a73809225f0f5f64c3380caca9ad213bc621934836f2ce221f0",
-    "0b9dad0d9af94bfa6efcd6a1cb89c1529bb13f46c758997c65f18ffb197787fe",
     "0fda79d63c82b70c75212ddcc2b116d95555ec21dc689cb5d829ddd8170a1c24",
-    "107b370aa037be5f7508b5761e1a8008f591e569ad7e40d0f86788b1e250c08a",
-    "137217017439170f49c2ff5e957fee5327260a682cf3dea7b3bea46c189648d1",
     "19edcd7cc1117af82bfed3917e49aa8a4b775b076258bf4b781b642ff9ac5cca",
-    "1cfec8f96b3f67ce98641fcf62b8ac8c17b1fd4a7872b2e060b8cb2e6a88ec41",
-    "1e03610a407999db4f5a1f6fe6b827d630c42966241d0b2872f707eaa20e44c4",
-    "1f6410f2da7a36e3b6ab2883ff7c23f98f7b2e2f3684470439a159e9ae586506",
-    "2e75f839e0e6222058b5315cf1da90965a8d596e1d107861871217409c6bb277",
-    "3c59feb470464c5059d9d05e035a27ec461a1cb57f4f22a2f44f0312dd12a318",
     "406841223d7bc5d494015dfd0e3c73e318f4677eae28262640acb9f3c11673e5",
-    "434c3b905971fd997089241eb4b2ec01ef91ce53957d220ac38540890cdeb634",
-    "44055c19800a2e0e6f39f8ef3d8fd46df60da3c42f758ea47bc8a2321f474141",
     "452072368be7f70e248f38b7763e0dcdeba558fd2540983e532c454acd92993e",
     "4c4505b27e4eaf402c6482704e5ec069e6ab6c82809cc936570085833f6124bd",
-    "579feebe3d38f95da64eb98f831450f8fd3ea1c08c07a8ee55c8cac1cf9bc3d2",
     "60bc29e29ea1449a81a78a84380f8c90240559c254632c65bb9973fccc72e204",
-    "614cd802a59f8e082fa496b6a9a439f76ff9aa7491345f737c47d81d455960f0",
     "70e406bbc203027593e44ee5f47b2d555da89a3a556896c36bb8d26d987ab216",
-    "762512b64edb4a4b181d9cf7101855aca2b89a1a69b2de625d699e55c0780112",
-    "77144108fd8dbcf4c7146f2ef7ca75dad3213463b11832aaa63ba1d9df8a6135",
-    "7bb4852eaafa3f3dc2ce949fa79fed374afd85b932b0f8be55a3fc2679f9feaa",
-    "7cec03492ed764569ca3cced3d03a21c6fea5add371d4282e60d6b80e9f934d5",
-    "807b5805762566249910e81b58bb2ee60e250ee74a27328a2dcba9b899073984",
-    "80fda3112ece63a05285f4fe371ecb84bb1ae354e4387afb579806f8cf886f75",
-    "8194f01bc6b4aede936365f65f46b773087aae773f797d3603d7151802b8ae3f",
     "900d1a566a610a2231b7286bd243f7581f2682d6b4f987280307f4405d7ddc87",
     "90350c07cc1905badd3c2467a28faf6838ff6e2a7eb193c6aeb245369401ef10",
     "9c7e8bb0c0934228f5c30fa513c81c780b051a2fb606ec6f1076c3b699ebf84f",
     "9e4591b334e646c43dc3c3a5fc167ad751ac0a7a6b89d35bac6ea78ce4969c7d",
-    "a267cab46fbc38709d29c7906cd63346f935c4d11c71c737159c4703a15d265a",
     "b0dc8be053ccb31198c373ae4c5b8a721dec1dc5614005c9b072580fdae0215e",
     "b38635f1512f94393b9b72cf3774c350b1e3f9166e2c39b53499cfdf77ea1fa8",
     "b3b10c3c873a40bbd642006467e69575976657feb903e6c902e24060b2a858e1",
-    "b5ee02bdb5be72c10c8df11923f3d17fdc6f6451f51e77ba23c5d745c5a44a5d",
-    "bbae472808b5747b7d87321b5865e59d97ca43c518474a1b7f60a95a60e43536",
-    "bd4a6cb610f417ff6e05d566b5e9323a73f594c1961a0d9a1cb3cbc974b3fa31",
-    "c30f54fb6e56763f787a74c94d613c010d3c3de348b0c250b1bc44ddf308450d",
-    "cba37ac67e7cb4323185bfc70e2e88af88d12898c8e2330164ec20a148a4da39",
-    "ccc125213c4cf0da7858d68515b487803709311bbd3ac1fe6f777e76575b85c2",
-    "cf2ec2508823d448951efa71ef204157f1734dce48ce15337eccc97c82b85101",
-    "d358d422ead8c3d25379c0e70cc94b2d930df34a04fdfa09e752e747a02c0ec7",
-    "d444e32df6af1b2e01b82602cef68103ad639102fdb454a7427d85c983c0707a",
-    "d6af5d1c98b2863c3ee361b067f6276314c5a7b6d3de506950623ffd7a1d3c71",
-    "dbc84b525591a420d4943a3e77b6b549b46a4aee6101f8582d761c0f7b275447",
-    "dd4c4bc781448b00aaab2dd9c2cf2decbbbccdab7915afaa2a37dbab728b92f5",
     "df7554e10c6d2cbbd256a7a4fa0c08c244e8f12c31d0f7117705e87b07cde2f2",
-    "e207933c42e138a830b397900bd11b7740b3f2e841b39e91ff53b1af8ddca57b",
     "e6ce0eff1eac969da64eaaa9d0687afe36247d40d34226a91a7af98285708255",
     "e930432dd5bb2987ebc52b304612682b88b0e65e24d4c9c46020038b15ecf96b",
-    "eeb297134277b322b5d0ebc94eb7fadc58802526c2c911ea76880aa5a6e12462",
-    "eede314ce70d4ede2fd6cb705a8510866189ba54cea906bb2d21b5938df0f905",
     "f2873ffb98cebd691ebc81cc05a8080bbca2bdb7d1fd404826d07159fd8db97e"
    ]
   },
@@ -859,6 +821,196 @@
    "action": "Read the exponent. Take the unit from time_series_columns, which records the dropped exponent for this file so that the check against the script still holds.",
    "status": "confirmed",
    "discovered": "2026-09-14"
+  },
+  {
+   "id": "spada-t01-05-vk-k-column-holds-minus-one-minus-k",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-05/k_L_T01-05_VK.dat",
+    "spada2011/spada2011-cost-es0701/T01-05/PAPER/k_L_T01-05_VK.dat"
+   ],
+   "field": "every degree column",
+   "as_shipped": "The header says `LLN of component k`, and at t = 0 and degree 2 the column holds -0.75601575.",
+   "correct": "The column holds -(1 + k): k at t = 0 and degree 2 is -0.24398425.",
+   "evidence": "GS's elastic k at degree 2 (test 2/1) is -0.24398316, and -1 minus the printed value is -0.24398425. The k files of T01-05/PAPER/ that figure 6 draws hold -1 minus this column, while the h and l files of the same run copy their columns unchanged.",
+   "action": "Do not read the column as k. Read the k files of T01-05/PAPER/, which hold k.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "6a4075c9dc569d30965cb7389c41afd15e4102a9764173383fc44f5b5a53bef2"
+   ]
+  },
+  {
+   "id": "spada-vk-time-zero-written-as-1e-12-kyr",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-05/PAPER/[hlk]_L_T01-05_VK.mod*",
+    "spada2011/spada2011-cost-es0701/T01-07/h_Vk.dat",
+    "spada2011/spada2011-cost-es0701/T02-03/lod_VK.dat"
+   ],
+   "field": "the first time",
+   "as_shipped": "9.9999997E-13 kyr",
+   "correct": "t = 0",
+   "evidence": "VK's VILMA runs start at t = 0 years. T01-05/PAPER/filter.f90 and T01-07/filter.f90 replace a time of 0 by 1e-9 years with `if(time(i)==0.0) time(i)=1E-9` and then divide by 1000, so that a logarithmic axis can take the point. T02-03/LOD/lod.f90 copies the times of k_L_T01-05_VK.mod into lod_VK.dat. The value at that time is the value of the source row at t = 0.",
+   "action": "Store the time 1e-12 kyr of these files as 0.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "4907d50c6a909f18c6dbf81973e12af2f044e62091e0ddfa71fa9647bd1a68c0",
+    "20309013d948e0f5c97c98ece3461cbb51bbc577030147d83f63757d080bc190",
+    "9aec551bb146758a80eb6be06535a8ce73530a64a56ce1faa20f08b2084bed33",
+    "51719ad730c57bec182d4cbad68c1be943f9d805cd3a690965a936075b3070bd",
+    "8f31afbf9feff03ca036ca58c9152573c5c0dd835230dbcd6b35c18b4dcaa775",
+    "e2bb386b50b9b155b52099ec7e124287e734fc43351108118d13164ab24a14ea",
+    "82859ab0a3505e43b1b507ab6a83dc611cfec0534b861d04cf0d043e184cd94f",
+    "70e48fb78df1cafa93e6387dfa4d21d175beba159671112d59a96f48bce63ffe",
+    "ba8a24c6cfa6ed8ea79a93ab6b4725298ef8b7ff1bb5dc21940aea09bf25da83",
+    "430b45a8c1338c69e2db313c264a0268275f81d398638bf9d39130d613815505",
+    "cbcc1457aa41c24504f5760139ba2464b5e3662d9a2ba98b690857fa3da7b9e3"
+   ]
+  },
+  {
+   "id": "spada-vk-first-rows-read-as-header",
+   "kind": "truncated",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-06/I106-M3-VSCAb-LLN-[hlk]-VK.mod*",
+    "spada2011/spada2011-cost-es0701/T01-07/l_Vk.dat"
+   ],
+   "field": "the first rows of every segment",
+   "as_shipped": "The h files of test 6/1 start at 0.047532132 kyr, the l and k files of test 6/1 at 0.095064263 kyr, and T01-07/l_Vk.dat at 0.095064263 kyr.",
+   "correct": "VK's runs start at t = 0. I107-M3-VSCAb-LLN-[hlk].dat of test 6/1 hold rows at 0 and 47.532132 years before that, and Vk/I106-M3-L70-V01-f1-LLN-l.dat of test 7/1 holds a row at 0.",
+   "evidence": "T01-06/FRUFRU.f90 reads 11 lines as header. I107-M3-VSCAb-LLN-h.dat has 10 comment lines and the l and k files have 9, so the program read the first one or two data rows as header and wrote them into the comment lines of the .mod files. Every row it did write equals the source column. T01-07/filter.f90 reads 6 header lines, and VK's l file of test 7/1 has 5.",
+   "action": "Convert the files as figures 7 and 8 draw them, from the first time they hold. The elastic value of these curves is not in the converted data.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "e2a85c8fdabc64d27205cf41cfbd11216e759874b619ba712c28b74ec2aac4a9",
+    "ce7a738b6ed8258ba29d281bbc4bafa1723e52dbdf0a3740c58f321068ef9756",
+    "b70f3fb19fd6368abe3d871dfd255020d3b0b5e2cb0e6a1ad6b7c40ec1ce441b",
+    "77f4613ec15e5bc42facc68b77490b7c10b538d3b813c45e663ad03f432b4a8f",
+    "4ceebf72c3175dbbb6cbbf300cffa564e562ed8e42324c38554f3d7e93994934",
+    "397ab70ebfc4bb511bdd68a94e9fd67aea01a029cfdc7a14a47c7b99c9fcadb7",
+    "7f2a876b004043ae50d570462df5feea8fefc6503445da3097847292d10699bf",
+    "f983dfcd94d490989586019f885cc2ff3780a6580996dac571927c75b2a06559",
+    "3cba0f1858bdbf20e554436be538632448cf059566946928d87a3f731b9b2f84",
+    "552d8c07db40b37debad155f79d26e87b336aae82c04aebe62cdc18370d669b6"
+   ]
+  },
+  {
+   "id": "spada-t01-06-banner-names-gs-for-vk-files",
+   "kind": "naming",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-06/love_PAP.gmt",
+    "spada2011/spada2011-cost-es0701/T01-06/love_POSTER.gmt",
+    "spada2011/spada2011-cost-es0701/T01-07/love_PAP.gmt"
+   ],
+   "field": "banner comments",
+   "as_shipped": "The banner comments name GS above the lines that read I106-M3-VSCAb-LLN-[hlk]-VK.mod, and the file names say VK.",
+   "correct": "The files are VK's: VILMA runs by Klemann at GFZ.",
+   "evidence": "T01-06/FRUFRU.f90, which wrote the files, sets `user_name='VK'` and reads I107-M3-VSCAb-LLN-k.dat, whose header says `performed by spectral FE code, Klemann at GFZ` and `run no.: VEGA-I107`; the .mod files carry the same header lines. In T01-06/love_PAP.gmt the lines that read GS's k_L_T01-05_GS.mod are commented out, and figure 7 of the paper shows Vk, Gsa and Rr only. T01-07/love_PAP.gmt is a copy of the test 6/1 script. The disagreement is listed in attribution_disagreements of spada_column_layouts.json.",
+   "action": "Attribute the files to VK by their names. Test 6/1 has no GS data.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "1fa13eaccbeba43d6301c6d107cc3731fe32c601e3a0bb9c96a75652d7859f93",
+    "e5246ee17c9d005bcb03013f162ba9f48b11ec04faddf2014b69351b38fada23",
+    "b14c9fb756e83a9a2edd7c172532e69ef04b23a6e27c0bbddf5117ee8e4f1ff5"
+   ]
+  },
+  {
+   "id": "spada-t01-07-rr-six-of-nine-modes",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-07/[hl]_Rr.dat"
+   ],
+   "field": "column 2",
+   "as_shipped": "h_Rr.dat and l_Rr.dat are eq. 19 summed over the first six of RR's nine degree-one modes in riva-T01-deg1_inc/.",
+   "correct": "The sum over all nine modes. Mode 8, s = -3.3416296 per kyr, has the h residue -1.5084246e-5 and the l residue -7.7171418e-5; modes 7 and 9 are Maxwell modes with residues below 1e-14.",
+   "evidence": "T01-07/filter.f90 reads MRR = 9 modes of RR and sums them with `do k=1, mvb`, where MVB = 6. Eq. 19 over six modes reproduces both files to 7e-8; over nine modes the curves differ from the files by at most 4.5e-6 in h and 2.3e-5 in l, at the longest times. The five curves of figure 8 agree to within 5e-3.",
+   "action": "Convert the files as figure 8 draws them. The difference is below the agreement between the contributors.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "a3ce00754fc32deaee1c0a34b0423364e079b6bbfbbb7e7183563865a2e72983",
+    "8f50e5e88789e282d7bb34a1de6de8e604979654f9e9b4adb1bc6d9b98d6fd14"
+   ]
+  },
+  {
+   "id": "spada-t01-07-gs-l-in-column-3",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-07/Gs/l_time_domain.dat"
+   ],
+   "field": "columns 2 and 3",
+   "as_shipped": "Three columns, of which column 2 is zero at every time. T01-07/degree1.gmt plots the file with the GMT default, columns 1 and 2.",
+   "correct": "Column 3 is l(t) of degree 1: -1.0814841 at 1e-3 kyr.",
+   "evidence": "Column 3 agrees with GSA's l(t) in Gsa/l-alma-deg1.dat to 1.1e-3 from 1e-3 to 1e4 kyr, as VB's and RR's do. Plotted at zero, GS's l(t) lies outside the axis of figure 8, which runs from -3.25 to -0.75, so the figure shows no GS curve of l although its legend names Gs. h_time_domain.dat has two columns, time and h.",
+   "action": "Read l from column 3.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "6e58ede77735cc68aab45423c98d805d85b4f2b05557b4dada554dc657572709"
+   ]
+  },
+  {
+   "id": "spada-t02-03-k2-files-hold-the-length-of-day",
+   "kind": "naming",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-03/k2_*.dat",
+    "spada2011/spada2011-cost-es0701/T02-03/LOD/k2_*.dat"
+   ],
+   "field": "file name",
+   "as_shipped": "k2_GS.dat, k2_GSA.dat and k2_VK.dat, in T02-03/ and in T02-03/LOD/.",
+   "correct": "The change in length of day in ms. Each file is byte identical to lod_GS.dat, lod_GSA.dat or lod_VK.dat.",
+   "evidence": "cmp finds k2_<member>.dat and lod_<member>.dat identical in both directories. The values start near 57 ms, while k_2 lies between -1 and 0.",
+   "action": "Do not read the k2 files. Read the length of day from lod_<member>.dat, which T02-03/m.gmt draws.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "29f630465a57b165b9624fb31c084d57c3c795952647e56697d0bcab906e5290",
+    "3b38793e0943394aa7a7b2d539fb714ebd9d73daf409f5715fc6c6930b26a876",
+    "cbcc1457aa41c24504f5760139ba2464b5e3662d9a2ba98b690857fa3da7b9e3"
+   ]
+  },
+  {
+   "id": "spada-t02-03-gs-tables-with-twice-the-values",
+   "kind": "superseded",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-03/other_data/PM_table_[yn]cw_*.dat"
+   ],
+   "field": "|m| and |dm/dt|",
+   "as_shipped": "PM_table_<setting>_<load>.dat holds twice the |m| of PM_table_<load>_<setting>.dat for the same load and setting, at every epoch after the loading.",
+   "correct": "PM_table_<load>_<setting>.dat holds GS's values of table 14.",
+   "evidence": "The ratio of |m| is 2 at 1, 2, 5, 10 and 20 kyr in all six pairs. PM_table_<load>_<setting>.dat equals GS's PM_plot curves at 0, 1, 2 and 5 kyr to every printed digit, and table 14 of the paper at every epoch to its three digits.",
+   "action": "Do not read PM_table_<setting>_<load>.dat.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "f84c2515902e857cac8db5d6f03b32dea542934fd191b8022003cd892b4d75d0",
+    "b60e166a073de341ab51bfe41b398d4ab2178b27c0a5f76a0c4c2dea96ae27d5",
+    "7ee71da4c2b64e78839a62ce90a541a296fbddfceb4fec26e236b2fdae609eb5",
+    "34c3191b3c45d9abb12f594eb423aeb6a609c37032a9fbcf66e3f5a492a27209",
+    "1aec8f122ce30746b246d94918624a831ca7fb9a1fc6d1ad2adaa1da1f4dbdd3",
+    "817ca4541c3e40c616d202ccbde77745fb092353e22ae63aa34a70df746bc596"
+   ]
+  },
+  {
+   "id": "spada-t02-03-vb-point-mass-header",
+   "kind": "metadata",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-03/M3-L70-V01_t02-03_point_cw*.txt"
+   ],
+   "field": "header line `Mass (kg)`",
+   "as_shipped": "Mass  (kg):      10.e18",
+   "correct": "The values are for the point mass of table 4, 1e18 kg.",
+   "evidence": "The geometrical factor in the same header, -0.152995854e-4 - 0.570988302e-4 i, is the factor of GS's PM_plot_poi-*.dat for 1e18 kg and the G_point of table 14, and the factor is proportional to the mass (eq. 31). Without the Chandler wobble VB's |m| of the point load equals GS's to five digits at every epoch.",
+   "action": "Do not read the mass from the header. The converter reads no load parameter from these files.",
+   "status": "confirmed",
+   "discovered": "2026-09-15",
+   "sha256": [
+    "4c434c0574c8663ee0db886c4f7017a88624641cfba1c0d9f3ce263bd80806da",
+    "17185aa16b4fe81fd2e0819bf3e7e7011765c0c96a36a49f995f4b85d3f745c6"
+   ]
   }
  ]
 }

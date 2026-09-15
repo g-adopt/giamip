@@ -84,9 +84,11 @@ The fluid limit is `math.inf`, which is a different epoch from 1000 kyr.
 
 ## Spada (2011): results and scores
 
-`gia_mip.benchmarks.results.SpadaResult` holds one code's Love numbers
-(elastic, fluid and residues per mode), relaxation spectrum and U, V, N or
-their rates, in the layout of the converted reference files.
+`gia_mip.benchmarks.results.SpadaResult` holds one code's results for one test,
+in the layout of the converted reference files: Love numbers (elastic, fluid
+and residues per mode), the relaxation spectrum, Love numbers against time,
+the polar motion transfer function, U, V, N or their rates, polar motion and
+the length of day.
 
 ```python
 from gia_mip.benchmarks.results import SpadaResult
@@ -111,6 +113,35 @@ is the same number as mm/yr. The paper has no reference code, so
 `spada_score` scores against each contributor separately and names it in every
 row. An epoch is compared only when both results hold it exactly, so a fluid
 limit is never compared with GS's run at 1000 kyr.
+
+Tests 5/1 to 7/1, 4/1 and 3/2 use four further kinds of result.
+
+```python
+run = SpadaResult("t01-05", "radopt")
+run.add_time_domain_love_numbers("h", 2, time_kyr, h_t)        # one curve per quantity and degree
+
+run = SpadaResult("t01-04", "radopt")
+run.add_polar_motion_transfer_function("included", a_e, a_s, frequencies, residues)
+                                                               # complex, 1/kyr; A_e dimensionless
+
+run = SpadaResult("t02-03", "radopt")
+run.add_polar_motion("cap", "excluded", "m_x", time_kyr, m_x_deg)
+run.add_polar_motion("cap", "excluded", "m_rate_modulus", time_kyr, rate_deg_per_myr)
+run.add_length_of_day("cap", time_kyr, delta_lod_ms)
+```
+
+The Chandler wobble setting is `"included"` or `"excluded"`. Polar motion is
+in degrees and its rate in degrees per Myr, the units of table 14. The modes of
+the transfer function are stored slowest first, by the real part of a_j.
+
+`spada_score` compares Love numbers against time in log10 of time, over the
+time window of the case file where it gives one. It compares polar motion and
+the length of day linearly in time over the whole reference. With the Chandler
+wobble included, polar motion oscillates with a period of about 1.2 years, and
+the reference files sample it once a year. A solver result must therefore hold
+the reference's own times for that comparison to mean anything. The transfer
+function scores A_e and A_s, and scores the modes only when both results hold
+the same number of modes. GS holds three Maxwell modes that VB does not hold.
 
 ## GIAMIP: inputs
 
