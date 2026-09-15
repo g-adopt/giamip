@@ -18,18 +18,16 @@ to be the tree the conversions were made from. Archives are unpacked next to
 themselves.
 
 ::: {.callout-important}
-## Redistribution is agreed for some files only
+## Only granted files are downloaded
 
 `python -m gia_mip.data` refuses to download any file whose `permission` is
-not `granted`, and prints which one and why. The Martinec archives are
-granted and public. Everything else is not yet.
+not `granted`, and prints which one and why. Today every file in the manifest
+is granted and public: the Martinec archives, Kachuck's giapy files, the Spada
+archive and the GIAMIP inputs.
 
-The Spada archive and Kachuck's giapy files were supplied privately. The GIAMIP inputs
-came through the project's own shared folder, and the ice histories are
-re-gridded versions of third-party reconstructions that each carry their own
-terms. Until each supplier has agreed, the files are obtained from the
-supplier and placed in `data/original/` by hand, in the layout the manifest
-describes.
+A file added later starts as `requested` or `not_asked`. Until its supplier
+agrees, obtain the file from the supplier and put it in `data/original/` by
+hand, in the layout that the manifest describes.
 
 [The manifest](manifest.qmd) records the permission state of every file.
 :::

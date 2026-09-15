@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-14T12:23:41+00:00",
+ "generated": "2026-09-14T23:55:08+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/gia-mip/",
  "artifacts": {
@@ -10,8 +10,8 @@
    "source_citation": "GIAMIP protocol document. Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.",
    "supplier": "GIAMIP organisers",
    "received": "2026-09-11",
-   "permission": "requested",
-   "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged.",
+   "permission": "granted",
+   "notes": "Converted from .docx. The two embedded equation images are kept as base64 data URIs. The prose is unchanged. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "modified_from_supplied": "Converted from the supplied Word document to Markdown. The prose is unchanged and the two equation images are kept as base64 data URIs, but the sum is of our conversion and not of the .docx. The .docx was not kept; request it from the organisers if a byte-exact original is needed.",
    "bytes": 41130,
    "sha256": "277d584fb2e8d172c10b43bf7de05824fc72d32861a767e85d2883bf94ab90d6"
@@ -23,8 +23,8 @@
    "source_citation": "GIAMIP input distribution. The underlying reconstructions are third-party and each carries its own terms: ICE-6G_D (Peltier, Argus and Drummond), ICE-7G_NA (Roy and Peltier), PaleoMIST (Gowan et al. 2021), GLAC3 (Tarasov, unpublished).",
    "supplier": "GIAMIP organisers, through the shared input folder",
    "received": "2026-09-11",
-   "permission": "requested",
-   "notes": "The protocol table names GLAC3b; the filenames say GLAC3c_profile; the internal title and source attributes say GLAC3c_merge. All six files declare _FillValue = 0.0 on ice_thickness. PaleoMIST starts at 80 ka with 379 steps; the other five start at 122 ka with 463.",
+   "permission": "granted",
+   "notes": "The protocol table names GLAC3b; the filenames say GLAC3c_profile; the internal title and source attributes say GLAC3c_merge. All six files declare _FillValue = 0.0 on ice_thickness. PaleoMIST starts at 80 ka with 379 steps; the other five start at 122 ka with 463. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 315706629,
    "sha256": "f27723c81000473dff3f76da40be6cc12bcfc32a4c42bba421e3dad1a54742f6",
    "members": [
@@ -68,8 +68,8 @@
    "source_citation": "GIAMIP input distribution. Fretwell et al. (2013) Bedmap2; Pritchard et al. (2025) Bedmap3; Morlighem et al. (2020) BedMachine; GEBCO.",
    "supplier": "GIAMIP organisers, through the shared input folder",
    "received": "2026-09-11",
-   "permission": "requested",
-   "notes": "The source attribute of the BedMachine Antarctica v3 file names BedMachine Greenland twice and never names its Antarctic dataset. The other two files are correct. All three reference a grid_mapping variable named crs that does not exist in the file.",
+   "permission": "granted",
+   "notes": "The source attribute of the BedMachine Antarctica v3 file names BedMachine Greenland twice and never names its Antarctic dataset. The other two files are correct. All three reference a grid_mapping variable named crs that does not exist in the file. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 1429867,
    "sha256": "350348219f73598432d749d3a2115069109d2c8a3278eed4c04ba694d07d0b4d",
    "members": [
@@ -98,7 +98,8 @@
    "source_citation": "Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
    "supplier": "unknown; obtained through the G-ADOPT reference collection",
    "received": "2026-09-03",
-   "permission": "not_asked",
+   "permission": "granted",
+   "notes": "Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 159050,
    "sha256": "7971c270c231ee4a07f679a58cac5ab93fa70c61fb74b8184e4dd02480181edd"
   },
@@ -109,8 +110,8 @@
    "source_citation": "Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
    "supplier": "unknown; obtained through the G-ADOPT reference collection",
    "received": "2026-09-03",
-   "permission": "not_asked",
-   "notes": "Its load and time labels are shifted by one from the published tables, and its basin list holds a basin the paper does not use. It generates A, D1, D2, E1, E2 and F1, and contains no code for C2 or D3, so it cannot settle the case mapping on its own.",
+   "permission": "granted",
+   "notes": "Its load and time labels are shifted by one from the published tables, and its basin list holds a basin the paper does not use. It generates A, D1, D2, E1, E2 and F1, and contains no code for C2 or D3, so it cannot settle the case mapping on its own. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 15029,
    "sha256": "7c5a7bf47940c96cc104c704249325ab45715a7d9d627a42cf080423aceacd14"
   },
@@ -1052,8 +1053,8 @@
    "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414. The code is Kachuck, S. B. (2017), giapy, https://github.com/skachuck/giapy.",
    "supplier": "unknown; obtained through the G-ADOPT reference collection",
    "received": "2026-09-03",
-   "permission": "not_asked",
-   "notes": "A is case A. C2, D3, E2 and F1 are cases B, C, D and E, established from Martinec's archives resultsB_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the stale one in resultsA_2026.zip; see corrections.json.",
+   "permission": "granted",
+   "notes": "A is case A. C2, D3, E2 and F1 are cases B, C, D and E, established from Martinec's archives resultsB_2026.zip to resultsE_2026.zip; see AGENTS.md, Case identity. The A profile in this archive supersedes the stale one in resultsA_2026.zip; see corrections.json. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 641258,
    "sha256": "5ec150908bb1453d48015af477e82091d40d43e6a44cfff985569119615d41d1",
    "members": [
@@ -1153,8 +1154,8 @@
    "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
    "supplier": "William Scott, Australian National University",
    "received": "2023-07",
-   "permission": "not_asked",
-   "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record.",
+   "permission": "granted",
+   "notes": "A working copy, not a curated release. Forty-seven operating-system and GMT state files were removed before packing: .DS_Store, .gmtcommands4, .gmtdefaults4 and .GMT_bb_info. Nothing else was changed. The eleven README files inside T02* document the VILMA column layout and are part of the record. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-14.",
    "modified_from_supplied": "Packed into a tar archive from a directory tree, with forty-seven files removed: eighteen .DS_Store, fourteen .gmtcommands4, fourteen .gmtdefaults4 and one .GMT_bb_info. No file that was kept was changed. The 977 members and their individual sums are listed in the manifest and can be checked against the supplier's tree file by file.",
    "bytes": 14331092,
    "sha256": "96bfa337b600cdfcbcf4d2cb36d2f0a779442f1a6fc11da2f90608d50214face",

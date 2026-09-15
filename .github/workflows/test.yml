@@ -21,11 +21,12 @@ jobs:
         run: pytest -q
 
   test-with-data:
-    # The Martinec archives are public at https://data.gadopt.org/gia-mip/, so
-    # the runner downloads them over HTTPS with no secret. Credentials for the
-    # object store are needed only to upload, which is done by hand with
-    # scripts/upload_originals.py. Other collections join this job when their
-    # permission in the manifest reads `granted`.
+    # Every original (Martinec, Spada and the GIAMIP inputs) is public at
+    # https://data.gadopt.org/gia-mip/, so the runner downloads them over HTTPS
+    # with no secret. Credentials for the object store are needed only to
+    # upload, which is done by hand with scripts/upload_originals.py. Other
+    # collections join this job when their permission in the manifest reads
+    # `granted`.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -35,6 +36,6 @@ jobs:
       - name: Install
         run: pip install -e ".[test]"
       - name: Fetch the granted originals
-        run: python -m gia_mip.data --collection martinec2018
+        run: python -m gia_mip.data --collection martinec2018 --collection spada2011 --collection giamip
       - name: Test with data
         run: pytest -q -m data

@@ -30,9 +30,9 @@ inputs, which are larger.
 
 The files are held in the gadopt object store at data.gadopt.org. The
 fetcher downloads only files whose supplier has agreed to redistribution,
-which today is the Martinec archives. The Spada and GIAMIP originals are
-obtained from the supplier and placed in `data/original/` by hand.
-`docs/data/fetching.qmd` says how, and `docs/data/manifest.qmd` records the
+which today is every file: the Martinec and Spada archives, Kachuck's giapy
+files and the GIAMIP inputs.
+`docs/data/fetching.qmd` describes the fetcher, and `docs/data/manifest.qmd` records the
 state of every file.
 
 ## Layout
