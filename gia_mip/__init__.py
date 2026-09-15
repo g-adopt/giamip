@@ -28,13 +28,14 @@ corrections
 cases
     Look up a case, an earth model or a load table.
 benchmarks
-    Martinec (2018) case set-up, results, scores and conversion to NetCDF.
-    Spada (2011) readers are not written.
+    Martinec (2018) and Spada (2011) case set-up, results, scores and
+    conversion to NetCDF.
 mip
     GIAMIP input readers. The output writer and compliance wrapper are not
     written.
-plotting
-    Empty. Redraws of the published figures, and the comparison figures.
+
+Figures are drawn inline in the pages of ``docs/``, so the package holds no
+plotting code.
 """
 
 __version__ = "0.1.0.dev0"

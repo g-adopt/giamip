@@ -92,7 +92,11 @@ lives.
 
 **The GLAC3 version.** The protocol table says GLAC3b. The filenames say
 `GLAC3c_profile`. The attributes inside the files say `GLAC3c_merge`. The
-compliance checker expects a fourth spelling. Asked of the organisers.
+compliance checker expects a fourth spelling. On 2026-09-12, Holly Han, the
+lead of the protocol, confirmed that the delivered files are the intended
+inputs, and that each file combines GLAC3 versions a, b and c across the ice
+sheets. The case files give the ice history as `GLAC3_p1` to `GLAC3_p3`, with
+no version letter.
 
 **Exp06 and Exp07 have no input file.** They repeat Exp01 and Exp02 over 80
 ka and only the 122 ka histories were delivered, so the truncation is ours to

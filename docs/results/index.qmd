@@ -10,6 +10,9 @@ None of them has been run. A case here is a specification: what earth model,
 what load, over what time, on what grid, with which constants, and what to
 compare against.
 
+Each Spada test also has its own page, which shows its settings, its loads and
+its earth model. The "Published as" column of the Spada table links to it.
+
 ```{python}
 #| echo: false
 import sys, pathlib
@@ -22,7 +25,10 @@ out.append("## Spada et al. (2011)\n")
 out.append("| Case | Published as | Title | Class | Earth model | Contributors |")
 out.append("| --- | --- | --- | --- | --- | --- |")
 for c in cases.cases("spada2011"):
-    out.append(f"| `{c['id']}` | {c['published_name']} | {c['title']} | "
+    # The published name links to the test's own page, which shows its inputs.
+    page = c["id"].removeprefix("spada2011-")
+    out.append(f"| `{c['id']}` | [{c['published_name']}](../cases/spada2011/{page}.py) | "
+               f"{c['title']} | "
                f"{c['test_class']} | {c['earth_model']} | "
                f"{', '.join(c['reference_data']['contributors'])} |")
 

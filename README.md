@@ -40,9 +40,9 @@ state of every file.
 ```
 gia_mip/     the package: data.py (fetch and verify), grids.py (the
              Gauss-Legendre grid), corrections.py (known defects in the
-             originals), benchmarks/ (Martinec case set-up, results, scores
-             and conversion) and mip/ (GIAMIP input readers). Not written:
-             Spada readers, the GIAMIP output writer and plotting/
+             originals), benchmarks/ (Martinec and Spada case set-up,
+             results, scores and conversion) and mip/ (GIAMIP input
+             readers). Not written: the GIAMIP output writer
 cases/       one JSON file per case, in benchmarks/ and giamip/
 models/      earth-model parameter tables referenced by the cases
 docs/        the Quarto site: one page per collection, per reference table and
@@ -81,6 +81,29 @@ under what terms.
 Some of the original files contain defects. `docs/data/corrections.qmd` lists
 every one that is known, with the evidence. The readers apply the corrections.
 The original files are never edited.
+
+## Correspondence about the GIAMIP inputs
+
+We raised two defects in the GIAMIP inputs with the GIAMIP organisers. The
+correspondence is not in this repository, so this section records the result.
+
+**GLAC3 version names** (correction `glac3-version-naming`). The protocol
+table gives the ice history of Exp03, Exp04 and Exp09 to Exp11 as GLAC3b. The
+delivered files are `iceHistory-GLAC3c_profile1.nc` to
+`iceHistory-GLAC3c_profile3.nc`. On 2026-09-12, Holly Han, the lead of the
+protocol, confirmed that these files are the intended inputs. Each file
+combines GLAC3 versions a, b and c, with different versions for different ice
+sheets. The case files give the ice history as `GLAC3_p1`, `GLAC3_p2` or
+`GLAC3_p3`, with no version letter.
+
+**Topography source attribute** (correction `topography-source-attribute`).
+In `bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc`, the `source` attribute
+names BedMachine Greenland twice. The first of the two entries must name
+BedMachine Antarctica v3. We reported this defect to Jan Swierczek-Jereczek on
+2026-09-12. Until a corrected file arrives, only the filename names the
+Antarctic dataset correctly. A corrected file has a new SHA-256 sum, and
+`tests/test_corrections.py` then fails until someone checks the correction
+against the new file.
 
 ## Licence
 
