@@ -49,23 +49,75 @@ submissions: `u` is vertical displacement, `v` horizontal, `e` geoid, in
 metres and metres per year, with `*cost` the fine grid and `*costg` the
 global grid, both poles omitted.
 
-## Two traps already recorded
+## Reading the data
 
-Both were found by a G-ADOPT script that reads this archive, and both are
-silent.
+`scripts/decode_spada_layouts.py` decodes the 87 GMT scripts into
+`gia_mip/resources/spada_column_layouts.json`. Its `files` table names every
+file a reader uses, keyed by the path under `data/original/`, and says what
+each column holds, in which unit and at which epoch, with the evidence. For the
+files no script describes, the evidence is the README files, the file headers
+and arithmetic on the values: the unit of a spectrum is fixed by comparing it
+with the relaxation times of the `.mod` file, and the sign of a residue by the
+fluid limit of the normal mode sum at degree 2.
 
-The `.ela`, `.flu` and `.res` files hold **absolute values** of the residues,
-because they exist to make a logarithmic plot. They reconstruct `h` correctly
-and get `l` and `k` wrong. The `.dat` files are signed; read those.
+`gia_mip.benchmarks.spada2011` reads those files and writes one NetCDF file per
+test to `data/converted/spada2011/`, in the layout of `SpadaResult`. Run
+`scripts/convert_spada2011.py` after the decoder. Five tests are converted:
 
-The residue lists have **twelve** entries while the relaxation spectrum has
-nine. Positions 6, 9 and 12 are Maxwell modes of vanishing strength. Drop
-them by fixed position: dropping by magnitude is right at degree 2 and drops
-four modes at degree 128, where a real mode is also small.
+| Test | Converted | Not in the archive |
+| --- | --- | --- |
+| 1/1 relaxation spectra | GS, RR, VB, ZM | |
+| 2/1 loading Love numbers | GS, RR, VB, ZM | |
+| 3/1 tidal Love numbers | GS, RR, VB | ZM |
+| 1/2 U, V, N | GS (cap, disc, point), VK (cap, disc) | BL, PG, ZM |
+| 2/2 rates of U, V, N | GS (cap, disc, point), VK (cap, disc) | BL, PG |
 
-## Not decoded yet
+Tests 4/1, 5/1, 6/1, 7/1 and 3/2 are not converted. Their quantities, the polar
+motion transfer function, Love numbers as functions of time, degree-one Love
+numbers, polar motion and length of day, are not held by the result class, and
+several of their files are not decoded. Each case file records the reason per
+contributor in `reference_data.not_converted`.
 
-The 87 GMT scripts in this archive have not been put through
-`scripts/decode_gmt_layouts.py`, so the column layouts for the Spada data
-files are not written down the way the Martinec ones are. That is the next
-piece of work on this collection.
+## Which contributor is the reference
+
+The paper has no reference code: its figures overlay the contributors and it
+judges agreement by eye. `gia_mip.benchmarks.metrics.spada_score` therefore
+scores a result against each contributor separately, and every row names the
+contributor. No average of the contributors is formed, because an average is a
+result that no code produced. Where two contributors are available, GS and VK
+in tests 1/2 and 2/2, their own difference is the spread a solver can be judged
+against: up to 1.7 m in U near the cap edge at 10 kyr, which is 0.6 per cent of
+the peak.
+
+## Traps
+
+Every one is an entry in [the corrections](../data/corrections.qmd), pinned to
+the versions of the files it was found in. The ones that give a wrong number
+with no error:
+
+The `.res` files hold **absolute values** of the residues, because they exist
+to make a logarithmic plot. They reconstruct `h`, whose residues have one sign,
+and give `l` and `k` wrong. The `.dat` files are signed; read those.
+
+GS's residue lists have **twelve** entries while the relaxation spectrum has
+nine. Positions 6, 9 and 12 are Maxwell modes of vanishing strength. Drop them
+by fixed position: dropping by magnitude is right at degree 2 and wrong at
+degree 128, where a real mode is also small.
+
+VB prints its residues with the **opposite sign** to the other codes, and ZM
+lists its modes **fastest first** where the others list them slowest first. The
+converted files hold every residue in the paper's convention,
+h_f = h_e - sum r_j / s_j, and every mode slowest first.
+
+The `.mod` files of test 1/1 hold the relaxation time tau_j **in years**, not
+s_j in 1/kyr: s_j = -1000 / tau_j.
+
+The GS profiles of tests 1/2 and 2/2 put the geoid in **column 5**; column 4 is
+the longitudinal displacement, zero along the meridian. The rate files label
+column 2 in kyrs, and it is in mm/yr. VK stores rates in m/yr. Beside the six
+epoch files, `disp_tinf_cap.dat`, `rate_tinf_cap.dat`, `disp_t3_disc.dat` and
+`rate_t3_disc.dat` are runs with a different load mass, and are not converted.
+GS's last epoch is a run at 1000 kyr, not the fluid limit, and is stored at 1000.
+
+The point load files in `T02/` are summed to degree 512, where the case
+prescribes 128.

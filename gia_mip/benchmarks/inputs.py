@@ -1,4 +1,7 @@
-"""Everything a solver needs to set up one Martinec et al. (2018) benchmark case.
+"""Everything a solver needs to set up a benchmark case.
+
+`MartinecCase` sets up one Martinec et al. (2018) case, and `SpadaCase`, at the
+end of this module, one Spada et al. (2011) test.
 
 A solver, radopt or G-ADOPT, needs the same five things for every case: the
 earth model, the ice load as a function of position and time, the initial
@@ -29,6 +32,7 @@ constant, because GIAMIP uses different values.
 from __future__ import annotations
 
 import dataclasses
+import math
 import re
 
 import numpy as np
@@ -347,3 +351,244 @@ class MartinecCase:
                 note=s.get("note"),
             ))
         return out
+
+
+# =====================================================================
+# Spada et al. (2011)
+# =====================================================================
+
+SPADA_COLLECTION = "spada2011"
+
+# A grid description of a case file or of loads/spada2011.json, for example
+# `0 to 25 degrees at 0.25 degree spacing` or
+# `colatitude 0 to 2.5*alpha at 0.25 degree spacing`.
+_GRID = re.compile(r"(?:colatitude )?(?P<lo>[\d.]+) to (?P<hi>[\d.]+(?:\*alpha)?)"
+                   r"(?: degrees)? at (?P<step>[\d.]+) degree spacing")
+
+
+class SpadaCase:
+    """The set-up of one Spada et al. (2011) test, from its case file and the load table.
+
+    The ten tests share one earth model family, three analytic loads and one
+    time history. This class turns the case file, ``loads/spada2011.json`` and
+    the earth model file into numbers, so a solver re-types no parameter. It
+    computes no response.
+
+    Parameters
+    ----------
+    case
+        ``t02-01`` or ``spada2011-t02-01``.
+
+    Conventions
+    -----------
+    Angles are in degrees; for a load, colatitude is the angle from the load
+    centre. Epochs are in kyr since the load was applied, with ``math.inf``
+    for the fluid limit. Surface density and its Legendre coefficients are in
+    kg/m2, and sigma(theta) = sum_n sigma_n P_n(cos theta). Densities and the
+    earth radius come from the load table and never from a module constant,
+    because GIAMIP uses other values.
+    """
+
+    def __init__(self, case: str):
+        short = case.lower().removeprefix(f"{SPADA_COLLECTION}-")
+        self.case_id = f"{SPADA_COLLECTION}-{short}"
+        self.definition = cases.case(self.case_id)
+        # Looked up through gia_mip.cases at construction, so a changed table
+        # is followed and no value is cached in this module.
+        self.load_table = cases.loads(SPADA_COLLECTION)
+        self.earth_model = cases.earth_model(self.definition["earth_model"])
+        constants = self.load_table["constants"]
+        self.ice_density: float = float(constants["ice_density_kg_m3"])
+        self.water_density: float = float(constants["water_density_kg_m3"])
+        # 6371 km, table 2 of the paper. Taken from the load table and not from
+        # the earth model, because VSS96 has no layer table here.
+        self.earth_radius_m: float = float(constants["earth_radius_m"])
+        parameters = self.definition["parameters"]
+        self.parameters = parameters
+        self.loads: tuple[str, ...] = tuple(parameters.get("loads", ()))
+        self.outputs: list[str] = list(self.definition["outputs"])
+
+    def __repr__(self) -> str:
+        return (f"SpadaCase({self.case_id!r}: {self.definition['title']}, "
+                f"earth model {self.earth_model['id']}, loads {self.loads})")
+
+    # ------------------------------------------------------------ set-up
+
+    @property
+    def load_centre(self) -> tuple[float, float] | None:
+        """Colatitude and longitude of the load centre in degrees, None for no load.
+
+        Tests 1/2 and 2/2 put the load on the north pole; test 3/2 moves its
+        centroid to colatitude 25, longitude 75.
+        """
+        if not self.loads:
+            return None
+        centroid = self.parameters.get("load_centroid")
+        if centroid is not None:
+            return (float(centroid["colatitude_deg"]), float(centroid["longitude_deg"]))
+        if self.parameters.get("placement") != "north pole":
+            raise ValueError(f"{self.case_id}: no load placement in the case file")
+        return (0.0, 0.0)
+
+    @property
+    def epochs_kyr(self) -> tuple[float, ...]:
+        """The epochs to output, with the string ``infinity`` read as ``math.inf``."""
+        return tuple(math.inf if e == "infinity" else float(e)
+                     for e in self.parameters.get("epochs_kyr", ()))
+
+    @property
+    def harmonic_degrees(self) -> tuple[int, int] | None:
+        """The lowest and highest harmonic degree, or None where the case gives none."""
+        if "harmonic_degrees" in self.parameters:
+            lo, hi = self.parameters["harmonic_degrees"]
+            return (int(lo), int(hi))
+        if "harmonic_degree" in self.parameters:
+            n = int(self.parameters["harmonic_degree"])
+            return (n, n)
+        return None
+
+    def earth_layers(self) -> dict[str, np.ndarray]:
+        """The layers of the earth model as arrays, surface first.
+
+        Same layout as `MartinecCase.earth_layers`. VSS96, the model of test
+        6/1, has no layer table in ``models/vss96.json`` yet, and asking for its
+        layers raises instead of returning a wrong model.
+        """
+        layers = self.earth_model.get("layers")
+        if not layers:
+            raise ValueError(f"earth model {self.earth_model['id']} has no layer table")
+        viscosity = [np.inf if layer["rheology"] == "elastic" else float(layer["viscosity_pa_s"])
+                     for layer in layers]
+        return {
+            "top_radius_m": np.array([l["top_radius_km"] * 1e3 for l in layers]),
+            "bottom_radius_m": np.array([l["bottom_radius_km"] * 1e3 for l in layers]),
+            "density_kg_m3": np.array([float(l["density_kg_m3"]) for l in layers]),
+            "shear_modulus_pa": np.array([float(l["shear_modulus_pa"]) for l in layers]),
+            "viscosity_pa_s": np.array(viscosity),
+            "rheology": np.array([l["rheology"] for l in layers]),
+        }
+
+    # ------------------------------------------------------------- loads
+
+    def _load(self, load: str) -> dict:
+        """One load of the table, refusing a name the table does not hold."""
+        table = self.load_table["loads"]
+        if load not in table:
+            raise ValueError(f"load must be one of {tuple(table)}, not {load!r}")
+        return table[load]
+
+    def load_mass(self, load: str) -> float:
+        """Total mass of a load in kg, from its closed form.
+
+        cap: rho h 2 pi a^2 (1 - cos alpha) 2/3, the integral of the square-root
+        profile; disc: rho h 2 pi a^2 (1 - cos alpha); point: the mass of the
+        table. With h = 1500 m for the cap and 1000 m for the disc the two are
+        equal, 3.607171340900778e18 kg, which TABOO prints in every header.
+        """
+        spec = self._load(load)
+        if load == "point":
+            return float(spec["mass_kg"])
+        cos_alpha = np.cos(np.radians(float(spec["angular_radius_deg"])))
+        mass = (self.ice_density * float(spec["thickness_m"]) * 2.0 * np.pi
+                * self.earth_radius_m ** 2 * (1.0 - cos_alpha))
+        return float(mass * 2.0 / 3.0) if load == "cap" else float(mass)
+
+    def surface_density(self, load: str, colatitude_deg) -> np.ndarray:
+        """Surface mass density in kg/m2 at an angle from the load centre.
+
+        cap: rho h sqrt((cos theta - cos alpha) / (1 - cos alpha)) inside alpha;
+        disc: rho h inside alpha; both zero beyond. The point load is a delta
+        function with no value at a point, so it raises ValueError.
+        """
+        spec = self._load(load)
+        if load == "point":
+            raise ValueError("the point load is a delta function and has no surface density")
+        theta = np.radians(np.asarray(colatitude_deg, dtype=float))
+        cos_alpha = np.cos(np.radians(float(spec["angular_radius_deg"])))
+        rho_h = self.ice_density * float(spec["thickness_m"])
+        if load == "disc":
+            # The edge itself, theta = alpha, belongs to the disc.
+            return np.where(np.cos(theta) >= cos_alpha, rho_h, 0.0)
+        ratio = (np.cos(theta) - cos_alpha) / (1.0 - cos_alpha)
+        return rho_h * np.sqrt(np.clip(ratio, 0.0, None))
+
+    def legendre_coefficients(self, load: str, degrees) -> np.ndarray:
+        """sigma_n in kg/m2 for the given degrees, from the closed forms of table 4.
+
+        The coefficients satisfy sigma(theta) = sum_n sigma_n P_n(cos theta), so
+        sigma_n = (2n + 1)/2 integral of sigma P_n d(cos theta), and 4 pi a^2 sigma_0
+        is the load mass.
+
+        cap: sigma_n = -rho h / (4 (1 - cos alpha)) [ (T_{n+1} - T_{n+2}) / (n + 3/2)
+             - (T_{n-1} - T_n) / (n - 1/2) ], with T_k = cos(k alpha) as written
+             in loads/spada2011.json. It also holds at n = 0, where it gives
+             rho h (1 - cos alpha) / 3.
+        disc: sigma_n = rho h / 2 [ P_{n-1}(cos alpha) - P_{n+1}(cos alpha) ], and
+             rho h (1 - cos alpha) / 2 at n = 0.
+        point: sigma_n = m (2n + 1) / (4 pi a^2).
+
+        The cap expression subtracts nearly equal cosines at high degree; at
+        n = 128 it agrees with a quadrature of the profile to 1e-10 relative.
+        """
+        spec = self._load(load)
+        n = np.asarray(degrees, dtype=int)
+        if np.any(n < 0):
+            raise ValueError("degrees must be non-negative")
+        if load == "point":
+            return float(spec["mass_kg"]) * (2 * n + 1) / (4.0 * np.pi * self.earth_radius_m ** 2)
+        alpha = np.radians(float(spec["angular_radius_deg"]))
+        rho_h = self.ice_density * float(spec["thickness_m"])
+        c = np.cos(alpha)
+        if load == "cap":
+            def t(k):
+                return np.cos(k * alpha)
+            return (-rho_h / (4.0 * (1.0 - c))
+                    * ((t(n + 1) - t(n + 2)) / (n + 1.5) - (t(n - 1) - t(n)) / (n - 0.5)))
+        # The disc needs P_{n-1} and P_{n+1} at cos alpha, from the three-term
+        # recurrence up to the highest degree asked for.
+        n_max = int(n.max()) + 1 if n.size else 1
+        p = np.zeros(n_max + 1)
+        p[0] = 1.0
+        if n_max >= 1:
+            p[1] = c
+        for k in range(1, n_max):
+            p[k + 1] = ((2 * k + 1) * c * p[k] - k * p[k - 1]) / (k + 1)
+        out = np.where(n == 0, rho_h * (1.0 - c) / 2.0,
+                       rho_h / 2.0 * (p[np.maximum(n - 1, 0)] - p[n + 1]))
+        return out
+
+    # ------------------------------------------------------------- grids
+
+    def _grid(self, name: str) -> np.ndarray:
+        """A colatitude grid from the case file, or else from the load table.
+
+        Test 1/2 writes its grids into its case file; test 2/2 says only "as
+        test 1/2", so the load table's `output_grids` is the fallback, where the
+        near field ends at 2.5 alpha.
+        """
+        text = self.parameters.get("grids", {}).get(name) or self.load_table["output_grids"][name]
+        match = _GRID.fullmatch(text)
+        if not match:
+            raise ValueError(f"{self.case_id}: cannot read the {name} grid {text!r}")
+        lo, step = float(match.group("lo")), float(match.group("step"))
+        hi_text = match.group("hi")
+        if hi_text.endswith("*alpha"):
+            radii = {float(self._load(l)["angular_radius_deg"]) for l in self.loads
+                     if "angular_radius_deg" in self._load(l)}
+            if len(radii) != 1:
+                raise ValueError(f"{self.case_id}: the loads do not share one radius")
+            hi = float(hi_text.removesuffix("*alpha")) * radii.pop()
+        else:
+            hi = float(hi_text)
+        # A count from the rounded ratio, so that 0.25 degree steps land exactly
+        # on 25.0 and are not lost to floating point in arange.
+        count = int(round((hi - lo) / step)) + 1
+        return lo + step * np.arange(count)
+
+    def near_field_colatitudes_deg(self) -> np.ndarray:
+        """0 to 2.5 alpha = 25 degrees at 0.25 degree, 101 points."""
+        return self._grid("near_field")
+
+    def global_colatitudes_deg(self) -> np.ndarray:
+        """0 to 180 degrees at 1 degree, 181 points."""
+        return self._grid("global")

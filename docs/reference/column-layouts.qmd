@@ -125,10 +125,15 @@ case to `data/converted/martinec2018/`. Run `scripts/convert_martinec2018.py`
 after `scripts/decode_gmt_layouts.py`. The module docstring describes the
 groups and attributes of the output.
 
-## What is not decoded
+## Spada et al. (2011)
 
 The Spada et al. (2011) archive holds 87 further GMT scripts covering its ten
-tests. They are not decoded yet. Eleven README files inside the `T02`
-directories do document the VILMA submissions: `u` is vertical displacement,
-`v` is horizontal, `e` is geoid, in metres and metres per year, with `*cost`
-holding the fine grid, `*costg` the global grid, and both poles omitted.
+tests, decoded by `scripts/decode_spada_layouts.py` into
+`gia_mip/resources/spada_column_layouts.json`. Its `files` table gives the
+layout of every file `gia_mip.benchmarks.spada2011` reads, keyed by the path
+under `data/original/`. Eleven README files inside the `T02` directories
+document the VILMA submissions: `u` is vertical displacement, `v` is
+horizontal, `e` is geoid, in metres and metres per year, with `*cost` holding
+the fine grid, `*costg` the global grid, and both poles omitted. The files of
+tests 4/1 to 7/1 and 3/2 are decoded only as far as the scripts draw them, in
+`by_file`.

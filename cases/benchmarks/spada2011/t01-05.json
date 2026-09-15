@@ -35,7 +35,12 @@
       "GSA",
       "VK"
     ],
-    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of gia_mip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
+    "not_converted": {
+      "GS": "T01-05/ holds [hlk]_L_T01-05_GS.dat and .mod, which the scripts draw (by_file in spada_column_layouts.json). SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet.",
+      "GSA": "T01-05/ holds h.dat, l.dat and k.dat, drawn as ALMA and attributed to GSA by the decoder. SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet.",
+      "VK": "T01-05/ holds [hlk]_L_T01-05_VK.dat and .mod. The .mod file of k differs from its PAPER copy in every row, and which run the paper used is not established (correction spada-paper-copy-differs-t01-05-vk). SpadaResult holds Love numbers with residues, relaxation spectra and surface profiles, and not Love numbers as functions of time, so this test has no reader yet."
+    }
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "not converted: no result class holds time-domain Love numbers."
 }

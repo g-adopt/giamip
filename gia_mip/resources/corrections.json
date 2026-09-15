@@ -198,7 +198,18 @@
    "evidence": "Nine of VB's tidal Love number files exist twice, once in T01-03/ and once in T01-03/PAPER/. The .ela and .flu copies differ by one row: PAPER adds degree 257, for example `257 0.70665666E-02` in h_T_T01-03_VB.ela. The .res copies differ in value as well: 8 of the first 2295 rows differ, by up to 1.07 in the residue. Every other data file in T01-03 is byte identical between the two directories, so this is not a wholesale re-run of the test.",
    "action": "Name the directory in the case file. Do not glob T01-03 for a file that exists in both, and do not assume the PAPER copy is the published one until the redraw of the published figure settles it.",
    "status": "unverified",
-   "discovered": "2026-09-13"
+   "discovered": "2026-09-13",
+   "sha256": [
+    "1e03610a407999db4f5a1f6fe6b827d630c42966241d0b2872f707eaa20e44c4",
+    "406841223d7bc5d494015dfd0e3c73e318f4677eae28262640acb9f3c11673e5",
+    "60bc29e29ea1449a81a78a84380f8c90240559c254632c65bb9973fccc72e204",
+    "a267cab46fbc38709d29c7906cd63346f935c4d11c71c737159c4703a15d265a",
+    "b0dc8be053ccb31198c373ae4c5b8a721dec1dc5614005c9b072580fdae0215e",
+    "cf2ec2508823d448951efa71ef204157f1734dce48ce15337eccc97c82b85101",
+    "d444e32df6af1b2e01b82602cef68103ad639102fdb454a7427d85c983c0707a",
+    "dd4c4bc781448b00aaab2dd9c2cf2decbbbccdab7915afaa2a37dbab728b92f5",
+    "eede314ce70d4ede2fd6cb705a8510866189ba54cea906bb2d21b5938df0f905"
+   ]
   },
   {
    "id": "spada-paper-copy-differs-t01-05-vk",
@@ -212,14 +223,17 @@
    "evidence": "All 584 data rows differ. The largest difference in the Love number column is 0.934, which is 28 times the value itself at its worst point, so this is a different run and not a difference of print precision. The other 40 data files of T01-05 that exist in both directories are byte identical, and only the plotting script h_love_time.gmt differs alongside it.",
    "action": "Name the directory in the case file. Redrawing the published figure of test 1/5 and comparing it against the PostScript shipped in the archive is what decides which copy the paper used.",
    "status": "unverified",
-   "discovered": "2026-09-13"
+   "discovered": "2026-09-13",
+   "sha256": [
+    "5fdee3227c5279b2834fcddaf368d1ad71972cecb3866578a87c3cc40bf16202"
+   ]
   },
   {
    "id": "spada-t02-01-contributors-without-data",
    "kind": "truncated",
    "applies_to": [
-    "spada2011/spada2011-cost-es0701/T02-01",
-    "spada2011/spada2011-cost-es0701/T02-02"
+    "spada2011/spada2011-cost-es0701/T02-01/plot_PAP.gmt",
+    "spada2011/spada2011-cost-es0701/T02-02/plot_PAP.gmt"
    ],
    "field": "reference_data.contributors",
    "as_shipped": "The case files list BL, GS, PG, VK and ZM for test 2/1 and BL, GS, PG and VK for test 2/2, from the paper's table 1",
@@ -227,14 +241,20 @@
    "evidence": "The GMT scripts of T02-01 and T02-02 draw two series per panel, one from the per-epoch files disp_t*_cap.dat and disp_t*_disc.dat and one from ./output_sec2parab/ and ./output_sec2disc/, attributed to GS and VK by the banner comments and by the header of u2cost.dat, which reads `performed by spectral FE code, Klemann at GFZ`. No file anywhere in the archive is attributable to BL, PG or, for these two tests, ZM.",
    "action": "Score against GS and VK for these two tests. A contributor named in the case file with no data in the archive must fail loudly, not be skipped.",
    "status": "confirmed",
-   "discovered": "2026-09-13"
+   "discovered": "2026-09-13",
+   "sha256": [
+    "4c71af8e88ecf94a6f881d79e9d9f1c4cb6dec88eae72ef41f1bf6f86462b24d",
+    "67e93369c2a0f470b96da5e656c7bf1c4e267af21b647110d52f7a38597dceb4"
+   ]
   },
   {
    "id": "spada-t02-time-layout-differs-by-contributor",
    "kind": "trap",
    "applies_to": [
-    "spada2011/spada2011-cost-es0701/T02-01",
-    "spada2011/spada2011-cost-es0701/T02-02"
+    "spada2011/spada2011-cost-es0701/T02-01/disp_t*_*.dat",
+    "spada2011/spada2011-cost-es0701/T02-02/rate_t*_*.dat",
+    "spada2011/spada2011-cost-es0701/T02-0[12]/output_sec2parab/*2cost*.dat",
+    "spada2011/spada2011-cost-es0701/T02-0[12]/output_sec2disc/*2cost*.dat"
    ],
    "field": "time axis",
    "as_shipped": "GS writes one file per epoch and VK writes one column per epoch",
@@ -242,7 +262,453 @@
    "evidence": "GS ships disp_t0_cap.dat, disp_t1_cap.dat, disp_t2_cap.dat, disp_t5_cap.dat, disp_t10_cap.dat and disp_t1000_cap.dat, each with colatitude in column 1 and the three quantities in columns 2, 3 and 5. Column 4 is read by no panel of the published figure. VK ships u2cost.dat, v2cost.dat and e2cost.dat, each with colatitude in column 1 and one column per epoch in columns 2 to 6, as the file header states: `# Epoch (kyr): 0 1 2 5 10`. Its README adds that *cost.dat is the fine grid and *costg.dat the global one, and that the poles are omitted.",
    "action": "The reader presents both as colatitude by epoch. Do not assume that the three quantities are columns 2, 3 and 4 of the GS files: the geoid is column 5.",
    "status": "confirmed",
-   "discovered": "2026-09-13"
+   "discovered": "2026-09-13",
+   "sha256": [
+    "0416e24e6b38d00d2890e831553b5daaf545fa6de1f9dd89ed8056c6fdf63c1b",
+    "068b05947c3aa762f0c636b6fb7a5b8861bbadb0e3cb0e72d9f635b63d353800",
+    "0c8c88386ae4b8fc7f11727cb4fe48023f6e44561a3f894c2ccfbc1c8c9eac7c",
+    "10364e675a4450cfb0bd58808e033e7a548939c8ba26acb6dbf622f4e660b3ac",
+    "131786d50e3f3eb706685483f9f83d43e5047ff6a038b622548930a8819e97c0",
+    "15544f17336dc25d3d89b614ece6497f78849d1cf794a610746773aa7cbe2244",
+    "1a6bcd26ffe289b55e7cfdfb943fb3afbd0fbdb6ca124d7034739758f1f81947",
+    "1afdb1e00de31a4994bcd4fad33a63f0c91c127935b80616cb273324f7135305",
+    "262af1bd1016d2b587c12f2e916db747cb9b48181625a1c095e20f34bec62056",
+    "2657919bc7ca00e3e39f957055e891c945c6bac3a28283bf09bc896421d05866",
+    "3c3b48453db52e7c7063e6aa89b1d6ecbda8dabfd13a2a96656ecd506bcd6316",
+    "3e1ec9fc5f9bd52e5cec9a20dbb2065be617a219d0223aad506951529d6b9bb1",
+    "3e3dc308ae795861718f528a7d791b4a0a8e9b1c5e87c00755d96cb25d066b07",
+    "48fb7d7badc029cd4098ed8729282ba899f44faa8200d0d860f8800bacad9282",
+    "52cca987573e5a981c98ae246c078d4869ba25b06a223f2671629079b260ed45",
+    "55c826c05b0a3c435f83495eb7b6c6db8611cceca3a339ed9dbfbae89a30a86b",
+    "591bc03d1fcda8821f6748d8e02e94d2c605138a59559791d5d7074967e3660e",
+    "5da9e44df4a267e630d4b0d9dca95e059e7b14e79851c981ae96de847c7624eb",
+    "605728f93b404af248dac0586169d59fcd3285e035ecbaefcd3383d33045a53c",
+    "640c7099231bc2c80a34e165c24b28aaf4c89bc20e8492bba038579380fe37bb",
+    "69acdde7016c5346d649678c9336ba62afcdc458ce914503412e1d1ced299545",
+    "730afd70732bdc9abd8fe9fc76317046f3f699d83d408b7298739e85325a3fac",
+    "738aac50ccbc56aaf187ca6a7f5a7b6b0bb93986ce7a0ae279904a743dba61dc",
+    "7aef8fa248775664e329ed899ac99711cfd2fcf743ecb8b9624e6f0fa820797f",
+    "7cca5ea54cf7ea24a1277570c398c44b2145f69ab0b8e10f76b170d42d8ec045",
+    "81f2f4280c45068aea492dbd8244e94e6952d961cc3850b079130d6c1c050228",
+    "848402ee4672ec72d057871b72ba2edd8d0cc4cab8827e7915ade76690cea4dd",
+    "8b0bb5c8cf1bf5f0f8fef68c0ef74f8112ee8f86fdbb724743291b7acd7a4adb",
+    "8b9d1a06af8ea9b7f9f7503dd350a8910b402fb9e5b78bb3c05675c9ffd4c414",
+    "8d2576d6cb9ac4d07f90f2f677cf2ac4f07230c721362420cd8f85a9b1fcd6ad",
+    "8d34ca611ae0bd3c7c03d9774e514571181910f2ba7fb4bca7941aa0406c8055",
+    "9f0a4b8023007c70364032f6db2a5a7537fa41449554cdd432d53116647cc3eb",
+    "9fe23e7e4294e02dca202d42e712bdcab127493e18ea0e41524aa94bbeaa90dd",
+    "a1870bedfe1c248e4b0ff49ca8745b63ab091d980f346e544b051e1f1f935842",
+    "a377614680654b330b1d47c28bbcf2c0a7420c6cf5e0f55b9c0619565717d722",
+    "ac6ebcbd71a5bd884b78303cf81d72231a36cda845882219517f6300a726fb00",
+    "b0a9f410d1c4abaa5a474dcccb4d62460edec992d69868ac6b8781949af86438",
+    "bd9341f095fe1288402768def4967767a180815d7c5ebc701364cada4fa2492d",
+    "c98df547f256a44ddc57463fda1289a7955034f89c0b8eb75df796f085460a5b",
+    "d2f4db74675512a7431b8d372499beb0b12a108f2a0a86887ac63775d2c94a8c",
+    "d497d9aa30ad8db11ebfe604e919818302e748283b936d00f18a00d63dc27ac3",
+    "d5de53c28b276e552f825e71d69ffb64e41e789319906a467dcc7fd966d1d23b",
+    "d83814a7ac8e975cd70e3281ae4baa0985e3129dd6558bf3dd85d4250bf18cb3",
+    "db4d8ce7607af5f4a0c1b8366a3034a90e95a1d4f85f1a4d9de3d07aeac1c8ab",
+    "dc470bec4eedaa717350a3a167a928a98be19dfee4b34efddd88b0b395840ec7",
+    "e22d88375c28c02fe351dca0d4f8a74aa3317ecb562a540d35abd5f8ac19c683",
+    "e575515556eb0b379d723aacfabdf4b97546c54b04dd86d8cf4eb902530efdcd",
+    "f394949d6bffb906265142ac1663177721de4e36702012ca2d22e26cd2e4fbfb",
+    "f55fcfed3c946082625f2fc7cae69e42b90bbe7a402bcd77b1dd67712f88d5a9",
+    "faecc970f2bb0e030af66540e2a800142123453472ae0494c6ae3ce3a214b055",
+    "fedff707ac216f77c594c746ced17fbb1e26402f7a4231f63628173ef4435683",
+    "ffc86fdb161dd8b008ed18fc288d3013be20164ebff8057c38295090e9ed7b0e"
+   ]
+  },
+  {
+   "id": "spada-t01-residue-files-absolute",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.ela",
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.flu",
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_??.res"
+   ],
+   "field": "whole file",
+   "as_shipped": "Each contributor's Love numbers of tests 2/1 and 3/1 exist twice: a signed table in the .dat file, and a plotting copy split into .ela, .flu and .res files. The .res files hold the absolute value of every residue, one (degree, residue) pair per line, and each of the three files starts with a line such as `*** ELASTIC    # File <<h.dat>>` that is not a comment.",
+   "correct": "The signed residues are in the .dat file. The .ela and .flu columns equal columns 2 and 3 of the .dat file, sign included.",
+   "evidence": "Measured on the 18 top-level plotting copies of GS, RR and VB in T01-02 and T01-03: no .res value is negative, while the .dat residues carry both signs, and GS's .res files have 12 lines per degree (3060 for 255 degrees), the Maxwell modes included. Every .ela and .flu value equals the .dat value with its sign. Residues read from .res reconstruct h, which has residues of one sign, and give l and k wrong in the fluid limit h_f = h_e - sum r_j / s_j.",
+   "action": "Read the .dat file. The converter reads no .ela, .flu or .res file.",
+   "status": "confirmed",
+   "discovered": "2026-09-13",
+   "sha256": [
+    "014f9d4836150a73809225f0f5f64c3380caca9ad213bc621934836f2ce221f0",
+    "0b9dad0d9af94bfa6efcd6a1cb89c1529bb13f46c758997c65f18ffb197787fe",
+    "0fda79d63c82b70c75212ddcc2b116d95555ec21dc689cb5d829ddd8170a1c24",
+    "107b370aa037be5f7508b5761e1a8008f591e569ad7e40d0f86788b1e250c08a",
+    "137217017439170f49c2ff5e957fee5327260a682cf3dea7b3bea46c189648d1",
+    "19edcd7cc1117af82bfed3917e49aa8a4b775b076258bf4b781b642ff9ac5cca",
+    "1cfec8f96b3f67ce98641fcf62b8ac8c17b1fd4a7872b2e060b8cb2e6a88ec41",
+    "1e03610a407999db4f5a1f6fe6b827d630c42966241d0b2872f707eaa20e44c4",
+    "1f6410f2da7a36e3b6ab2883ff7c23f98f7b2e2f3684470439a159e9ae586506",
+    "2e75f839e0e6222058b5315cf1da90965a8d596e1d107861871217409c6bb277",
+    "3c59feb470464c5059d9d05e035a27ec461a1cb57f4f22a2f44f0312dd12a318",
+    "406841223d7bc5d494015dfd0e3c73e318f4677eae28262640acb9f3c11673e5",
+    "434c3b905971fd997089241eb4b2ec01ef91ce53957d220ac38540890cdeb634",
+    "44055c19800a2e0e6f39f8ef3d8fd46df60da3c42f758ea47bc8a2321f474141",
+    "452072368be7f70e248f38b7763e0dcdeba558fd2540983e532c454acd92993e",
+    "4c4505b27e4eaf402c6482704e5ec069e6ab6c82809cc936570085833f6124bd",
+    "579feebe3d38f95da64eb98f831450f8fd3ea1c08c07a8ee55c8cac1cf9bc3d2",
+    "60bc29e29ea1449a81a78a84380f8c90240559c254632c65bb9973fccc72e204",
+    "614cd802a59f8e082fa496b6a9a439f76ff9aa7491345f737c47d81d455960f0",
+    "70e406bbc203027593e44ee5f47b2d555da89a3a556896c36bb8d26d987ab216",
+    "762512b64edb4a4b181d9cf7101855aca2b89a1a69b2de625d699e55c0780112",
+    "77144108fd8dbcf4c7146f2ef7ca75dad3213463b11832aaa63ba1d9df8a6135",
+    "7bb4852eaafa3f3dc2ce949fa79fed374afd85b932b0f8be55a3fc2679f9feaa",
+    "7cec03492ed764569ca3cced3d03a21c6fea5add371d4282e60d6b80e9f934d5",
+    "807b5805762566249910e81b58bb2ee60e250ee74a27328a2dcba9b899073984",
+    "80fda3112ece63a05285f4fe371ecb84bb1ae354e4387afb579806f8cf886f75",
+    "8194f01bc6b4aede936365f65f46b773087aae773f797d3603d7151802b8ae3f",
+    "900d1a566a610a2231b7286bd243f7581f2682d6b4f987280307f4405d7ddc87",
+    "90350c07cc1905badd3c2467a28faf6838ff6e2a7eb193c6aeb245369401ef10",
+    "9c7e8bb0c0934228f5c30fa513c81c780b051a2fb606ec6f1076c3b699ebf84f",
+    "9e4591b334e646c43dc3c3a5fc167ad751ac0a7a6b89d35bac6ea78ce4969c7d",
+    "a267cab46fbc38709d29c7906cd63346f935c4d11c71c737159c4703a15d265a",
+    "b0dc8be053ccb31198c373ae4c5b8a721dec1dc5614005c9b072580fdae0215e",
+    "b38635f1512f94393b9b72cf3774c350b1e3f9166e2c39b53499cfdf77ea1fa8",
+    "b3b10c3c873a40bbd642006467e69575976657feb903e6c902e24060b2a858e1",
+    "b5ee02bdb5be72c10c8df11923f3d17fdc6f6451f51e77ba23c5d745c5a44a5d",
+    "bbae472808b5747b7d87321b5865e59d97ca43c518474a1b7f60a95a60e43536",
+    "bd4a6cb610f417ff6e05d566b5e9323a73f594c1961a0d9a1cb3cbc974b3fa31",
+    "c30f54fb6e56763f787a74c94d613c010d3c3de348b0c250b1bc44ddf308450d",
+    "cba37ac67e7cb4323185bfc70e2e88af88d12898c8e2330164ec20a148a4da39",
+    "ccc125213c4cf0da7858d68515b487803709311bbd3ac1fe6f777e76575b85c2",
+    "cf2ec2508823d448951efa71ef204157f1734dce48ce15337eccc97c82b85101",
+    "d358d422ead8c3d25379c0e70cc94b2d930df34a04fdfa09e752e747a02c0ec7",
+    "d444e32df6af1b2e01b82602cef68103ad639102fdb454a7427d85c983c0707a",
+    "d6af5d1c98b2863c3ee361b067f6276314c5a7b6d3de506950623ffd7a1d3c71",
+    "dbc84b525591a420d4943a3e77b6b549b46a4aee6101f8582d761c0f7b275447",
+    "dd4c4bc781448b00aaab2dd9c2cf2decbbbccdab7915afaa2a37dbab728b92f5",
+    "df7554e10c6d2cbbd256a7a4fa0c08c244e8f12c31d0f7117705e87b07cde2f2",
+    "e207933c42e138a830b397900bd11b7740b3f2e841b39e91ff53b1af8ddca57b",
+    "e6ce0eff1eac969da64eaaa9d0687afe36247d40d34226a91a7af98285708255",
+    "e930432dd5bb2987ebc52b304612682b88b0e65e24d4c9c46020038b15ecf96b",
+    "eeb297134277b322b5d0ebc94eb7fadc58802526c2c911ea76880aa5a6e12462",
+    "eede314ce70d4ede2fd6cb705a8510866189ba54cea906bb2d21b5938df0f905",
+    "f2873ffb98cebd691ebc81cc05a8080bbca2bdb7d1fd404826d07159fd8db97e"
+   ]
+  },
+  {
+   "id": "spada-t01-gs-twelve-residues",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_GS.dat"
+   ],
+   "field": "columns 4 to 15",
+   "as_shipped": "Twelve residues per degree, `(Including the Maxwell ones)` in the header, while the relaxation spectrum spec_T01_01_GS.dat has nine modes",
+   "correct": "Residue positions 6, 9 and 12 (columns 9, 12 and 15) are Maxwell modes of vanishing strength. The other nine pair, in order, with the nine columns of spec_T01_01_GS.dat.",
+   "evidence": "With positions 6, 9 and 12 dropped, h_f = h_e - sum r_j / s_j holds to 1e-5 relative at every degree of all six files. At degree 2 the dropped values are of order 1e-29. At degree 128 a real mode has a residue of -1.4e-14, as small as a Maxwell mode in relative terms, so a drop by magnitude removes a real mode there.",
+   "action": "Drop the residues by fixed position, never by magnitude.",
+   "status": "confirmed",
+   "discovered": "2026-09-13",
+   "sha256": [
+    "1f1c68ab81f3384bbeff67f47f961d8828ce59c442aeb95c5160df5051ea86eb",
+    "50210a96ea9702149616365e99023f4d5c5442f3be158e96432a2f3b5deef7ee",
+    "7d39ccb6f9876d7996623c4cead95ae48527f330072a3f49fb65b4a102f9f664",
+    "9462f6eb25c92a79d93fb085f6de78e8873f7a84a209d37946301ab90f5d41cb",
+    "b1e011865e8302f9b6cc8662d99607dc7fd1725caf87f6a91f7b8bf5054be8e4",
+    "f0b35a60c69b693f0cf1bc118cec8ffb52b8148ce6ccd248481f725eb3ae26b7"
+   ]
+  },
+  {
+   "id": "spada-t01-01-mod-relaxation-times-in-years",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_??.mod"
+   ],
+   "field": "column 2",
+   "as_shipped": "The .mod files that the published figure of test 1/1 draws hold, per degree, one line per mode with a positive number, for example `2 0.27612688E+08`",
+   "correct": "The number is the relaxation time tau_j in years. The relaxation frequency in 1/kyr is s_j = -1000 / tau_j, which is what the .dat files hold.",
+   "evidence": "For GS, -1000 / tau_j from spec_T01_01_GS.mod equals the s_j of spec_T01_01_GS.dat to 3e-8 relative at every degree, and the slowest degree-2 mode gives tau = 2.76e7 yr and s = -3.6215236e-5 1/kyr. The y axis of the figure reads `Relaxation time (yrs)`.",
+   "action": "Read s_j from the .dat file. The converter reads no .mod file.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "163b1415b4bf09d9dbf325b24eb76bd4a29fd9517685a2ca866d533cb2862abc",
+    "58310428b8bd7271534dd9d129b025b1417d5fb41dad2db54f618fed8059e1c8",
+    "583c17f07b66f8d5e08ba0a420151afc6adbc4bfa9b7ef47b3cd9870899d6575",
+    "8bcf805c1c11f0b939b71d5bee584cb210f577e4f15627fdf34ec43794f0e932"
+   ]
+  },
+  {
+   "id": "spada-t01-01-gs-spectrum-header-unit",
+   "kind": "metadata",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_GS.dat"
+   ],
+   "field": "header line `Harmonic degree, s(1), s(2), ... , s(M) (kyrs)`",
+   "as_shipped": "The header gives the unit of s_j as kyrs and says `Total number of modes, M= 12`",
+   "correct": "s_j is a frequency in 1/kyr, and the file holds nine modes per degree: the header also says `MAXWELL MODES DELETED FOR PLOTTING`.",
+   "evidence": "See spada-t01-01-mod-relaxation-times-in-years: -1000/s_j is the relaxation time in years of the .mod file. Every data row has a degree and nine values.",
+   "action": "Take the unit and the mode count from spada_column_layouts.json, not from the header.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "9303741110d9b8fe364e1bf1d893b1572b7ee6870cab51d7ec0b33f9925f956b"
+   ]
+  },
+  {
+   "id": "spada-t01-01-zm-degrees-copy-degree-2",
+   "kind": "truncated",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_ZM.dat"
+   ],
+   "field": "rows of degrees 3 and 4",
+   "as_shipped": "ZM's spectrum has degrees 2 to 5, and the rows of degrees 3 and 4 are byte for byte the row of degree 2",
+   "correct": "Not supplied. The spectrum depends on the degree: GS, RR and VB give s_1 = -7.0864376e-5 1/kyr at degree 3, against -3.6215243e-5 at degree 2.",
+   "evidence": "The three rows are identical to every printed digit. ZM's Love number files of test 2/1 hold degrees 2 and 5 only, so no ZM value at degree 3 or 4 is used anywhere else.",
+   "action": "Keep the rows, so the converted degrees are the degrees printed, and list 3 and 4 in the attribute `degrees_not_to_score`. Scoring skips them.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "c401fdeab364b973baa8102d1c75fa3e5d9a7ecb372a364d6c7e0a4ad3dd12a1"
+   ]
+  },
+  {
+   "id": "spada-t01-zm-mode-order",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_ZM.dat",
+    "spada2011/spada2011-cost-es0701/T01-02/[hlk]_L_T01-02_ZM.dat"
+   ],
+   "field": "the order of the nine modes",
+   "as_shipped": "ZM lists the modes fastest first: s_1 = -3.358 1/kyr at degree 2. GS, RR and VB list them slowest first: s_1 = -3.62e-5 1/kyr.",
+   "correct": "The same modes in the reverse order. The residues of ZM's Love numbers follow ZM's spectrum.",
+   "evidence": "In every row of the four spectra the frequencies are strictly monotonic: decreasing for GS, RR and VB, increasing for ZM. Reversed, ZM's degree-2 frequencies agree with GS's to 2e-7 relative, and ZM's h, l and k fluid limits hold with ZM's own order.",
+   "action": "Store every member slowest first. The decoder records the order it finds in each file as `mode_order`, and the converter reverses a file that is `fastest_first`.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "af543504c69b39096bff123591324c471956ed72da068d69f26d9ef5c4947729",
+    "c401fdeab364b973baa8102d1c75fa3e5d9a7ecb372a364d6c7e0a4ad3dd12a1",
+    "c64713984404fe2278d44a961ee54bf335e975343b97c9d4d627ffedc503567c",
+    "f6b9a911adf97e4b31eff13d3b5627f64d45dec1d912109794e76d13210f4863"
+   ]
+  },
+  {
+   "id": "spada-t01-rr-repeated-degrees",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_RR.dat",
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_RR.dat"
+   ],
+   "field": "rows of degrees 29 and 40",
+   "as_shipped": "RR writes degrees 29 and 40 twice in the spectrum and in each Love number file: 257 rows for 255 degrees",
+   "correct": "One row per degree. In the spectrum the two rows are identical. In the Love number files the elastic and fluid values of the two rows are identical, and one residue differs at the level of 1e-12 or less, below the precision of the other residues of that row.",
+   "evidence": "Degree 29 of h_L_T01-02_RR.dat has residue 3 as -7.6438776e-12 in one row and -7.7167074e-12 in the other; degree 40 has -2.7734599e-14 and 1.7210357e-15. Both rows satisfy the fluid limit identity to 1e-5 relative.",
+   "action": "Keep the first row of a repeated degree when its elastic and fluid values (or, for a spectrum, all values) equal those of the repeat, and raise otherwise. The kept degrees are listed in the attribute `repeated_degrees`.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "406d0e66b7cf847b5faf57f11c36b44f138076e3bd696120d4966c7009dae0b1",
+    "4dea94fce5950f38ebeba22497ce5c02aa1009f7b6eb035abd22fbba382a120a",
+    "7ae8dd3e6c8e56bc9813c91ae95f6e334ec32b9088f0f0e9c840c4f34f452545",
+    "8b0c4c860b43186b2e725e0d154d0164b1d8beb65433d368fd6eeed6aca9194d",
+    "9b1383d4433d1c8d05221974f01727f3f697f14cb8ccdf2d86db06d3030e5c8b",
+    "b5c0004954615a797cd849cee11960daf1005fe61bdf87248c9116014473f539",
+    "bbf05f6f3c54d6ea02cd246570d3c852aac4bb1dce089cc8fe813409d27096c4"
+   ]
+  },
+  {
+   "id": "spada-t01-vb-residue-sign-and-wrap",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T01-0[23]/[hlk]_[LT]_T01-0[23]_VB.dat"
+   ],
+   "field": "residue columns",
+   "as_shipped": "VB's residues carry the opposite sign to those of GS, RR and ZM, and each record of twelve values wraps onto a second line after ten values",
+   "correct": "The residue in the convention of Spada et al. (2011), h_f = h_e - sum r_j / s_j, is minus the printed value.",
+   "evidence": "At degree 2 VB prints the slowest h residue as +3.0189252e-06 and GS as -3.0189264e-06. With the printed sign VB's fluid limit misfits by order one; negated, it holds to 6e-8 relative at every degree in both tests.",
+   "action": "Join the lines of a record before splitting it. The decoder finds the sign by the fluid limit at degree 2 and records it as `residue_sign`; the converter multiplies the residues by it.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "6a976eb31eda8fdda59d5d2c1c6031638df2184d5fa24f3c1860ab62e0ac65c2",
+    "7ca1e20570b8ade5a4982a4e0e26d106554a1adea7e2b8c0fa31b70384cd25d4",
+    "7df10f940aeed3a4830e6da11842173f7d2be8927a5474c5bb51a9eeabe18bb4",
+    "919fd127e33434ca1543ae609a24f64b0fc07a89cb7c5a9a0dfc6a3a842866e8",
+    "b2b2329eec9f2d7e08e7b089878655683653c0db607dc0093f51b21d709a505c",
+    "e4050cc746690b707b4c45fd1a600d5e11230b7b7c56481f241662e92a2dceef"
+   ]
+  },
+  {
+   "id": "spada-t02-taboo-header-and-repeated-last-row",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-01/disp_t*_*.dat",
+    "spada2011/spada2011-cost-es0701/T02-02/rate_t*_*.dat",
+    "spada2011/spada2011-cost-es0701/T02/disp_t*_point.dat",
+    "spada2011/spada2011-cost-es0701/T02/rate_t*_point.dat"
+   ],
+   "field": "header and last row",
+   "as_shipped": "Every TABOO profile starts with 16 lines beginning with ` #`, and writes its last row, colatitude 180, twice",
+   "correct": "721 points at 0.25 degree for the cap and the disc, 181 points at 1 degree for the point load",
+   "evidence": "All 40 per-epoch files of T02, T02-01 and T02-02 have one more data row than their grid, and the last two rows are identical.",
+   "action": "Skip lines that start with `#`. Drop a repeated point with the same values, and raise on a repeated colatitude with different values.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "0c8c88386ae4b8fc7f11727cb4fe48023f6e44561a3f894c2ccfbc1c8c9eac7c",
+    "131786d50e3f3eb706685483f9f83d43e5047ff6a038b622548930a8819e97c0",
+    "15544f17336dc25d3d89b614ece6497f78849d1cf794a610746773aa7cbe2244",
+    "1afdb1e00de31a4994bcd4fad33a63f0c91c127935b80616cb273324f7135305",
+    "1b15a5e6b4d5b8aca67562782be25a534e7c36c9a814917672c864657d3a1d20",
+    "1cd2e4790be9363f92bb3c64f5ec44c6f8a67ccd8e3df43b8f0a86b5582f5f9a",
+    "1d786f390ee5f044edbee390d34515abb545f75de1616ee588f129c82b3b6bb1",
+    "262af1bd1016d2b587c12f2e916db747cb9b48181625a1c095e20f34bec62056",
+    "48fb7d7badc029cd4098ed8729282ba899f44faa8200d0d860f8800bacad9282",
+    "4da3fc1f0898e578017c1d4761ca16b4e4af078a3429ab547044fbf79211cdf4",
+    "52cca987573e5a981c98ae246c078d4869ba25b06a223f2671629079b260ed45",
+    "58f69d6ef1b14f56b9a66d8d81889f81d97b08afdb2c80a0bb501e94a5c5e132",
+    "591bc03d1fcda8821f6748d8e02e94d2c605138a59559791d5d7074967e3660e",
+    "5da9e44df4a267e630d4b0d9dca95e059e7b14e79851c981ae96de847c7624eb",
+    "60d7b8ea160b5b83fe81e97df99a2acf8d302b86c2a4b4e7cf7259c74b7270cd",
+    "69acdde7016c5346d649678c9336ba62afcdc458ce914503412e1d1ced299545",
+    "703790f93903bb7edc5d89e019cfd894d8589fb0df8bc52508d35b1633cfbb68",
+    "81f2f4280c45068aea492dbd8244e94e6952d961cc3850b079130d6c1c050228",
+    "848402ee4672ec72d057871b72ba2edd8d0cc4cab8827e7915ade76690cea4dd",
+    "8b0bb5c8cf1bf5f0f8fef68c0ef74f8112ee8f86fdbb724743291b7acd7a4adb",
+    "8b9d1a06af8ea9b7f9f7503dd350a8910b402fb9e5b78bb3c05675c9ffd4c414",
+    "8d0727db307fdf71685badf6d9ab74675306bc4091deb6b9fc17b8c97db97660",
+    "8d2576d6cb9ac4d07f90f2f677cf2ac4f07230c721362420cd8f85a9b1fcd6ad",
+    "9350dc9d57daac3b807c8bcea14208b253b9ec0291281fc48d3802b0288f5c04",
+    "9c1205ed7855521c576ce8a9a4da8e9543be9cee5e6b5fbe1f4cab2a307999d1",
+    "9f0a4b8023007c70364032f6db2a5a7537fa41449554cdd432d53116647cc3eb",
+    "ac6ebcbd71a5bd884b78303cf81d72231a36cda845882219517f6300a726fb00",
+    "bd9341f095fe1288402768def4967767a180815d7c5ebc701364cada4fa2492d",
+    "c98df547f256a44ddc57463fda1289a7955034f89c0b8eb75df796f085460a5b",
+    "d2f4db74675512a7431b8d372499beb0b12a108f2a0a86887ac63775d2c94a8c",
+    "d497d9aa30ad8db11ebfe604e919818302e748283b936d00f18a00d63dc27ac3",
+    "d83814a7ac8e975cd70e3281ae4baa0985e3129dd6558bf3dd85d4250bf18cb3",
+    "da2d1a8214e57f70a9b2c213424bdf028cbfcbe3dec143da8cb84961df3d89fb",
+    "db4d8ce7607af5f4a0c1b8366a3034a90e95a1d4f85f1a4d9de3d07aeac1c8ab",
+    "dc470bec4eedaa717350a3a167a928a98be19dfee4b34efddd88b0b395840ec7",
+    "dcb55f6c2b60ad25b1bbd066c14d4a7c1327cb7efc456dede45acb08647f00e0",
+    "e22d88375c28c02fe351dca0d4f8a74aa3317ecb562a540d35abd5f8ac19c683",
+    "e575515556eb0b379d723aacfabdf4b97546c54b04dd86d8cf4eb902530efdcd",
+    "f394949d6bffb906265142ac1663177721de4e36702012ca2d22e26cd2e4fbfb",
+    "f55fcfed3c946082625f2fc7cae69e42b90bbe7a402bcd77b1dd67712f88d5a9"
+   ]
+  },
+  {
+   "id": "spada-t02-gs-rate-header-unit",
+   "kind": "metadata",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-02/rate_t*_*.dat",
+    "spada2011/spada2011-cost-es0701/T02/rate_t*_point.dat"
+   ],
+   "field": "unit of column 2 in the header",
+   "as_shipped": "The unit line reads `(deg) (kyrs) (mm/yr) (mm/yr) (mm/yr)`, so column 2, d_rad, is labelled in kyrs",
+   "correct": "Column 2 is the vertical displacement rate in mm/yr, as the other three rate columns are",
+   "evidence": "T02-02/plot_PAP.gmt draws GS column 2 without a factor on the same axis as VK's vertical rate times 1000, which VK stores in m/yr. The two agree to a few per cent, which fixes the GS unit as mm/yr. A time in kyrs cannot be negative, and column 2 is -77.948066 at the pole at t = 0.",
+   "action": "Take the unit from spada_column_layouts.json, which records mm/yr and the header's label.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "0c8c88386ae4b8fc7f11727cb4fe48023f6e44561a3f894c2ccfbc1c8c9eac7c",
+    "131786d50e3f3eb706685483f9f83d43e5047ff6a038b622548930a8819e97c0",
+    "15544f17336dc25d3d89b614ece6497f78849d1cf794a610746773aa7cbe2244",
+    "1afdb1e00de31a4994bcd4fad33a63f0c91c127935b80616cb273324f7135305",
+    "1b15a5e6b4d5b8aca67562782be25a534e7c36c9a814917672c864657d3a1d20",
+    "1d786f390ee5f044edbee390d34515abb545f75de1616ee588f129c82b3b6bb1",
+    "262af1bd1016d2b587c12f2e916db747cb9b48181625a1c095e20f34bec62056",
+    "48fb7d7badc029cd4098ed8729282ba899f44faa8200d0d860f8800bacad9282",
+    "58f69d6ef1b14f56b9a66d8d81889f81d97b08afdb2c80a0bb501e94a5c5e132",
+    "591bc03d1fcda8821f6748d8e02e94d2c605138a59559791d5d7074967e3660e",
+    "5da9e44df4a267e630d4b0d9dca95e059e7b14e79851c981ae96de847c7624eb",
+    "81f2f4280c45068aea492dbd8244e94e6952d961cc3850b079130d6c1c050228",
+    "848402ee4672ec72d057871b72ba2edd8d0cc4cab8827e7915ade76690cea4dd",
+    "9c1205ed7855521c576ce8a9a4da8e9543be9cee5e6b5fbe1f4cab2a307999d1",
+    "ac6ebcbd71a5bd884b78303cf81d72231a36cda845882219517f6300a726fb00",
+    "c98df547f256a44ddc57463fda1289a7955034f89c0b8eb75df796f085460a5b",
+    "d83814a7ac8e975cd70e3281ae4baa0985e3129dd6558bf3dd85d4250bf18cb3",
+    "da2d1a8214e57f70a9b2c213424bdf028cbfcbe3dec143da8cb84961df3d89fb",
+    "dcb55f6c2b60ad25b1bbd066c14d4a7c1327cb7efc456dede45acb08647f00e0",
+    "e22d88375c28c02fe351dca0d4f8a74aa3317ecb562a540d35abd5f8ac19c683"
+   ]
+  },
+  {
+   "id": "spada-t02-gs-runs-with-a-different-load",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-01/disp_tinf_cap.dat",
+    "spada2011/spada2011-cost-es0701/T02-02/rate_tinf_cap.dat",
+    "spada2011/spada2011-cost-es0701/T02-01/disp_t3_disc.dat",
+    "spada2011/spada2011-cost-es0701/T02-02/rate_t3_disc.dat"
+   ],
+   "field": "whole file",
+   "as_shipped": "Beside the six epoch files of the cap and the disc, the directories hold disp_tinf_cap.dat and rate_tinf_cap.dat (Time 1000 kyr) and disp_t3_disc.dat and rate_t3_disc.dat (Time 3 kyr)",
+   "correct": "These are runs with a different load. Their headers give a load mass of 5.793341806542921e18 kg (tinf cap) and 3.874512718475594e18 kg (t3 disc), while the cap and disc of table 4 carry 3.607171340900778e18 kg, which every other file prints. Which load they used is not established.",
+   "evidence": "The load mass line of each header. No panel of T02-01/plot_PAP.gmt or T02-02/plot_PAP.gmt reads these four files; the published figure draws disp_t1000_cap.dat and rate_t1000_cap.dat for the last epoch.",
+   "action": "Do not convert them. Take the files from the published script, not from a glob.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "69acdde7016c5346d649678c9336ba62afcdc458ce914503412e1d1ced299545",
+    "848402ee4672ec72d057871b72ba2edd8d0cc4cab8827e7915ade76690cea4dd",
+    "e22d88375c28c02fe351dca0d4f8a74aa3317ecb562a540d35abd5f8ac19c683",
+    "f394949d6bffb906265142ac1663177721de4e36702012ca2d22e26cd2e4fbfb"
+   ]
+  },
+  {
+   "id": "spada-t02-point-load-lmax-512",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02/disp_t*_point.dat",
+    "spada2011/spada2011-cost-es0701/T02/rate_t*_point.dat"
+   ],
+   "field": "header `Lmin, Lmax 2 512`",
+   "as_shipped": "The TABOO point load profiles are summed to degree 512 and sampled every degree of colatitude. The file for the last epoch is named tinf and its header says `Time (kyrs) = 1000.000`.",
+   "correct": "The case prescribes degrees 2 to 128. A solver truncated at 128 does not reproduce the near field of a point load, where the series converges slowly.",
+   "evidence": "The header line of all twelve files. No GMT script in the archive draws them, and no other contributor supplied a point load: T02/output_sec2-from-VOLKER is a parabolic load run and its e2cost files are empty.",
+   "action": "Convert them as GS's point load with epochs 0, 1, 2, 5, 10 and 1000 kyr (the header time, not the name), and record Lmax 512 in an attribute. Compare a solver with them knowing the truncation differs.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "1b15a5e6b4d5b8aca67562782be25a534e7c36c9a814917672c864657d3a1d20",
+    "1cd2e4790be9363f92bb3c64f5ec44c6f8a67ccd8e3df43b8f0a86b5582f5f9a",
+    "1d786f390ee5f044edbee390d34515abb545f75de1616ee588f129c82b3b6bb1",
+    "4da3fc1f0898e578017c1d4761ca16b4e4af078a3429ab547044fbf79211cdf4",
+    "58f69d6ef1b14f56b9a66d8d81889f81d97b08afdb2c80a0bb501e94a5c5e132",
+    "60d7b8ea160b5b83fe81e97df99a2acf8d302b86c2a4b4e7cf7259c74b7270cd",
+    "703790f93903bb7edc5d89e019cfd894d8589fb0df8bc52508d35b1633cfbb68",
+    "8d0727db307fdf71685badf6d9ab74675306bc4091deb6b9fc17b8c97db97660",
+    "9350dc9d57daac3b807c8bcea14208b253b9ec0291281fc48d3802b0288f5c04",
+    "9c1205ed7855521c576ce8a9a4da8e9543be9cee5e6b5fbe1f4cab2a307999d1",
+    "da2d1a8214e57f70a9b2c213424bdf028cbfcbe3dec143da8cb84961df3d89fb",
+    "dcb55f6c2b60ad25b1bbd066c14d4a7c1327cb7efc456dede45acb08647f00e0"
+   ]
+  },
+  {
+   "id": "spada-t02-vilma-rate-unit",
+   "kind": "trap",
+   "applies_to": [
+    "spada2011/spada2011-cost-es0701/T02-0[12]/output_sec2parab/[uve]dt2cost*.dat",
+    "spada2011/spada2011-cost-es0701/T02-0[12]/output_sec2disc/[uve]dt2cost*.dat"
+   ],
+   "field": "columns 2 to 6",
+   "as_shipped": "VK stores rates in m/yr (`(m/a)` in the header, `Units are m and m/yr` in the README), while GS stores them in mm/yr",
+   "correct": "Both are the same quantity. In the converted files every rate is in m/kyr: VK times 1000, GS unchanged, because 1 mm/yr is 1 m/kyr.",
+   "evidence": "T02-02/plot_PAP.gmt draws VK as `$n*1000` and GS as stored on one axis.",
+   "action": "Convert with the unit recorded in spada_column_layouts.json, checked against the scale the script applies.",
+   "status": "confirmed",
+   "discovered": "2026-09-14",
+   "sha256": [
+    "10364e675a4450cfb0bd58808e033e7a548939c8ba26acb6dbf622f4e660b3ac",
+    "1a6bcd26ffe289b55e7cfdfb943fb3afbd0fbdb6ca124d7034739758f1f81947",
+    "3c3b48453db52e7c7063e6aa89b1d6ecbda8dabfd13a2a96656ecd506bcd6316",
+    "55c826c05b0a3c435f83495eb7b6c6db8611cceca3a339ed9dbfbae89a30a86b",
+    "605728f93b404af248dac0586169d59fcd3285e035ecbaefcd3383d33045a53c",
+    "730afd70732bdc9abd8fe9fc76317046f3f699d83d408b7298739e85325a3fac",
+    "738aac50ccbc56aaf187ca6a7f5a7b6b0bb93986ce7a0ae279904a743dba61dc",
+    "7cca5ea54cf7ea24a1277570c398c44b2145f69ab0b8e10f76b170d42d8ec045",
+    "9fe23e7e4294e02dca202d42e712bdcab127493e18ea0e41524aa94bbeaa90dd",
+    "a1870bedfe1c248e4b0ff49ca8745b63ab091d980f346e544b051e1f1f935842",
+    "faecc970f2bb0e030af66540e2a800142123453472ae0494c6ae3ce3a214b055",
+    "fedff707ac216f77c594c746ced17fbb1e26402f7a4231f63628173ef4435683"
+   ]
   },
   {
    "id": "martinec2018-caseC-basin-gravity-factor",

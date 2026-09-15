@@ -53,6 +53,65 @@ file Martinec shipped is not the published reference (case A, the case B
 basin and case D), it recovers the reference from a contributor's profile and
 difference file; each row says which reference it used.
 
+## Spada (2011): setting up a test
+
+`gia_mip.benchmarks.inputs.SpadaCase` reads the case file, the load table
+`loads/spada2011.json` and the earth model. It gives the three loads as surface
+density and as Legendre coefficients, and the epochs, grids and degrees to
+output.
+
+```python
+from gia_mip.benchmarks.inputs import SpadaCase
+
+case = SpadaCase("t02-01")
+case.earth_layers()                          # M3-L70-V01; VSS96 (test 6/1) has no layer table yet
+case.ice_density, case.water_density         # 931 and 1000 kg/m3, from the load table
+case.loads                                   # ("cap", "disc", "point")
+case.load_centre                             # (0.0, 0.0), or (25.0, 75.0) in test 3/2
+case.load_mass("cap")                        # 3.607171340900778e18 kg
+sigma = case.surface_density("disc", theta)  # kg/m2 at an angle from the load centre
+sigma_n = case.legendre_coefficients("cap", range(0, 129))   # kg/m2
+case.epochs_kyr                              # (0, 1, 2, 5, 10, inf)
+case.harmonic_degrees                        # (2, 128)
+case.near_field_colatitudes_deg()            # 0 to 25 at 0.25 degree
+case.global_colatitudes_deg()                # 0 to 180 at 1 degree
+case.outputs                                 # ["U", "V", "N"]
+```
+
+The cap is the square-root profile, and its coefficients satisfy
+sigma(theta) = sum_n sigma_n P_n(cos theta), so 4 pi a^2 sigma_0 is the load mass.
+The fluid limit is `math.inf`, which is a different epoch from 1000 kyr.
+
+## Spada (2011): results and scores
+
+`gia_mip.benchmarks.results.SpadaResult` holds one code's Love numbers
+(elastic, fluid and residues per mode), relaxation spectrum and U, V, N or
+their rates, in the layout of the converted reference files.
+
+```python
+from gia_mip.benchmarks.results import SpadaResult
+from gia_mip.benchmarks import metrics
+
+run = SpadaResult("t01-02", "radopt")
+run.add_love_numbers("h", degrees, elastic, fluid, residues)   # residues (degrees, 9), 1/kyr
+run.write("outputs/spada2011/radopt/spada2011-t01-02.nc")
+
+run = SpadaResult("t02-01", "radopt")
+run.add_spatial("cap", "U", 10.0, colatitude_deg, u_m)
+run.add_spatial("cap", "U", math.inf, colatitude_deg, u_fluid_m)
+
+path = SpadaResult.reference_path("t02-01")   # data/converted/spada2011/spada2011-t02-01.nc
+references = {m: SpadaResult.read(path, m) for m in SpadaResult.members(path)}
+metrics.spada_score(run, references)          # rows per contributor, near field and whole meridian
+```
+
+Residues follow the convention of the paper, h_f = h_e - sum_j r_j / s_j, and
+mode 1 is the slowest mode, the s_j closest to zero. Rates are in m/kyr, which
+is the same number as mm/yr. The paper has no reference code, so
+`spada_score` scores against each contributor separately and names it in every
+row. An epoch is compared only when both results hold it exactly, so a fluid
+limit is never compared with GS's run at 1000 kyr.
+
 ## GIAMIP: inputs
 
 `gia_mip.mip.inputs.GiamipExperiment` opens the ice history and the topography

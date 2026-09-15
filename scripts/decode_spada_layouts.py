@@ -46,6 +46,15 @@ symbol is therefore part of the record, not decoration.
 GMT 4 no longer runs, so for the files with no header these scripts are the
 only surviving description of their contents.
 
+The output has two views of the same archive. by_file is what each script
+drew, keyed by the name the script wrote. files is what a reader uses,
+keyed by the path under data/original/: for every file the converter
+gia_mip.benchmarks.spada2011 reads, what each column holds, its unit and
+its epoch, and the evidence for it. For the files no script describes (the
+VILMA files, the signed Love number tables and the point load profiles) that
+evidence is the README files, the file headers and arithmetic on the values,
+written out in file_layouts.
+
 Usage::
 
     python3 scripts/decode_spada_layouts.py [--root data/original] \\
@@ -555,6 +564,409 @@ def decode(path: pathlib.Path, test: str, variant: str) -> dict:
     }
 
 
+# ------------------------------------------------------------------------
+# The per-file layouts a reader uses
+# ------------------------------------------------------------------------
+#
+# `by_file` above answers "what did a script draw from this name". A reader
+# needs a different answer: for one file, keyed by its path under
+# data/original/, what every column holds, in which unit, and at which epoch.
+# The scripts give that only partly. The Spada scripts plot GS's rate column
+# 2 without saying its unit, they never draw the signed Love number tables or
+# the point load, and the VILMA files are described only by README files and
+# headers. So this part reads three kinds of evidence, all in the archive:
+# the drawn series of the published scripts, the README files, and the file
+# headers. Where a value is derived by arithmetic on the data, such as the
+# sign convention of a residue, the arithmetic is written here and is the
+# evidence.
+
+# The path of the archive under data/original/, the key of every table.
+ARCHIVE = "spada2011/spada2011-cost-es0701"
+
+# The two scripts that drew the published figures of tests 1/2 and 2/2. The
+# POSTER and test scripts read the same files; the PAP script is the one the
+# paper printed, so its choice of files is the one a reader follows.
+PUBLISHED_SPATIAL_SCRIPTS = {"T02-01/plot_PAP.gmt": "t02-01",
+                             "T02-02/plot_PAP.gmt": "t02-02"}
+
+# TABOO names its profile columns in a header line. Column 4 is the
+# longitudinal component, zero along a meridian of an axisymmetric load, and
+# is not the geoid (correction spada-t02-time-layout-differs-by-contributor).
+TABOO_COLUMNS = {
+    "Colat.": "colatitude",
+    "u_rad": "U", "u_col": "V", "u_lon": "longitudinal_displacement", "geoid": "N",
+    "d_rad": "U_rate", "d_col": "V_rate", "d_lon": "longitudinal_displacement_rate",
+    "d_geoid": "N_rate",
+}
+
+# The load line of a TABOO header and of a VILMA header, as a load name of
+# loads/spada2011.json.
+TABOO_LOADS = {"PARABOLIC LOAD": "cap", "DISC LOAD": "disc", "POINT MASS": "point"}
+VILMA_LOADS = {"parabolic load": "cap", "disc load": "disc"}
+
+# The VILMA file stems, from the README: `[uve]2cost.dat` displacements and
+# `[uev]dt2cost` rates, u vertical, v horizontal, e geoid.
+VILMA_STEMS = {"u": "U", "v": "V", "e": "N", "udt": "U_rate", "vdt": "V_rate", "edt": "N_rate"}
+# The words the VILMA header line uses for each quantity, checked so that a
+# file renamed by hand cannot take the layout of another.
+VILMA_WORDS = {"U": "vertical displacement", "V": "horizontal displacement",
+               "N": "geoid displacement"}
+
+# How many m/kyr one stored rate unit is. 1 mm/yr is 1e-3 m per 1e-3 kyr, so
+# it is the same number in m/kyr; 1 m/yr is 1000 m/kyr.
+IN_M_PER_KYR = {"mm/yr": 1.0, "m/yr": 1000.0, "m/kyr": 1.0}
+
+# Test 1/1 prints nine modes per degree. A Love number record with twelve
+# residues carries the three Maxwell modes at residue positions 6, 9 and 12
+# (from one), the TABOO order (correction spada-t01-gs-twelve-residues).
+MAXWELL_POSITIONS = (6, 9, 12)
+
+
+def _header_lines(path: pathlib.Path) -> list[str]:
+    """The comment lines of a data file, with the leading `#` removed."""
+    out = []
+    for line in path.read_text(errors="replace").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#"):
+            out.append(stripped.lstrip("#").strip())
+    return out
+
+
+def _records(path: pathlib.Path) -> list[list[float]]:
+    """The data records of a Love number or spectrum table.
+
+    A record starts at a line whose first token is an integer, the harmonic
+    degree, and runs to the next such line. VB wraps each record of twelve
+    values onto two lines (correction spada-t01-vb-residue-sign-and-wrap), so
+    records are joined across lines here. Lines starting with `#` or with the
+    GMT segment marker `>` are skipped, and Fortran D exponents are read.
+    """
+    records: list[list[float]] = []
+    for line in path.read_text(errors="replace").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped[0] in "#>":
+            continue
+        tokens = stripped.split()
+        values = [float(t.replace("D", "E").replace("d", "e")) for t in tokens]
+        if re.fullmatch(r"\d+", tokens[0]):
+            records.append(values)
+        elif records:
+            records[-1].extend(values)
+        else:
+            raise ValueError(f"{path}: a continuation line before any record")
+    return records
+
+
+def _lines_per_record(path: pathlib.Path) -> int:
+    """How many lines the first record of a table occupies."""
+    count = 0
+    for line in path.read_text(errors="replace").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped[0] in "#>":
+            continue
+        if re.fullmatch(r"\d+", stripped.split()[0]) and count:
+            return count
+        count += 1
+    return count
+
+
+def _mode_order(records: list[list[float]], path: pathlib.Path) -> str:
+    """`slowest_first` or `fastest_first`, from the frequencies of every row.
+
+    s_j is negative, and the slowest mode is the one closest to zero. A row
+    whose values strictly decrease lists the slowest mode first. A file whose
+    rows do not all run the same way has no order a reader can rely on, and
+    raises.
+    """
+    orders = set()
+    for record in records:
+        s = record[1:]
+        if all(a > b for a, b in zip(s, s[1:])):
+            orders.add("slowest_first")
+        elif all(a < b for a, b in zip(s, s[1:])):
+            orders.add("fastest_first")
+        else:
+            orders.add("none")
+    if len(orders) != 1 or "none" in orders:
+        raise ValueError(f"{path}: the modes are not in one monotonic order ({orders})")
+    return orders.pop()
+
+
+def _spectrum_layout(archive: pathlib.Path, path: pathlib.Path) -> dict:
+    """The layout of one test 1/1 relaxation spectrum, checked against its .mod file.
+
+    The .mod file of the same contributor holds the relaxation times tau_j in
+    years (correction spada-t01-01-mod-relaxation-times-in-years). The unit of
+    the .dat file is established by the arithmetic s_j = -1000 / tau_j at
+    degree 2, which must hold to the eight printed digits.
+    """
+    records = _records(path)
+    widths = {len(r) for r in records}
+    if widths != {10}:
+        raise ValueError(f"{path}: expected a degree and nine frequencies, found {widths}")
+    order = _mode_order(records, path)
+    tau = [r for r in _records(path.with_suffix(".mod")) if int(r[0]) == 2]
+    s_from_tau = sorted(-1000.0 / r[1] for r in tau)
+    s_printed = sorted(next(r for r in records if int(r[0]) == 2)[1:])
+    if len(s_from_tau) != 9 or any(abs(a - b) > 1e-6 * abs(b)
+                                   for a, b in zip(s_from_tau, s_printed)):
+        raise ValueError(f"{path}: s_j is not -1000 / tau_j of the .mod file at degree 2")
+    relative = str(path.relative_to(archive))
+    contributor, _ = contributor_of(path.name)
+    columns = {"1": {"quantity": "degree", "units": "1"}}
+    for j in range(1, 10):
+        columns[str(j + 1)] = {"quantity": "s", "mode": j, "units": "1/kyr"}
+    return {
+        "contributor": contributor,
+        "kind": "relaxation_spectrum",
+        "cases": ["t01-01"],
+        "evidence": (f"{relative}: ten values per row; s_j = -1000 / tau_j of "
+                     f"{path.with_suffix('.mod').name} (tau in years) at degree 2; "
+                     f"the frequencies of every row are monotonic"),
+        "record_values": 10,
+        "lines_per_record": 1,
+        "mode_order": order,
+        "columns": columns,
+    }
+
+
+def _love_layout(archive: pathlib.Path, path: pathlib.Path, spectrum: dict) -> dict:
+    """The layout of one signed Love number table of test 2/1 or 3/1.
+
+    The record is degree, elastic, fluid and then nine or twelve residues.
+    Twelve means the three Maxwell modes are included, at residue positions 6,
+    9 and 12. The residues pair in order with the frequencies of the same
+    contributor's spectrum, and their sign is found from the fluid limit of
+    the normal mode sum at degree 2,
+
+        h_f = h_e - sum_j r_j / s_j        (Spada et al. 2011, eq. 17),
+
+    tried with the printed sign and with the opposite sign. Exactly one must
+    hold to 1e-5 of max(1, |h_f|), else the file is not understood and this
+    raises.
+    """
+    records = _records(path)
+    widths = {len(r) for r in records}
+    if len(widths) != 1 or widths.pop() not in (12, 15):
+        raise ValueError(f"{path}: records of {sorted({len(r) for r in records})} values")
+    width = len(records[0])
+    residues = width - 3
+    maxwell = MAXWELL_POSITIONS if residues == 12 else ()
+    kept = [i for i in range(1, residues + 1) if i not in maxwell]
+    frequencies = spectrum[2]
+    row = next(r for r in records if int(r[0]) == 2)
+    r = [row[2 + i] for i in kept]
+    signs = []
+    for sign in (1, -1):
+        fluid = row[1] - sum(sign * rj / sj for rj, sj in zip(r, frequencies))
+        if abs(fluid - row[2]) <= 1e-5 * max(1.0, abs(row[2])):
+            signs.append(sign)
+    if len(signs) != 1:
+        raise ValueError(f"{path}: the fluid limit at degree 2 holds for signs {signs}")
+    relative = str(path.relative_to(archive))
+    contributor, _ = contributor_of(path.name)
+    quantity, kind = path.name.split("_")[:2]
+    columns = {"1": {"quantity": "degree", "units": "1"},
+               "2": {"quantity": f"{quantity}_elastic", "units": "1"},
+               "3": {"quantity": f"{quantity}_fluid", "units": "1"}}
+    mode = 0
+    for i in range(1, residues + 1):
+        if i in maxwell:
+            columns[str(3 + i)] = {"quantity": "maxwell_residue", "units": "1/kyr"}
+        else:
+            mode += 1
+            columns[str(3 + i)] = {"quantity": f"{quantity}_residue", "mode": mode,
+                                   "units": "1/kyr"}
+    test = relative.split("/")[0]
+    return {
+        "contributor": contributor,
+        "kind": "love_numbers",
+        "cases": [test.lower()],
+        "quantity": quantity,
+        "love_number_type": {"L": "loading", "T": "tidal"}[kind],
+        "evidence": (f"{relative}: header `Harmonic degree, elastic, fluid, residues`; "
+                     f"{width} values per record over {_lines_per_record(path)} line(s); "
+                     f"the fluid limit at degree 2 holds with residue sign {signs[0]:+d} "
+                     f"and the modes of {spectrum[1]}"
+                     + ("; residue positions 6, 9 and 12 are the Maxwell modes" if maxwell else "")),
+        "record_values": width,
+        "lines_per_record": _lines_per_record(path),
+        # The printed residue times this sign is the residue in the paper's
+        # convention.
+        "residue_sign": signs[0],
+        # The residues follow the mode order of the same contributor's spectrum.
+        "mode_order": spectrum[0],
+        "columns": columns,
+    }
+
+
+def _taboo_layout(archive: pathlib.Path, path: pathlib.Path, case: str,
+                  drawn_by: list[str]) -> dict:
+    """The layout of one TABOO (GS) profile: one epoch, colatitude and four fields.
+
+    Column names and units come from the two header lines TABOO writes, and
+    the epoch from `Time (kyrs) =`. The rate files label column 2 `(kyrs)`,
+    which cannot be the unit of a rate; the unit is taken from the other rate
+    columns, mm/yr, and the header's label is kept
+    (correction spada-t02-gs-rate-header-unit).
+    """
+    header = _header_lines(path)
+    names = units = None
+    for i, line in enumerate(header):
+        tokens = line.split()
+        if tokens and tokens[0] == "Colat.":
+            names, units = tokens, header[i + 1].split()
+    if names is None or len(names) != 5 or len(units) != 5:
+        raise ValueError(f"{path}: no TABOO column header")
+    time = next(float(l.split("=")[1]) for l in header if l.startswith("Time"))
+    mass = next(float(l.split("=")[1]) for l in header if "mass of the load" in l)
+    lmin, lmax = (int(v) for v in next(l for l in header if l.startswith("Lmin")).split()[-2:])
+    load = next(TABOO_LOADS[l] for l in header if l in TABOO_LOADS)
+    rate_units = {u.strip("()") for n, u in zip(names, units) if n.startswith("d_") and u != "(kyrs)"}
+    columns = {}
+    for number, (name, unit) in enumerate(zip(names, units), start=1):
+        quantity = TABOO_COLUMNS[name]
+        entry = {"quantity": quantity, "units": unit.strip("()").replace("deg", "degrees")}
+        if quantity != "colatitude":
+            entry["epoch_kyr"] = time
+            if unit == "(kyrs)":
+                if len(rate_units) != 1:
+                    raise ValueError(f"{path}: cannot read the unit of {name}")
+                entry["units"] = next(iter(rate_units))
+                entry["header_units"] = "kyrs"
+        columns[str(number)] = entry
+    relative = str(path.relative_to(archive))
+    return {
+        "contributor": "GS",
+        "kind": "spatial",
+        "cases": [case],
+        "load": load,
+        "evidence": (f"{relative}: TABOO header lines `Colat. ...` and their units, "
+                     f"`Time (kyrs)`, the load line and the load mass"
+                     + (f"; drawn by {', '.join(drawn_by)}" if drawn_by else
+                        "; drawn by no script, the TABOO point load of tests 1/2 and 2/2")),
+        "load_mass_kg": mass,
+        "harmonic_degrees": [lmin, lmax],
+        "columns": columns,
+    }
+
+
+def _vilma_layout(archive: pathlib.Path, path: pathlib.Path, case: str,
+                  drawn_by: list[str]) -> dict:
+    """The layout of one VILMA (VK) file: colatitude and one column per epoch.
+
+    The README in the same directory gives the quantity of each stem, the
+    units (m and m/yr) and the two grids; the header gives the load, the
+    quantity in words and the epochs, `# Epoch (kyr): 0 1 2 5 10`. Both are
+    checked against each other.
+    """
+    readme = (path.parent / "README").read_text(errors="replace")
+    if "Units are m and m/yr" not in readme or path.name not in readme.split():
+        raise ValueError(f"{path}: the README does not document this file")
+    match = re.fullmatch(r"(udt|vdt|edt|u|v|e)2cost(g?)\.dat", path.name)
+    if not match:
+        raise ValueError(f"{path}: not a VILMA file name")
+    quantity = VILMA_STEMS[match.group(1)]
+    grid = "global" if match.group(2) else "fine"
+    header = _header_lines(path)
+    load = next(VILMA_LOADS[l] for l in header if l in VILMA_LOADS)
+    base = quantity.removesuffix("_rate")
+    words = VILMA_WORDS[base] + (" rate (m/a)" if quantity.endswith("_rate") else " (m)")
+    if words not in header:
+        raise ValueError(f"{path}: the header does not say `{words}`")
+    epochs = next(l for l in header if l.startswith("Epoch (kyr):")).split(":")[1].split()
+    units = "m/yr" if quantity.endswith("_rate") else "m"
+    columns = {"1": {"quantity": "colatitude", "units": "degrees"}}
+    for offset, epoch in enumerate(epochs):
+        columns[str(offset + 2)] = {"quantity": quantity, "units": units,
+                                    "epoch_kyr": float(epoch)}
+    relative = str(path.relative_to(archive))
+    return {
+        "contributor": "VK",
+        "kind": "spatial",
+        "cases": [case],
+        "load": load,
+        "grid": grid,
+        "evidence": (f"{relative.rsplit('/', 1)[0]}/README (`Units are m and m/yr`, "
+                     f"`*cost.dat contain the fine grids and *costg contain the gobal grid`, "
+                     f"`North and South pole are omitted`) and the header of {path.name} "
+                     f"(`{words}`, `Epoch (kyr): {' '.join(epochs)}`); drawn by {', '.join(drawn_by)}"),
+        "columns": columns,
+    }
+
+
+def file_layouts(archive: pathlib.Path, decoded: list[dict]) -> dict:
+    """Every file a Spada reader uses, keyed by its path under data/original/.
+
+    The files are those the published scripts of tests 1/2 and 2/2 draw, the
+    TABOO point load profiles in T02/, the four relaxation spectra of test 1/1
+    and the signed Love number tables of tests 2/1 and 3/1, all in the working
+    directories and not in PAPER/. A file is chosen by the script that drew it
+    where one exists, which is what keeps the runs with a different load out
+    (correction spada-t02-gs-runs-with-a-different-load).
+    """
+    files: dict[str, dict] = {}
+
+    # Tests 1/2 and 2/2: whatever the published script draws.
+    drawn: dict[tuple[str, str], list[str]] = {}
+    for script in decoded:
+        case = PUBLISHED_SPATIAL_SCRIPTS.get(script["script"])
+        if case is None:
+            continue
+        for panel in script["panels"]:
+            for series in panel["series"]:
+                if not series["drawn"]:
+                    continue
+                name = f"{script['test']}/{series['file'].removeprefix('./')}"
+                drawn.setdefault((name, case), [])
+                if script["script"] not in drawn[(name, case)]:
+                    drawn[(name, case)].append(script["script"])
+    for (name, case), scripts in sorted(drawn.items()):
+        path = archive / name
+        layout = (_vilma_layout if "/output_sec2" in name else _taboo_layout)(
+            archive, path, case, scripts)
+        files[f"{ARCHIVE}/{name}"] = layout
+
+    # The point load, which no script draws.
+    for prefix, case in (("disp", "t02-01"), ("rate", "t02-02")):
+        for path in sorted((archive / "T02").glob(f"{prefix}_t*_point.dat")):
+            files[f"{ARCHIVE}/{path.relative_to(archive)}"] = _taboo_layout(archive, path, case, [])
+
+    # Test 1/1, and the Love numbers paired with it.
+    spectra = {}
+    for path in sorted((archive / "T01-01").glob("spec_T01_01_*.dat")):
+        layout = _spectrum_layout(archive, path)
+        files[f"{ARCHIVE}/{path.relative_to(archive)}"] = layout
+        records = _records(path)
+        row = next(r for r in records if int(r[0]) == 2)
+        spectra[layout["contributor"]] = (layout["mode_order"], path.name, row[1:])
+    for test, kind in (("T01-02", "L"), ("T01-03", "T")):
+        for path in sorted((archive / test).glob(f"[hlk]_{kind}_{test}_*.dat")):
+            contributor, _ = contributor_of(path.name)
+            files[f"{ARCHIVE}/{path.relative_to(archive)}"] = _love_layout(
+                archive, path, spectra[contributor])
+
+    # The units a reader converts rates with must reproduce the published axis:
+    # the script multiplies a stored value by its scale, so the stored unit in
+    # m/kyr divided by the scale is one number for every series on the axis.
+    quotients = set()
+    for script in decoded:
+        if script["script"] != "T02-02/plot_PAP.gmt":
+            continue
+        for panel in script["panels"]:
+            for series in panel["series"]:
+                if not series["drawn"]:
+                    continue
+                name = f"{ARCHIVE}/T02-02/{series['file'].removeprefix('./')}"
+                column = files[name]["columns"][str(series["ordinate"]["column"])]
+                scale = series["ordinate"]["scale"]
+                factor = 1.0 if scale is None else float(re.fullmatch(r"x\*([\d.]+)", scale).group(1))
+                quotients.add(round(IN_M_PER_KYR[column["units"]] / factor, 9))
+    if len(quotients) != 1:
+        raise ValueError(f"the rate units disagree with T02-02/plot_PAP.gmt: {quotients}")
+    return dict(sorted(files.items()))
+
+
 def main() -> int:
     here = pathlib.Path(__file__).resolve().parent.parent
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
@@ -640,6 +1052,10 @@ def main() -> int:
             {"file": f, "script": script, "path_says": path_code,
              "banner_says": banner_code}
             for f, script, path_code, banner_code in disagree],
+        # The table a reader uses, keyed by the path under data/original/. It
+        # is written by this script and never by hand, so the next run cannot
+        # remove a table the reader depends on.
+        "files": file_layouts(archive, decoded),
     }
     args.output.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
 
@@ -647,6 +1063,7 @@ def main() -> int:
     n_panels = sum(len(s["panels"]) for s in decoded)
     print(f"{len(decoded)} scripts, {n_panels} panels, {len(per_file)} data "
           f"files, {n_series} column assignments")
+    print(f"{len(doc['files'])} files with a per-file layout for the reader")
 
     unnamed = [p["output"] for s in decoded for p in s["panels"]
                if p["quantity"] is None and p["series"]]

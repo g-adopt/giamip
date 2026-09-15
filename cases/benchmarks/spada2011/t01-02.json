@@ -31,7 +31,7 @@
       "VB",
       "ZM"
     ],
-    "$comment": "Contributor abbreviations are those of the paper's table 1. Which files hold which quantity is recorded in docs/reference/column-layouts.qmd, and is not yet decoded for every file."
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of gia_mip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file."
   },
-  "status": "specified; no reader and no converted data yet"
+  "status": "converted: GS, RR, VB and ZM in data/converted/spada2011/spada2011-t01-02.nc. ZM supplied degrees 2 and 5 only."
 }

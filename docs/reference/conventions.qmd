@@ -20,6 +20,14 @@ data file departs from them, the departure is in
 | zeta | Solid Earth topography | m | Upward, so a negative value is ocean depth | Mean sea level |
 | h_UF | Thickness of the uniform water layer | m | Positive when water is added to the ocean | Zero at the initial time |
 
+In the Spada et al. (2011) tests the colatitude is the angle from the load
+centre, `V` is positive away from the load, and the rates `U_rate`, `V_rate`
+and `N_rate` are stored in m/kyr in the converted files. GS writes rates in
+mm/yr and VK in m/yr, which is the same quantity in two units and not a sign
+difference; both agree in sign with the displacements. Residues of the Love
+numbers are in 1/kyr with the sign of the paper, h_f = h_e - sum r_j / s_j,
+which VB's files reverse.
+
 `N` is a height, and several benchmark contributors store the gravitational
 potential perturbation instead. Dividing the potential by the surface gravity
 gives the height; the Martinec scripts use 9.8155 m/s², the surface value of

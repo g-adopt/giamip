@@ -93109,5 +93109,4302 @@
    "path_says": "RR",
    "banner_says": "GS"
   }
- ]
+ ],
+ "files": {
+  "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_GS.dat": {
+   "contributor": "GS",
+   "kind": "relaxation_spectrum",
+   "cases": [
+    "t01-01"
+   ],
+   "evidence": "T01-01/spec_T01_01_GS.dat: ten values per row; s_j = -1000 / tau_j of spec_T01_01_GS.mod (tau in years) at degree 2; the frequencies of every row are monotonic",
+   "record_values": 10,
+   "lines_per_record": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "s",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "3": {
+     "quantity": "s",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "4": {
+     "quantity": "s",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "s",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "s",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "s",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "s",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "s",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "s",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_RR.dat": {
+   "contributor": "RR",
+   "kind": "relaxation_spectrum",
+   "cases": [
+    "t01-01"
+   ],
+   "evidence": "T01-01/spec_T01_01_RR.dat: ten values per row; s_j = -1000 / tau_j of spec_T01_01_RR.mod (tau in years) at degree 2; the frequencies of every row are monotonic",
+   "record_values": 10,
+   "lines_per_record": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "s",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "3": {
+     "quantity": "s",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "4": {
+     "quantity": "s",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "s",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "s",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "s",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "s",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "s",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "s",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_VB.dat": {
+   "contributor": "VB",
+   "kind": "relaxation_spectrum",
+   "cases": [
+    "t01-01"
+   ],
+   "evidence": "T01-01/spec_T01_01_VB.dat: ten values per row; s_j = -1000 / tau_j of spec_T01_01_VB.mod (tau in years) at degree 2; the frequencies of every row are monotonic",
+   "record_values": 10,
+   "lines_per_record": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "s",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "3": {
+     "quantity": "s",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "4": {
+     "quantity": "s",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "s",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "s",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "s",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "s",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "s",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "s",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-01/spec_T01_01_ZM.dat": {
+   "contributor": "ZM",
+   "kind": "relaxation_spectrum",
+   "cases": [
+    "t01-01"
+   ],
+   "evidence": "T01-01/spec_T01_01_ZM.dat: ten values per row; s_j = -1000 / tau_j of spec_T01_01_ZM.mod (tau in years) at degree 2; the frequencies of every row are monotonic",
+   "record_values": 10,
+   "lines_per_record": 1,
+   "mode_order": "fastest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "s",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "3": {
+     "quantity": "s",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "4": {
+     "quantity": "s",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "s",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "s",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "s",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "s",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "s",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "s",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/h_L_T01-02_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "h",
+   "love_number_type": "loading",
+   "evidence": "T01-02/h_L_T01-02_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/h_L_T01-02_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "h",
+   "love_number_type": "loading",
+   "evidence": "T01-02/h_L_T01-02_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/h_L_T01-02_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "h",
+   "love_number_type": "loading",
+   "evidence": "T01-02/h_L_T01-02_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/h_L_T01-02_ZM.dat": {
+   "contributor": "ZM",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "h",
+   "love_number_type": "loading",
+   "evidence": "T01-02/h_L_T01-02_ZM.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_ZM.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "fastest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/k_L_T01-02_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "k",
+   "love_number_type": "loading",
+   "evidence": "T01-02/k_L_T01-02_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/k_L_T01-02_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "k",
+   "love_number_type": "loading",
+   "evidence": "T01-02/k_L_T01-02_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/k_L_T01-02_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "k",
+   "love_number_type": "loading",
+   "evidence": "T01-02/k_L_T01-02_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/k_L_T01-02_ZM.dat": {
+   "contributor": "ZM",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "k",
+   "love_number_type": "loading",
+   "evidence": "T01-02/k_L_T01-02_ZM.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_ZM.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "fastest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/l_L_T01-02_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "l",
+   "love_number_type": "loading",
+   "evidence": "T01-02/l_L_T01-02_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/l_L_T01-02_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "l",
+   "love_number_type": "loading",
+   "evidence": "T01-02/l_L_T01-02_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/l_L_T01-02_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "l",
+   "love_number_type": "loading",
+   "evidence": "T01-02/l_L_T01-02_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-02/l_L_T01-02_ZM.dat": {
+   "contributor": "ZM",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-02"
+   ],
+   "quantity": "l",
+   "love_number_type": "loading",
+   "evidence": "T01-02/l_L_T01-02_ZM.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_ZM.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "fastest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/h_T_T01-03_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "h",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/h_T_T01-03_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/h_T_T01-03_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "h",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/h_T_T01-03_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/h_T_T01-03_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "h",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/h_T_T01-03_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "h_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "h_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "h_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "h_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "h_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "h_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "h_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "h_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "h_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "h_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "h_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/k_T_T01-03_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "k",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/k_T_T01-03_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/k_T_T01-03_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "k",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/k_T_T01-03_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/k_T_T01-03_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "k",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/k_T_T01-03_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "k_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "k_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "k_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "k_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "k_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "k_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "k_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "k_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "k_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "k_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "k_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/l_T_T01-03_GS.dat": {
+   "contributor": "GS",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "l",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/l_T_T01-03_GS.dat: header `Harmonic degree, elastic, fluid, residues`; 15 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_GS.dat; residue positions 6, 9 and 12 are the Maxwell modes",
+   "record_values": 15,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    },
+    "13": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "14": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    },
+    "15": {
+     "quantity": "maxwell_residue",
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/l_T_T01-03_RR.dat": {
+   "contributor": "RR",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "l",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/l_T_T01-03_RR.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 1 line(s); the fluid limit at degree 2 holds with residue sign +1 and the modes of spec_T01_01_RR.dat",
+   "record_values": 12,
+   "lines_per_record": 1,
+   "residue_sign": 1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T01-03/l_T_T01-03_VB.dat": {
+   "contributor": "VB",
+   "kind": "love_numbers",
+   "cases": [
+    "t01-03"
+   ],
+   "quantity": "l",
+   "love_number_type": "tidal",
+   "evidence": "T01-03/l_T_T01-03_VB.dat: header `Harmonic degree, elastic, fluid, residues`; 12 values per record over 2 line(s); the fluid limit at degree 2 holds with residue sign -1 and the modes of spec_T01_01_VB.dat",
+   "record_values": 12,
+   "lines_per_record": 2,
+   "residue_sign": -1,
+   "mode_order": "slowest_first",
+   "columns": {
+    "1": {
+     "quantity": "degree",
+     "units": "1"
+    },
+    "2": {
+     "quantity": "l_elastic",
+     "units": "1"
+    },
+    "3": {
+     "quantity": "l_fluid",
+     "units": "1"
+    },
+    "4": {
+     "quantity": "l_residue",
+     "mode": 1,
+     "units": "1/kyr"
+    },
+    "5": {
+     "quantity": "l_residue",
+     "mode": 2,
+     "units": "1/kyr"
+    },
+    "6": {
+     "quantity": "l_residue",
+     "mode": 3,
+     "units": "1/kyr"
+    },
+    "7": {
+     "quantity": "l_residue",
+     "mode": 4,
+     "units": "1/kyr"
+    },
+    "8": {
+     "quantity": "l_residue",
+     "mode": 5,
+     "units": "1/kyr"
+    },
+    "9": {
+     "quantity": "l_residue",
+     "mode": 6,
+     "units": "1/kyr"
+    },
+    "10": {
+     "quantity": "l_residue",
+     "mode": 7,
+     "units": "1/kyr"
+    },
+    "11": {
+     "quantity": "l_residue",
+     "mode": 8,
+     "units": "1/kyr"
+    },
+    "12": {
+     "quantity": "l_residue",
+     "mode": 9,
+     "units": "1/kyr"
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t0_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t0_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t0_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t0_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t1000_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t1000_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t1000_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t1000_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t10_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t10_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t10_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t10_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t1_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t1_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t1_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t1_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t2_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t2_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t2_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t2_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t5_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "evidence": "T02-01/disp_t5_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/disp_t5_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "evidence": "T02-01/disp_t5_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-01/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/e2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of e2cost.dat (`geoid displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/e2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of e2costg.dat (`geoid displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/u2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of u2cost.dat (`vertical displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/u2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of u2costg.dat (`vertical displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/v2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of v2cost.dat (`horizontal displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2disc/v2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of v2costg.dat (`horizontal displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/e2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of e2cost.dat (`geoid displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/e2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of e2costg.dat (`geoid displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/u2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of u2cost.dat (`vertical displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/u2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of u2costg.dat (`vertical displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/v2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of v2cost.dat (`horizontal displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-01/output_sec2parab/v2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-01/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of v2costg.dat (`horizontal displacement (m)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-01/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/edt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of edt2cost.dat (`geoid displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/edt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of edt2costg.dat (`geoid displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/udt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of udt2cost.dat (`vertical displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/udt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of udt2costg.dat (`vertical displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/vdt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of vdt2cost.dat (`horizontal displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2disc/vdt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2disc/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of vdt2costg.dat (`horizontal displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/edt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of edt2cost.dat (`geoid displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/edt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of edt2costg.dat (`geoid displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "N_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/udt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of udt2cost.dat (`vertical displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/udt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of udt2costg.dat (`vertical displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "U_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/vdt2cost.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "fine",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of vdt2cost.dat (`horizontal displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/output_sec2parab/vdt2costg.dat": {
+   "contributor": "VK",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "grid": "global",
+   "evidence": "T02-02/output_sec2parab/README (`Units are m and m/yr`, `*cost.dat contain the fine grids and *costg contain the gobal grid`, `North and South pole are omitted`) and the header of vdt2costg.dat (`horizontal displacement rate (m/a)`, `Epoch (kyr): 0 1 2 5 10`); drawn by T02-02/plot_PAP.gmt",
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 5.0
+    },
+    "6": {
+     "quantity": "V_rate",
+     "units": "m/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t0_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t0_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t0_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t0_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t1000_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t1000_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t1000_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t1000_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t10_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t10_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t10_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t10_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t1_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t1_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t1_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t1_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t2_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t2_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t2_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t2_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t5_cap.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "cap",
+   "evidence": "T02-02/rate_t5_cap.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02-02/rate_t5_disc.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "disc",
+   "evidence": "T02-02/rate_t5_disc.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by T02-02/plot_PAP.gmt",
+   "load_mass_kg": 3.607171340900778e+18,
+   "harmonic_degrees": [
+    2,
+    128
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_t0_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_t0_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_t10_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_t10_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_t1_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_t1_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_t2_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_t2_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_t5_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_t5_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/disp_tinf_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-01"
+   ],
+   "load": "point",
+   "evidence": "T02/disp_tinf_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "3": {
+     "quantity": "V",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N",
+     "units": "m",
+     "epoch_kyr": 1000.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_t0_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_t0_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 0.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_t10_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_t10_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 10.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_t1_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_t1_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_t2_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_t2_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 2.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_t5_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_t5_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 5.0
+    }
+   }
+  },
+  "spada2011/spada2011-cost-es0701/T02/rate_tinf_point.dat": {
+   "contributor": "GS",
+   "kind": "spatial",
+   "cases": [
+    "t02-02"
+   ],
+   "load": "point",
+   "evidence": "T02/rate_tinf_point.dat: TABOO header lines `Colat. ...` and their units, `Time (kyrs)`, the load line and the load mass; drawn by no script, the TABOO point load of tests 1/2 and 2/2",
+   "load_mass_kg": 1e+18,
+   "harmonic_degrees": [
+    2,
+    512
+   ],
+   "columns": {
+    "1": {
+     "quantity": "colatitude",
+     "units": "degrees"
+    },
+    "2": {
+     "quantity": "U_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0,
+     "header_units": "kyrs"
+    },
+    "3": {
+     "quantity": "V_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "4": {
+     "quantity": "longitudinal_displacement_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    },
+    "5": {
+     "quantity": "N_rate",
+     "units": "mm/yr",
+     "epoch_kyr": 1000.0
+    }
+   }
+  }
+ }
 }

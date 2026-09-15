@@ -22,14 +22,17 @@ contributor's own difference file, which reproduces the published reference:
 * the case B basin and both case D profiles
   (correction martinec2018-caseD-vega-profile-grid), recovered from YS, whose
   2048-point grid is the finest.
+
+Spada et al. (2011) has no such reference code; `spada_score` at the end of
+this module scores against each contributor separately.
 """
 
 from __future__ import annotations
 
 import numpy as np
 
-from gia_mip.benchmarks.inputs import MartinecCase
-from gia_mip.benchmarks.results import BenchmarkResult, Curve
+from gia_mip.benchmarks.inputs import MartinecCase, SpadaCase
+from gia_mip.benchmarks.results import BenchmarkResult, Curve, SpadaResult
 
 # Which contributor the reference is recovered from, where VEGA as shipped
 # cannot be used. The key is (case, profile).
@@ -145,4 +148,122 @@ def score(result: BenchmarkResult) -> list[dict]:
             rows.append({"kind": "time_series", "profile": None, "quantity": quantity,
                          "interval": spec.time_interval_kyr,
                          "reference": ref.attributes["reference"], **m})
+    return rows
+
+
+# =====================================================================
+# Spada et al. (2011)
+# =====================================================================
+#
+# Spada et al. (2011) has no reference code. Its figures overlay the
+# contributors and the paper judges agreement by eye, so no one of them is
+# right by definition, and an average of them would be a result that no code
+# produced. `spada_score` therefore scores a result against each reference
+# contributor separately and labels every row with the contributor's code. A
+# reader who wants one number chooses the contributor and says so.
+
+def _restricted(curve: Curve, keep: np.ndarray) -> Curve:
+    """A curve on a subset of its axis values."""
+    mask = np.isin(curve.axis, keep)
+    return Curve(curve.axis[mask], curve.values[mask], dict(curve.attributes))
+
+
+def _spatial_intervals(case: str) -> list[tuple[float, float]]:
+    """The near-field and global colatitude intervals of a spatial case, in degrees."""
+    setup = SpadaCase(case)
+    near, whole = setup.near_field_colatitudes_deg(), setup.global_colatitudes_deg()
+    return [(float(near[0]), float(near[-1])), (float(whole[0]), float(whole[-1]))]
+
+
+def _degree_rows(candidate_degrees, reference_degrees, excluded) -> np.ndarray:
+    """The degrees both hold, less those the reference marks as not to score."""
+    common = np.intersect1d(np.asarray(candidate_degrees), np.asarray(reference_degrees))
+    return common[~np.isin(common, np.asarray(excluded, dtype=int))]
+
+
+def _excluded_degrees(attributes: dict) -> list[int]:
+    """Degrees listed in ``degrees_not_to_score``, text such as ``3 4``, or none.
+
+    The converter lists ZM's spectrum rows that copy degree 2
+    (correction spada-t01-01-zm-degrees-copy-degree-2).
+    """
+    text = attributes.get("degrees_not_to_score", "")
+    return [int(v) for v in str(text).split()]
+
+
+def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list[dict]:
+    """Score one result against each reference contributor, with `difference_metrics`.
+
+    Spatial fields are compared at every epoch both results hold, exactly: a
+    solver's fluid limit (``math.inf``) is never paired with GS's run at 1000
+    kyr. Each field gets two rows, one over the near field (0 to 25 degrees)
+    and one over the whole meridian (0 to 180 degrees), measured at the
+    reference's points. Love numbers are compared per degree over the degrees
+    both hold: elastic and fluid for each of h, l and k. The relaxation
+    spectrum is compared mode by mode over the common degrees. Residues are not
+    scored, because their size spans twenty orders of magnitude over the
+    degrees and a difference in one number says little.
+
+    Parameters
+    ----------
+    result
+        The candidate, for example a radopt run.
+    references
+        Member code to reference result, for example the GS and VK members of
+        ``SpadaResult.reference_path(case)``.
+
+    Returns
+    -------
+    list of dict
+        One row per comparison: ``kind`` (``spatial``, ``love_numbers`` or
+        ``relaxation_spectrum``), ``load`` (None unless spatial), ``quantity``
+        (for Love numbers ``h_elastic`` and so on, for the spectrum ``s_1``
+        and so on), ``epoch_kyr`` (None unless spatial), ``interval``,
+        ``reference`` (the member code), and the entries of
+        `difference_metrics`.
+    """
+    rows: list[dict] = []
+    intervals = _spatial_intervals(result.case) if result.fields else []
+    for code, reference in references.items():
+        # Surface fields, per load, quantity and epoch.
+        for (load, quantity, epoch), curve in sorted(result.fields.items()):
+            if (load, quantity, epoch) not in reference.fields:
+                continue
+            ref = reference.fields[(load, quantity, epoch)]
+            for interval in intervals:
+                m = difference_metrics(curve, ref, interval)
+                rows.append({"kind": "spatial", "load": load, "quantity": quantity,
+                             "epoch_kyr": epoch, "interval": interval,
+                             "reference": code, **m})
+        # Love numbers, per degree.
+        for quantity, love in sorted(result.love.items()):
+            if quantity not in reference.love:
+                continue
+            ref = reference.love[quantity]
+            degrees = _degree_rows(love.degrees, ref.degrees, _excluded_degrees(ref.attributes))
+            if degrees.size == 0:
+                continue
+            interval = (float(degrees[0]), float(degrees[-1]))
+            for part in ("elastic", "fluid"):
+                candidate = _restricted(Curve(love.degrees, getattr(love, part)), degrees)
+                reference_curve = _restricted(Curve(ref.degrees, getattr(ref, part)), degrees)
+                m = difference_metrics(candidate, reference_curve, interval)
+                rows.append({"kind": "love_numbers", "load": None,
+                             "quantity": f"{quantity}_{part}", "epoch_kyr": None,
+                             "interval": interval, "reference": code, **m})
+        # Relaxation spectrum, per mode.
+        if result.spectrum is not None and reference.spectrum is not None:
+            mine, ref = result.spectrum, reference.spectrum
+            if mine.s_per_kyr.shape[1] == ref.s_per_kyr.shape[1]:
+                degrees = _degree_rows(mine.degrees, ref.degrees, _excluded_degrees(ref.attributes))
+                if degrees.size:
+                    interval = (float(degrees[0]), float(degrees[-1]))
+                    for j in range(mine.s_per_kyr.shape[1]):
+                        m = difference_metrics(
+                            _restricted(Curve(mine.degrees, mine.s_per_kyr[:, j]), degrees),
+                            _restricted(Curve(ref.degrees, ref.s_per_kyr[:, j]), degrees),
+                            interval)
+                        rows.append({"kind": "relaxation_spectrum", "load": None,
+                                     "quantity": f"s_{j + 1}", "epoch_kyr": None,
+                                     "interval": interval, "reference": code, **m})
     return rows
