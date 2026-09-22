@@ -79,6 +79,19 @@ D on the titles of Martinec's own figure scripts, and E on Martinec's archive
 `resultsE_2026.zip`, which holds only F1 files. Where a new identity is not
 established in the same way, the field says so. Do not guess.
 
+## Reference data of the Spada benchmark
+
+The archive `spada2011/spada2011-cost-es0701.tar.gz` is the reference data of
+Spada et al. (2011). It is the most complete record that could be obtained.
+Sia Ghelichkhani decided this on 2026-09-15 and closed the gaps in it as they
+stand. Each case file says so in `reference_data.reference_status`, and
+`docs/collections/spada2011.qmd` lists the gaps.
+
+Do not fill a gap from another source, for example by typing values from the
+tables of the paper or by reading them off a figure. If a contributor supplies
+new data, add it as a new original with its provenance and corrections. Then
+update the case file and the collection page.
+
 ## Redistribution
 
 `gia_mip/resources/provenance.json` records, per file, whether the supplier

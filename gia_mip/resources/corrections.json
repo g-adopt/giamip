@@ -239,7 +239,7 @@
    "as_shipped": "The case files list BL, GS, PG, VK and ZM for test 2/1 and BL, GS, PG and VK for test 2/2, from the paper's table 1",
    "correct": "The archive holds data for GS and VK only in both tests",
    "evidence": "The GMT scripts of T02-01 and T02-02 draw two series per panel, one from the per-epoch files disp_t*_cap.dat and disp_t*_disc.dat and one from ./output_sec2parab/ and ./output_sec2disc/, attributed to GS and VK by the banner comments and by the header of u2cost.dat, which reads `performed by spectral FE code, Klemann at GFZ`. No file anywhere in the archive is attributable to BL, PG or, for these two tests, ZM.",
-   "action": "Score against GS and VK for these two tests. A contributor named in the case file with no data in the archive must fail loudly, not be skipped.",
+   "action": "Score against GS and VK for these two tests. A contributor named in the case file with no data in the archive must fail loudly, not be skipped. The gap is closed by Sia Ghelichkhani's decision of 2026-09-15: the archive is the reference data, and ZM's values in tables 10 to 12 and BL's and PG's curves in figure 12 exist only in the paper.",
    "status": "confirmed",
    "discovered": "2026-09-13",
    "sha256": [

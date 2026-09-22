@@ -31,7 +31,8 @@
       "VB",
       "ZM"
     ],
-    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of gia_mip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file."
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of gia_mip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
+    "reference_status": "closed on 2026-09-15 by Sia Ghelichkhani: the archive spada2011-cost-es0701 is the reference data for this test, and what it lacks is recorded in not_converted and status. New data for a gap is added as a new original, with its own provenance and corrections."
   },
-  "status": "converted: GS, RR, VB and ZM in data/converted/spada2011/spada2011-t01-02.nc. ZM supplied degrees 2 and 5 only."
+  "status": "converted: GS, RR, VB and ZM in data/converted/spada2011/spada2011-t01-02.nc. ZM supplied degrees 2 and 5 only. The paper prints none of ZM's values; the caption of table 6 states that they agree, and table 7 gives the degree-2 components of k that GS, RR and VB also give."
 }

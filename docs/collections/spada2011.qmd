@@ -55,6 +55,36 @@ submissions: `u` is vertical displacement, `v` horizontal, `e` geoid, in
 metres and metres per year, with `*cost` the fine grid and `*costg` the
 global grid, both poles omitted.
 
+## Status of the reference data
+
+The archive is the reference data of this collection. It is the most complete
+record of the benchmark that could be obtained. On 2026-09-15 Sia Ghelichkhani
+decided to close its gaps as they stand, and every case file records this in
+`reference_data.reference_status`. If data for a gap emerges later, it is added
+as a new original with its provenance and corrections, and the case file and
+this page record it.
+
+Two contributions that the paper publishes are not in the archive:
+
+| Test | Contributor | In the paper | In the archive |
+| --- | --- | --- | --- |
+| 1/2 | ZM | U, V and N of the cap at 8 colatitudes and 4 times, tables 10 to 12 | Nothing |
+| 1/2 and 2/2 | BL, PG | U and its rate for the cap from 0 to 15 degrees, figure 12 | Nothing |
+
+Table 1 of the paper also lists contributions for which the paper prints no
+values of their own:
+
+| Test | Contributor | In the archive |
+| --- | --- | --- |
+| 1/1 | ZM | Degrees 2 to 5, of which 3 and 4 copy degree 2 |
+| 2/1 | ZM | Degrees 2 and 5 |
+| 3/1 | ZM | Nothing |
+| 6/1 | GS | Nothing, and figure 7 shows no GS result |
+
+For ZM the paper states only that its values agree with those of the other
+codes (tables 5, 6 and 7). Every value the paper prints for these tests is
+also given by GS, RR and VB, and their files are complete.
+
 ## Reading the data
 
 `scripts/decode_spada_layouts.py` decodes the 87 GMT scripts into

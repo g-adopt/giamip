@@ -143,6 +143,19 @@ def test_every_spada_case_has_an_updated_status(case_id):
     assert status.strip() and status != OLD_STATUS, (case_id, status)
 
 
+@pytest.mark.parametrize("case_id", [f"spada2011-t01-0{i}" for i in range(1, 8)]
+                         + [f"spada2011-t02-0{i}" for i in range(1, 4)])
+def test_every_spada_case_records_that_its_reference_data_is_closed(case_id):
+    """Sia Ghelichkhani's decision of 2026-09-15: the archive is the reference data.
+
+    AGENTS.md forbids filling a gap from another source. A case file that
+    loses this record would let a later change do exactly that without notice.
+    """
+    reference = cases.case(case_id)["reference_data"]
+    assert reference.get("reference_status", "").startswith("closed on 2026-09-15"), case_id
+    assert "spada2011-cost-es0701" in reference["reference_status"], case_id
+
+
 # ------------------------------------------------------------ documentation
 
 def test_the_collection_page_no_longer_says_the_scripts_are_not_decoded():
