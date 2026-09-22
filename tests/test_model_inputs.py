@@ -53,6 +53,64 @@ def test_the_closed_form_mass_matches_a_numerical_integral():
     assert integral == pytest.approx(case.ice_mass(10.0), rel=1e-5)
 
 
+def _legendre(n_max: int, x: np.ndarray) -> np.ndarray:
+    """P_0 .. P_n_max at the points x, by the three-term recurrence."""
+    p = np.zeros((n_max + 1, x.size))
+    p[0] = 1.0
+    if n_max >= 1:
+        p[1] = x
+    for n in range(1, n_max):
+        p[n + 1] = ((2 * n + 1) * x * p[n] - n * p[n - 1]) / (n + 1)
+    return p
+
+
+def test_the_cap_legendre_coefficients_are_the_projection_of_the_profile():
+    """sigma_n = (2n + 1)/2 integral of sigma(psi) P_n(cos psi) over cos psi.
+
+    The integral runs over x = cos psi from cos alpha to 1, where the cap
+    sits. The substitution x = cos alpha + (1 - cos alpha) u^2 turns the
+    square root of the profile into u, so the integrand is a polynomial in u
+    of degree at most 2 n_max + 2. Gauss-Legendre quadrature with 400 nodes
+    integrates it exactly up to rounding, so the tolerance, 1e-8 relative
+    with a floor of 1e-4 kg/m2 against a degree-1 value near 1e5 kg/m2, is a
+    statement about rounding and not about the closed form.
+    """
+    case = MartinecCase("B")
+    degrees = np.arange(0, 129)
+    height, alpha_deg = case.cap_size(10.0)
+    c_alpha = np.cos(np.radians(alpha_deg))
+    nodes, weights = np.polynomial.legendre.leggauss(400)
+    u = 0.5 * (nodes + 1.0)
+    w = 0.5 * weights
+    x = c_alpha + (1.0 - c_alpha) * u ** 2
+    jacobian = 2.0 * (1.0 - c_alpha) * u
+    # The profile as a function of the angle from the cap centre, in kg/m2.
+    sigma = case.ice_density * height * np.sqrt((x - c_alpha) / (1.0 - c_alpha))
+    p = _legendre(int(degrees[-1]), x)
+    expected = (2 * degrees + 1) / 2.0 * (p[degrees] * sigma * jacobian * w).sum(axis=1)
+    got = case.legendre_coefficients(degrees, 10.0)
+    np.testing.assert_allclose(got, expected, rtol=1e-8, atol=1e-4)
+
+
+def test_the_degree_0_cap_coefficient_carries_the_cap_mass():
+    """4 pi a^2 sigma_0 is the mass the closed form of `ice_mass` gives."""
+    case = MartinecCase("C")
+    sigma_0 = case.legendre_coefficients(np.array([0]), 15.0)[0]
+    mass = 4 * np.pi * case.earth_radius_m ** 2 * sigma_0
+    assert mass == pytest.approx(case.ice_mass(15.0), rel=1e-12)
+
+
+def test_the_cap_coefficients_vanish_before_the_cap_exists():
+    """Case C grows from nothing, so t = 0 has no load and every degree is zero."""
+    got = MartinecCase("C").legendre_coefficients(np.arange(0, 5), 0.0)
+    assert np.all(got == 0.0)
+
+
+def test_a_negative_degree_is_refused():
+    with pytest.raises(ValueError, match="non-negative"):
+        MartinecCase("B").legendre_coefficients([-1, 0, 1], 10.0)
+
+
 def test_the_basin_radius_and_area_match_the_paper():
     case = MartinecCase("D")
     assert case.basin_radius_deg() == pytest.approx(24.8503, abs=5e-5)

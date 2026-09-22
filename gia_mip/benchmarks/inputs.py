@@ -215,6 +215,53 @@ class MartinecCase:
         colat2d, lon2d = np.meshgrid(90.0 - lat, lon, indexing="ij")
         return np.stack([self.ice_thickness(colat2d, lon2d, t) for t in np.atleast_1d(times_kyr)])
 
+    def legendre_coefficients(self, degrees, t_kyr: float) -> np.ndarray:
+        """sigma_n of the cap at time t in kg/m2, as an expansion about its own axis.
+
+        The cap is axially symmetric about its centre, so its surface mass
+        density is ``sigma(psi) = sum_n sigma_n P_n(cos psi)`` with psi the angle
+        from that centre and P_n the unnormalised Legendre polynomials. The
+        closed form is the one of Spada et al. (2011), table 4, row 1, which
+        ``loads/spada2011.json`` records:
+
+            sigma_n = -rho h / (4 (1 - cos alpha))
+                      [ (T_{n+1} - T_{n+2}) / (n + 3/2) - (T_{n-1} - T_n) / (n - 1/2) ],
+            T_k = cos(k alpha).
+
+        It also holds at n = 0, where it gives rho h (1 - cos alpha) / 3, so that
+        4 pi a^2 sigma_0 is the cap mass of `ice_mass`.
+
+        Why this exists beside `ice_thickness`. The cap has an infinitely steep
+        edge, so its expansion converges slowly and a quadrature of the profile
+        on any finite grid aliases the tail back onto the retained degrees. The
+        closed form has no such error, and a solver that works in spherical
+        harmonics should start from it. Placing the cap away from the pole is
+        then one application of the addition theorem, which needs the harmonics
+        of the solver and is therefore left to the solver.
+
+        Parameters
+        ----------
+        degrees
+            Harmonic degrees, non-negative.
+        t_kyr
+            Time since loading. The height and the angular radius follow
+            `cap_size`, so a cap that has not started gives zeros.
+        """
+        n = np.asarray(degrees, dtype=int)
+        if np.any(n < 0):
+            raise ValueError("degrees must be non-negative")
+        height, alpha_deg = self.cap_size(t_kyr)
+        if alpha_deg <= 0.0:
+            return np.zeros(n.shape, dtype=float)
+        alpha = np.radians(alpha_deg)
+        rho_h = self.ice_density * height
+        # The expression subtracts nearly equal cosines at high degree; at
+        # degree 128 it agrees with a quadrature of the profile to 1e-10
+        # relative (the same check as SpadaCase.legendre_coefficients).
+        t = lambda k: np.cos(k * alpha)                                  # noqa: E731
+        return (-rho_h / (4.0 * (1.0 - np.cos(alpha)))
+                * ((t(n + 1) - t(n + 2)) / (n + 1.5) - (t(n - 1) - t(n)) / (n - 0.5)))
+
     def ice_mass(self, t_kyr: float) -> float:
         """Total mass of the cap in kg, from the closed form of the profile.
 
