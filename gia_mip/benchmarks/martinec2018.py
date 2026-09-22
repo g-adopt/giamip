@@ -134,6 +134,7 @@ HANDLING = {
     "benchmarkA-fortran-exponent": "D exponents are rewritten as E before parsing",
     "benchmarkA-ww-axisymmetric-rescaled": "the figure-only factors 9*x/10 and 2*x/3 are not applied",
     "benchmarkA-geoid-sign-varies": "the sign is taken from column_layouts.json",
+    "martinec2018-geoid-panel-is-negated": "the geoid is negated after the script's own sign",
     "benchmarkA-gs-repeated-last-row": "a point repeated with the same value is dropped",
     "benchmarkA-vega-supplied-run-differs": "converted, and flagged as a second VEGA run in an attribute",
     "martinec2018-caseC-basin-gravity-factor": "the potential is divided by 9.8155, not by 10",
@@ -415,6 +416,21 @@ def extract(case: str, root: pathlib.Path | None = None,
                         if scale is not None and abs(factor * GRAVITY - 1.0) > 1e-12:
                             raise ValueError(f"{rel}: unexpected scale {scale!r} on {name}")
                     sign = -1.0 if series["y"]["negated"] else 1.0
+                    if name == "N":
+                        # The geoid panel holds minus the geoid displacement,
+                        # after the per-file signs above have brought the
+                        # contributors into agreement with each other. The
+                        # scripts draw the VEGA potential column as $5/9.8155,
+                        # with no minus sign, while eq. 9 of the paper is
+                        # N = -Phi/g0. See the correction
+                        # martinec2018-geoid-panel-is-negated, which carries two
+                        # independent checks: S = -N + h_UF in the shipped case C
+                        # data, and 1 + k positive at every epoch for this earth
+                        # model. Applied here so that every N in
+                        # data/converted/ is positive upward, as
+                        # docs/reference/conventions.qmd states.
+                        corrections.by_id("martinec2018-geoid-panel-is-negated")
+                        sign = -sign
                     values = sign * factor * y
                     if "benchmarkA-vega-supplied-run-differs" in ids:
                         attributes["note"] = ("A second VEGA run, not the one behind the "

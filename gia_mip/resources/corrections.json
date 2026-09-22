@@ -164,6 +164,20 @@
    "discovered": "2026-09-11"
   },
   {
+   "id": "martinec2018-geoid-panel-is-negated",
+   "kind": "trap",
+   "applies_to": [
+    "martinec2018/results?_2026/*"
+   ],
+   "field": "the geoid panel of every cross-section script, after the per-file signs of benchmarkA-geoid-sign-varies are applied",
+   "as_shipped": "The panel labelled N(theta,t) holds minus the geoid displacement. The scripts agree with each other on this sign and disagree with the paper.",
+   "correct": "Geoid displacement N, positive upward, as eq. 9 of the paper defines it: N = -Phi / g0.",
+   "evidence": "Two independent checks. First, from the data alone: on the case C basin profile, S = -N + h_UF at every colatitude to the last stored digit, with the stored h_UF(15 kyr) = -25.72346 m, while eq. 6 and eq. 8 of the paper give S = N + h_UF over the ocean. Second, from the physics of the earth model: 1 + k is positive at every epoch for M3-L70-V01, 0.756 at the elastic limit and 0.0157 at the fluid limit, the latter set by the elastic lithosphere, so a positive surface load raises the geoid at every time. The shipped benchmark A reference is -7.38 m at the cap centre, and its magnitude lies between the elastic value of +40.6 m and the fluid value of +1.23 m computed with radopt, which is where 10 kyr belongs. The origin is visible in the layout table: the scripts draw the VEGA potential column as $5/9.8155, with no minus sign, and vega_seven_column_format names column 5 the gravitational potential increment.",
+   "action": "Negate the geoid after the per-file sign of column_layouts.json has been applied. scripts/convert_martinec2018.py does this, so every N in data/converted/martinec2018/ is positive upward and agrees with docs/reference/conventions.qmd. A reader of the original files that follows the scripts alone is wrong by a factor of minus one.",
+   "status": "confirmed",
+   "discovered": "2026-09-16"
+  },
+  {
    "id": "benchmarkA-vega-supplied-run-differs",
    "kind": "superseded",
    "applies_to": [
