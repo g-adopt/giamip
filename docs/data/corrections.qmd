@@ -39,7 +39,7 @@ version is current. Three rules keep that safe.
 #| echo: false
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
-from gia_mip import corrections
+from giamip import corrections
 from IPython.display import Markdown
 
 rows = ["| Id | Kind | Applies to | Status |", "| --- | --- | --- | --- |"]
@@ -73,4 +73,4 @@ Markdown("\n".join(blocks))
 
 Finding a defect is useful. Open an issue with the file, the field, what the
 file says, what you believe is true, and how you know. See
-[CONTRIBUTING.md](https://github.com/g-adopt/gia-mip/blob/main/CONTRIBUTING.md).
+[CONTRIBUTING.md](https://github.com/g-adopt/giamip/blob/main/CONTRIBUTING.md).

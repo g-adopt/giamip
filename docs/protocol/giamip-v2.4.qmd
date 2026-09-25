@@ -14,7 +14,7 @@ The protocol names three output variables. The data request spreadsheet it
 refers to defines fourteen, and the compliance checker transcribes them. For
 anything about output format, see
 [the GIAMIP collection page](../collections/giamip.qmd) and
-`gia_mip/resources/variables.json`, which are generated from the checker.
+`giamip/resources/variables.json`, which are generated from the checker.
 
 Three points where the delivered files disagree with this text are recorded
 in [the corrections](../data/corrections.qmd): the GLAC3b and GLAC3c naming,

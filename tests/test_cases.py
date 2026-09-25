@@ -2,7 +2,7 @@
 
 import pytest
 
-from gia_mip import cases
+from giamip import cases
 
 COLLECTIONS = {"spada2011", "martinec2018", "giamip"}
 
@@ -81,7 +81,7 @@ def test_giamip_cases_use_the_giamip_constants_and_benchmarks_do_not():
 
 
 def test_giamip_cases_are_on_the_prescribed_grid():
-    from gia_mip import grids
+    from giamip import grids
     for c in cases.cases("giamip"):
         assert c["grid"]["nlat"] == grids.NLAT
         assert c["grid"]["nlon"] == grids.NLON

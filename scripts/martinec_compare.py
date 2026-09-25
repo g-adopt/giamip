@@ -1,6 +1,6 @@
 """Print the score of a Martinec et al. (2018) run against the published reference.
 
-The scoring lives in the package, in `gia_mip.benchmarks.metrics`, so that a
+The scoring lives in the package, in `giamip.benchmarks.metrics`, so that a
 solver's own test calls the same functions as this script. This file only reads
 a result and prints:
 
@@ -33,9 +33,9 @@ REPOSITORY = pathlib.Path(__file__).resolve().parent.parent
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
-from gia_mip.benchmarks import metrics                               # noqa: E402
-from gia_mip.benchmarks.inputs import MartinecCase                   # noqa: E402
-from gia_mip.benchmarks.results import BenchmarkResult               # noqa: E402
+from giamip.benchmarks import metrics                               # noqa: E402
+from giamip.benchmarks.inputs import MartinecCase                   # noqa: E402
+from giamip.benchmarks.results import BenchmarkResult               # noqa: E402
 
 
 def print_score(rows: list[dict]) -> None:

@@ -1,7 +1,7 @@
-"""Where `gia_mip.data.locate` finds a data file, and when it downloads one.
+"""Where `giamip.data.locate` finds a data file, and when it downloads one.
 
 All offline. A temporary directory stands in for the object store and is
-reached through a ``file://`` base URL (``GIA_MIP_BASE_URL``), which
+reached through a ``file://`` base URL (``GIAMIP_BASE_URL``), which
 ``urllib`` opens like an https one. A synthetic manifest replaces the real
 one, except in the tests that are about the real checkout.
 """
@@ -20,7 +20,7 @@ import zipfile
 
 import pytest
 
-from gia_mip import data
+from giamip import data
 
 REPOSITORY = pathlib.Path(data.__file__).resolve().parent.parent
 
@@ -70,8 +70,8 @@ def isolated(tmp_path, monkeypatch):
     manifest = {"base_url": "https://unused.invalid/", "artifacts": {}}
     monkeypatch.setattr(data, "load_manifest", lambda *a, **k: manifest)
     monkeypatch.setattr(data, "checkout_root", lambda: None)
-    monkeypatch.setenv("GIA_MIP_DATA_ROOT", str(root))
-    monkeypatch.setenv("GIA_MIP_BASE_URL", store.as_uri() + "/")
+    monkeypatch.setenv("GIAMIP_DATA_ROOT", str(root))
+    monkeypatch.setenv("GIAMIP_BASE_URL", store.as_uri() + "/")
     data._VERIFIED.clear()
     return {"store": store, "root": root, "manifest": manifest}
 
@@ -111,7 +111,7 @@ def test_a_corrupt_tracked_converted_file_raises_and_names_the_fix(tmp_path, mon
                 "artifacts": {"x/f.nc": _converted_entry("x/f.nc", b"published")}}
     monkeypatch.setattr(data, "load_manifest", lambda *a, **k: manifest)
     monkeypatch.setattr(data, "ROOT", checkout)
-    monkeypatch.delenv("GIA_MIP_DATA_ROOT", raising=False)
+    monkeypatch.delenv("GIAMIP_DATA_ROOT", raising=False)
     with pytest.raises(ValueError, match="build_manifest"):
         data.locate("x/f.nc", "converted")
     assert (checkout / "data" / "converted" / "x" / "f.nc").read_bytes() == b"edited"
@@ -119,7 +119,7 @@ def test_a_corrupt_tracked_converted_file_raises_and_names_the_fix(tmp_path, mon
 
 def test_main_in_a_checkout_reports_a_tracked_converted_file_and_fetches_nothing(monkeypatch, capsys):
     calls = _count_fetches(monkeypatch)
-    monkeypatch.delenv("GIA_MIP_DATA_ROOT", raising=False)
+    monkeypatch.delenv("GIAMIP_DATA_ROOT", raising=False)
     assert data.main(["--stage", "converted", "--collection", "martinec2018"]) == 0
     assert calls == []
     assert "ok       martinec2018/martinec2018-B.nc" in capsys.readouterr().out
@@ -175,8 +175,8 @@ def test_an_original_with_a_wrong_sum_is_not_replaced_and_the_named_command_fixe
         data.locate("giamip/in.nc", "original")
     assert path.read_bytes() == b"previous version"
     message = str(caught.value)
-    command = message[message.index("python -m gia_mip.data"):].rstrip(".").split()
-    assert command[:3] == ["python", "-m", "gia_mip.data"]
+    command = message[message.index("python -m giamip.data"):].rstrip(".").split()
+    assert command[:3] == ["python", "-m", "giamip.data"]
     assert data.main(command[3:]) == 0
     assert data.locate("giamip/in.nc", "original").read_bytes() == payload
 
@@ -194,7 +194,7 @@ def test_an_artifact_without_permission_is_refused(isolated):
 def test_an_unreachable_store_raises_with_the_command_and_a_second_try_fails_at_once(isolated, monkeypatch):
     payload = b"never served"
     isolated["manifest"]["artifacts"]["x/f.nc"] = _converted_entry("x/f.nc", payload)
-    with pytest.raises(data.DataUnavailable, match="python -m gia_mip.data --stage converted"):
+    with pytest.raises(data.DataUnavailable, match="python -m giamip.data --stage converted"):
         data.locate("x/f.nc", "converted")
     calls = _count_fetches(monkeypatch)
     with pytest.raises(data.DataUnavailable, match="failed .* s ago"):
@@ -269,10 +269,10 @@ def test_the_temporary_download_name_starts_with_a_dot(isolated, monkeypatch):
 def test_the_default_download_root_is_under_home_and_ignores_xdg(tmp_path, monkeypatch):
     """On Gadi XDG_CACHE_HOME is job storage, deleted after the job."""
     monkeypatch.setattr(data, "checkout_root", lambda: None)
-    monkeypatch.delenv("GIA_MIP_DATA_ROOT", raising=False)
+    monkeypatch.delenv("GIAMIP_DATA_ROOT", raising=False)
     monkeypatch.setenv("HOME", str(tmp_path / "home"))
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "jobfs"))
-    assert data.download_root() == tmp_path / "home" / ".cache" / "gia-mip"
+    assert data.download_root() == tmp_path / "home" / ".cache" / "giamip"
 
 
 # ----------------------------------------------- two processes, one download
@@ -280,7 +280,7 @@ def test_the_default_download_root_is_under_home_and_ignores_xdg(tmp_path, monke
 PROCESS = textwrap.dedent("""
     import json, os, pathlib, sys, time
     sys.path.insert(0, {repository!r})
-    from gia_mip import data
+    from giamip import data
     manifest = json.loads(pathlib.Path({manifest!r}).read_text())
     data.load_manifest = lambda *a, **k: manifest
     data.checkout_root = lambda: None
@@ -312,8 +312,8 @@ def test_two_processes_download_one_missing_artifact_once(tmp_path):
     count = tmp_path / "count.txt"
     script = PROCESS.format(repository=str(REPOSITORY), manifest=str(manifest_path),
                             count=str(count), markers=str(markers))
-    env = {**os.environ, "GIA_MIP_DATA_ROOT": str(root)}
-    env.pop("GIA_MIP_BASE_URL", None)
+    env = {**os.environ, "GIAMIP_DATA_ROOT": str(root)}
+    env.pop("GIAMIP_BASE_URL", None)
     runs = [subprocess.Popen([sys.executable, "-c", script], env=env, text=True,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE) for _ in range(2)]
     outputs = [run.communicate(timeout=60) for run in runs]
@@ -347,7 +347,7 @@ def test_an_older_archive_is_not_replaced_when_a_member_is_missing(isolated):
         data.locate("giamip/grow/b.nc", "original")
     assert archive.read_bytes() == old
     message = str(caught.value)
-    command = message[message.index("python -m gia_mip.data"):].rstrip(".").split()
+    command = message[message.index("python -m giamip.data"):].rstrip(".").split()
     assert data.main(command[3:]) == 0
     assert data.locate("giamip/grow/b.nc", "original").read_bytes() == b"new b"
 
@@ -385,7 +385,7 @@ def test_a_root_that_cannot_be_written_raises_data_unavailable(isolated):
 UNPACKING = textwrap.dedent("""
     import json, os, pathlib, sys, time
     sys.path.insert(0, {repository!r})
-    from gia_mip import data
+    from giamip import data
     manifest = json.loads(pathlib.Path({manifest!r}).read_text())
     data.load_manifest = lambda *a, **k: manifest
     data.checkout_root = lambda: None
@@ -420,7 +420,7 @@ def test_processes_unpack_an_archive_in_place_once(tmp_path):
     processes = 4
     script = UNPACKING.format(repository=str(REPOSITORY), manifest=str(manifest_path),
                               count=str(count), markers=str(markers), processes=processes)
-    env = {**os.environ, "GIA_MIP_DATA_ROOT": str(root)}
+    env = {**os.environ, "GIAMIP_DATA_ROOT": str(root)}
     runs = [subprocess.Popen([sys.executable, "-c", script], env=env, text=True,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             for _ in range(processes)]

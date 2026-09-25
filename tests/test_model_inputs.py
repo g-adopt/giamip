@@ -8,11 +8,11 @@ and skip when those are absent.
 import numpy as np
 import pytest
 
-from gia_mip import grids
-from gia_mip.benchmarks import metrics
-from gia_mip.benchmarks.inputs import MartinecCase, angular_distance_deg
-from gia_mip.benchmarks.results import BenchmarkResult, Curve
-from gia_mip.mip import inputs as mip_inputs
+from giamip import grids
+from giamip.benchmarks import metrics
+from giamip.benchmarks.inputs import MartinecCase, angular_distance_deg
+from giamip.benchmarks.results import BenchmarkResult, Curve
+from giamip.mip import inputs as mip_inputs
 
 
 # ----------------------------------------------------------- Martinec set-up
@@ -214,7 +214,7 @@ def test_a_curve_refuses_a_repeated_axis_value():
 
 def _need_converted():
     """Skip when the converted Martinec files are neither here nor downloadable."""
-    from gia_mip import data
+    from giamip import data
     try:
         BenchmarkResult.reference_path("E")
     except data.DataUnavailable:
@@ -284,8 +284,8 @@ def test_model_years_follow_the_protocol_steps():
 
 
 def _ice_file(name="iceHistory-ICE-6G_D.nc"):
-    """The relative path of an ice history, located (and fetched) through gia_mip.data."""
-    from gia_mip import data
+    """The relative path of an ice history, located (and fetched) through giamip.data."""
+    from giamip import data
     rel = f"giamip/ice-history/{name}"
     try:
         data.locate(rel, "original")
@@ -324,7 +324,7 @@ def test_the_truncated_experiments_start_at_80_ka():
 
 @pytest.mark.data
 def test_topography_names_its_antarctic_dataset_from_the_filename():
-    from gia_mip import data
+    from giamip import data
     rel = "giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"
     try:
         data.locate(rel, "original")

@@ -25,8 +25,8 @@ import pathlib
 import numpy as np
 import pytest
 
-from gia_mip import _netcdf, grids
-from gia_mip.benchmarks.results import BenchmarkResult, SpadaResult
+from giamip import _netcdf, grids
+from giamip.benchmarks.results import BenchmarkResult, SpadaResult
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONVERTED = ROOT / "data" / "converted"
@@ -74,7 +74,7 @@ def test_a_fill_value_comes_back_through_spada_result_read(tmp_path):
 def test_a_fill_value_comes_back_through_ice_history(tmp_path):
     """An ice file like the GIAMIP ones: zeros declared as _FillValue stay zeros."""
     import h5netcdf
-    from gia_mip.mip.inputs import IceHistory
+    from giamip.mip.inputs import IceHistory
     relative = "giamip/ice-history/iceHistory-synthetic.nc"
     path = tmp_path / relative
     path.parent.mkdir(parents=True)
@@ -124,7 +124,7 @@ def test_netcdf_c_reads_every_converted_file_as_the_package_does(path):
 def test_no_module_of_the_package_imports_netcdf4_or_xarray():
     """The Gadi environment has no netCDF4; a stray import would fail only there."""
     offenders = []
-    for source in sorted((ROOT / "gia_mip").rglob("*.py")):
+    for source in sorted((ROOT / "giamip").rglob("*.py")):
         tree = ast.parse(source.read_text(), filename=str(source))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
@@ -217,7 +217,7 @@ def _assert_same_content(fresh: pathlib.Path, tracked: pathlib.Path) -> None:
 @pytest.mark.data
 @pytest.mark.parametrize("case", ["A", "B", "C", "D", "E"])
 def test_a_fresh_martinec_conversion_equals_the_tracked_file(data_root, tmp_path, case):
-    from gia_mip.benchmarks import martinec2018
+    from giamip.benchmarks import martinec2018
     root = data_root / "original"
     if not (root / "martinec2018" / f"results{case}_2026").is_dir():
         pytest.skip("the Martinec archives are not unpacked")
@@ -229,7 +229,7 @@ def test_a_fresh_martinec_conversion_equals_the_tracked_file(data_root, tmp_path
 @pytest.mark.parametrize("case", ["t01-01", "t01-02", "t01-03", "t01-04", "t01-05",
                                   "t01-06", "t01-07", "t02-01", "t02-02", "t02-03"])
 def test_a_fresh_spada_conversion_equals_the_tracked_file(data_root, tmp_path, case):
-    from gia_mip.benchmarks import spada2011
+    from giamip.benchmarks import spada2011
     root = data_root / "original"
     if not (root / "spada2011").is_dir():
         pytest.skip("the Spada archive is not unpacked")

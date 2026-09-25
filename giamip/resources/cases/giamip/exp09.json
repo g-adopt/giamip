@@ -1,0 +1,57 @@
+{
+  "id": "giamip-exp09",
+  "collection": "giamip",
+  "experiment_id": "Exp09",
+  "tier": 2,
+  "mandatory": false,
+  "source": {
+    "citation": "GIAMIP experiment protocol v2.4, dated 2026-09-08. Lead: Holly Han.",
+    "document": "data/original/giamip/giamip-protocol-v2.4.md"
+  },
+  "forcing": {
+    "ice_history": "GLAC3_p1",
+    "ice_history_file": "giamip/ice-history/iceHistory-GLAC3c_profile1.nc",
+    "grounded_ice_only": true,
+    "$comment": "Protocol section 2.1: only grounded ice loads the solid Earth, so floating ice is masked out."
+  },
+  "earth": {
+    "viscosity": "open",
+    "elastic_structure": "open",
+    "rheology": "open",
+    "compressibility": "group's choice, recorded in the model report",
+    "$comment": "Labelled 'Open'. The group chooses freely and records the choice. The protocol encourages exploring values well outside the suggested range where a region calls for it."
+  },
+  "topography": {
+    "model": "open",
+    "file": null,
+    "$comment": "GEBCO 2024 outside the polar regional datasets."
+  },
+  "period": {
+    "start_ka_before_2000ce": 122,
+    "end_years_after_2000ce": 1000,
+    "reference_year": "2000 CE is model year 0",
+    "resolution": "500 years before 26 ka, 100 years from 26 ka onward"
+  },
+  "grid": {
+    "nlat": 257,
+    "nlon": 513,
+    "kind": "Gauss-Legendre",
+    "lmax": 256
+  },
+  "constants": {
+    "ice_density_kg_m3": 917,
+    "ocean_water_density_kg_m3": 1025,
+    "fresh_water_density_kg_m3": 1000,
+    "earth_radius_m": 6371000,
+    "$comment": "Protocol section 8. These differ from the benchmark values of 931 and 1000."
+  },
+  "reference_frame": "centre of mass of the whole Earth system (CM), not the solid Earth alone (CE)",
+  "outputs": "giamip/resources/variables.json",
+  "open_choices": [
+    "viscosity",
+    "elastic_structure",
+    "rheology",
+    "topography"
+  ],
+  "status": "specified; no runner and no output writer yet"
+}

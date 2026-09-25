@@ -23,7 +23,7 @@ import pathlib
 
 import pytest
 
-from gia_mip import data
+from giamip import data
 
 LAYOUTS = (pathlib.Path(data.__file__).parent / "resources"
            / "spada_column_layouts.json")

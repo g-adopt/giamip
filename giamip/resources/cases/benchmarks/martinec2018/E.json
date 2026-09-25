@@ -1,0 +1,72 @@
+{
+  "id": "martinec2018-E",
+  "collection": "martinec2018",
+  "published_name": "Benchmark E",
+  "title": "Moving coastline, floating ice, terminal topography prescribed",
+  "description": "As case D, with the solid Earth topography prescribed at the terminal time instead of the initial time. The initial topography becomes the unknown and is solved for. The motivation is that present-day topography is measured while initial topography is not.",
+  "source": {
+    "citation": "Martinec, Z. et al. (2018). Geophysical Journal International 215(1), 389-414.",
+    "doi": "10.1093/gji/ggy280"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "giamip/resources/loads/martinec2018.json",
+  "specification": {
+    "sea_level_equation": 2,
+    "ice_height_model": "L2",
+    "time_scenario": "T1",
+    "ocean_basin": "B2*",
+    "terminal_time_kyr": 15
+  },
+  "outputs": [
+    "ocean_area",
+    "h_UF"
+  ],
+  "$outputs_comment": "U is surface vertical displacement, N is geoid displacement, S is sea-surface variation, all along meridional cross-sections at the terminal time. h_UF is the thickness of the uniform water layer, ice_mass_grounded and ice_mass_floating are ice masses, and ocean_area is the ocean area as a fraction of 4 pi, all as functions of time. The list holds what the paper compares for this case.",
+  "comparison": {
+    "reference_solution": "VEGA (contributor ZM)",
+    "metrics": [
+      "root mean square difference",
+      "maximum difference"
+    ],
+    "profiles": [],
+    "time_series": [
+      {
+        "quantities": [
+          "ocean_area"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 18
+      },
+      {
+        "quantities": [
+          "h_UF"
+        ],
+        "interval": "0 to 15 kyr",
+        "figure": 19
+      }
+    ],
+    "$comment": "Source: Martinec et al. (2018), section 5, figures 3 to 19. Difference intervals apply to the profiles at the terminal time. See docs/protocol/martinec2018.qmd, section Comparison method."
+  },
+  "reference_data": {
+    "contributors": [
+      "ZM",
+      "VK",
+      "YS",
+      "MS",
+      "SK"
+    ],
+    "archive": "martinec2018/resultsE_2026.zip",
+    "internal_case_code": "F1",
+    "internal_case_code_evidence": "Martinec's archive resultsE_2026.zip holds only F1 contributor files, and its figures compare the ocean area and h_UF, which is what the paper compares for case E (Figs 18 and 19). Its two scripts overlay a curve labelled 'Benchmark D' from vega76_E2.out. No script carries a title for case E itself.",
+    "reference": "VEGA, in resultsE_2026/vega76.out, as shipped. vega76_E2.out is a case D run that the case E figures overlay.",
+    "published_figure": "Figures 18 and 19",
+    "reference_curves": {
+      "$comment": "How each reference curve in the group `reference` of the converted file is built. 'as shipped' copies VEGA (contributor ZM) from the archive. 'recovered' is YS's profile minus YS's own difference file, on YS's 2048-point grid: every difference file of the archive was computed against one finer VEGA profile, which the archive does not hold, and this gives it (docs/protocol/martinec2018.qmd, section How the reference is built).",
+      "time_series": {
+        "method": "as shipped",
+        "member": "ZM"
+      }
+    }
+  },
+  "status": "specified; converted to data/converted/martinec2018/martinec2018-E.nc"
+}

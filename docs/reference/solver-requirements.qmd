@@ -43,7 +43,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json, pathlib
-v = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+v = json.loads((pathlib.Path("../..") / "giamip" / "resources"
                 / "variables.json").read_text())
 rows = ["| Variable | Dimensions | Unit | Precision | Long name |",
         "| --- | --- | --- | --- | --- |"]

@@ -1,6 +1,6 @@
 """VSS96, the earth model of Spada et al. (2011) test 6/1, is the archive's table.
 
-`gia_mip/resources/models/vss96.json` is a transcription of `T01-06/VSS96.dat` in the Spada
+`giamip/resources/models/vss96.json` is a transcription of `T01-06/VSS96.dat` in the Spada
 archive. Two tests tie it to the archive. The first compares every value with
 the file. The second compares the viscosity with the profile that figure 1 of
 the paper draws, `T01-06/vis-vss96.dat`. The second test also fixes how a row
@@ -19,8 +19,8 @@ import re
 import numpy as np
 import pytest
 
-from gia_mip import cases
-from gia_mip.benchmarks.inputs import SpadaCase
+from giamip import cases
+from giamip.benchmarks.inputs import SpadaCase
 
 # The directory of test 6/1 inside the data tree.
 T01_06 = pathlib.Path("original") / "spada2011" / "spada2011-cost-es0701" / "T01-06"

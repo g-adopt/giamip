@@ -3,7 +3,7 @@
 ## What this repository is
 
 It specifies GIA model comparison cases and holds the data to compare against.
-The case files, load tables and earth models are in `gia_mip/resources/`
+The case files, load tables and earth models are in `giamip/resources/`
 (`cases/`, `loads/`, `models/`), so an installed package carries them.
 It contains no solver. If a change would make this repository compute a
 viscoelastic response, the change belongs in `lovejx` or in G-ADOPT.
@@ -14,7 +14,7 @@ Each of these prevents a wrong answer that arrives with no error message.
 
 **Original data is never edited.** `data/original/` holds third-party files
 byte for byte. Every known defect is an entry in
-`gia_mip/resources/corrections.json`, applied by a reader at read time and
+`giamip/resources/corrections.json`, applied by a reader at read time and
 rendered on the corrections page. A defect fixed with a text editor is
 invisible, and it is lost at the next re-fetch.
 
@@ -52,13 +52,13 @@ the sum of the file it opens. A new version fails the test suite until someone
 has checked every pinned correction against it. See
 `docs/data/corrections.qmd`.
 
-**`gia_mip/data.py` imports only the standard library.** It runs on a bare CI
+**`giamip/data.py` imports only the standard library.** It runs on a bare CI
 runner before anything is installed, and `tests/test_import.py` checks this by
 reading the source.
 
 **No data file goes into the package.** The wheel holds the code and the JSON
-files under `gia_mip/resources/`. Every data file, original or converted, is
-found through `gia_mip.data.locate`, which downloads it from data.gadopt.org
+files under `giamip/resources/`. Every data file, original or converted, is
+found through `giamip.data.locate`, which downloads it from data.gadopt.org
 on first use and checks its SHA-256. A converted file that changes gets a new
 object key, `versions/<sha256>/<key>`, and is uploaded with
 `scripts/upload_artifacts.py`; the old object stays for the releases that name
@@ -66,15 +66,18 @@ it.
 
 ## Naming
 
-The package is `gia_mip`. The project is GIAMIP. The compliance checker
-publishes scripts named `giamip_*`. Keep the underscore in the package name so
-the three stay apart in a sentence and on the command line.
+The package is `giamip`, on PyPI and on import. The project is GIAMIP, and the
+case collection of its experiments is `giamip` (`giamip.case("giamip-exp01")`).
+The compliance checker publishes scripts named `giamip_*`. The repository is
+`g-adopt/giamip`, and the object store prefix is
+`https://data.gadopt.org/giamip/`. Use one name, `giamip`, for the package,
+the repository and the store.
 
 ## Where authority lives
 
 For GIAMIP output conventions, the authority is the compliance checker at
 `https://github.com/JanJereczek/GIA_SimulationChecker`, pinned to a commit
-recorded in `gia_mip/resources/checker.json`. Its
+recorded in `giamip/resources/checker.json`. Its
 `GIAMIP_VARIABLES` table transcribes the data request spreadsheet, and its
 `variables.md` documents it. Do not re-type the variable list from the
 protocol prose: generate it from the checker and test that the two agree.
@@ -107,10 +110,10 @@ update the case file and the collection page.
 
 ## Redistribution
 
-`gia_mip/resources/provenance.json` records, per file, whether the supplier
+`giamip/resources/provenance.json` records, per file, whether the supplier
 has agreed to redistribution through the object store. Nothing whose
-`permission` is not `granted` is uploaded, and neither `python -m gia_mip.data`
-nor `gia_mip.data.locate` downloads it. Do not work around this by hard-coding a URL.
+`permission` is not `granted` is uploaded, and neither `python -m giamip.data`
+nor `giamip.data.locate` downloads it. Do not work around this by hard-coding a URL.
 
 ## Working notes
 

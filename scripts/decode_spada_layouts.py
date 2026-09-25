@@ -49,7 +49,7 @@ only surviving description of their contents.
 The output has two views of the same archive. by_file is what each script
 drew, keyed by the name the script wrote. files is what a reader uses,
 keyed by the path under data/original/: for every file the converter
-gia_mip.benchmarks.spada2011 reads, what each column holds, its unit and
+giamip.benchmarks.spada2011 reads, what each column holds, its unit and
 its epoch, and the evidence for it. For the files no script describes (the
 VILMA files, the signed Love number tables, the point load profiles, the
 transfer functions of test 4/1 and the polar motion tables of test 3/2) that
@@ -60,7 +60,7 @@ file_layouts.
 Usage::
 
     python3 scripts/decode_spada_layouts.py [--root data/original] \\
-        [--output gia_mip/resources/spada_column_layouts.json]
+        [--output giamip/resources/spada_column_layouts.json]
 """
 
 from __future__ import annotations
@@ -79,7 +79,7 @@ import numpy as np
 # IN_M_PER_KYR, how many m/kyr one stored rate unit is, has its one definition
 # in the converter. The rate unit check at the end of the `files` table uses it.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from gia_mip.benchmarks.spada2011 import IN_M_PER_KYR  # noqa: E402
+from giamip.benchmarks.spada2011 import IN_M_PER_KYR  # noqa: E402
 
 # The eight contributor abbreviations of the paper's table 1, as recorded in
 # the `reference_data.contributors` field of the ten case files, plus the one
@@ -611,7 +611,7 @@ TABOO_COLUMNS = {
 }
 
 # The load line of a TABOO header and of a VILMA header, as a load name of
-# gia_mip/resources/loads/spada2011.json.
+# giamip/resources/loads/spada2011.json.
 TABOO_LOADS = {"PARABOLIC LOAD": "cap", "DISC LOAD": "disc", "POINT MASS": "point"}
 VILMA_LOADS = {"parabolic load": "cap", "disc load": "disc"}
 
@@ -1734,7 +1734,7 @@ def main() -> int:
     ap.add_argument("--root", type=pathlib.Path,
                     default=here / "data" / "original")
     ap.add_argument("--output", type=pathlib.Path,
-                    default=here / "gia_mip" / "resources"
+                    default=here / "giamip" / "resources"
                     / "spada_column_layouts.json")
     args = ap.parse_args()
 

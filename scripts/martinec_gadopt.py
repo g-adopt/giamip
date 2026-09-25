@@ -26,7 +26,7 @@ about this repository's readers:
 This script reads those two files, builds a `BenchmarkResult` with the member
 name ``g-adopt``, writes it to
 ``outputs/martinec2018/<member>/martinec2018-<case>.nc`` and scores it with
-`gia_mip.benchmarks.metrics`, exactly as a lovejx run is scored. A G-ADOPT
+`giamip.benchmarks.metrics`, exactly as a lovejx run is scored. A G-ADOPT
 driver that builds the `BenchmarkResult` itself and calls its ``write`` needs
 none of the ``.npz`` readers here; they remain for the runs already written in
 that layout.
@@ -41,7 +41,7 @@ THE UNIFORM WATER LAYER OF CASE B AND CASE C
 
 The paper compares `h_UF` against time for the moving-coastline cases only, so
 the converted reference file of case B carries no time series at all
-(``comparison.time_series`` of ``gia_mip/resources/cases/benchmarks/martinec2018/B.json`` is
+(``comparison.time_series`` of ``giamip/resources/cases/benchmarks/martinec2018/B.json`` is
 empty). The pass criterion of the G-ADOPT job G2 is nevertheless stated
 against VEGA, so the VEGA value has to come from the profiles.
 
@@ -50,7 +50,7 @@ ocean, and the reference has both `S` and `N` on the basin meridian at the
 terminal time on one common colatitude grid. Their difference is the VEGA
 uniform layer at the terminal time: -119.896770 m for case B, constant along
 the meridian to 1.0e-08 m, which is the evidence that the two curves differ by
-the uniform layer and not by something else. `gia_mip.benchmarks.metrics.uniform_layer`
+the uniform layer and not by something else. `giamip.benchmarks.metrics.uniform_layer`
 returns that mean and that spread, and `report_uniform_layer` prints the
 comparison with the run.
 """
@@ -67,17 +67,17 @@ REPOSITORY = pathlib.Path(__file__).resolve().parent.parent
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
-from gia_mip.benchmarks.inputs import MartinecCase                   # noqa: E402
-from gia_mip.benchmarks.results import BenchmarkResult               # noqa: E402
+from giamip.benchmarks.inputs import MartinecCase                   # noqa: E402
+from giamip.benchmarks.results import BenchmarkResult               # noqa: E402
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from gia_mip.benchmarks import metrics                               # noqa: E402
+from giamip.benchmarks import metrics                               # noqa: E402
 from martinec_compare import print_score                              # noqa: E402
 from martinec_compare import report_uniform_layer as _report_layer    # noqa: E402
 
 #: The driver's time-series array names, and the names `BenchmarkResult`
-#: stores them under. `_time_series_units` of `gia_mip.benchmarks.results`
+#: stores them under. `_time_series_units` of `giamip.benchmarks.results`
 #: reads the unit from the stored name, so the names on the right are fixed:
 #: metres for h_UF, kilograms for an ice mass, a fraction of 4 pi for the
 #: ocean area. The driver's own names carry the unit as a suffix.

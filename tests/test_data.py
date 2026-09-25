@@ -16,7 +16,7 @@ import zipfile
 
 import pytest
 
-from gia_mip import data
+from giamip import data
 
 
 # ---------------------------------------------------------------- selection
@@ -186,7 +186,7 @@ def test_unpack_refuses_an_escaping_member_before_touching_the_target(tmp_path):
 def test_the_permission_gate_blocks_a_download(tmp_path, monkeypatch, capsys):
     """Nothing whose supplier has not agreed is fetched, whatever the base URL."""
     manifest = {
-        "base_url": "https://example.invalid/gia-mip/",
+        "base_url": "https://example.invalid/giamip/",
         "artifacts": {
             "x/blocked.dat": {
                 "collection": "giamip", "stage": "original", "bytes": 3,
@@ -199,7 +199,7 @@ def test_the_permission_gate_blocks_a_download(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(data, "load_manifest", lambda *a, **k: manifest)
     # A base URL an attacker might set cannot get past the gate, because the
     # gate is checked before the URL is used at all.
-    monkeypatch.setenv("GIA_MIP_BASE_URL", "file:///etc/")
+    monkeypatch.setenv("GIAMIP_BASE_URL", "file:///etc/")
     code = data.main(["--dest", str(tmp_path), "--collection", "giamip"])
     assert code == 1
     assert "SKIPPED" in capsys.readouterr().err

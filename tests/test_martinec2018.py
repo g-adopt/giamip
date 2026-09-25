@@ -13,8 +13,8 @@ import pathlib
 import numpy as np
 import pytest
 
-from gia_mip import corrections
-from gia_mip.benchmarks import martinec2018
+from giamip import corrections
+from giamip.benchmarks import martinec2018
 
 LAYOUTS = martinec2018.load_layouts()
 
@@ -109,7 +109,7 @@ def test_a_repeated_point_with_different_data_raises():
 
 def _read(path, group, name):
     """One variable and its axis, read through h5netcdf as AGENTS.md requires."""
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     with _netcdf.open_read(path) as ds:
         g = ds[group]
         v = g.variables[name]
@@ -128,7 +128,7 @@ def converted(tmp_path_factory, data_root):
 
 @pytest.mark.data
 def test_every_axis_ascends_and_every_value_is_finite(converted):
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     for case, path in converted.items():
         with _netcdf.open_read(path) as ds:
             stack = [ds]
@@ -170,7 +170,7 @@ def test_ys_minus_vega_reproduces_the_shipped_difference(converted, case, profil
 
 @pytest.mark.data
 def test_the_case_a_stale_sk_profile_is_not_converted(converted):
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     with _netcdf.open_read(converted["A"]) as ds:
         assert "SK" not in ds["profiles/load"].groups
         assert "SK" in ds["differences/load"].groups
@@ -187,7 +187,7 @@ def test_the_figure_only_rescaling_is_not_applied(converted):
 @pytest.mark.data
 def test_case_d_time_series_agree_after_unit_conversion(converted):
     """Five codes, three storage units each for mass and area, one answer."""
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     path = converted["D"]
     with _netcdf.open_read(path) as ds:
         members = set(ds["time_series"].groups)
@@ -207,7 +207,7 @@ def test_case_d_time_series_agree_after_unit_conversion(converted):
 
 @pytest.mark.data
 def test_case_e_keeps_the_case_d_run_apart(converted):
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     with _netcdf.open_read(converted["E"]) as ds:
         assert {"ZM", "ZM_case_D", "VK", "YS", "SK"} == set(ds["time_series"].groups)
         assert "profiles" not in ds.groups
@@ -245,7 +245,7 @@ def test_every_contributor_profile_agrees_with_its_difference_file(converted, ca
     right one makes the first far smaller. Case A is compared against the
     reference recovered from GS, because its shipped VEGA file is a second run.
     """
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     path = converted[case]
     with _netcdf.open_read(path) as ds:
         profiles = {p: set(ds[f"differences/{p}"].groups) for p in ds["differences"].groups}

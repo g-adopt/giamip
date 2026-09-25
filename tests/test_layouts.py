@@ -15,8 +15,8 @@ import pathlib
 
 import pytest
 
-from gia_mip import corrections, data
-from gia_mip.benchmarks import martinec2018
+from giamip import corrections, data
+from giamip.benchmarks import martinec2018
 
 LAYOUTS = pathlib.Path(data.__file__).parent / "resources" / "column_layouts.json"
 

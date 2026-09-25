@@ -4,7 +4,7 @@ title: "Cases"
 
 Twenty-seven cases: ten tests from Spada et al. (2011), five from Martinec et
 al. (2018), and the twelve GIAMIP experiments. Each is a JSON file in
-`gia_mip/resources/cases/`, and this page is generated from those files.
+`giamip/resources/cases/`, and this page is generated from those files.
 
 None of them has been run. A case here is a specification: what earth model,
 what load, over what time, on what grid, with which constants, and what to
@@ -18,7 +18,7 @@ its earth model. The "Published as" column of the Spada table links to it.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 out = []
 
 out.append("## Spada et al. (2011)\n")
@@ -62,7 +62,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json
-from gia_mip import cases
+from giamip import cases
 out = []
 for c in cases.cases():
     out.append(f"### `{c['id']}`\n")

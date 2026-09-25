@@ -1,13 +1,13 @@
 name: Release
 
-# Publish gia-mip to PyPI when a version tag is pushed, for example v0.1.0.
+# Publish giamip to PyPI when a version tag is pushed, for example v0.1.0.
 #
 # PyPI trusted publishing: PyPI trusts this repository's workflow through
 # OpenID Connect, so there is no API token anywhere. Configure it once on PyPI
-# for the project gia-mip: owner g-adopt, repository gia-mip, workflow
+# for the project giamip: owner g-adopt, repository giamip, workflow
 # release.yml, environment pypi.
 #
-# The version is `gia_mip.__version__` (pyproject.toml reads it). The tag must
+# The version is `giamip.__version__` (pyproject.toml reads it). The tag must
 # be "v" followed by that version, and the build job stops when it is not.
 
 on:
@@ -28,7 +28,7 @@ jobs:
           python -m build
       - name: Check that the tag is the package version
         run: |
-          version=$(python -c "import sys; sys.path.insert(0, '.'); import gia_mip; print(gia_mip.__version__)")
+          version=$(python -c "import sys; sys.path.insert(0, '.'); import giamip; print(giamip.__version__)")
           if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
             echo "tag ${GITHUB_REF_NAME} is not v${version}"; exit 1
           fi
@@ -46,7 +46,7 @@ jobs:
         # here.
         working-directory: ${{ runner.temp }}
         env:
-          GIA_MIP_DATA_ROOT: ${{ runner.temp }}/gia-mip-data
+          GIAMIP_DATA_ROOT: ${{ runner.temp }}/giamip-data
         run: >
           "$RUNNER_TEMP/venv/bin/python" "$GITHUB_WORKSPACE/scripts/check_installed.py"
           --all-converted

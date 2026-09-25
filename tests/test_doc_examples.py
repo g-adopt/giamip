@@ -23,7 +23,7 @@ import re
 import numpy as np
 from scipy.interpolate import CubicSpline
 
-from gia_mip.benchmarks.results import BenchmarkResult
+from giamip.benchmarks.results import BenchmarkResult
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -41,8 +41,8 @@ def _reference_at(letter: str, profile: str, quantity: str, colatitude: np.ndarr
 
 def test_the_readme_example_runs(tmp_path, monkeypatch):
     blocks = [b for b in _python_blocks((ROOT / "README.md").read_text())
-              if "gia_mip.case(" in b]
-    assert len(blocks) == 1, "README.md should hold one example of gia_mip.case"
+              if "giamip.case(" in b]
+    assert len(blocks) == 1, "README.md should hold one example of giamip.case"
     monkeypatch.chdir(tmp_path)
     colatitude_deg = np.linspace(0.0, 180.0, 1801)
     namespace = {

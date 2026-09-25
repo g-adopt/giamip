@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from gia_mip import corrections, data
+from giamip import corrections, data
 
 REQUIRED = {"id", "kind", "applies_to", "as_shipped", "correct",
             "evidence", "action", "status", "discovered"}

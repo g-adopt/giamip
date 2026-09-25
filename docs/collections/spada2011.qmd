@@ -23,7 +23,7 @@ directories are `T01-0X` and `T02-0X`.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 rows = ["| Case | Published as | Directory | Title | Contributors |",
         "| --- | --- | --- | --- | --- |"]
 for c in cases.cases("spada2011"):
@@ -88,7 +88,7 @@ also given by GS, RR and VB, and their files are complete.
 ## Reading the data
 
 `scripts/decode_spada_layouts.py` decodes the 87 GMT scripts into
-`gia_mip/resources/spada_column_layouts.json`. Its `files` table names every
+`giamip/resources/spada_column_layouts.json`. Its `files` table names every
 file a reader uses, keyed by the path under `data/original/`, and says what
 each column holds, in which unit and at which epoch, with the evidence. For the
 files no script describes, the evidence is the README files, the file headers
@@ -96,7 +96,7 @@ and arithmetic on the values: the unit of a spectrum is fixed by comparing it
 with the relaxation times of the `.mod` file, and the sign of a residue by the
 fluid limit of the normal mode sum at degree 2.
 
-`gia_mip.benchmarks.spada2011` reads those files and writes one NetCDF file per
+`giamip.benchmarks.spada2011` reads those files and writes one NetCDF file per
 test to `data/converted/spada2011/`, in the layout of `SpadaResult`. Run
 `scripts/convert_spada2011.py` after the decoder. All ten tests are converted:
 
@@ -127,7 +127,7 @@ loads and both settings of the Chandler wobble.
 ## Which contributor is the reference
 
 The paper has no reference code: its figures overlay the contributors and it
-judges agreement by eye. `gia_mip.benchmarks.metrics.spada_score` therefore
+judges agreement by eye. `giamip.benchmarks.metrics.spada_score` therefore
 scores a result against each contributor separately, and every row names the
 contributor. No average of the contributors is formed, because an average is a
 result that no code produced. Where two contributors are available, GS and VK

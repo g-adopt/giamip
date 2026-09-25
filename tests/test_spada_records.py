@@ -4,7 +4,7 @@ These tests need no data. They check the files a person reads and CI runs:
 the redistribution permission, the CI fetch step, the case files, the
 documentation pages, and the per-file column layouts that the reader uses.
 
-The column layouts table ``files`` in ``gia_mip/resources/spada_column_layouts.json``
+The column layouts table ``files`` in ``giamip/resources/spada_column_layouts.json``
 is keyed by the path relative to ``data/original/``, the key the corrections
 table and the manifest use. The existing ``by_file`` table is keyed by the
 name a GMT script wrote, which is relative to the script's directory and so
@@ -27,7 +27,7 @@ import sys
 
 import pytest
 
-from gia_mip import cases, data
+from giamip import cases, data
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RESOURCES = pathlib.Path(data.__file__).parent / "resources"
@@ -113,7 +113,7 @@ def test_the_provenance_note_records_whose_decision_it_was_and_when(provenance):
 def test_the_manifest_grants_the_spada_archive():
     """scripts/build_manifest.py copies permission; a stale manifest blocks the fetch.
 
-    `python -m gia_mip.data` reads the manifest, not the provenance file, so a
+    `python -m giamip.data` reads the manifest, not the provenance file, so a
     grant recorded in provenance.json alone still refuses the download in CI.
     """
     assert data.load_manifest()["artifacts"][ARCHIVE]["permission"] == "granted"
@@ -123,12 +123,12 @@ def test_the_data_job_in_ci_fetches_spada2011():
     """The `test-with-data` job must download the Spada archive before `pytest -m data`.
 
     The job is read as text: the fetch command is any line of that job that
-    runs `gia_mip.data`, and one of them must name the spada2011 collection.
+    runs `giamip.data`, and one of them must name the spada2011 collection.
     """
     workflow = (ROOT / ".github" / "workflows" / "test.yml").read_text()
     job = workflow.split("test-with-data:", 1)
     assert len(job) == 2, "the workflow has no test-with-data job"
-    fetch_lines = [line for line in job[1].splitlines() if "gia_mip.data" in line]
+    fetch_lines = [line for line in job[1].splitlines() if "giamip.data" in line]
     assert fetch_lines, "the test-with-data job runs no fetch"
     assert any(re.search(r"--collection[ =]spada2011\b", line) for line in fetch_lines), fetch_lines
 
@@ -243,7 +243,7 @@ def test_the_stored_rate_units_reproduce_the_axis_of_the_figure(layouts, files):
     transcribed as m/yr for GS gives 1000, and mm/yr for VK gives 0.001. The
     comparison is exact up to rounding, because every factor is a power of ten.
     """
-    from gia_mip.benchmarks.martinec2018 import scale_factor
+    from giamip.benchmarks.martinec2018 import scale_factor
 
     seen = []
     for name, entries in layouts["by_file"].items():

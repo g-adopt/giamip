@@ -3,7 +3,7 @@ title: "Loads and grids"
 ---
 
 The surface loads, time histories and ocean basins of the two benchmarks, and
-the grid GIAMIP prescribes. Generated from `gia_mip/resources/loads/` and `gia_mip/grids.py`.
+the grid GIAMIP prescribes. Generated from `giamip/resources/loads/` and `giamip/grids.py`.
 
 ## Spada et al. (2011): three analytic loads
 
@@ -17,7 +17,7 @@ load.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 t = cases.loads("spada2011")
 out = []
 for key, L in t["loads"].items():
@@ -41,7 +41,7 @@ Markdown("\n".join(out))
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 c = cases.loads("spada2011")["constants"]
 rows = ["| Constant | Value |", "| --- | ---: |"]
 for k, v in c.items():
@@ -65,7 +65,7 @@ moved and rescaled.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 t = cases.loads("martinec2018")
 out = ["### Ice height models\n",
        "| Model | Centre colatitude | Centre longitude | Height (m) | Note |",
@@ -106,7 +106,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import numpy as np
-from gia_mip import grids
+from giamip import grids
 
 lat, lon = grids.latitudes(), grids.longitudes()
 spacing = np.diff(lat)
@@ -142,5 +142,5 @@ that is wrong and looks plausible, and six of the ten variables GIAMIP
 requires are area or mass integrals.
 
 An axis built with `numpy.linspace` has the right count and the right extent
-and is a different grid. `gia_mip.grids.check` rejects it.
+and is a different grid. `giamip.grids.check` rejects it.
 :::

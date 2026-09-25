@@ -20,11 +20,11 @@ The repository records the case facts in files that a program can read. Where
 this page and those files disagree, report it, and use the files until the
 disagreement is settled.
 
-- The five cases: `gia_mip/resources/cases/benchmarks/martinec2018/A.json` to `E.json`, shown in
+- The five cases: `giamip/resources/cases/benchmarks/martinec2018/A.json` to `E.json`, shown in
   [the Martinec (2018) collection page](../collections/martinec2018.qmd).
-- The earth model: `gia_mip/resources/models/m3-l70-v01.json`, shown in
+- The earth model: `giamip/resources/models/m3-l70-v01.json`, shown in
   [the earth models](../reference/earth-models.qmd).
-- The ice heights, time scenarios and ocean basins: `gia_mip/resources/loads/martinec2018.json`,
+- The ice heights, time scenarios and ocean basins: `giamip/resources/loads/martinec2018.json`,
   shown in [the loads and grids](../reference/loads-and-grids.qmd).
 - The signs and datums of each quantity:
   [the conventions](../reference/conventions.qmd).
@@ -67,14 +67,14 @@ section 3.1). It is spherically symmetric, self-gravitating and
 incompressible, with five layers. The lithosphere is elastic, the three mantle
 layers are Maxwell viscoelastic, and the core is a uniform inviscid fluid. The
 paper does not repeat the layer values. The table below is generated from
-`gia_mip/resources/models/m3-l70-v01.json`.
+`giamip/resources/models/m3-l70-v01.json`.
 
 ```{python}
 #| echo: false
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 
 # The earth model is read from the JSON file so that this page and the model
 # file cannot disagree. The paper only names the model (section 3.1).
@@ -144,7 +144,7 @@ Ice height models. Source: Martinec et al. (2018), table 1.
 
 ```{python}
 #| echo: false
-# Table 1 of the paper, read from gia_mip/resources/loads/martinec2018.json.
+# Table 1 of the paper, read from giamip/resources/loads/martinec2018.json.
 loads = cases.loads("martinec2018")
 rows = ["| Model | Centre colatitude $\\theta_0$ | Centre longitude $\\lambda_0$ | $h_0$ (m) | Angular radius $\\alpha_0$ |",
         "| --- | ---: | ---: | ---: | ---: |"]
@@ -211,7 +211,7 @@ Ocean basin parameters at $t_0$. Source: Martinec et al. (2018), table 3.
 
 ```{python}
 #| echo: false
-# Table 3 of the paper, read from gia_mip/resources/loads/martinec2018.json. The minimum
+# Table 3 of the paper, read from giamip/resources/loads/martinec2018.json. The minimum
 # topography b_max - b_0 is computed here and is the (negative) ocean depth
 # at the basin centre.
 basins = loads["ocean_basins"]
@@ -642,7 +642,7 @@ the one-row VEGA file in the first case A archive. In the case B basin, the
 interpolation between them misses it by up to 0.17 m near the coast. In case
 A, both WW variants count as contributors.
 
-**How a result is scored.** `gia_mip.benchmarks.metrics.score` compares a
+**How a result is scored.** `giamip.benchmarks.metrics.score` compares a
 profile on the result's own points inside the difference interval, with the
 reference evaluated there by the same cubic spline, and a time series on the
 result's own times, with the reference interpolated linearly. Scored this way,

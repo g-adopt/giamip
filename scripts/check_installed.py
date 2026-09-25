@@ -1,13 +1,13 @@
-"""Check an installed gia-mip wheel from a directory outside the checkout.
+"""Check an installed giamip wheel from a directory outside the checkout.
 
-A solver's job on a compute node uses gia-mip as an installed package, with
+A solver's job on a compute node uses giamip as an installed package, with
 no clone of this repository and no netCDF4. This script does what such a job
 does, with the wheel installed into a fresh virtual environment that holds
 only the wheel's own dependencies:
 
-1. it checks that ``gia_mip`` is imported from the installation and not from
+1. it checks that ``giamip`` is imported from the installation and not from
    this checkout, and that netCDF4 is absent;
-2. it reads case B with `gia_mip.case`, gets its reference through the cache
+2. it reads case B with `giamip.case`, gets its reference through the cache
    (downloaded on first use), scores a synthetic run (the reference plus
    0.01 m) and checks that every row gives 0.01 m, runs criterion 2 with a
    band of 6.74 degrees, and computes the uniform water layer;
@@ -16,19 +16,19 @@ only the wheel's own dependencies:
 5. with ``--all-converted``, it locates every converted file of the manifest,
    which fails when one of them is not on the store.
 
-``GIA_MIP_DATA_ROOT`` decides where the downloads go. When it is not set, a
+``GIAMIP_DATA_ROOT`` decides where the downloads go. When it is not set, a
 temporary directory is used, so the check never fills a user cache.
 
 With ``--store DIR`` the script first builds a store in DIR from this
 checkout's ``data/converted/``, at the object keys of the installed manifest,
-and points ``GIA_MIP_BASE_URL`` at it through ``file://``. The continuous
+and points ``GIAMIP_BASE_URL`` at it through ``file://``. The continuous
 integration uses that, so that a change to a converted file is tested before
 it is uploaded. Without ``--store`` the real store at data.gadopt.org is used.
 
 Usage, with the wheel installed in the active environment::
 
     cd "$(mktemp -d)"
-    python /path/to/gia-mip/scripts/check_installed.py [--store DIR] [--all-converted]
+    python /path/to/giamip/scripts/check_installed.py [--store DIR] [--all-converted]
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ import sys
 import tempfile
 
 # This file's own checkout. The script is run by its path, so Python puts
-# scripts/ first on sys.path, not the checkout root, and `import gia_mip`
+# scripts/ first on sys.path, not the checkout root, and `import giamip`
 # below finds the installed package.
 CHECKOUT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -64,7 +64,7 @@ def build_store(store: pathlib.Path, manifest: dict) -> None:
         target = store / entry["object"]
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
-    os.environ["GIA_MIP_BASE_URL"] = store.resolve().as_uri() + "/"
+    os.environ["GIAMIP_BASE_URL"] = store.resolve().as_uri() + "/"
 
 
 def main(argv=None) -> int:
@@ -75,40 +75,40 @@ def main(argv=None) -> int:
                         help="locate every converted file of the manifest")
     args = parser.parse_args(argv)
 
-    if "GIA_MIP_DATA_ROOT" not in os.environ:
-        os.environ["GIA_MIP_DATA_ROOT"] = tempfile.mkdtemp(prefix="gia-mip-check-")
+    if "GIAMIP_DATA_ROOT" not in os.environ:
+        os.environ["GIAMIP_DATA_ROOT"] = tempfile.mkdtemp(prefix="giamip-check-")
 
     import numpy as np
 
-    import gia_mip
-    from gia_mip import data
-    from gia_mip.benchmarks import metrics
-    from gia_mip.benchmarks.results import BenchmarkResult, SpadaResult
+    import giamip
+    from giamip import data
+    from giamip.benchmarks import metrics
+    from giamip.benchmarks.results import BenchmarkResult, SpadaResult
 
     # 1. The installation, not the checkout, and no netCDF4.
-    installed = pathlib.Path(gia_mip.__file__).resolve()
+    installed = pathlib.Path(giamip.__file__).resolve()
     if CHECKOUT in installed.parents:
-        fail(f"gia_mip is imported from the checkout: {installed}")
+        fail(f"giamip is imported from the checkout: {installed}")
     if data.checkout_root() is not None:
-        fail("gia_mip.data sees a checkout")
+        fail("giamip.data sees a checkout")
     try:
         import netCDF4  # noqa: F401
     except ImportError:
         pass
     else:
         fail("netCDF4 is importable; the check must run with the wheel's dependencies only")
-    print(f"gia_mip {gia_mip.__version__} from {installed.parent}")
-    print(f"data root {os.environ['GIA_MIP_DATA_ROOT']}")
+    print(f"giamip {giamip.__version__} from {installed.parent}")
+    print(f"data root {os.environ['GIAMIP_DATA_ROOT']}")
 
     if args.store is not None:
         build_store(args.store, data.load_manifest())
-        print(f"store {os.environ['GIA_MIP_BASE_URL']}")
+        print(f"store {os.environ['GIAMIP_BASE_URL']}")
 
     # 2. A case, its reference through the cache, a synthetic run scored.
-    case = gia_mip.case("martinec2018-B")
+    case = giamip.case("martinec2018-B")
     reference = case.reference()
     path = BenchmarkResult.reference_path("B")
-    if pathlib.Path(os.environ["GIA_MIP_DATA_ROOT"]) not in path.parents:
+    if pathlib.Path(os.environ["GIAMIP_DATA_ROOT"]) not in path.parents:
         fail(f"the reference was not read from the download root: {path}")
     run = BenchmarkResult("B", "synthetic")
     for (profile, quantity), curve in reference.profiles.items():
@@ -150,7 +150,7 @@ def main(argv=None) -> int:
         for key in keys:
             data.locate(key, "converted")
         print(f"located all {len(keys)} converted files")
-    print("installed gia-mip: all checks passed")
+    print("installed giamip: all checks passed")
     return 0
 
 

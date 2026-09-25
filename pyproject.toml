@@ -5,8 +5,8 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gia-mip"
-# One version number: `gia_mip.__version__`, read by setuptools at build time.
+name = "giamip"
+# One version number: `giamip.__version__`, read by setuptools at build time.
 dynamic = ["version"]
 description = "Case definitions, reference data and output conventions for the Spada (2011) and Martinec (2018) GIA benchmarks and for GIAMIP."
 readme = "README.md"
@@ -51,23 +51,23 @@ plot = ["matplotlib>=3.8"]
 docs = ["jupyter>=1.0", "matplotlib>=3.8"]
 
 [project.urls]
-Homepage = "https://github.com/g-adopt/gia-mip"
+Homepage = "https://github.com/g-adopt/giamip"
 
 [tool.setuptools.packages.find]
-include = ["gia_mip*"]
+include = ["giamip*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "gia_mip.__version__"}
+version = {attr = "giamip.__version__"}
 
 # The package carries the small JSON files a solver needs with no network: the
 # case files, the load tables, the earth models, the manifest, the provenance
 # record, the corrections and the column layouts. It carries no data file. The
 # converted reference data and the originals come from data.gadopt.org through
-# `gia_mip.data`, which caches them on first use. The wheel job of
+# `giamip.data`, which caches them on first use. The wheel job of
 # .github/workflows/test.yml checks that the wheel's resources equal
-# `git ls-files gia_mip/resources` and that it holds no .nc file.
+# `git ls-files giamip/resources` and that it holds no .nc file.
 [tool.setuptools.package-data]
-gia_mip = ["resources/*.json", "resources/cases/**/*.json",
+giamip = ["resources/*.json", "resources/cases/**/*.json",
            "resources/loads/*.json", "resources/models/*.json"]
 
 [tool.pytest.ini_options]
@@ -80,7 +80,7 @@ testpaths = ["tests"]
 norecursedirs = ["data", "outputs", "_site", "_freeze", ".quarto"]
 # The default run excludes tests marked `data`, because those need the fetched
 # originals in data/original/. Run them with `-m data` once `python -m
-# gia_mip.data` has filled that directory.
+# giamip.data` has filled that directory.
 addopts = "-m 'not data'"
 timeout = 600
 markers = [

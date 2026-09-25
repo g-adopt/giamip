@@ -30,7 +30,7 @@ and has to be recorded in the model report.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 rows = ["| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start | Open choices |",
         "| --- | ---: | --- | --- | --- | --- | --- | ---: | ---: |"]
 for c in cases.cases("giamip"):
@@ -64,7 +64,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json, pathlib
-v = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+v = json.loads((pathlib.Path("../..") / "giamip" / "resources"
                 / "variables.json").read_text())
 man = [e for e in v["variables"] if e["mandatory"]]
 opt = [e for e in v["variables"] if not e["mandatory"]]

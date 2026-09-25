@@ -21,7 +21,7 @@ reference, the VEGA solution of Martinec.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 rows = ["| Case | Title | SLE | Ice | Time | Basin | Terminal |",
         "| --- | --- | ---: | --- | --- | --- | ---: |"]
 for c in cases.cases("martinec2018"):
@@ -48,7 +48,7 @@ in `data/converted/martinec2018/`; see [the column layouts](../reference/column-
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-from gia_mip import cases
+from giamip import cases
 rows = ["| Case | Archive | Contributors in the paper | Reference solution |",
         "| --- | --- | ---: | --- |"]
 for c in cases.cases("martinec2018"):

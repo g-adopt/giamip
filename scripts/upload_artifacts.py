@@ -1,11 +1,11 @@
 """Upload the data files of the manifest to the object store behind data.gadopt.org.
 
-`gia_mip.data` fetches every artifact from
-https://data.gadopt.org/gia-mip/<object>, where <object> is the artifact's
+`giamip.data` fetches every artifact from
+https://data.gadopt.org/giamip/<object>, where <object> is the artifact's
 `object` field when it has one (the converted files:
 `versions/<sha256>/<collection>/<file>`) and its manifest key otherwise (the
 originals). That host serves the `gadopt` bucket of the G-ADOPT DigitalOcean
-Space, so an artifact is uploaded to the key `gia-mip/<object>` with public
+Space, so an artifact is uploaded to the key `giamip/<object>` with public
 read access. A converted file's key contains its sum, so a new version is a
 new object and the old one stays for the releases that name it. Nothing is
 ever deleted.
@@ -34,10 +34,10 @@ import sys
 
 REPOSITORY = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPOSITORY))
-from gia_mip import data  # noqa: E402
+from giamip import data  # noqa: E402
 
 BUCKET = "gadopt"
-PREFIX = "gia-mip/"
+PREFIX = "giamip/"
 
 
 def read_s3cmd_config(path: pathlib.Path) -> dict[str, str]:

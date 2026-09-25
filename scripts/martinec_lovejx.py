@@ -2,7 +2,7 @@
 
 This repository specifies the cases and holds the data to compare against; the
 viscoelastic response is computed by lovejx. This script is the piece between
-them. It reads the case with `gia_mip.benchmarks.inputs.MartinecCase`, builds
+them. It reads the case with `giamip.benchmarks.inputs.MartinecCase`, builds
 the earth model and the load for lovejx, runs lovejx, and writes the result as
 a `BenchmarkResult`, which is the same object the published contributors are
 read through.
@@ -55,8 +55,8 @@ import jax.numpy as jnp                                              # noqa: E40
 
 jax.config.update("jax_enable_x64", True)
 
-from gia_mip.benchmarks.inputs import MartinecCase                   # noqa: E402
-from gia_mip.benchmarks.results import BenchmarkResult               # noqa: E402
+from giamip.benchmarks.inputs import MartinecCase                   # noqa: E402
+from giamip.benchmarks.results import BenchmarkResult               # noqa: E402
 from lovejx.lovenumbers.profile import layered_profile               # noqa: E402
 from lovejx.lovenumbers.propagate import StepPlan                    # noqa: E402
 from lovejx.lovenumbers.rheology import Maxwell                      # noqa: E402

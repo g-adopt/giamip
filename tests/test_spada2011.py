@@ -7,8 +7,8 @@ check the result against evidence the converter does not use: the fluid limit
 of the normal mode expansion, the relaxation times file, the load mass that
 TABOO prints in each header, and the agreement of two independent codes.
 
-The converter lives in ``gia_mip.benchmarks.spada2011`` and follows the
-pattern of ``gia_mip.benchmarks.martinec2018``:
+The converter lives in ``giamip.benchmarks.spada2011`` and follows the
+pattern of ``giamip.benchmarks.martinec2018``:
 
 ``CASES``
     The short case names it converts, for example ``t02-01``.
@@ -27,7 +27,7 @@ Every value read from a source file names that file: a spatial curve in
 ``SpadaResult.love_numbers(q)`` and ``SpadaResult.relaxation_spectrum()`` in
 a ``source_file`` field. Each is a path relative to ``data/original/``.
 
-The converted files are read back with ``gia_mip.benchmarks.results.SpadaResult``,
+The converted files are read back with ``giamip.benchmarks.results.SpadaResult``,
 so these tests also check that a reference contributor is read the way a
 solver's result is.
 """
@@ -42,7 +42,7 @@ import re
 import numpy as np
 import pytest
 
-from gia_mip import cases, corrections, data
+from giamip import cases, corrections, data
 
 PREFIX = "spada2011/spada2011-cost-es0701"
 RESOURCES = pathlib.Path(data.__file__).parent / "resources"
@@ -57,7 +57,7 @@ REQUIRED_CASES = ("t01-01", "t01-02", "t01-03", "t01-04", "t01-05", "t01-06", "t
 
 def _spada2011():
     """The converter module, imported when a test runs so collection never fails."""
-    from gia_mip.benchmarks import spada2011
+    from giamip.benchmarks import spada2011
     return spada2011
 
 
@@ -184,8 +184,8 @@ def test_a_case_that_is_not_converted_records_every_contributor():
 # --------------------------------------------------------------- data needed
 
 # The unpacked archive, under the same data root the converter uses:
-# $GIA_MIP_DATA_ROOT if set, else data/ in the checkout (tests/conftest.py).
-ARCHIVE_DIR = (pathlib.Path(os.environ["GIA_MIP_DATA_ROOT"]) if os.environ.get("GIA_MIP_DATA_ROOT")
+# $GIAMIP_DATA_ROOT if set, else data/ in the checkout (tests/conftest.py).
+ARCHIVE_DIR = (pathlib.Path(os.environ["GIAMIP_DATA_ROOT"]) if os.environ.get("GIAMIP_DATA_ROOT")
                else pathlib.Path(__file__).resolve().parent.parent / "data") / "original" / PREFIX
 
 
@@ -218,7 +218,7 @@ def converted(tmp_path_factory, data_root):
 
 
 def _result(converted, case, member):
-    from gia_mip.benchmarks.results import SpadaResult
+    from giamip.benchmarks.results import SpadaResult
     return SpadaResult.read(converted[case], member, case=case)
 
 
@@ -230,7 +230,7 @@ def test_the_converted_file_is_named_for_the_case(converted):
 
 @pytest.mark.data
 def test_every_value_is_finite_and_every_axis_ascends(converted):
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     for case, path in converted.items():
         with _netcdf.open_read(path) as ds:
             stack = [ds]
@@ -252,7 +252,7 @@ def test_every_contributor_is_converted_or_recorded(converted, case):
     Correction spada-t02-01-contributors-without-data: a contributor listed in
     the case file with no data must fail loudly, not be skipped.
     """
-    from gia_mip.benchmarks.results import SpadaResult
+    from giamip.benchmarks.results import SpadaResult
     definition = cases.case(f"spada2011-{case}")
     members = set(SpadaResult.members(converted[case]))
     reasons = definition["reference_data"].get("not_converted", {})
@@ -323,7 +323,7 @@ def test_every_file_the_converter_reads_has_a_layout(converted):
     test_every_correction_on_a_file_with_a_layout_has_a_decision, which loops
     over `files`.
     """
-    from gia_mip.benchmarks.results import SpadaResult
+    from giamip.benchmarks.results import SpadaResult
     layouts = json.loads((RESOURCES / "spada_column_layouts.json").read_text())
     files = layouts.get("files", {})
     sources: dict[str, tuple] = {}
@@ -645,12 +645,12 @@ def test_every_gs_file_converted_carries_the_load_of_the_case(converted, case, q
     """The header mass of each source file equals the mass of the table-4 load.
 
     Every epoch of GS_EPOCHS must be present first.
-    SpadaCase computes the mass from gia_mip/resources/loads/spada2011.json: 3.607171340900778e18 kg
+    SpadaCase computes the mass from giamip/resources/loads/spada2011.json: 3.607171340900778e18 kg
     for the cap and the disc, 1e18 kg for the point. TABOO prints sixteen
     digits, and the two agree to rounding, so the tolerance is 1e-9. The files
     of a different run (5.79e18 kg, 3.87e18 kg) differ by 7 to 60 per cent.
     """
-    from gia_mip.benchmarks.inputs import SpadaCase
+    from giamip.benchmarks.inputs import SpadaCase
     result = _result(converted, case, "GS")
     expected = SpadaCase(case).load_mass(load)
     root = data_root / "original"
@@ -1095,7 +1095,7 @@ def test_the_length_of_day_follows_from_the_k2_of_test_5_1(converted, member):
     G is 75.403 ms. The measured misfit is 1.6e-6 ms; the tolerance is 1e-5
     ms. The working copy of VK's k, which holds -(1 + k), misses by 67 ms.
     """
-    from gia_mip.benchmarks.inputs import SpadaCase
+    from giamip.benchmarks.inputs import SpadaCase
     factor = _lod_factor_ms(SpadaCase("t02-03"))
     lod = _result(converted, "t02-03", member).length_of_day("cap")
     k2 = _result(converted, "t01-05", member).time_domain_love_numbers("k", 2)
@@ -1116,7 +1116,7 @@ def test_the_three_length_of_day_curves_match_within_2_ms(converted, member):
 @pytest.mark.data
 def test_the_members_of_test_3_2(converted):
     """GS and VB, table 1, and GSA and VK for the length of day of figure 13c."""
-    from gia_mip.benchmarks.results import SpadaResult
+    from giamip.benchmarks.results import SpadaResult
     assert SpadaResult.members(converted["t02-03"]) == ["GS", "GSA", "VB", "VK"]
 
 
@@ -1124,6 +1124,6 @@ def test_the_members_of_test_3_2(converted):
 @pytest.mark.parametrize("case", REQUIRED_CASES)
 def test_no_converted_contributor_keeps_a_reason_for_not_being_converted(converted, case):
     """A reason left in `not_converted` for a contributor the file holds is stale."""
-    from gia_mip.benchmarks.results import SpadaResult
+    from giamip.benchmarks.results import SpadaResult
     reasons = cases.case(f"spada2011-{case}")["reference_data"].get("not_converted", {})
     assert not set(reasons) & set(SpadaResult.members(converted[case])), (case, sorted(reasons))

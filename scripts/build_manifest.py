@@ -1,8 +1,8 @@
-"""Generate `gia_mip/resources/manifest.json` from `data/original/` and `data/converted/`.
+"""Generate `giamip/resources/manifest.json` from `data/original/` and `data/converted/`.
 
 The manifest is the checksum record for every file this project depends on:
 the third-party originals and the converted reference data derived from them. It is generated, never hand-edited: the human-written half is
-`gia_mip/resources/provenance.json`, which says where each artifact came from,
+`giamip/resources/provenance.json`, which says where each artifact came from,
 who supplied it and whether they have agreed to redistribution. This script
 joins that provenance to the size and SHA-256 sum measured on disk.
 
@@ -14,15 +14,15 @@ verify one file out of an archive that was unpacked some time ago.
 A converted file also gets an ``object`` key, ``versions/<sha256>/<path>``:
 the name of the object on the store and of its place in a local cache. The key
 contains the sum, so every version of a converted file has its own object, an
-older release of gia-mip downloads the version it was built with, and two
-versions never overwrite each other in a cache (gia_mip/data.py,
+older release of giamip downloads the version it was built with, and two
+versions never overwrite each other in a cache (giamip/data.py,
 `cache_path`). Only ``data/converted/<collection>/*.nc`` is scanned, so no
 downloaded version, lock file or temporary file is ever taken for an artifact.
 
 Usage::
 
     python3 scripts/build_manifest.py [--root data/original] [--converted-root data/converted]
-                                      [--output gia_mip/resources/manifest.json]
+                                      [--output giamip/resources/manifest.json]
 
 Run it after adding a file to `data/original/` and after adding the matching
 entry to `provenance.json`, and after every conversion that changed a file in
@@ -42,11 +42,11 @@ import sys
 import tarfile
 import zipfile
 
-# The unpack rule lives in gia_mip.data so there is one definition of where an
+# The unpack rule lives in giamip.data so there is one definition of where an
 # archive lands. That module imports only the standard library, so importing
 # it here costs nothing and cannot fail on a bare machine.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from gia_mip.data import (  # noqa: E402
+from giamip.data import (  # noqa: E402
     STAMP as UNPACK_STAMP, common_top, member_path, unpack_target,
 )
 
@@ -162,9 +162,9 @@ def main() -> int:
     ap.add_argument("--converted-root", type=pathlib.Path, default=here / "data" / "converted",
                     help="directory holding the converted files, <collection>/<file>.nc")
     ap.add_argument("--output", type=pathlib.Path,
-                    default=here / "gia_mip" / "resources" / "manifest.json")
+                    default=here / "giamip" / "resources" / "manifest.json")
     ap.add_argument("--provenance", type=pathlib.Path,
-                    default=here / "gia_mip" / "resources" / "provenance.json")
+                    default=here / "giamip" / "resources" / "provenance.json")
     args = ap.parse_args()
 
     provenance = json.loads(args.provenance.read_text())

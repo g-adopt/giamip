@@ -14,7 +14,7 @@
 #
 # This page shows the inputs of the test: the settings of the case file, the
 # physical constants, the loads and the earth model. It shows no results. The code cells read every
-# value through `gia_mip.benchmarks.inputs.SpadaCase`, which reads
+# value through `giamip.benchmarks.inputs.SpadaCase`, which reads
 # `cases/benchmarks/spada2011/t02-03.json`, `loads/spada2011.json` and
 # `models/m3-l70-v01.json`. The test suite and the site build execute this
 # page, so a change to those files or to `SpadaCase` that breaks a cell fails
@@ -30,7 +30,7 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path("../../..").resolve()
-if (ROOT / "gia_mip").is_dir():
+if (ROOT / "giamip").is_dir():
     sys.path.insert(0, str(ROOT))
 
 # %%
@@ -43,7 +43,7 @@ import numpy as np
 from IPython.display import Markdown
 from matplotlib.cm import ScalarMappable
 
-from gia_mip.benchmarks.inputs import SpadaCase
+from giamip.benchmarks.inputs import SpadaCase
 
 
 def power_of_ten(value: float, digits: int) -> str:

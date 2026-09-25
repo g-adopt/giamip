@@ -5,7 +5,7 @@ import pathlib
 
 import pytest
 
-from gia_mip import data
+from giamip import data
 
 PROVENANCE = pathlib.Path(data.__file__).parent / "resources" / "provenance.json"
 PERMISSIONS = {"granted", "requested", "not_asked"}
@@ -155,7 +155,7 @@ def test_each_converted_entry_is_derived_from_known_originals(manifest):
     for key, entry in _converted(manifest).items():
         assert entry["derived_from"], key
         assert set(entry["derived_from"]) <= originals, (key, entry["derived_from"])
-        assert entry["converter"].startswith("gia_mip.benchmarks."), key
+        assert entry["converter"].startswith("giamip.benchmarks."), key
 
 
 def test_no_original_has_an_object_key(manifest):

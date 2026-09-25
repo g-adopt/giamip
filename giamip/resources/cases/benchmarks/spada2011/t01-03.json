@@ -1,0 +1,41 @@
+{
+  "id": "spada2011-t01-03",
+  "collection": "spada2011",
+  "published_name": "Test 3/1",
+  "title": "Tidal Love numbers",
+  "test_class": "wavenumber",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "giamip/resources/loads/spada2011.json",
+  "what_to_compute": "As test 2/1, for the tidal Love numbers: an externally applied potential that does not load the surface. The relaxation frequencies s_j are unchanged, since they depend only on the model structure.",
+  "outputs": [
+    "h_tidal",
+    "l_tidal",
+    "k_tidal"
+  ],
+  "parameters": {
+    "harmonic_degrees": [
+      2,
+      256
+    ]
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T01-03",
+    "contributors": [
+      "GS",
+      "RR",
+      "VB",
+      "ZM"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of giamip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
+    "not_converted": {
+      "ZM": "T01-03/ holds tidal Love number files from GS, RR and VB only; no file is ZM's. The paper prints no tidal values of ZM's own: table 7 gives the degree-2 components of k that GS, RR and VB also give."
+    },
+    "reference_status": "closed on 2026-09-15 by Sia Ghelichkhani: the archive spada2011-cost-es0701 is the reference data for this test, and what it lacks is recorded in not_converted and status. New data for a gap is added as a new original, with its own provenance and corrections."
+  },
+  "status": "converted: GS, RR and VB in data/converted/spada2011/spada2011-t01-03.nc. ZM supplied no tidal Love numbers."
+}

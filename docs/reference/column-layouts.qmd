@@ -41,7 +41,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json, pathlib
-d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+d = json.loads((pathlib.Path("../..") / "giamip" / "resources"
                 / "column_layouts.json").read_text())
 rows = ["| Script | Panel | Quantity | Series drawn |", "| --- | ---: | --- | ---: |"]
 for s in d["scripts"]:
@@ -62,7 +62,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json, pathlib
-d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+d = json.loads((pathlib.Path("../..") / "giamip" / "resources"
                 / "column_layouts.json").read_text())
 out = []
 for name, entries in d["by_file"].items():
@@ -105,7 +105,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
 import json, pathlib
-d = json.loads((pathlib.Path("../..") / "gia_mip" / "resources"
+d = json.loads((pathlib.Path("../..") / "giamip" / "resources"
                 / "column_layouts.json").read_text())
 rows = ["| File | Time column | Column | Holds | Stored unit | si_factor | Evidence |",
         "| --- | ---: | ---: | --- | --- | ---: | --- |"]
@@ -118,7 +118,7 @@ Markdown("\n".join(rows))
 
 ## Converted data
 
-`gia_mip.benchmarks.martinec2018` reads every curve that a script draws, with
+`giamip.benchmarks.martinec2018` reads every curve that a script draws, with
 the column, sign and scale from this page and the fixes from
 [the corrections](../data/corrections.qmd), and writes one NetCDF4 file per
 case to `data/converted/martinec2018/`. Run `scripts/convert_martinec2018.py`
@@ -129,8 +129,8 @@ groups and attributes of the output.
 
 The Spada et al. (2011) archive holds 87 further GMT scripts covering its ten
 tests, decoded by `scripts/decode_spada_layouts.py` into
-`gia_mip/resources/spada_column_layouts.json`. Its `files` table gives the
-layout of every file `gia_mip.benchmarks.spada2011` reads, keyed by the path
+`giamip/resources/spada_column_layouts.json`. Its `files` table gives the
+layout of every file `giamip.benchmarks.spada2011` reads, keyed by the path
 under `data/original/`. Eleven README files inside the `T02` directories
 document the VILMA submissions: `u` is vertical displacement, `v` is
 horizontal, `e` is geoid, in metres and metres per year, with `*cost` holding

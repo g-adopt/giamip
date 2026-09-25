@@ -14,7 +14,7 @@
 # This page shows the inputs of the test: the settings of the case file, the
 # layers of VSS96, and VSS96 against M3-L70-V01. The page shows no results.
 # The code cells read every value through
-# `gia_mip.benchmarks.inputs.SpadaCase`, which reads
+# `giamip.benchmarks.inputs.SpadaCase`, which reads
 # `cases/benchmarks/spada2011/t01-06.json`, `models/vss96.json` and, for the
 # comparison, `models/m3-l70-v01.json`. The test suite and the site build
 # execute this page, so a change to those files or to `SpadaCase` that breaks
@@ -30,7 +30,7 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path("../../..").resolve()
-if (ROOT / "gia_mip").is_dir():
+if (ROOT / "giamip").is_dir():
     sys.path.insert(0, str(ROOT))
 
 # %%
@@ -40,7 +40,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from IPython.display import Markdown
 
-from gia_mip.benchmarks.inputs import SpadaCase
+from giamip.benchmarks.inputs import SpadaCase
 
 
 def power_of_ten(value: float, digits: int) -> str:

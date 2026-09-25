@@ -17,14 +17,14 @@ The default run needs no network: it reads the tracked converted files in
 excluded by default:
 
 ```bash
-python -m gia_mip.data --all
+python -m giamip.data --all
 pytest -q -m data
 ```
 
 ## Adding a data file
 
 Add the file to `data/original/`, add an entry to
-`gia_mip/resources/provenance.json` saying where it came from, who supplied
+`giamip/resources/provenance.json` saying where it came from, who supplied
 it, when, and whether they have agreed to redistribution, then run:
 
 ```bash
@@ -36,13 +36,13 @@ that is not there, so the two cannot drift apart. Commit the regenerated
 `manifest.json`.
 
 Never edit a file in `data/original/`. If it has a defect, add an entry to
-`gia_mip/resources/corrections.json` with the evidence, and apply it in the
+`giamip/resources/corrections.json` with the evidence, and apply it in the
 reader.
 
 ## After a conversion
 
 The converted reference files in `data/converted/` are tracked, and they are
-also on the object store, where an installed gia-mip downloads them. After a
+also on the object store, where an installed giamip downloads them. After a
 conversion that changed one:
 
 ```bash
@@ -62,7 +62,7 @@ stops.
 
 ## Adding a case
 
-A case is one JSON file in `gia_mip/resources/cases/`, shown on a page in `docs/results/`.
+A case is one JSON file in `giamip/resources/cases/`, shown on a page in `docs/results/`.
 `tests/test_cases.py` checks that it names an earth model and a load table that
 exist. State the physical constants in the case file: they differ between the benchmarks
 and GIAMIP, and a shared module would silently give one of them the other's
@@ -72,7 +72,7 @@ values.
 
 A pushed tag `v<version>` runs `.github/workflows/release.yml`. It builds the
 sdist and the wheel, checks that the tag is `v` followed by
-`gia_mip.__version__`, installs the wheel into a new virtual environment,
+`giamip.__version__`, installs the wheel into a new virtual environment,
 checks it from outside the checkout against the real store
 (`scripts/check_installed.py --all-converted`), and publishes to PyPI through
 trusted publishing, with no token.

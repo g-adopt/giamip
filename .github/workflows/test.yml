@@ -22,7 +22,7 @@ jobs:
 
   test-with-data:
     # Every original (Martinec, Spada and the GIAMIP inputs) is public at
-    # https://data.gadopt.org/gia-mip/, so the runner downloads them over HTTPS
+    # https://data.gadopt.org/giamip/, so the runner downloads them over HTTPS
     # with no secret. Credentials for the object store are needed only to
     # upload, which is done by hand with scripts/upload_artifacts.py. Other
     # collections join this job when their permission in the manifest reads
@@ -36,7 +36,7 @@ jobs:
       - name: Install
         run: pip install -e ".[test]"
       - name: Fetch the granted originals
-        run: python -m gia_mip.data --collection martinec2018 --collection spada2011 --collection giamip
+        run: python -m giamip.data --collection martinec2018 --collection spada2011 --collection giamip
       - name: Test with data
         run: pytest -q -m data
 
@@ -63,8 +63,8 @@ jobs:
           if unzip -Z1 dist/*.whl | grep -q '\.nc$'; then
             echo "the wheel holds a NetCDF file"; exit 1
           fi
-          unzip -Z1 dist/*.whl | grep '^gia_mip/resources/' | grep -v '/$' | sort > wheel.txt
-          git ls-files gia_mip/resources | sort > tracked.txt
+          unzip -Z1 dist/*.whl | grep '^giamip/resources/' | grep -v '/$' | sort > wheel.txt
+          git ls-files giamip/resources | sort > tracked.txt
           diff tracked.txt wheel.txt
       - name: Install the wheel into a new virtual environment
         run: |
@@ -73,7 +73,7 @@ jobs:
       - name: Check the installed wheel from outside the checkout
         working-directory: ${{ runner.temp }}
         env:
-          GIA_MIP_DATA_ROOT: ${{ runner.temp }}/gia-mip-data
+          GIAMIP_DATA_ROOT: ${{ runner.temp }}/giamip-data
         run: >
           "$RUNNER_TEMP/venv/bin/python" "$GITHUB_WORKSPACE/scripts/check_installed.py"
           --store "$RUNNER_TEMP/store" --all-converted

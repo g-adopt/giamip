@@ -1,10 +1,10 @@
-# gia-mip
+# giamip
 
 Case definitions, reference data and output conventions for glacial isostatic
 adjustment (GIA) model comparison.
 
 This repository specifies what to run and holds what to compare against. It
-contains no solver. A solver reads a case with `gia_mip.case`, produces
+contains no solver. A solver reads a case with `giamip.case`, produces
 output, and uses this package to check that the output obeys the conventions
 and to score it against the reference data.
 
@@ -19,7 +19,7 @@ Three collections are covered.
 ## Install
 
 ```
-pip install gia-mip
+pip install giamip
 ```
 
 The package holds the code and the small JSON files: the case files, the load
@@ -31,10 +31,10 @@ development, install a checkout with `pip install -e ".[test]"`.
 ## How to run a case
 
 ```python
-import gia_mip
-from gia_mip.benchmarks.results import BenchmarkResult
+import giamip
+from giamip.benchmarks.results import BenchmarkResult
 
-case = gia_mip.case("martinec2018-B")                    # the set-up of benchmark B
+case = giamip.case("martinec2018-B")                    # the set-up of benchmark B
 h = case.ice_thickness(colatitude, longitude, t_kyr)     # the load at your points
 b = case.topography(colatitude, longitude)               # the ocean basin
 
@@ -49,10 +49,10 @@ rows = case.score(run)                                   # eq. 31, on your own p
 checks = case.envelope_check(run, band_half_width_deg=6.74)   # criterion 2
 ```
 
-`gia_mip.case` gives a `MartinecCase`, a `SpadaCase` or a `GiamipExperiment`.
+`giamip.case` gives a `MartinecCase`, a `SpadaCase` or a `GiamipExperiment`.
 `tests/test_doc_examples.py` runs this example. For a solver's own benchmark
 test, with both stages and the per-case list of what a result must hold, read
-the section "Using gia-mip in a solver's benchmark test" of
+the section "Using giamip in a solver's benchmark test" of
 `docs/reference/python-interface.qmd`.
 The reference curves of a Martinec case are VEGA, and
 `docs/protocol/martinec2018.qmd` says how each one is built.
@@ -73,11 +73,11 @@ is derived from them and is tracked in this repository under
 `docs/data/manifest.qmd` records, for every file, its size, its SHA-256 sum,
 where it came from, who supplied it and under what terms.
 
-A reader finds a file with `gia_mip.data.locate`. It looks in the checkout
+A reader finds a file with `giamip.data.locate`. It looks in the checkout
 (when it runs from one) and in the download root, and downloads the file into
 the download root when neither has it. The download root is
-`$GIA_MIP_DATA_ROOT` when it is set, else `data/` of the checkout, else
-`~/.cache/gia-mip`. `docs/data/fetching.qmd` gives the details.
+`$GIAMIP_DATA_ROOT` when it is set, else `data/` of the checkout, else
+`~/.cache/giamip`. `docs/data/fetching.qmd` gives the details.
 
 Some of the original files contain defects. `docs/data/corrections.qmd` lists
 every one that is known, with the evidence. The readers apply the corrections.
@@ -88,13 +88,13 @@ The original files are never edited.
 Gadi compute nodes have no network, and in a job the Firedrake module points
 `XDG_CACHE_HOME` at storage that is deleted when the job ends. So:
 
-1. The maintainer of the Firedrake module installs gia-mip with its
+1. The maintainer of the Firedrake module installs giamip with its
    dependencies h5netcdf and `packaging` (h5py, numpy and scipy are there).
 2. On a login node, fill a directory on `/g/data` once:
-   `GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip python -m gia_mip.data --stage converted --collection benchmarks`.
+   `GIAMIP_DATA_ROOT=/g/data/<project>/giamip python -m giamip.data --stage converted --collection benchmarks`.
    For the GIAMIP inputs (317 MB), run the same command with
    `--collection giamip` and without `--stage converted`: they are originals.
-3. In the job script, set `GIA_MIP_DATA_ROOT` to the same directory.
+3. In the job script, set `GIAMIP_DATA_ROOT` to the same directory.
 
 A reader on a compute node that does not find a file raises
 `DataUnavailable`, and the message gives the command of step 2.
@@ -102,13 +102,13 @@ A reader on a compute node that does not find a file raises
 ## Layout
 
 ```
-gia_mip/            the package: data.py (locate, fetch and verify),
+giamip/            the package: data.py (locate, fetch and verify),
                     grids.py (the Gauss-Legendre grid), corrections.py
                     (known defects in the originals), benchmarks/ (Martinec
                     and Spada case set-up, results, scores and conversion)
                     and mip/ (GIAMIP input readers). Not written: the GIAMIP
                     output writer
-gia_mip/resources/  the JSON files the package carries: cases/ (one file per
+giamip/resources/  the JSON files the package carries: cases/ (one file per
                     case, in benchmarks/ and giamip/), loads/ (the analytic
                     load tables), models/ (the earth models), the manifest,
                     the provenance record, the corrections and the column

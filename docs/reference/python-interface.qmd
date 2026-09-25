@@ -9,27 +9,27 @@ of it computes a response.
 ## One entry point
 
 ```python
-import gia_mip
+import giamip
 
-case = gia_mip.case("martinec2018-B")   # MartinecCase
-case = gia_mip.case("spada2011-t02-01") # SpadaCase
-case = gia_mip.case("giamip-exp01")     # GiamipExperiment
+case = giamip.case("martinec2018-B")   # MartinecCase
+case = giamip.case("spada2011-t02-01") # SpadaCase
+case = giamip.case("giamip-exp01")     # GiamipExperiment
 ```
 
 The case files are in the package. The data files are not: a reader gets each
-one through `gia_mip.data.locate`, which downloads it from data.gadopt.org on
+one through `giamip.data.locate`, which downloads it from data.gadopt.org on
 first use and caches it ([Fetching the data](../data/fetching.qmd)). Every
 NetCDF file is read and written through h5netcdf, on h5py, which applies no
 mask, scale or fill value.
 
 ## Martinec (2018): setting up a case
 
-`gia_mip.benchmarks.inputs.MartinecCase` reads the case file, the load table
+`giamip.benchmarks.inputs.MartinecCase` reads the case file, the load table
 and the earth model, and evaluates the load and the topography at the points
 a solver chooses.
 
 ```python
-from gia_mip.benchmarks.inputs import MartinecCase
+from giamip.benchmarks.inputs import MartinecCase
 
 case = MartinecCase("D")
 case.earth_layers()                          # radii, densities, moduli, viscosities
@@ -47,13 +47,13 @@ total mass then equals VEGA's to 2e-4 at every time, which a test checks.
 
 ## Martinec (2018): results and scores
 
-`gia_mip.benchmarks.results.BenchmarkResult` holds the curves of one code for
+`giamip.benchmarks.results.BenchmarkResult` holds the curves of one code for
 one case, in the same layout as the converted reference files, so a solver's
 output and a published contributor are read, plotted and scored the same way.
 
 ```python
-from gia_mip.benchmarks.results import BenchmarkResult
-from gia_mip.benchmarks import metrics
+from giamip.benchmarks.results import BenchmarkResult
+from giamip.benchmarks import metrics
 
 run = BenchmarkResult("D", "lovejx")
 run.add_profile("load", "U", colatitude_deg, u_m)
@@ -85,7 +85,7 @@ cubic spline, so a solver can sample at any points. Scored this way, every
 contributor of the archive gets the numbers of its own published difference
 file. A time series is compared on the result's own times, with the reference
 interpolated linearly. Each row carries the number of points, the largest
-spacing between them, how the reference was built and the gia-mip version.
+spacing between them, how the reference was built and the giamip version.
 
 `metrics.envelope_check` is criterion 2 of the G-ADOPT tests: the result's
 largest difference and RMS against the largest of the published codes, with a
@@ -94,11 +94,11 @@ band removed around the cap margin and the initial coastline
 it is not decided. The function raises when the result lacks a compared
 curve.
 
-## Using gia-mip in a solver's benchmark test
+## Using giamip in a solver's benchmark test
 
 This section is for the agent or person who adds a Martinec benchmark to a
 solver's own test suite, as G-ADOPT does in `tests/gia_selfgrav_benchmarks/`.
-It needs only `pip install gia-mip` in the solver's environment.
+It needs only `pip install giamip` in the solver's environment.
 
 ### What a result must hold
 
@@ -113,12 +113,12 @@ reads the same lists from `case.profiles` and `case.time_series`.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 from IPython.display import Markdown
-import gia_mip
+import giamip
 
 rows = ["| Case | Profiles: meridian, quantities, interval | Time series, 0 to 15 kyr | Terminal time |",
         "| --- | --- | --- | ---: |"]
 for letter in "ABCDE":
-    case = gia_mip.case(f"martinec2018-{letter}")
+    case = giamip.case(f"martinec2018-{letter}")
     profiles = "; ".join(f"{p.name} (longitude {p.longitude_deg:g}): {', '.join(p.quantities)}, "
                          f"{p.colatitude_interval_deg[0]:g} to {p.colatitude_interval_deg[1]:g} degrees"
                          for p in case.profiles) or "none"
@@ -144,12 +144,12 @@ a stand-in that returns the reference, so it cannot go out of date.
 ```python
 # example: solver benchmark test
 import numpy as np
-import gia_mip
-from gia_mip.benchmarks import metrics
-from gia_mip.benchmarks.results import BenchmarkResult
+import giamip
+from giamip.benchmarks import metrics
+from giamip.benchmarks.results import BenchmarkResult
 
 # ---- stage 1, the run (compute node; needs no data file and no network) ----
-case = gia_mip.case("martinec2018-C")
+case = giamip.case("martinec2018-C")
 rho_ice, rho_water, g = case.ice_density, case.water_density, case.surface_gravity
 # The load and the topography at the solver's own points, at any time:
 #   case.ice_thickness(colatitude_deg, longitude_deg, t_kyr), case.topography(...)
@@ -177,7 +177,7 @@ assert abs(ours - reference_h_uf) <= 0.01 * abs(reference_h_uf)   # the solver's
 vega = case.reference().series("ice_mass_grounded")           # VEGA's series
 ```
 
-gia-mip gives the metrics and the range of the published codes. The pass
+giamip gives the metrics and the range of the published codes. The pass
 tolerances (1 per cent above) belong to the solver's test. The band width of
 criterion 2 is a required argument because it is not decided; 6.74 degrees is
 the width of the first G-ADOPT verdicts.
@@ -187,26 +187,26 @@ the width of the first G-ADOPT verdicts.
 The compute-node stage needs the package and nothing else. The test stage
 reads the converted reference files. A login node has network access, so the
 first test run downloads them into the download root. To keep them in one
-place for every job and every user of a project, set `GIA_MIP_DATA_ROOT` to a
+place for every job and every user of a project, set `GIAMIP_DATA_ROOT` to a
 directory on `/g/data`, and fill it once:
 
 ```bash
-GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip python -m gia_mip.data --stage converted --collection benchmarks
+GIAMIP_DATA_ROOT=/g/data/<project>/giamip python -m giamip.data --stage converted --collection benchmarks
 ```
 
-The Firedrake module must have gia-mip installed with h5netcdf and
+The Firedrake module must have giamip installed with h5netcdf and
 `packaging`; h5py, numpy and scipy are there. See
 [Fetching the data](../data/fetching.qmd).
 
-### Moving from a gia-mip checkout to the package
+### Moving from a giamip checkout to the package
 
 Code written against a checkout on `sys.path` (the variable `GIA_MIP`)
 changes as follows.
 
 | With a checkout | With the package |
 | --- | --- |
-| `GIA_MIP` and `sys.path.insert(...)` | `pip install gia-mip`; plain imports |
-| reading `cases/benchmarks/martinec2018/<L>.json` and `loads/martinec2018.json` with `json.load` | `gia_mip.case("martinec2018-<L>")`. The files moved to `gia_mip/resources/`, so old paths fail |
+| `GIA_MIP` and `sys.path.insert(...)` | `pip install giamip`; plain imports |
+| reading `cases/benchmarks/martinec2018/<L>.json` and `loads/martinec2018.json` with `json.load` | `giamip.case("martinec2018-<L>")`. The files moved to `giamip/resources/`, so old paths fail |
 | `spec["sea_level_equation"]`, `["terminal_time_kyr"]`, `["ice_height_model"]`, `["time_scenario"]`, `["ocean_basin"]` | `case.sea_level_equation`, `case.terminal_time_kyr`, `case.ice_height_model`, `case.time_scenario`, `case.ocean_basin` |
 | `constants.ice_density_kg_m3`, `water_density_kg_m3`, `surface_gravity_m_s2` | `case.ice_density`, `case.water_density`, `case.surface_gravity` |
 | `ice_height_models[...]`, `load_shape.angular_radius_deg` | `case.cap` (centre, `height_m`, `radius_deg`); `case.cap_size(t_kyr)` for T1 |
@@ -229,13 +229,13 @@ one grid point can cross a band edge.
 
 ## Spada (2011): setting up a test
 
-`gia_mip.benchmarks.inputs.SpadaCase` reads the case file, the load table
-`gia_mip/resources/loads/spada2011.json` and the earth model. It gives the three loads as surface
+`giamip.benchmarks.inputs.SpadaCase` reads the case file, the load table
+`giamip/resources/loads/spada2011.json` and the earth model. It gives the three loads as surface
 density and as Legendre coefficients, and the epochs, grids and degrees to
 output.
 
 ```python
-from gia_mip.benchmarks.inputs import SpadaCase
+from giamip.benchmarks.inputs import SpadaCase
 
 case = SpadaCase("t02-01")
 case.earth_layers()                          # M3-L70-V01, or VSS96 in test 6/1
@@ -258,15 +258,15 @@ The fluid limit is `math.inf`, which is a different epoch from 1000 kyr.
 
 ## Spada (2011): results and scores
 
-`gia_mip.benchmarks.results.SpadaResult` holds one code's results for one test,
+`giamip.benchmarks.results.SpadaResult` holds one code's results for one test,
 in the layout of the converted reference files: Love numbers (elastic, fluid
 and residues per mode), the relaxation spectrum, Love numbers against time,
 the polar motion transfer function, U, V, N or their rates, polar motion and
 the length of day.
 
 ```python
-from gia_mip.benchmarks.results import SpadaResult
-from gia_mip.benchmarks import metrics
+from giamip.benchmarks.results import SpadaResult
+from giamip.benchmarks import metrics
 
 run = SpadaResult("t01-02", "lovejx")
 run.add_love_numbers("h", degrees, elastic, fluid, residues)   # residues (degrees, 9), 1/kyr
@@ -319,14 +319,14 @@ the same number of modes. GS holds three Maxwell modes that VB does not hold.
 
 ## GIAMIP: inputs
 
-`gia_mip.mip.inputs.GiamipExperiment` opens the ice history and the topography
+`giamip.mip.inputs.GiamipExperiment` opens the ice history and the topography
 an experiment prescribes, through h5netcdf, which applies no mask, with the
 grid checked and the corrections for the version of the file on disk. The
-files are located through `gia_mip.data.locate`, so they are downloaded and
+files are located through `giamip.data.locate`, so they are downloaded and
 unpacked on first use (317 MB for the ice histories).
 
 ```python
-from gia_mip.mip.inputs import GiamipExperiment, grounded_thickness
+from giamip.mip.inputs import GiamipExperiment, grounded_thickness
 
 exp = GiamipExperiment("Exp01")
 ice = exp.ice_history                       # IceHistory

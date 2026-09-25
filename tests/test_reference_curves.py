@@ -17,10 +17,10 @@ import numpy as np
 import pytest
 from scipy.interpolate import CubicSpline
 
-from gia_mip import cases
-from gia_mip.benchmarks import martinec2018
-from gia_mip.benchmarks.inputs import MartinecCase
-from gia_mip.benchmarks.results import BenchmarkResult
+from giamip import cases
+from giamip.benchmarks import martinec2018
+from giamip.benchmarks.inputs import MartinecCase
+from giamip.benchmarks.results import BenchmarkResult
 
 LETTERS = ("A", "B", "C", "D", "E")
 

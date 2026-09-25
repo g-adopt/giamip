@@ -3,7 +3,7 @@ title: "GIA model comparison"
 ---
 
 This site is the documentation for
-[`g-adopt/gia-mip`](https://github.com/g-adopt/gia-mip), a repository that
+[`g-adopt/giamip`](https://github.com/g-adopt/giamip), a repository that
 specifies glacial isostatic adjustment (GIA) model comparison cases and holds
 the data to compare against.
 

@@ -5,25 +5,25 @@ title: "Fetching the data"
 No data file is in the package. The third-party originals (341 MB) belong to
 the people who produced them, and the converted reference data (10 MB) is
 derived from them. Both are in the gadopt object store and are served at
-`https://data.gadopt.org/gia-mip/`. Every file is checked against the SHA-256
-sum in `gia_mip/resources/manifest.json`, so a file that the package reads is
+`https://data.gadopt.org/giamip/`. Every file is checked against the SHA-256
+sum in `giamip/resources/manifest.json`, so a file that the package reads is
 the file that the manifest describes.
 
 ## On first use
 
-A reader asks for a file with `gia_mip.data.locate`, and every reader of the
+A reader asks for a file with `giamip.data.locate`, and every reader of the
 package does this. For example, `BenchmarkResult.reference_path("B")` calls:
 
 ```python
-from gia_mip import data
+from giamip import data
 data.locate("martinec2018/martinec2018-B.nc", "converted")
 ```
 
 `locate` looks in two places:
 
 1. `data/<stage>/` of the checkout, when the package runs from one;
-2. the download root: `$GIA_MIP_DATA_ROOT` when it is set, else `data/` of
-   the checkout, else `~/.cache/gia-mip`.
+2. the download root: `$GIAMIP_DATA_ROOT` when it is set, else `data/` of
+   the checkout, else `~/.cache/giamip`.
 
 When neither has the file, `locate` downloads it into the download root,
 checks its sum and, for an archive, unpacks it. A file is identified by its
@@ -39,7 +39,7 @@ Under a root, an original is at `original/<key>`, for example
 `original/giamip/ice-history.zip`. A converted file is at
 `versions/<sha256>/<key>`, for example
 `versions/104e8a…/martinec2018/martinec2018-B.nc`. The sum in the path gives
-every version of a converted file its own place, so two versions of gia-mip
+every version of a converted file its own place, so two versions of giamip
 that share one cache never overwrite each other's files. In a checkout,
 `data/versions/` is ignored by git, and the tracked files in
 `data/converted/` are never overwritten.
@@ -88,14 +88,14 @@ point the job at it:
 
 ```bash
 # on a login node
-GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip \
-    python -m gia_mip.data --stage converted --collection benchmarks
+GIAMIP_DATA_ROOT=/g/data/<project>/giamip \
+    python -m giamip.data --stage converted --collection benchmarks
 # in the job script
-export GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip
+export GIAMIP_DATA_ROOT=/g/data/<project>/giamip
 ```
 
 Add `--collection giamip` (with the default stage, `original`) for the
-GIAMIP inputs, 317 MB. The Firedrake module must have gia-mip installed with
+GIAMIP inputs, 317 MB. The Firedrake module must have giamip installed with
 its dependencies h5netcdf and `packaging`; h5py, numpy and scipy are in the
 module already.
 :::
@@ -103,13 +103,13 @@ module already.
 ## The command line
 
 ```bash
-python -m gia_mip.data                         # both benchmarks, the originals
-python -m gia_mip.data --stage converted       # the converted reference data
-python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
-python -m gia_mip.data --all                   # every collection
-python -m gia_mip.data --list                  # what exists, and what is local
-python -m gia_mip.data --verify --all          # check the sums, download nothing
-python -m gia_mip.data --dest DIR              # fill DIR, not the download root
+python -m giamip.data                         # both benchmarks, the originals
+python -m giamip.data --stage converted       # the converted reference data
+python -m giamip.data --collection giamip     # the GIAMIP inputs, 317 MB
+python -m giamip.data --all                   # every collection
+python -m giamip.data --list                  # what exists, and what is local
+python -m giamip.data --verify --all          # check the sums, download nothing
+python -m giamip.data --dest DIR              # fill DIR, not the download root
 ```
 
 `--collection` takes `spada2011`, `martinec2018` or `giamip`, and `benchmarks`
@@ -124,7 +124,7 @@ non-zero. Run it after you copy a tree between machines.
 ::: {.callout-note}
 ## Only granted files are downloaded
 
-`locate` and `python -m gia_mip.data` refuse to download a file whose
+`locate` and `python -m giamip.data` refuse to download a file whose
 `permission` is not `granted`. Today every file in the manifest is granted and
 public. A file added later starts as `requested` or `not_asked`. Until its
 supplier agrees, obtain the file from the supplier and put it in

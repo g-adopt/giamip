@@ -5,7 +5,7 @@ small synthetic results in memory and in a temporary directory.
 
 The interface under test
 ------------------------
-``gia_mip.benchmarks.inputs.SpadaCase(case)``
+``giamip.benchmarks.inputs.SpadaCase(case)``
     ``case`` is ``"t02-01"`` or ``"spada2011-t02-01"``. Attributes:
     ``case_id``, ``earth_model`` (the model dict), ``ice_density``,
     ``water_density``, ``earth_radius_m``, ``loads`` (tuple of load names),
@@ -16,7 +16,7 @@ The interface under test
     ``legendre_coefficients(load, degrees)``,
     ``near_field_colatitudes_deg()``, ``global_colatitudes_deg()``.
 
-``gia_mip.benchmarks.results.SpadaResult(case, member)``
+``giamip.benchmarks.results.SpadaResult(case, member)``
     ``add_love_numbers(quantity, degrees, elastic, fluid, residues)`` and
     ``love_numbers(quantity)`` with fields ``degrees``, ``elastic``,
     ``fluid``, ``residues`` (degrees by modes);
@@ -41,7 +41,7 @@ The interface under test
     with fields ``elastic``, ``secular``, ``frequencies`` and ``residues``, the
     last two complex arrays with the slowest mode first.
 
-``gia_mip.benchmarks.metrics.spada_score(result, references)``
+``giamip.benchmarks.metrics.spada_score(result, references)``
     ``references`` maps a member code to a ``SpadaResult``. One row per
     comparison, with ``kind``, ``load``, ``quantity``, ``epoch_kyr``,
     ``degree``, ``chandler_wobble``, ``interval``, ``reference`` and the
@@ -62,7 +62,7 @@ import math
 import numpy as np
 import pytest
 
-from gia_mip import cases
+from giamip import cases
 
 # The load mass TABOO prints in the header of every T02-01 cap and disc file,
 # for a 1500 m cap and a 1000 m disc of 10 degrees radius, ice of 931 kg/m3,
@@ -73,17 +73,17 @@ TABOO_LOAD_MASS_KG = 3.607171340900778e18
 
 def _inputs():
     """The inputs module, imported when a test runs so collection never fails."""
-    from gia_mip.benchmarks import inputs
+    from giamip.benchmarks import inputs
     return inputs
 
 
 def _results():
-    from gia_mip.benchmarks import results
+    from giamip.benchmarks import results
     return results
 
 
 def _metrics():
-    from gia_mip.benchmarks import metrics
+    from giamip.benchmarks import metrics
     return metrics
 
 
@@ -133,7 +133,7 @@ def test_the_densities_are_the_spada_values():
 def test_the_densities_are_read_from_the_load_table(monkeypatch):
     """A module constant would keep 931 after the table changes; the table must win.
 
-    The load table returned by gia_mip.cases.loads is replaced by a copy with
+    The load table returned by giamip.cases.loads is replaced by a copy with
     the GIAMIP values. SpadaCase must obtain its table through that function,
     as MartinecCase does.
     """

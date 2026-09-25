@@ -1,6 +1,6 @@
 """The one scoring path for the Martinec cases, and the case entry point.
 
-`gia_mip.benchmarks.metrics.score` compares a profile on the result's own
+`giamip.benchmarks.metrics.score` compares a profile on the result's own
 points, with the stored reference evaluated there by a cubic spline. The
 strongest check of that rule is the archive itself: every contributor, scored
 this way, must get the maximum and RMS of its own published difference file.
@@ -11,11 +11,11 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import gia_mip
-from gia_mip.benchmarks import metrics
-from gia_mip.benchmarks.inputs import MartinecCase, SpadaCase
-from gia_mip.benchmarks.results import BenchmarkResult, Curve
-from gia_mip.mip.inputs import GiamipExperiment
+import giamip
+from giamip.benchmarks import metrics
+from giamip.benchmarks.inputs import MartinecCase, SpadaCase
+from giamip.benchmarks.results import BenchmarkResult, Curve
+from giamip.mip.inputs import GiamipExperiment
 
 # Bounds on |score - published difference file|, in metres. In A the
 # reference is continued to the pole and VK differs from the other codes by
@@ -108,7 +108,7 @@ def test_the_reference_scores_zero_and_a_constant_offset_scores_the_constant(let
         assert row["max"] == pytest.approx(offset, rel=1e-9), row
         assert row["rms"] == pytest.approx(offset, rel=1e-9), row
         assert row["compared_on"] == "result points"
-        assert row["gia_mip_version"] == gia_mip.__version__
+        assert row["giamip_version"] == giamip.__version__
 
 
 @pytest.mark.parametrize("letter,profile", [("B", "basin"), ("D", "load"), ("D", "basin")])
@@ -257,16 +257,16 @@ def test_the_band_width_has_no_default():
 
 # --------------------------------------------------------- the entry point
 
-def test_gia_mip_case_returns_the_class_of_its_collection():
-    assert isinstance(gia_mip.case("martinec2018-B"), MartinecCase)
-    assert isinstance(gia_mip.case("spada2011-t02-01"), SpadaCase)
-    assert isinstance(gia_mip.case("giamip-exp01"), GiamipExperiment)
+def test_giamip_case_returns_the_class_of_its_collection():
+    assert isinstance(giamip.case("martinec2018-B"), MartinecCase)
+    assert isinstance(giamip.case("spada2011-t02-01"), SpadaCase)
+    assert isinstance(giamip.case("giamip-exp01"), GiamipExperiment)
     with pytest.raises(KeyError, match="Known ids"):
-        gia_mip.case("martinec2018-Z")
+        giamip.case("martinec2018-Z")
 
 
 def test_a_case_gives_its_reference_and_its_reference_colatitudes():
-    case = gia_mip.case("martinec2018-B")
+    case = giamip.case("martinec2018-B")
     assert case.id == "martinec2018-B"
     assert case.reference().member == "VEGA"
     assert case.reference_colatitudes("basin").size == 2048
@@ -274,7 +274,7 @@ def test_a_case_gives_its_reference_and_its_reference_colatitudes():
 
 def test_a_case_refuses_to_score_a_result_of_another_case():
     with pytest.raises(ValueError, match="case C"):
-        gia_mip.case("martinec2018-B").score(BenchmarkResult.reference("C"))
+        giamip.case("martinec2018-B").score(BenchmarkResult.reference("C"))
 
 
 def _reference_plus(letter: str, change) -> BenchmarkResult:

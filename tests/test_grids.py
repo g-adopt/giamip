@@ -10,7 +10,7 @@ an experiment whose forcing file has not arrived.
 import numpy as np
 import pytest
 
-from gia_mip import grids
+from giamip import grids
 
 # Every delivered file, relative to data/original/. Marked `data` because they
 # are not in the repository.
@@ -85,7 +85,7 @@ def test_check_accepts_the_generated_grid():
 @pytest.mark.parametrize("relative_path", DELIVERED)
 def test_delivered_files_are_on_the_prescribed_grid(data_root, relative_path):
     """Every file GIAMIP delivered sits on the grid this module generates."""
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     path = data_root / "original" / relative_path
     if not path.exists():
         pytest.skip(f"{relative_path} not fetched")
@@ -103,7 +103,7 @@ def test_generated_latitudes_match_a_delivered_file_to_machine_precision(data_ro
     allows. The delivered float64 axes agree far more closely than that, and
     this test records the real figure so a later drift is visible.
     """
-    from gia_mip import _netcdf
+    from giamip import _netcdf
     path = data_root / "original" / "giamip/ice-history/iceHistory-ICE-6G_D.nc"
     if not path.exists():
         pytest.skip("ICE-6G_D not fetched")

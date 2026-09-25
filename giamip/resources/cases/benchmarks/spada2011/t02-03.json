@@ -1,0 +1,50 @@
+{
+  "id": "spada2011-t02-03",
+  "collection": "spada2011",
+  "published_name": "Test 3/2",
+  "title": "Polar motion and length of day",
+  "test_class": "spatial",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "giamip/resources/loads/spada2011.json",
+  "what_to_compute": "Compute polar motion m, its rate, and the change in length of day, for the same loads and time history as tests 1/2 and 2/2, with the load centroid moved off the pole.",
+  "outputs": [
+    "polar_motion",
+    "polar_motion_rate",
+    "length_of_day"
+  ],
+  "parameters": {
+    "epochs_kyr": [
+      0,
+      1,
+      2,
+      5,
+      10,
+      "infinity"
+    ],
+    "load_centroid": {
+      "colatitude_deg": 25,
+      "longitude_deg": 75
+    },
+    "loads": [
+      "cap",
+      "disc",
+      "point"
+    ],
+    "chandler_wobble": "computed both with and without"
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T02-03",
+    "contributors": [
+      "GS",
+      "VB"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of giamip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
+    "reference_status": "closed on 2026-09-15 by Sia Ghelichkhani: the archive spada2011-cost-es0701 is the reference data for this test, and what it lacks is recorded in not_converted and status. New data for a gap is added as a new original, with its own provenance and corrections."
+  },
+  "status": "converted: GS and VB in data/converted/spada2011/spada2011-t02-03.nc, polar motion and its rate for the three loads with the Chandler wobble included and excluded. GS's curves run from 0 to 5 kyr and add the table 14 epochs of 10 and 20 kyr; VB's hold the table 14 epochs, and for the cap without the wobble a grid to 20 kyr. The length of day of the cap is held for GS, GSA and VK, as figure 13c draws it; GS computed all three from each code's k_2 of test 5/1 with T02-03/LOD/lod.f90."
+}

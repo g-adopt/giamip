@@ -1,0 +1,32 @@
+{
+  "id": "spada2011-t01-04",
+  "collection": "spada2011",
+  "published_name": "Test 4/1",
+  "title": "Polar motion transfer function",
+  "test_class": "wavenumber",
+  "source": {
+    "citation": "Spada, G. et al. (2011). Geophysical Journal International 185(1), 106-132.",
+    "doi": "10.1111/j.1365-246X.2011.04952.x"
+  },
+  "earth_model": "m3-l70-v01",
+  "loads": "giamip/resources/loads/spada2011.json",
+  "what_to_compute": "Compute the coefficients of the polar motion transfer function M(s) in the Laplace domain: the secular and elastic rotational residues and the rotational characteristic frequencies.",
+  "outputs": [
+    "pmtf_coefficients"
+  ],
+  "parameters": {
+    "harmonic_degree": 2,
+    "chandler_wobble": "computed both with and without; table 8 compares the coefficients with the wobble included"
+  },
+  "reference_data": {
+    "archive": "spada2011/spada2011-cost-es0701.tar.gz",
+    "directory": "T01-04",
+    "contributors": [
+      "GS",
+      "VB"
+    ],
+    "$comment": "Contributor abbreviations are those of the paper's table 1. For a converted test, the files read and what each column holds are in the `files` table of giamip/resources/spada_column_layouts.json. `not_converted` gives, per contributor, the reason its data is not in the converted file.",
+    "reference_status": "closed on 2026-09-15 by Sia Ghelichkhani: the archive spada2011-cost-es0701 is the reference data for this test, and what it lacks is recorded in not_converted and status. New data for a gap is added as a new original, with its own provenance and corrections."
+  },
+  "status": "converted: GS and VB, with the Chandler wobble included and excluded, in data/converted/spada2011/spada2011-t01-04.nc. Table 8 of the paper compares the two with the wobble included. GS keeps three Maxwell modes of vanishing strength that VB leaves out, so GS has 12 rotational modes with the wobble and VB 9."
+}

@@ -48,7 +48,7 @@ is generated. Do not edit it by hand; edit this script and run it again.
 Usage::
 
     python3 scripts/decode_gmt_layouts.py [--root data/original] \\
-        [--output gia_mip/resources/column_layouts.json]
+        [--output giamip/resources/column_layouts.json]
 """
 
 from __future__ import annotations
@@ -611,7 +611,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--root", type=pathlib.Path, default=here / "data" / "original")
     ap.add_argument("--output", type=pathlib.Path,
-                    default=here / "gia_mip" / "resources" / "column_layouts.json")
+                    default=here / "giamip" / "resources" / "column_layouts.json")
     args = ap.parse_args()
     root = args.root.resolve()
 
