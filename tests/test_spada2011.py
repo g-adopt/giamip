@@ -208,9 +208,9 @@ def _numeric_rows(path: pathlib.Path, per_record: int) -> np.ndarray:
 
 
 @pytest.fixture(scope="module")
-def converted(tmp_path_factory):
+def converted(tmp_path_factory, data_root):
     """Convert the required cases into a temporary directory, once for the module."""
-    root = _spada2011().data_root() / "original"
+    root = data_root / "original"
     if not (root / PREFIX / "T02-01").is_dir():
         pytest.skip("the Spada archive is not unpacked")
     out = tmp_path_factory.mktemp("spada2011")
@@ -230,19 +230,18 @@ def test_the_converted_file_is_named_for_the_case(converted):
 
 @pytest.mark.data
 def test_every_value_is_finite_and_every_axis_ascends(converted):
-    import netCDF4
+    from gia_mip import _netcdf
     for case, path in converted.items():
-        with netCDF4.Dataset(path) as ds:
-            ds.set_auto_mask(False)
+        with _netcdf.open_read(path) as ds:
             stack = [ds]
             while stack:
                 group = stack.pop()
                 stack.extend(group.groups.values())
                 for name, variable in group.variables.items():
-                    values = np.asarray(variable[:], dtype=float)
-                    assert np.all(np.isfinite(values)), (case, group.path, name)
+                    values = np.asarray(variable[...], dtype=float)
+                    assert np.all(np.isfinite(values)), (case, group.name, name)
                     if name in group.dimensions and values.size > 1:
-                        assert np.all(np.diff(values) > 0), (case, group.path, name)
+                        assert np.all(np.diff(values) > 0), (case, group.name, name)
 
 
 @pytest.mark.data
@@ -271,7 +270,8 @@ UNHANDLED_TARGETS = [("t02-01", "T02-01/disp_t0_cap.dat"),
 
 @pytest.mark.data
 @pytest.mark.parametrize("case,relative", UNHANDLED_TARGETS)
-def test_a_correction_without_a_decision_stops_the_converter(monkeypatch, tmp_path, case, relative):
+def test_a_correction_without_a_decision_stops_the_converter(monkeypatch, tmp_path, case, relative,
+                                                              data_root):
     """A defect added to the table and forgotten in the converter must stop `convert`.
 
     The table is the real one plus one fake correction on a file the case
@@ -281,7 +281,7 @@ def test_a_correction_without_a_decision_stops_the_converter(monkeypatch, tmp_pa
     the conversion changes.
     """
     spada2011 = _spada2011()
-    root = spada2011.data_root() / "original"
+    root = data_root / "original"
     if not (root / PREFIX / "T02-01").is_dir():
         pytest.skip("the Spada archive is not unpacked")
     path = f"{PREFIX}/{relative}"
@@ -640,11 +640,12 @@ def _header_mass(path: pathlib.Path) -> float:
 @pytest.mark.data
 @pytest.mark.parametrize("case,quantity", [("t02-01", "U"), ("t02-02", "U_rate")])
 @pytest.mark.parametrize("load", ["cap", "disc", "point"])
-def test_every_gs_file_converted_carries_the_load_of_the_case(converted, case, quantity, load):
+def test_every_gs_file_converted_carries_the_load_of_the_case(converted, case, quantity, load,
+                                                              data_root):
     """The header mass of each source file equals the mass of the table-4 load.
 
     Every epoch of GS_EPOCHS must be present first.
-    SpadaCase computes the mass from loads/spada2011.json: 3.607171340900778e18 kg
+    SpadaCase computes the mass from gia_mip/resources/loads/spada2011.json: 3.607171340900778e18 kg
     for the cap and the disc, 1e18 kg for the point. TABOO prints sixteen
     digits, and the two agree to rounding, so the tolerance is 1e-9. The files
     of a different run (5.79e18 kg, 3.87e18 kg) differ by 7 to 60 per cent.
@@ -652,7 +653,7 @@ def test_every_gs_file_converted_carries_the_load_of_the_case(converted, case, q
     from gia_mip.benchmarks.inputs import SpadaCase
     result = _result(converted, case, "GS")
     expected = SpadaCase(case).load_mass(load)
-    root = _spada2011().data_root() / "original"
+    root = data_root / "original"
     epochs = result.epochs(load, quantity)
     # An empty epoch list would pass the loop below without checking a file.
     # GS ships all six epochs for every load in both cases, including
@@ -710,9 +711,9 @@ def test_rates_are_stored_in_metres_per_kyr(converted):
 
 
 @pytest.mark.data
-def test_every_spatial_curve_names_the_version_of_its_source(converted):
+def test_every_spatial_curve_names_the_version_of_its_source(converted, data_root):
     """source_file and source_sha256 let a curve be traced to one file version."""
-    root = _spada2011().data_root() / "original"
+    root = data_root / "original"
     result = _result(converted, "t02-01", "VK")
     curve = result.spatial("disc", "N", 5.0)
     source = curve.attributes["source_file"]

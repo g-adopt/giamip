@@ -85,18 +85,14 @@ def test_check_accepts_the_generated_grid():
 @pytest.mark.parametrize("relative_path", DELIVERED)
 def test_delivered_files_are_on_the_prescribed_grid(data_root, relative_path):
     """Every file GIAMIP delivered sits on the grid this module generates."""
-    netCDF4 = pytest.importorskip("netCDF4")
+    from gia_mip import _netcdf
     path = data_root / "original" / relative_path
     if not path.exists():
         pytest.skip(f"{relative_path} not fetched")
-    ds = netCDF4.Dataset(path)
-    # Masking off, always. See AGENTS.md: the ice files declare a fill value of
-    # zero, and a default read masks every ice-free cell.
-    ds.set_auto_mask(False)
-    try:
-        grids.check(ds["lat"][:], ds["lon"][:], name=relative_path)
-    finally:
-        ds.close()
+    # Through h5netcdf, which applies no mask. See AGENTS.md: the ice files
+    # declare a fill value of zero, and a masking read hides every ice-free cell.
+    with _netcdf.open_read(path) as ds:
+        grids.check(np.asarray(ds["lat"][...]), np.asarray(ds["lon"][...]), name=relative_path)
 
 
 @pytest.mark.data
@@ -107,14 +103,10 @@ def test_generated_latitudes_match_a_delivered_file_to_machine_precision(data_ro
     allows. The delivered float64 axes agree far more closely than that, and
     this test records the real figure so a later drift is visible.
     """
-    netCDF4 = pytest.importorskip("netCDF4")
+    from gia_mip import _netcdf
     path = data_root / "original" / "giamip/ice-history/iceHistory-ICE-6G_D.nc"
     if not path.exists():
         pytest.skip("ICE-6G_D not fetched")
-    ds = netCDF4.Dataset(path)
-    ds.set_auto_mask(False)
-    try:
-        error = np.max(np.abs(ds["lat"][:] - grids.latitudes()))
-    finally:
-        ds.close()
+    with _netcdf.open_read(path) as ds:
+        error = np.max(np.abs(np.asarray(ds["lat"][...]) - grids.latitudes()))
     assert error < 1e-12, f"latitudes differ by {error:g} degrees"

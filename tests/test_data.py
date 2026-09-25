@@ -41,8 +41,13 @@ def test_select_rejects_an_unknown_stage():
 
 
 def test_select_allows_a_stage_with_no_files_yet():
-    """`converted` is a real stage even before anything is in it."""
-    manifest = data.load_manifest()
+    """A known stage with no files gives an empty result, not an error.
+
+    The real manifest has files in both stages, so a synthetic one with only
+    originals stands in for a stage that is still empty.
+    """
+    manifest = {"artifacts": {"x/a.dat": {"collection": "giamip", "stage": "original",
+                                          "permission": "granted"}}}
     assert data.select(manifest, None, {"converted"}) == {}
 
 

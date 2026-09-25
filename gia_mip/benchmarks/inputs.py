@@ -3,14 +3,14 @@
 `MartinecCase` sets up one Martinec et al. (2018) case, and `SpadaCase`, at the
 end of this module, one Spada et al. (2011) test.
 
-A solver, radopt or G-ADOPT, needs the same five things for every case: the
+A solver, lovejx or G-ADOPT, needs the same five things for every case: the
 earth model, the ice load as a function of position and time, the initial
 topography, the physical constants, and the list of what to output where. The
 case files, the load table and the earth model file record all of them, and
 `MartinecCase` turns them into numbers, so no solver re-types a parameter.
 
 The class evaluates the load and the topography at any points the caller
-chooses. radopt passes the nodes of its Gauss-Legendre grid; G-ADOPT passes
+chooses. lovejx passes the nodes of its Gauss-Legendre grid; G-ADOPT passes
 the coordinates of its surface mesh. Nothing here assumes a grid, and nothing
 here computes a response.
 
@@ -25,7 +25,7 @@ Conventions
 -----------
 Angles are in degrees, colatitude from the north pole and longitude east.
 Time is in kyr since the load was first applied, t = 0. Heights are in metres.
-Densities come from ``loads/martinec2018.json`` and never from a module
+Densities come from ``gia_mip/resources/loads/martinec2018.json`` and never from a module
 constant, because GIAMIP uses different values.
 """
 
@@ -112,7 +112,8 @@ class MartinecCase:
     def __init__(self, case: str):
         letter = case.rsplit("-", 1)[-1].upper()
         self.letter = letter
-        self.definition = cases.case(f"{COLLECTION}-{letter}")
+        self.id = f"{COLLECTION}-{letter}"
+        self.definition = cases.case(self.id)
         self.load_table = cases.loads(COLLECTION)
         self.earth_model = cases.earth_model(self.definition["earth_model"])
         spec = self.definition["specification"]
@@ -179,7 +180,7 @@ class MartinecCase:
         psi < alpha(t), and zero beyond, with psi the angle from the cap centre.
         The square root gives the infinite slope at the edge that the paper
         describes, and it is the profile whose Legendre coefficients
-        loads/spada2011.json records.
+        gia_mip/resources/loads/spada2011.json records.
 
         Parameters
         ----------
@@ -206,7 +207,7 @@ class MartinecCase:
     def ice_on_grid(self, latitudes_deg, longitudes_deg, times_kyr) -> np.ndarray:
         """Ice thickness on a latitude-longitude grid, shaped (times, lat, lon).
 
-        The rows follow the order of ``latitudes_deg``. radopt wants row 0 at
+        The rows follow the order of ``latitudes_deg``. lovejx wants row 0 at
         the north, so pass its latitudes north first; GIAMIP files store them
         south first.
         """
@@ -222,7 +223,7 @@ class MartinecCase:
         density is ``sigma(psi) = sum_n sigma_n P_n(cos psi)`` with psi the angle
         from that centre and P_n the unnormalised Legendre polynomials. The
         closed form is the one of Spada et al. (2011), table 4, row 1, which
-        ``loads/spada2011.json`` records:
+        ``gia_mip/resources/loads/spada2011.json`` records:
 
             sigma_n = -rho h / (4 (1 - cos alpha))
                       [ (T_{n+1} - T_{n+2}) / (n + 3/2) - (T_{n-1} - T_n) / (n - 1/2) ],
@@ -321,7 +322,24 @@ class MartinecCase:
         return b["bmax_m"] - b["b0_m"] * np.exp(-psi ** 2 / (2.0 * b["sigma_b_deg"] ** 2))
 
     def ocean_function(self, colatitude_deg, longitude_deg) -> np.ndarray:
-        """1 where the topography is below zero, 0 elsewhere (eq. 1)."""
+        """The ocean function of the initial geometry: 1 where the topography is below zero.
+
+        Eq. 1 of the paper: C = 1 over the ocean and 0 over land, from the
+        topography `topography` gives at the same points. For B0 the
+        topography is zero everywhere, so the function is zero: no ocean. It
+        is the ocean at the time `topography_time` names; with a moving
+        coastline (sea-level equation level 2) the solver evolves it.
+
+        Parameters
+        ----------
+        colatitude_deg, longitude_deg
+            The points, in degrees, as arrays of one shape.
+
+        Returns
+        -------
+        numpy.ndarray
+            1.0 or 0.0 at each point, float.
+        """
         return (self.topography(colatitude_deg, longitude_deg) < 0.0).astype(float)
 
     def initial_ocean_area_fraction(self) -> float:
@@ -356,6 +374,97 @@ class MartinecCase:
             "viscosity_pa_s": np.array(viscosity),
             "rheology": np.array([l["rheology"] for l in layers]),
         }
+
+    # ------------------------------------------------ reference and scoring
+
+    def feature_colatitudes(self, profile: str) -> tuple[float, ...]:
+        """Colatitudes where a comparison meridian crosses a sharp feature, in degrees.
+
+        On the ``load`` meridian, which runs through the cap centre, the cap
+        margin: the centre colatitude plus and minus the cap radius at the
+        terminal time. On the ``basin`` meridian, which runs through the basin
+        centre, the initial coastline: the basin centre colatitude plus and
+        minus `basin_radius_deg`. Values outside 0 to 180 are dropped. Near
+        these points every code disagrees strongly, so criterion 2 removes a
+        band around them (`gia_mip.benchmarks.metrics.contributor_envelope`).
+
+        B gives 15 and 35 on the load meridian and 75.1497 and 124.8503 on the
+        basin meridian; C and D give 15, 35 and 10.1497, 59.8503; A gives 10.
+        In case D the coastline moves; the band stays on the initial one.
+        """
+        if profile == "load":
+            centre = self.cap["centre_colatitude_deg"]
+            radius = self.cap_size(self.terminal_time_kyr)[1]
+        elif profile == "basin":
+            centre = float(self.basin["centre_colatitude_deg"])
+            radius = self.basin_radius_deg()
+        else:
+            raise ValueError(f"profile must be 'load' or 'basin', not {profile!r}")
+        return tuple(c for c in (centre - radius, centre + radius) if 0.0 <= c <= 180.0)
+
+    def reference(self):
+        """The reference curves of this case, as a `BenchmarkResult` with member ``"VEGA"``.
+
+        The group ``reference`` of the converted file, fetched and cached on
+        first use. Each curve's attributes say how it was built.
+        """
+        from gia_mip.benchmarks.results import BenchmarkResult
+        return BenchmarkResult.reference(self.letter)
+
+    def reference_colatitudes(self, profile: str) -> np.ndarray:
+        """The colatitudes, in degrees, of the reference curves of one profile.
+
+        A solver can sample at any points, because scoring evaluates the
+        reference at the result's own points. These are VEGA's own points, for
+        a solver that wants them. Raises ValueError when the quantities of the
+        profile are on different axes.
+        """
+        reference = self.reference()
+        axes = [curve.axis for (name, _), curve in reference.profiles.items() if name == profile]
+        if not axes:
+            raise KeyError(f"case {self.letter} compares no {profile} profile")
+        if any(a.shape != axes[0].shape or not np.array_equal(a, axes[0]) for a in axes):
+            raise ValueError(f"case {self.letter}: the {profile} reference curves are on "
+                             f"different colatitudes")
+        return axes[0].copy()
+
+    def score(self, result) -> list[dict]:
+        """Score a result of this case against the reference, as the paper does.
+
+        `gia_mip.benchmarks.metrics.score`: one row per compared profile
+        quantity and time series, with ``rms``, ``max``, ``at``, ``n``,
+        ``signal_max``, ``max_spacing`` and how the reference was built.
+        Profiles are compared on the result's own colatitudes, with the
+        reference evaluated there by a cubic spline; time series on the
+        result's own times. A curve the result lacks is skipped.
+
+        Raises ValueError for a result of another case.
+        """
+        from gia_mip.benchmarks import metrics
+        self._check_case(result)
+        return metrics.score(result)
+
+    def envelope_check(self, result, *, band_half_width_deg: float) -> list[dict]:
+        """Criterion 2 for a result of this case: is it inside the range of the published codes?
+
+        `gia_mip.benchmarks.metrics.envelope_check`: per compared profile
+        quantity, the result's largest difference and RMS from the reference,
+        with a band of ``band_half_width_deg`` removed around each
+        `feature_colatitudes`, next to the largest of the published codes on
+        the same terms, and ``inside`` when neither is larger. The band width
+        has no default: it is not decided.
+
+        Raises KeyError when the result lacks a compared curve, and ValueError
+        for a result of another case.
+        """
+        from gia_mip.benchmarks import metrics
+        self._check_case(result)
+        return metrics.envelope_check(result, band_half_width_deg=band_half_width_deg)
+
+    def _check_case(self, result) -> None:
+        """A result of another case would be scored over this case's intervals."""
+        if result.case != self.letter:
+            raise ValueError(f"the result is for case {result.case}, not {self.letter}")
 
     # --------------------------------------------------------------- outputs
 
@@ -406,7 +515,7 @@ class MartinecCase:
 
 SPADA_COLLECTION = "spada2011"
 
-# A grid description of a case file or of loads/spada2011.json, for example
+# A grid description of a case file or of gia_mip/resources/loads/spada2011.json, for example
 # `0 to 25 degrees at 0.25 degree spacing` or
 # `colatitude 0 to 2.5*alpha at 0.25 degree spacing`.
 _GRID = re.compile(r"(?:colatitude )?(?P<lo>[\d.]+) to (?P<hi>[\d.]+(?:\*alpha)?)"
@@ -417,7 +526,7 @@ class SpadaCase:
     """The set-up of one Spada et al. (2011) test, from its case file and the load table.
 
     The ten tests share one earth model family, three analytic loads and one
-    time history. This class turns the case file, ``loads/spada2011.json`` and
+    time history. This class turns the case file, ``gia_mip/resources/loads/spada2011.json`` and
     the earth model file into numbers, so a solver re-types no parameter. It
     computes no response.
 
@@ -584,7 +693,7 @@ class SpadaCase:
 
         cap: sigma_n = -rho h / (4 (1 - cos alpha)) [ (T_{n+1} - T_{n+2}) / (n + 3/2)
              - (T_{n-1} - T_n) / (n - 1/2) ], with T_k = cos(k alpha) as written
-             in loads/spada2011.json. It also holds at n = 0, where it gives
+             in gia_mip/resources/loads/spada2011.json. It also holds at n = 0, where it gives
              rho h (1 - cos alpha) / 3.
         disc: sigma_n = rho h / 2 [ P_{n-1}(cos alpha) - P_{n+1}(cos alpha) ], and
              rho h (1 - cos alpha) / 2 at n = 0.

@@ -2,7 +2,7 @@
 title: "Earth models"
 ---
 
-Every case names an earth model. This page is generated from `models/`, so a
+Every case names an earth model. This page is generated from `gia_mip/resources/models/`, so a
 case and its model cannot disagree.
 
 Two kinds appear. A **complete model** gives density, shear modulus and

@@ -19,7 +19,7 @@
     "elastic_structure": "open",
     "rheology": "open",
     "compressibility": "group's choice, recorded in the model report",
-    "$comment": "Labelled 'Within suggested range' in the protocol table. Choose values inside models/giamip-open-range.json and record them in the model report."
+    "$comment": "Labelled 'Within suggested range' in the protocol table. Choose values inside gia_mip/resources/models/giamip-open-range.json and record them in the model report."
   },
   "topography": {
     "model": "bedmap3",

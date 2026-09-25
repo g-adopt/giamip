@@ -6,14 +6,14 @@ wrong answer with no error, and the readers here handle all three:
 
 * every ice file declares ``_FillValue = 0.0``, so a default read masks every
   ice-free cell (correction ice-fillvalue-zero). Masking is always off here;
-* the latitudes run south to north, while radopt and many solvers want the
+* the latitudes run south to north, while lovejx and many solvers want the
   north first. Every field accessor takes ``north_first``;
 * the files change under the same name (docs/data/corrections.qmd). Each
   reader computes the SHA-256 of the file it opens and looks up the
   corrections for that version only.
 
 The experiment, the ice history and the topography of each case come from
-``cases/giamip/expNN.json``, so `GiamipExperiment` is the entry point:
+``gia_mip/resources/cases/giamip/expNN.json``, so `GiamipExperiment` is the entry point:
 
     >>> from gia_mip.mip.inputs import GiamipExperiment
     >>> exp = GiamipExperiment("Exp01")
@@ -29,46 +29,54 @@ import re
 
 import numpy as np
 
-from gia_mip import cases, corrections, data, grids
+from gia_mip import _netcdf, cases, corrections, data, grids
 
 # The time unit of the forcing files: days on a 365-day calendar (correction
 # ice-year-longname), so a year is exactly 365 days.
 DAYS_PER_YEAR = 365.0
 
 
-def original_root() -> pathlib.Path:
-    """The ``original/`` directory: ``$GIA_MIP_DATA_ROOT/original`` or the checkout's."""
-    import os
-    root = os.environ.get("GIA_MIP_DATA_ROOT")
-    return (pathlib.Path(root) if root else data.ROOT / "data") / "original"
-
-
 class _GiamipFile:
-    """A NetCDF input on the prescribed grid, opened with masking off.
+    """A NetCDF input on the prescribed grid, read through h5netcdf.
+
+    h5netcdf applies no mask, scale or fill value, so the zeros of
+    ``ice_thickness``, which every ice file also declares as its
+    ``_FillValue``, come back as zeros and never as missing values.
 
     Parameters
     ----------
     relative_path
-        Path under ``data/original/``, as the case file names it.
+        The path of the file after its archive is unpacked, as the case file
+        names it, for example ``giamip/ice-history/iceHistory-ICE-6G_D.nc``.
     root
-        The ``original/`` directory. Default: `original_root`.
+        An ``original/`` directory to read the file from as it is. Default:
+        None, which finds the file through `gia_mip.data.locate`: in a
+        checkout, in ``$GIA_MIP_DATA_ROOT`` or in ``~/.cache/gia-mip``, and
+        downloaded from data.gadopt.org and unpacked on first use. Through
+        `locate`, a file whose SHA-256 is not the manifest's raises, because
+        the GIAMIP inputs change under one name and a file on disk can be the
+        only copy of a previous version. To read a known previous version,
+        pass the directory that holds it as ``root``; `is_current_version`
+        then says it is not the current one, and the corrections of that
+        version apply.
     """
 
     def __init__(self, relative_path: str, root: pathlib.Path | None = None):
-        import netCDF4
         self.relative_path = relative_path
-        self.path = (root or original_root()) / relative_path
-        if not self.path.exists():
-            raise FileNotFoundError(
-                f"{self.path} is missing. GIAMIP inputs are not yet cleared for "
-                f"redistribution; place them by hand as docs/data/fetching.qmd describes.")
-        # The version of the file decides which corrections apply to it.
-        self.sha256 = data.sha256(self.path)
+        if root is not None:
+            self.path = pathlib.Path(root) / relative_path
+            if not self.path.exists():
+                raise FileNotFoundError(f"{self.path} is missing")
+        else:
+            self.path = data.locate(relative_path, "original")
+        # The version of the file decides which corrections apply to it. The
+        # sum is cached per process, so a file `locate` already checked is
+        # not hashed again.
+        self.sha256 = data.verified_sha256(self.path)
         known = data.file_versions().get(relative_path)
         self.is_current_version = bool(known) and known["sha256"] == self.sha256
         self.corrections = corrections.applying_to(relative_path, self.sha256)
-        self._ds = netCDF4.Dataset(self.path)
-        self._ds.set_auto_mask(False)
+        self._ds = _netcdf.open_read(self.path)
         self.lat = np.asarray(self._ds["lat"][:], dtype=float)
         self.lon = np.asarray(self._ds["lon"][:], dtype=float)
         grids.check(self.lat, self.lon, name=relative_path)
@@ -107,7 +115,7 @@ class IceHistory(_GiamipFile):
     def __init__(self, relative_path: str, root: pathlib.Path | None = None):
         super().__init__(relative_path, root)
         days = np.asarray(self._ds["time"][:], dtype=float)
-        calendar = getattr(self._ds["time"], "calendar", None)
+        calendar = _netcdf.attributes(self._ds["time"]).get("calendar")
         if calendar != "365_day":
             raise ValueError(f"{relative_path}: time calendar is {calendar!r}, expected '365_day'")
         self.years = days / DAYS_PER_YEAR
@@ -192,7 +200,8 @@ class GiamipExperiment:
     experiment
         ``"Exp01"``, ``"giamip-exp01"`` or ``1``.
     root
-        The ``original/`` directory. Default: `original_root`.
+        An ``original/`` directory to read the forcing files from. Default: None,
+        which finds them through `gia_mip.data.locate` (see `_GiamipFile`).
     """
 
     def __init__(self, experiment, root: pathlib.Path | None = None):

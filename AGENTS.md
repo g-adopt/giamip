@@ -3,8 +3,10 @@
 ## What this repository is
 
 It specifies GIA model comparison cases and holds the data to compare against.
+The case files, load tables and earth models are in `gia_mip/resources/`
+(`cases/`, `loads/`, `models/`), so an installed package carries them.
 It contains no solver. If a change would make this repository compute a
-viscoelastic response, the change belongs in `radopt` or in G-ADOPT.
+viscoelastic response, the change belongs in `lovejx` or in G-ADOPT.
 
 ## The rules that do not bend
 
@@ -16,10 +18,13 @@ byte for byte. Every known defect is an entry in
 rendered on the corrections page. A defect fixed with a text editor is
 invisible, and it is lost at the next re-fetch.
 
-**Every reader turns NetCDF masking off.** All six GIAMIP ice files declare
-`_FillValue = 0.0` on `ice_thickness`. A default read masks every ice-free
-cell and propagates NaN into loads and mass integrals. Call
-`Dataset.set_auto_mask(False)`, and test that you did.
+**Every reader in the package opens NetCDF through h5netcdf.** All six GIAMIP
+ice files declare `_FillValue = 0.0` on `ice_thickness`. A masking read hides
+every ice-free cell and propagates NaN into loads and mass integrals. h5netcdf,
+on h5py, applies no mask, scale or fill value. No module of the package
+imports netCDF4 or xarray; `tests/test_netcdf_io.py` checks this and checks
+that a value equal to `_FillValue` comes back unchanged through every reader.
+Tests may use netCDF4 to check that netCDF-C reads the files.
 
 **Physical constants come from the case file, never from a module.** Spada and
 Martinec use an ice density of 931 kg/m3 and a water density of 1000 kg/m3.
@@ -50,6 +55,14 @@ has checked every pinned correction against it. See
 **`gia_mip/data.py` imports only the standard library.** It runs on a bare CI
 runner before anything is installed, and `tests/test_import.py` checks this by
 reading the source.
+
+**No data file goes into the package.** The wheel holds the code and the JSON
+files under `gia_mip/resources/`. Every data file, original or converted, is
+found through `gia_mip.data.locate`, which downloads it from data.gadopt.org
+on first use and checks its SHA-256. A converted file that changes gets a new
+object key, `versions/<sha256>/<key>`, and is uploaded with
+`scripts/upload_artifacts.py`; the old object stays for the releases that name
+it.
 
 ## Naming
 
@@ -96,8 +109,8 @@ update the case file and the collection page.
 
 `gia_mip/resources/provenance.json` records, per file, whether the supplier
 has agreed to redistribution through the object store. Nothing whose
-`permission` is not `granted` is uploaded, and `python -m gia_mip.data`
-refuses to download it. Do not work around this by hard-coding a URL.
+`permission` is not `granted` is uploaded, and neither `python -m gia_mip.data`
+nor `gia_mip.data.locate` downloads it. Do not work around this by hard-coding a URL.
 
 ## Working notes
 

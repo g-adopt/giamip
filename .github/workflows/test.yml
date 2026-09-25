@@ -24,7 +24,7 @@ jobs:
     # Every original (Martinec, Spada and the GIAMIP inputs) is public at
     # https://data.gadopt.org/gia-mip/, so the runner downloads them over HTTPS
     # with no secret. Credentials for the object store are needed only to
-    # upload, which is done by hand with scripts/upload_originals.py. Other
+    # upload, which is done by hand with scripts/upload_artifacts.py. Other
     # collections join this job when their permission in the manifest reads
     # `granted`.
     runs-on: ubuntu-latest
@@ -39,3 +39,42 @@ jobs:
         run: python -m gia_mip.data --collection martinec2018 --collection spada2011 --collection giamip
       - name: Test with data
         run: pytest -q -m data
+
+  wheel:
+    # The wheel as a solver's job uses it: installed into a new virtual
+    # environment with only its own dependencies (no netCDF4), and run from a
+    # directory outside the checkout. The converted files come from a local
+    # file:// store built from this checkout's data/converted/, so a pull
+    # request that changes a converted file is tested before the upload.
+    # release.yml runs the same check against the real store.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Build the sdist and the wheel
+        run: |
+          pip install build
+          python -m build
+      - name: List the wheel and check what it holds
+        run: |
+          unzip -l dist/*.whl
+          if unzip -Z1 dist/*.whl | grep -q '\.nc$'; then
+            echo "the wheel holds a NetCDF file"; exit 1
+          fi
+          unzip -Z1 dist/*.whl | grep '^gia_mip/resources/' | grep -v '/$' | sort > wheel.txt
+          git ls-files gia_mip/resources | sort > tracked.txt
+          diff tracked.txt wheel.txt
+      - name: Install the wheel into a new virtual environment
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install dist/*.whl
+      - name: Check the installed wheel from outside the checkout
+        working-directory: ${{ runner.temp }}
+        env:
+          GIA_MIP_DATA_ROOT: ${{ runner.temp }}/gia-mip-data
+        run: >
+          "$RUNNER_TEMP/venv/bin/python" "$GITHUB_WORKSPACE/scripts/check_installed.py"
+          --store "$RUNNER_TEMP/store" --all-converted
+

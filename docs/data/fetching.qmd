@@ -2,73 +2,132 @@
 title: "Fetching the data"
 ---
 
-The third-party data this project depends on is 341 MB and belongs to the
-people who produced it, so it is not in the repository.
+No data file is in the package. The third-party originals (341 MB) belong to
+the people who produced them, and the converted reference data (10 MB) is
+derived from them. Both are in the gadopt object store and are served at
+`https://data.gadopt.org/gia-mip/`. Every file is checked against the SHA-256
+sum in `gia_mip/resources/manifest.json`, so a file that the package reads is
+the file that the manifest describes.
 
-```bash
-pip install -e .
-python -m gia_mip.data                         # both benchmarks
-python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
-python -m gia_mip.data --all
+## On first use
+
+A reader asks for a file with `gia_mip.data.locate`, and every reader of the
+package does this. For example, `BenchmarkResult.reference_path("B")` calls:
+
+```python
+from gia_mip import data
+data.locate("martinec2018/martinec2018-B.nc", "converted")
 ```
 
-Every file is checked against the SHA-256 sum in
-`gia_mip/resources/manifest.json` after download, so a fetched tree is known
-to be the tree the conversions were made from. Archives are unpacked next to
-themselves.
+`locate` looks in two places:
 
-::: {.callout-important}
-## Only granted files are downloaded
+1. `data/<stage>/` of the checkout, when the package runs from one;
+2. the download root: `$GIA_MIP_DATA_ROOT` when it is set, else `data/` of
+   the checkout, else `~/.cache/gia-mip`.
 
-`python -m gia_mip.data` refuses to download any file whose `permission` is
-not `granted`, and prints which one and why. Today every file in the manifest
-is granted and public: the Martinec archives, Kachuck's giapy files, the Spada
-archive and the GIAMIP inputs.
+When neither has the file, `locate` downloads it into the download root,
+checks its sum and, for an archive, unpacks it. A file is identified by its
+sum, so it does not matter which of two identical copies is read.
 
-A file added later starts as `requested` or `not_asked`. Until its supplier
-agrees, obtain the file from the supplier and put it in `data/original/` by
-hand, in the layout that the manifest describes.
-
-[The manifest](manifest.qmd) records the permission state of every file.
-:::
-
-## Two axes
-
-A file is addressed by the body of work it belongs to and by whether it is
-untouched.
-
-`--collection` takes `spada2011`, `martinec2018` or `giamip`, and `benchmarks`
-as an alias for the first two. `--stage` takes `original` for an untouched
-third-party file, the default, or `converted` for something this project
-derived from one. The converted reference data is small and is tracked in the
-repository under `data/converted/`, so the tests and the site build with no
-network at all.
+`locate` never reads `XDG_CACHE_HOME`. On Gadi the Firedrake module points it
+at storage that is deleted when the job ends, so a cache there would be empty
+in every job.
 
 ## Where the files go
 
-The default destination is `data/` in the checkout, with `original/` and
-`converted/` beneath it. Set `GIA_MIP_DATA_ROOT`, or pass `--dest`, to put
-them somewhere else. On a machine with several worktrees, or on a cluster
-where 341 MB does not belong in a checkout, point every worktree at one
-directory.
-
-An installed package has no checkout to fill, so `--dest` or
-`GIA_MIP_DATA_ROOT` is required there and the fetcher says so instead of
-writing into `site-packages`.
+Under a root, an original is at `original/<key>`, for example
+`original/giamip/ice-history.zip`. A converted file is at
+`versions/<sha256>/<key>`, for example
+`versions/104e8a…/martinec2018/martinec2018-B.nc`. The sum in the path gives
+every version of a converted file its own place, so two versions of gia-mip
+that share one cache never overwrite each other's files. In a checkout,
+`data/versions/` is ignored by git, and the tracked files in
+`data/converted/` are never overwritten.
 
 Archives are unpacked into a directory named after the archive, with the
 archive's single top-level directory removed when it has one, so
 `giamip/ice-history.zip` gives
 `giamip/ice-history/iceHistory-ICE-6G_D.nc`. A stamp file inside the target
-records which archive it came from, so a second run neither re-extracts
-317 MB nor disturbs anything you put there.
+records which archive it came from, so a second run neither extracts 317 MB
+again nor disturbs anything you put there.
 
-## Checking what is there
+## When a file is wrong
+
+A file in place whose sum is not the manifest's is handled by its kind:
+
+- **A converted file in the checkout's `data/converted/`**: `locate` raises
+  and names `scripts/build_manifest.py`. This is the state after a conversion
+  and before the manifest is rebuilt.
+- **A converted file under `versions/`**: the path names the sum, so the file
+  is damaged. `locate` downloads it again.
+- **An original**: `locate` raises and gives the command that replaces the
+  file. It never replaces an original by itself. The GIAMIP inputs change
+  under one name, and a file on disk can be the only copy of a previous
+  version, which the store no longer has. `GiamipExperiment` and the GIAMIP
+  readers take a `root` argument to read such a version on purpose.
+
+## Many processes, and no network
+
+The download and the unpack of one file run under a file lock
+(`.<name>.lock`, beside the file). When the ranks of an MPI job start at
+once, one downloads and the others wait and then read. On Gadi, `/g/data`
+and `/scratch` are mounted with `localflock`, so the lock excludes only the
+processes on one node.
+
+A download that fails raises `DataUnavailable`. Its message gives the URL,
+the reason, and the command that fills a directory on a machine with network
+access. The failure is recorded in `.<name>.failed` for 60 s, so the other
+processes of the job raise at once and do not each wait for the 30 s timeout.
+The command below ignores that record.
+
+::: {.callout-important}
+## Gadi
+
+Compute nodes have no network. Fill a directory on a login node once, and
+point the job at it:
 
 ```bash
-python -m gia_mip.data --list           # what exists, and what is local
-python -m gia_mip.data --verify --all   # re-check the sums, download nothing
+# on a login node
+GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip \
+    python -m gia_mip.data --stage converted --collection benchmarks
+# in the job script
+export GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip
 ```
 
+Add `--collection giamip` (with the default stage, `original`) for the
+GIAMIP inputs, 317 MB. The Firedrake module must have gia-mip installed with
+its dependencies h5netcdf and `packaging`; h5py, numpy and scipy are in the
+module already.
+:::
+
+## The command line
+
+```bash
+python -m gia_mip.data                         # both benchmarks, the originals
+python -m gia_mip.data --stage converted       # the converted reference data
+python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
+python -m gia_mip.data --all                   # every collection
+python -m gia_mip.data --list                  # what exists, and what is local
+python -m gia_mip.data --verify --all          # check the sums, download nothing
+python -m gia_mip.data --dest DIR              # fill DIR, not the download root
+```
+
+`--collection` takes `spada2011`, `martinec2018` or `giamip`, and `benchmarks`
+as an alias for the first two. `--stage` takes `original`, the default, for an
+untouched third-party file, or `converted` for a file this project derived
+from one. In a checkout filled by default, a tracked converted file that
+matches the manifest is reported `ok` and not downloaded again.
+
 `--verify` reports a file that is missing or whose sum has changed, and exits
-non-zero. Run it after copying a tree between machines.
+non-zero. Run it after you copy a tree between machines.
+
+::: {.callout-note}
+## Only granted files are downloaded
+
+`locate` and `python -m gia_mip.data` refuse to download a file whose
+`permission` is not `granted`. Today every file in the manifest is granted and
+public. A file added later starts as `requested` or `not_asked`. Until its
+supplier agrees, obtain the file from the supplier and put it in
+`data/original/` by hand, in the layout that the manifest describes.
+[The manifest](manifest.qmd) records the permission state of every file.
+:::

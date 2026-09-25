@@ -2,9 +2,25 @@
 title: "Python interface for solvers"
 ---
 
-The package gives radopt, G-ADOPT and any other solver one way to read what a
+The package gives lovejx, G-ADOPT and any other solver one way to read what a
 case prescribes and one way to hold and score what the solver produced. None
 of it computes a response.
+
+## One entry point
+
+```python
+import gia_mip
+
+case = gia_mip.case("martinec2018-B")   # MartinecCase
+case = gia_mip.case("spada2011-t02-01") # SpadaCase
+case = gia_mip.case("giamip-exp01")     # GiamipExperiment
+```
+
+The case files are in the package. The data files are not: a reader gets each
+one through `gia_mip.data.locate`, which downloads it from data.gadopt.org on
+first use and caches it ([Fetching the data](../data/fetching.qmd)). Every
+NetCDF file is read and written through h5netcdf, on h5py, which applies no
+mask, scale or fill value.
 
 ## Martinec (2018): setting up a case
 
@@ -39,24 +55,182 @@ output and a published contributor are read, plotted and scored the same way.
 from gia_mip.benchmarks.results import BenchmarkResult
 from gia_mip.benchmarks import metrics
 
-run = BenchmarkResult("D", "radopt")
+run = BenchmarkResult("D", "lovejx")
 run.add_profile("load", "U", colatitude_deg, u_m)
 run.add_time_series("h_UF", time_kyr, h_uf_m)
-run.write("outputs/martinec2018/radopt/martinec2018-D.nc")
+run.write("outputs/martinec2018/lovejx/martinec2018-D.nc")
+BenchmarkResult.read("outputs/martinec2018/lovejx/martinec2018-D.nc", "lovejx")
 
-vega = BenchmarkResult.reference("D", "ZM")
-metrics.score(run)        # RMS and maximum difference per profile and time series
+reference = BenchmarkResult.reference("D")      # the curves scoring compares with
+shipped = BenchmarkResult.reference("D", "ZM")  # VEGA's files as the archive has them
+case = MartinecCase("D")
+case.reference_colatitudes("basin")             # VEGA's own points, if you want them
+
+metrics.score(run)                              # eq. 31 per profile and time series
+metrics.envelope_check(run, band_half_width_deg=6.74)   # criterion 2
+metrics.uniform_layer("D")                      # h_UF of the reference, S - N
 ```
 
-`metrics.score` uses the colatitude intervals of the case file. Where the VEGA
-file Martinec shipped is not the published reference (case A, the case B
-basin and case D), it recovers the reference from a contributor's profile and
-difference file; each row says which reference it used.
+The reference is VEGA. `BenchmarkResult.reference(case)` reads the group
+`reference` of the converted file, which the converter builds by the rule of
+the case file's `reference_data.reference_curves`: VEGA as shipped, or VEGA
+recovered as YS's profile minus YS's own difference file, where the shipped
+file is not the one the published differences were computed against (case A,
+the case B basin and case D). Each curve's attributes say how it was built,
+and [the protocol page](../protocol/martinec2018.qmd) gives the evidence.
+
+`metrics.score` compares a profile on the result's own points inside the
+colatitude interval of the case file, with the reference evaluated there by a
+cubic spline, so a solver can sample at any points. Scored this way, every
+contributor of the archive gets the numbers of its own published difference
+file. A time series is compared on the result's own times, with the reference
+interpolated linearly. Each row carries the number of points, the largest
+spacing between them, how the reference was built and the gia-mip version.
+
+`metrics.envelope_check` is criterion 2 of the G-ADOPT tests: the result's
+largest difference and RMS against the largest of the published codes, with a
+band removed around the cap margin and the initial coastline
+(`MartinecCase.feature_colatitudes`). The band width has no default, because
+it is not decided. The function raises when the result lacks a compared
+curve.
+
+## Using gia-mip in a solver's benchmark test
+
+This section is for the agent or person who adds a Martinec benchmark to a
+solver's own test suite, as G-ADOPT does in `tests/gia_selfgrav_benchmarks/`.
+It needs only `pip install gia-mip` in the solver's environment.
+
+### What a result must hold
+
+A result holds the curves the case file compares, in SI units, with the signs
+and datums of [the conventions](conventions.qmd): U, N and S in metres,
+positive upward; `h_UF` in metres; ice masses in kg; the ocean area as a
+fraction of 4π. The table is generated from the case files, and a solver
+reads the same lists from `case.profiles` and `case.time_series`.
+
+```{python}
+#| echo: false
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+from IPython.display import Markdown
+import gia_mip
+
+rows = ["| Case | Profiles: meridian, quantities, interval | Time series, 0 to 15 kyr | Terminal time |",
+        "| --- | --- | --- | ---: |"]
+for letter in "ABCDE":
+    case = gia_mip.case(f"martinec2018-{letter}")
+    profiles = "; ".join(f"{p.name} (longitude {p.longitude_deg:g}): {', '.join(p.quantities)}, "
+                         f"{p.colatitude_interval_deg[0]:g} to {p.colatitude_interval_deg[1]:g} degrees"
+                         for p in case.profiles) or "none"
+    series = ", ".join(q for s in case.time_series for q in s.quantities) or "none"
+    rows.append(f"| {letter} | {profiles} | {series} | {case.terminal_time_kyr:g} kyr |")
+Markdown("\n".join(rows))
+```
+
+A solver may sample a profile at any colatitudes. Scoring evaluates the
+reference at the result's own points, and the result must reach to within 1
+per cent of the interval's width at each end. Each score row reports
+`max_spacing`, so a grid too coarse to see a peak shows. For VEGA's own
+points, call `case.reference_colatitudes(profile)`; this reads the reference
+file, so on a machine with no network the cache must hold it.
+
+### The two stages
+
+A benchmark on a cluster has two stages: the run on the compute nodes, and the
+test that reads the run afterwards. The example below is complete. It runs
+in `tests/test_doc_examples.py`, with `my_profile` and `my_series` replaced by
+a stand-in that returns the reference, so it cannot go out of date.
+
+```python
+# example: solver benchmark test
+import numpy as np
+import gia_mip
+from gia_mip.benchmarks import metrics
+from gia_mip.benchmarks.results import BenchmarkResult
+
+# ---- stage 1, the run (compute node; needs no data file and no network) ----
+case = gia_mip.case("martinec2018-C")
+rho_ice, rho_water, g = case.ice_density, case.water_density, case.surface_gravity
+# The load and the topography at the solver's own points, at any time:
+#   case.ice_thickness(colatitude_deg, longitude_deg, t_kyr), case.topography(...)
+# ... the solver runs here ...
+run = BenchmarkResult(case.letter, "my-code")
+for profile in case.profiles:
+    for quantity in profile.quantities:
+        colatitude_deg, values_m = my_profile(profile, quantity)
+        run.add_profile(profile.name, quantity, colatitude_deg, values_m)
+for series in case.time_series:
+    for quantity in series.quantities:
+        time_kyr, values = my_series(quantity)
+        run.add_time_series(quantity, time_kyr, values)
+run.write(output_dir / "martinec2018-C.nc")        # output_dir: a pathlib.Path of yours
+
+# ---- stage 2, the test (login node or laptop; the reference is fetched) ----
+run = BenchmarkResult.read(output_dir / "martinec2018-C.nc", "my-code", case="C")
+rows = case.score(run)                                        # eq. 31, one row per curve
+checks = case.envelope_check(run, band_half_width_deg=6.74)   # criterion 2
+assert all(row["inside"] for row in checks), checks
+reference_h_uf, spread = metrics.uniform_layer("C")           # S - N of the reference
+series = run.series("h_UF")
+ours = float(np.interp(case.terminal_time_kyr, series.axis, series.values))
+assert abs(ours - reference_h_uf) <= 0.01 * abs(reference_h_uf)   # the solver's tolerance
+vega = case.reference().series("ice_mass_grounded")           # VEGA's series
+```
+
+gia-mip gives the metrics and the range of the published codes. The pass
+tolerances (1 per cent above) belong to the solver's test. The band width of
+criterion 2 is a required argument because it is not decided; 6.74 degrees is
+the width of the first G-ADOPT verdicts.
+
+### On Gadi
+
+The compute-node stage needs the package and nothing else. The test stage
+reads the converted reference files. A login node has network access, so the
+first test run downloads them into the download root. To keep them in one
+place for every job and every user of a project, set `GIA_MIP_DATA_ROOT` to a
+directory on `/g/data`, and fill it once:
+
+```bash
+GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip python -m gia_mip.data --stage converted --collection benchmarks
+```
+
+The Firedrake module must have gia-mip installed with h5netcdf and
+`packaging`; h5py, numpy and scipy are there. See
+[Fetching the data](../data/fetching.qmd).
+
+### Moving from a gia-mip checkout to the package
+
+Code written against a checkout on `sys.path` (the variable `GIA_MIP`)
+changes as follows.
+
+| With a checkout | With the package |
+| --- | --- |
+| `GIA_MIP` and `sys.path.insert(...)` | `pip install gia-mip`; plain imports |
+| reading `cases/benchmarks/martinec2018/<L>.json` and `loads/martinec2018.json` with `json.load` | `gia_mip.case("martinec2018-<L>")`. The files moved to `gia_mip/resources/`, so old paths fail |
+| `spec["sea_level_equation"]`, `["terminal_time_kyr"]`, `["ice_height_model"]`, `["time_scenario"]`, `["ocean_basin"]` | `case.sea_level_equation`, `case.terminal_time_kyr`, `case.ice_height_model`, `case.time_scenario`, `case.ocean_basin` |
+| `constants.ice_density_kg_m3`, `water_density_kg_m3`, `surface_gravity_m_s2` | `case.ice_density`, `case.water_density`, `case.surface_gravity` |
+| `ice_height_models[...]`, `load_shape.angular_radius_deg` | `case.cap` (centre, `height_m`, `radius_deg`); `case.cap_size(t_kyr)` for T1 |
+| `time_scenarios[...].growth_end_kyr` | `case.load_table["time_scenarios"][case.time_scenario].get("growth_end_kyr")` |
+| `ocean_basins[...]`, `sigma_b_deg` | `case.basin` (centre, `bmax_m`, `b0_m`, `sigma_b_deg`); `case.basin_radius_deg()` |
+| a JSON copy of the VEGA colatitudes | any points; or `case.reference_colatitudes(profile)` |
+| `.npz` files and `scripts/martinec_gadopt.read_run` | `BenchmarkResult.add_profile`, `add_time_series`, `write`; `BenchmarkResult.read` |
+| `scripts/martinec_compare.score(values, reference, colatitude, interval)` (one dict) | `metrics.score(result)` or `case.score(result)` (a list of rows) |
+| a hand-written band and contributor bar for criterion 2 | `case.envelope_check(result, band_half_width_deg=...)`; `case.feature_colatitudes(profile)` |
+| `report_uniform_layer(result, letter)` | `metrics.uniform_layer(letter)` against the run's `h_UF` at the terminal time |
+| `BenchmarkResult.reference(letter, "ZM")` | unchanged for VEGA as shipped; `BenchmarkResult.reference(letter)` or `case.reference()` for the curves scoring uses |
+
+Two numbers move when a solver switches. The case B basin and both case D
+profiles are scored against VEGA recovered on 2048 points, not the 359-row
+shipped file; at the shipped rows the two agree to 7e-5 m or better, and
+between them the old linear interpolation was off by up to 0.24 m. The
+feature colatitudes come from the geometry (75.1497, 124.8503, 10.1497,
+59.8503 degrees) where earlier code typed 75.15, 124.85, 10.149 and 59.849, so
+one grid point can cross a band edge.
 
 ## Spada (2011): setting up a test
 
 `gia_mip.benchmarks.inputs.SpadaCase` reads the case file, the load table
-`loads/spada2011.json` and the earth model. It gives the three loads as surface
+`gia_mip/resources/loads/spada2011.json` and the earth model. It gives the three loads as surface
 density and as Legendre coefficients, and the epochs, grids and degrees to
 output.
 
@@ -94,15 +268,15 @@ the length of day.
 from gia_mip.benchmarks.results import SpadaResult
 from gia_mip.benchmarks import metrics
 
-run = SpadaResult("t01-02", "radopt")
+run = SpadaResult("t01-02", "lovejx")
 run.add_love_numbers("h", degrees, elastic, fluid, residues)   # residues (degrees, 9), 1/kyr
-run.write("outputs/spada2011/radopt/spada2011-t01-02.nc")
+run.write("outputs/spada2011/lovejx/spada2011-t01-02.nc")
 
-run = SpadaResult("t02-01", "radopt")
+run = SpadaResult("t02-01", "lovejx")
 run.add_spatial("cap", "U", 10.0, colatitude_deg, u_m)
 run.add_spatial("cap", "U", math.inf, colatitude_deg, u_fluid_m)
 
-path = SpadaResult.reference_path("t02-01")   # data/converted/spada2011/spada2011-t02-01.nc
+path = SpadaResult.reference_path("t02-01")   # located, and downloaded on first use
 references = {m: SpadaResult.read(path, m) for m in SpadaResult.members(path)}
 metrics.spada_score(run, references)          # rows per contributor, near field and whole meridian
 ```
@@ -117,14 +291,14 @@ limit is never compared with GS's run at 1000 kyr.
 Tests 5/1 to 7/1, 4/1 and 3/2 use four further kinds of result.
 
 ```python
-run = SpadaResult("t01-05", "radopt")
+run = SpadaResult("t01-05", "lovejx")
 run.add_time_domain_love_numbers("h", 2, time_kyr, h_t)        # one curve per quantity and degree
 
-run = SpadaResult("t01-04", "radopt")
+run = SpadaResult("t01-04", "lovejx")
 run.add_polar_motion_transfer_function("included", a_e, a_s, frequencies, residues)
                                                                # complex, 1/kyr; A_e dimensionless
 
-run = SpadaResult("t02-03", "radopt")
+run = SpadaResult("t02-03", "lovejx")
 run.add_polar_motion("cap", "excluded", "m_x", time_kyr, m_x_deg)
 run.add_polar_motion("cap", "excluded", "m_rate_modulus", time_kyr, rate_deg_per_myr)
 run.add_length_of_day("cap", time_kyr, delta_lod_ms)
@@ -146,8 +320,10 @@ the same number of modes. GS holds three Maxwell modes that VB does not hold.
 ## GIAMIP: inputs
 
 `gia_mip.mip.inputs.GiamipExperiment` opens the ice history and the topography
-an experiment prescribes, with NetCDF masking off, the grid checked, and the
-corrections for the version of the file on disk.
+an experiment prescribes, through h5netcdf, which applies no mask, with the
+grid checked and the corrections for the version of the file on disk. The
+files are located through `gia_mip.data.locate`, so they are downloaded and
+unpacked on first use (317 MB for the ice histories).
 
 ```python
 from gia_mip.mip.inputs import GiamipExperiment, grounded_thickness
@@ -163,5 +339,5 @@ grounded = grounded_thickness(h, bed, exp.constants["ice_density_kg_m3"],
 ```
 
 The GIAMIP grid has 257 latitudes and 513 longitudes. A solver that assumes
-`nlat` by `2 nlat` longitudes, as the radopt sea-level solver does, cannot take
+`nlat` by `2 nlat` longitudes, as the lovejx sea-level solver does, cannot take
 it without regridding.

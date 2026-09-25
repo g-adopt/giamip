@@ -1,16 +1,30 @@
-"""Fetch the original data files and verify them against the manifest.
+"""Find, fetch and verify every data file, and cache it at the first use.
 
-The third-party data this project depends on is 341 MB and belongs to the
-people who produced it, so it is not in the repository. It lives in the gadopt
-object store under ``gia-mip/``. This module downloads what is missing or
-corrupt and checks every file against the SHA-256 sums in
-``gia_mip/resources/manifest.json``, so a fetched tree is known to be the tree
-the conversions were made from.
+No data file is in the package. The third-party originals (341 MB) and the
+converted reference data derived from them (10 MB) live in the gadopt object
+store under ``gia-mip/``, served at https://data.gadopt.org/gia-mip/. Every
+file is checked against the SHA-256 sum in ``gia_mip/resources/manifest.json``,
+so a file this package reads is known to be the file the manifest describes.
 
-    python -m gia_mip.data                         # both benchmarks, 24 MB
+A reader asks for a file with `locate`, which returns a local path:
+
+    >>> from gia_mip import data
+    >>> data.locate("martinec2018/martinec2018-B.nc", "converted")   # doctest: +SKIP
+
+`locate` looks in the checkout's ``data/`` (when the package runs from a
+checkout) and in the download root, and downloads the file into the download
+root when neither has it. The download root is ``$GIA_MIP_DATA_ROOT`` when set,
+else ``data/`` of the checkout, else ``~/.cache/gia-mip``. A machine with no
+network, such as a compute node of Gadi, reads what an earlier run on a
+machine with network put there; `locate` then raises `DataUnavailable` with
+the command that fills the directory.
+
+The same can be done in advance from the command line:
+
+    python -m gia_mip.data                         # both benchmarks, originals
+    python -m gia_mip.data --stage converted       # the converted reference data
     python -m gia_mip.data --collection giamip     # the GIAMIP inputs, 317 MB
     python -m gia_mip.data --collection spada2011  # one collection
-    python -m gia_mip.data --stage converted       # what this project derived
     python -m gia_mip.data --all
     python -m gia_mip.data --list                  # what exists, what is local
     python -m gia_mip.data --verify                # re-check what is here
@@ -21,6 +35,12 @@ work it belongs to: `spada2011`, `martinec2018` or `giamip`, with `benchmarks`
 as an alias for the first two. `--stage` is whether it is an untouched
 third-party file (`original`, the default) or something this project derived
 from one (`converted`).
+
+Where a file lives under a root is `cache_path`: an original at
+``<root>/original/<key>``, and a converted file at ``<root>/<object>``, where
+``<object>`` is ``versions/<sha256>/<key>``. The sum in the path gives each
+version of a converted file its own place, so two versions of gia-mip that
+share one cache never overwrite each other's files.
 
 Archives are unpacked next to themselves after verification, into a directory
 named after the archive with its suffixes removed. If an archive holds exactly
@@ -37,6 +57,7 @@ broken reader can never stop a fetch.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -44,9 +65,18 @@ import pathlib
 import shutil
 import sys
 import tarfile
+import time
 import urllib.error
 import urllib.request
 import zipfile
+
+# `fcntl` gives the file lock that lets several processes, for example the MPI
+# ranks of one job, share one first download. It exists on Linux and macOS.
+# Where it does not (Windows), there is no lock and the module still imports.
+try:
+    import fcntl
+except ImportError:                                  # pragma: no cover
+    fcntl = None
 
 CHUNK = 1 << 20
 
@@ -55,9 +85,18 @@ CHUNK = 1 << 20
 MANIFEST_PATH = pathlib.Path(__file__).resolve().parent / "resources" / "manifest.json"
 
 # Two levels above this module is the repository root when running from a
-# checkout. An installed package has no such root, so --dest is required there.
+# checkout. `checkout_root` decides whether it is one.
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DEFAULT_DEST = ROOT / "data"
+
+# Seconds a download may wait for the server before it fails. A compute node
+# that drops outgoing connections would otherwise wait for the operating
+# system's own timeout, about two minutes on Linux, on every rank.
+TIMEOUT_S = 30
+
+# Seconds during which a recorded failed download makes `locate` fail at once
+# without trying again, so that N processes behind one lock do not each wait
+# a full timeout.
+FAILURE_MEMORY_S = 60
 
 # `benchmarks` is the only alias, because asking for "the two published
 # benchmarks" is the common case and naming both every time is tedious.
@@ -127,12 +166,14 @@ def fetch(url: str, dest: pathlib.Path) -> None:
 
     An interrupted download must never leave a truncated file under the final
     name, because the next run would find it present and, without --verify,
-    could treat it as complete.
+    could treat it as complete. The temporary name carries the process id, so
+    two processes never write the same file, and starts with ".", so
+    scripts/build_manifest.py never takes a left-over one for an artifact.
     """
     dest.parent.mkdir(parents=True, exist_ok=True)
-    tmp = dest.with_name(dest.name + ".part")
+    tmp = dest.with_name(f".{dest.name}.part-{os.getpid()}")
     try:
-        with urllib.request.urlopen(url) as r, open(tmp, "wb") as f:
+        with urllib.request.urlopen(url, timeout=TIMEOUT_S) as r, open(tmp, "wb") as f:
             total = int(r.headers.get("Content-Length") or 0)
             done = 0
             for chunk in iter(lambda: r.read(CHUNK), b""):
@@ -243,7 +284,9 @@ def unpack(archive: pathlib.Path, members: list[str], digest: str) -> pathlib.Pa
     check_member_names(members)
     top = common_top(members)
     target = unpack_target(archive)
-    scratch = target.with_name(target.name + f".unpacking-{os.getpid()}")
+    # The scratch and the old tree start with ".", so a killed unpack in a
+    # checkout leaves nothing that scripts/build_manifest.py reports.
+    scratch = target.with_name(f".{target.name}.unpacking-{os.getpid()}")
     if scratch.exists():
         shutil.rmtree(scratch)
     scratch.mkdir(parents=True)
@@ -281,13 +324,338 @@ def unpack(archive: pathlib.Path, members: list[str], digest: str) -> pathlib.Pa
     # Swap. The old tree is moved aside first and removed afterwards, so a
     # failure between the two leaves something recoverable on disk.
     if target.exists():
-        stale = target.with_name(target.name + f".stale-{os.getpid()}")
+        stale = target.with_name(f".{target.name}.stale-{os.getpid()}")
         target.rename(stale)
         scratch.rename(target)
         shutil.rmtree(stale, ignore_errors=True)
     else:
         scratch.rename(target)
     return target
+
+
+# ---------------------------------------------------------------- locate
+
+
+class DataUnavailable(FileNotFoundError):
+    """A data file is not on this machine and cannot be downloaded now.
+
+    The message names the file, the reason and the command that fills a
+    directory with it on a machine that has network access.
+    """
+
+
+def checkout_root() -> pathlib.Path | None:
+    """The repository root when the package runs from a checkout, else None.
+
+    A checkout has ``pyproject.toml`` two levels above this module. An
+    installed package sits in ``site-packages``, which has none.
+    """
+    return ROOT if (ROOT / "pyproject.toml").exists() else None
+
+
+def download_root() -> pathlib.Path:
+    """Where `locate` puts a file it downloads.
+
+    ``$GIA_MIP_DATA_ROOT`` when set, else ``data/`` of the checkout, else
+    ``~/.cache/gia-mip``. ``XDG_CACHE_HOME`` is not read on purpose: the
+    Firedrake module on Gadi points it at the job's own storage, which is
+    deleted when the job ends, so a cache there would be empty in every job.
+    """
+    if "GIA_MIP_DATA_ROOT" in os.environ:
+        return pathlib.Path(os.environ["GIA_MIP_DATA_ROOT"])
+    checkout = checkout_root()
+    if checkout is not None:
+        return checkout / "data"
+    return pathlib.Path.home() / ".cache" / "gia-mip"
+
+
+def cache_path(root: pathlib.Path, key: str, entry: dict) -> pathlib.Path:
+    """Where an artifact lives under a root.
+
+    ``root / entry["object"]`` for an artifact with an ``object`` field (a
+    converted file: ``versions/<sha256>/<key>``), else
+    ``root / stage / key`` (an original, where the converters read its
+    unpacked tree). In a checkout, ``data/versions/`` is ignored by the
+    ``/data/*`` rule of .gitignore and lies outside the tracked
+    ``data/converted/``.
+    """
+    if "object" in entry:
+        return pathlib.Path(root) / entry["object"]
+    return pathlib.Path(root) / entry["stage"] / key
+
+
+# Sums of files already checked in this process, keyed by path, size and
+# modification time, so a 62 MB ice history is hashed once per process however
+# often it is located or opened.
+_VERIFIED: dict[tuple[str, int, int], str] = {}
+
+
+def verified_sha256(path: pathlib.Path) -> str:
+    """The SHA-256 of a file, computed once per process for each version of it."""
+    stat = pathlib.Path(path).stat()
+    key = (str(pathlib.Path(path).resolve()), stat.st_size, stat.st_mtime_ns)
+    if key not in _VERIFIED:
+        _VERIFIED[key] = sha256(pathlib.Path(path))
+    return _VERIFIED[key]
+
+
+def _lookup(relative: str, manifest: dict) -> tuple[str, dict, dict | None, str | None]:
+    """The artifact that holds a path, and the member when it is inside an archive.
+
+    Returns ``(key, entry, member, member_relative)``. For an artifact the last
+    two are None. For an archive member, ``member`` is its manifest record and
+    ``member_relative`` its path inside the unpack target.
+    """
+    artifacts = manifest["artifacts"]
+    if relative in artifacts:
+        return relative, artifacts[relative], None, None
+    for key, entry in artifacts.items():
+        members = entry.get("members")
+        if not members:
+            continue
+        target = str(unpack_target(pathlib.PurePosixPath(key)))
+        prefix = target + "/"
+        if not relative.startswith(prefix):
+            continue
+        top = common_top([m["name"] for m in members])
+        inside = relative[len(prefix):]
+        for m in members:
+            if member_path(m["name"], top) == inside:
+                return key, entry, m, inside
+    raise KeyError(f"{relative!r} is neither an artifact of the manifest nor a member "
+                   f"of one of its archives")
+
+
+def _command(entry: dict, root: pathlib.Path | None = None) -> str:
+    """The command that puts an artifact into a directory, for error messages."""
+    dest = f" --dest {root}" if root is not None else ""
+    env = "" if root is not None else "GIA_MIP_DATA_ROOT=<a directory this machine can read> "
+    return (f"{env}python -m gia_mip.data --stage {entry['stage']} "
+            f"--collection {entry['collection']}{dest}")
+
+
+@contextlib.contextmanager
+def _locked(path: pathlib.Path):
+    """Hold an exclusive lock for one artifact while it is downloaded and unpacked.
+
+    The lock file is ``.<name>.lock`` beside the artifact. It starts with "."
+    so that scripts/build_manifest.py never counts it. On Gadi, /g/data and
+    /scratch are mounted with ``localflock``, so the lock excludes only
+    processes on the same node; processes on two nodes may both download,
+    and each still writes through its own temporary file.
+    """
+    # A download root that cannot be written, for example a shared read-only
+    # directory that lacks this file, is reported as unavailable data with
+    # the way out, not as a bare OSError.
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        handle = open(path.with_name(f".{path.name}.lock"), "a")
+    except OSError as exc:
+        raise DataUnavailable(f"cannot write to {path.parent} ({exc}). Set "
+                              f"GIA_MIP_DATA_ROOT to a directory this process can write, "
+                              f"or fill {path.parent} from an account that can.") from exc
+    with handle:
+        if fcntl is None:                            # pragma: no cover
+            yield
+            return
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def _failure_marker(path: pathlib.Path) -> pathlib.Path:
+    """The file that records a failed download of an artifact, with its time."""
+    return path.with_name(f".{path.name}.failed")
+
+
+def _download(key: str, entry: dict, path: pathlib.Path, manifest: dict) -> None:
+    """Download one artifact to ``path``, check its sum, unpack an archive.
+
+    Runs under `_locked`. A process that gets the lock after another one
+    finished finds the file in place and does nothing. A process that finds
+    a failure younger than `FAILURE_MEMORY_S` raises at once.
+    """
+    with _locked(path):
+        if path.exists() and verified_sha256(path) == entry["sha256"]:
+            _ensure_unpacked(path, entry)
+            return
+        marker = _failure_marker(path)
+        if marker.exists():
+            age = time.time() - marker.stat().st_mtime
+            if age < FAILURE_MEMORY_S:
+                raise DataUnavailable(
+                    f"{key}: a download failed {age:.0f} s ago "
+                    f"({marker.read_text().strip()}); not trying again for "
+                    f"{FAILURE_MEMORY_S} s. On a machine with network access run: "
+                    f"{_command(entry)}")
+        base = os.environ.get("GIA_MIP_BASE_URL", manifest["base_url"])
+        if not base.endswith("/"):
+            base += "/"
+        url = base + entry.get("object", key)
+        try:
+            fetch(url, path)
+        except (urllib.error.URLError, OSError) as exc:
+            marker.write_text(f"{url}: {exc}\n")
+            raise DataUnavailable(
+                f"{key} is not in {path.parent} and cannot be downloaded from {url} "
+                f"({exc}). On a machine with network access run: {_command(entry)}, "
+                f"and set GIA_MIP_DATA_ROOT to the same directory here.") from exc
+        if verified_sha256(path) != entry["sha256"]:
+            path.unlink()
+            raise DataUnavailable(f"{key}: the file downloaded from {url} does not match "
+                                  f"the manifest's SHA-256")
+        marker.unlink(missing_ok=True)
+        _ensure_unpacked(path, entry)
+
+
+def _ensure_unpacked(path: pathlib.Path, entry: dict) -> None:
+    """Unpack a verified archive once; do nothing for a file that is not one.
+
+    The caller holds the lock of the archive (`_locked`), because two
+    processes that unpack one archive at once remove each other's trees.
+    """
+    members = entry.get("members")
+    if members and not is_unpacked(path, entry["sha256"]):
+        unpack(path, [m["name"] for m in members], entry["sha256"])
+
+
+def _unpack_locked(path: pathlib.Path, entry: dict) -> None:
+    """`_ensure_unpacked` under the archive's lock, for an archive already in place.
+
+    An archive can be present and not unpacked: after ``--no-unpack``, after
+    an unpack that was killed, or when only the archive was copied. The ranks
+    of a job that find it so must unpack it once, so the check is made again
+    once the lock is held. The quick test before the lock keeps the common
+    case, a tree already unpacked, free of lock files.
+    """
+    if not entry.get("members") or is_unpacked(path, entry["sha256"]):
+        return
+    with _locked(path):
+        _ensure_unpacked(path, entry)
+
+
+def locate(relative: str, stage: str) -> pathlib.Path:
+    """The local path of a data file, downloaded and checked on first use.
+
+    Parameters
+    ----------
+    relative
+        A manifest key, for example ``"martinec2018/martinec2018-B.nc"``, or
+        the path of an archive member after unpacking, for example
+        ``"giamip/ice-history/iceHistory-ICE-6G_D.nc"``.
+    stage
+        ``"original"`` or ``"converted"``. It must be the artifact's stage.
+
+    Returns
+    -------
+    pathlib.Path
+        A file whose SHA-256 is the manifest's. For an archive, the archive,
+        with its tree unpacked beside it.
+
+    Raises
+    ------
+    KeyError
+        For a path the manifest does not know, or one of another stage.
+    ValueError
+        For a file in place with a wrong sum that `locate` must not replace:
+        a converted file in the checkout's ``data/converted/`` (run
+        scripts/build_manifest.py), or an original anywhere (the message gives
+        the command that replaces it; an original can be the only local copy
+        of a previous version, which the store no longer has).
+    PermissionError
+        For an artifact whose ``permission`` is not ``granted``.
+    DataUnavailable
+        When the file is absent and cannot be downloaded.
+    """
+    manifest = load_manifest()
+    key, entry, member, inside = _lookup(relative, manifest)
+    if entry["stage"] != stage:
+        raise KeyError(f"{relative!r} is a {entry['stage']} file, not a {stage} one")
+    expected = member["sha256"] if member else entry["sha256"]
+    checkout = checkout_root()
+
+    # Where the artifact itself (an archive, for a member) can be.
+    homes: list[tuple[pathlib.Path, pathlib.Path]] = []      # (root, artifact path)
+    if checkout is not None:
+        if stage == "converted":
+            homes.append((checkout / "data", checkout / "data" / "converted" / key))
+        else:
+            homes.append((checkout / "data", cache_path(checkout / "data", key, entry)))
+    root = download_root()
+    download_path = cache_path(root, key, entry)
+    if all(download_path != path for _, path in homes):
+        homes.append((root, download_path))
+
+    def target(path: pathlib.Path) -> pathlib.Path:
+        return unpack_target(path) / inside if member else path
+
+    # A file identified by its sum can be read from any home that has it. A
+    # wrong sum stops the search: it is either a development state of the
+    # checkout or an original that must not be replaced here.
+    for home_root, path in homes:
+        candidate = target(path)
+        if not candidate.exists():
+            continue
+        if verified_sha256(candidate) == expected:
+            if not member:
+                _unpack_locked(candidate, entry)
+            return candidate
+        if stage == "converted" and path.is_relative_to(home_root / "converted"):
+            raise ValueError(f"{candidate} does not match the manifest. It is a tracked "
+                             f"converted file; run scripts/build_manifest.py after a "
+                             f"conversion.")
+        if stage == "original":
+            extra = (f" Remove {unpack_target(path)} first, because the archive and its "
+                     f"stamp match and the command does not unpack it again."
+                     if member else "")
+            raise ValueError(f"{candidate} does not match the manifest. It can be a "
+                             f"previous version, which gia-mip does not replace by itself. "
+                             f"To replace it run: {_command(entry, home_root)}.{extra}")
+        # A converted file at its content-addressed path whose sum is wrong is
+        # corrupt, because the path names the sum. It is downloaded again.
+        candidate.unlink()
+
+    # Nothing usable in place. For a member, an archive in place is used: one
+    # that matches is unpacked, and one that does not stops the search as any
+    # original with a wrong sum does, because downloading over it would
+    # remove a previous version and its tree. Otherwise the artifact is
+    # downloaded.
+    found = None
+    if member:
+        for home_root, path in homes:
+            if not path.exists():
+                continue
+            if verified_sha256(path) != entry["sha256"]:
+                raise ValueError(f"{path} does not match the manifest, and its member "
+                                 f"{inside} is not unpacked. It can be a previous version, "
+                                 f"which gia-mip does not replace by itself. To replace it "
+                                 f"run: {_command(entry, home_root)}.")
+            _unpack_locked(path, entry)
+            found = path
+            break
+    if found is None:
+        if entry["permission"] != "granted":
+            raise PermissionError(f"{key}: the supplier has not agreed to redistribution "
+                                  f"(permission={entry['permission']})")
+        found = download_path
+        _download(key, entry, found, manifest)
+    path = found
+    candidate = target(path)
+    if not candidate.exists() or verified_sha256(candidate) != expected:
+        raise ValueError(f"{candidate} is missing or wrong after unpacking {path}")
+    return candidate
+
+
+def original_tree(key: str) -> pathlib.Path:
+    """The ``original/`` directory that holds an archive's unpacked tree.
+
+    `locate` finds, downloads and unpacks the archive as needed. The
+    converters read the tree below the returned directory.
+    """
+    archive = locate(key, "original")
+    return archive.parents[len(pathlib.PurePosixPath(key).parts) - 1]
 
 
 def expand(names: list[str]) -> set[str]:
@@ -334,9 +702,10 @@ def select(manifest: dict, collections: set[str] | None, stages: set[str]) -> di
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--dest", type=pathlib.Path, default=None,
-                    help="directory to fill; default $GIA_MIP_DATA_ROOT, "
-                         "else <repo>/data. On a shared machine point this at "
-                         "one directory so worktrees do not each hold 341 MB.")
+                    help="directory to fill; default $GIA_MIP_DATA_ROOT, else "
+                         "<repo>/data in a checkout, else ~/.cache/gia-mip. On a "
+                         "shared machine point this at one directory so worktrees "
+                         "do not each hold 341 MB.")
     ap.add_argument("--collection", action="append", default=None,
                     help="spada2011, martinec2018, giamip, or the alias "
                          "benchmarks; repeatable. Default: benchmarks")
@@ -356,24 +725,23 @@ def main(argv: list[str] | None = None) -> int:
     stages = set(args.stage or ["original"])
     artifacts = select(manifest, collections, stages)
 
-    # The destination is <root>/<stage>/<relative path>, so originals and
-    # converted products never collide and one root holds both.
-    root = args.dest or (
-        pathlib.Path(os.environ["GIA_MIP_DATA_ROOT"])
-        if "GIA_MIP_DATA_ROOT" in os.environ
-        else DEFAULT_DEST
-    )
-    # An installed package sits in site-packages, where DEFAULT_DEST would
-    # scatter 341 MB among the dependencies. Refuse instead.
-    if args.dest is None and "GIA_MIP_DATA_ROOT" not in os.environ:
-        if not (ROOT / "pyproject.toml").exists():
-            raise SystemExit(
-                "gia_mip is installed rather than checked out, so there is no "
-                "repository to fill. Pass --dest DIR or set GIA_MIP_DATA_ROOT."
-            )
+    # Each artifact goes to `cache_path` under the root: an original at
+    # <root>/original/<key>, a converted file at <root>/versions/<sha256>/<key>.
+    root = args.dest or download_root()
+    checkout = checkout_root()
+    # In a checkout filled by default, the tracked converted files are the
+    # converted data. A converted artifact whose tracked copy matches the
+    # manifest is reported and not downloaded again under versions/. A tracked
+    # copy that does not match is left alone, never overwritten: the
+    # download, if any, goes to versions/.
+    use_tracked = checkout is not None and args.dest is None and "GIA_MIP_DATA_ROOT" not in os.environ
 
     def local(rel: str, entry: dict) -> pathlib.Path:
-        return root / entry["stage"] / rel
+        if use_tracked and entry["stage"] == "converted":
+            tracked = checkout / "data" / "converted" / rel
+            if tracked.exists() and verified_sha256(tracked) == entry["sha256"]:
+                return tracked
+        return cache_path(root, rel, entry)
 
     if args.list and not args.verify:
         if not artifacts:
@@ -428,7 +796,7 @@ def main(argv: list[str] | None = None) -> int:
             failures += 1
             continue
 
-        url = base + rel
+        url = base + entry.get("object", rel)
         print(f"fetch    {rel} ({entry['bytes'] / 1e6:.1f} MB)")
         try:
             fetch(url, path)
@@ -442,6 +810,10 @@ def main(argv: list[str] | None = None) -> int:
                   f"{entry['sha256'][:16]}", file=sys.stderr)
             failures += 1
             continue
+        # The command ignores a failure that `locate` recorded, because a
+        # person who runs it wants the download tried, and it clears the
+        # record once the download succeeded.
+        _failure_marker(path).unlink(missing_ok=True)
         verified[rel] = entry
 
     if not args.no_unpack and not args.verify:

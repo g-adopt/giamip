@@ -12,11 +12,13 @@ generated from the same JSON, so a page and a case cannot disagree.
     >>> cases.earth_model(a["earth_model"])["layers"][0]["thickness_km"]
     70
 
-Cases live in `cases/`, earth models in `models/` and the analytic load
-tables in `loads/`, all at the top level of the repository and not inside the
-package, because they are content for people to read as much as for code to
-load. An installed package therefore needs the repository; `ROOT` is where it
-looks.
+Cases live in `gia_mip/resources/cases/`, earth models in
+`gia_mip/resources/models/` and the analytic load tables in
+`gia_mip/resources/loads/`. They are inside the package so that an installed
+gia-mip carries them: a solver on a compute node with no network reads a case
+without a clone of the repository. They are small JSON files, and people read
+them on the repository page at those paths. The data the cases refer
+to is not in the package; `gia_mip.data` fetches it and caches it.
 """
 
 from __future__ import annotations
@@ -25,12 +27,14 @@ import functools
 import json
 import pathlib
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-CASE_DIRS = (ROOT / "cases" / "benchmarks" / "spada2011",
-             ROOT / "cases" / "benchmarks" / "martinec2018",
-             ROOT / "cases" / "giamip")
-MODEL_DIR = ROOT / "models"
-LOAD_DIR = ROOT / "loads"
+# Resolved from this file, so the lookup is the same in a checkout, in a
+# worktree put first on PYTHONPATH, in an editable install and in a wheel.
+RESOURCES = pathlib.Path(__file__).resolve().parent / "resources"
+CASE_DIRS = (RESOURCES / "cases" / "benchmarks" / "spada2011",
+             RESOURCES / "cases" / "benchmarks" / "martinec2018",
+             RESOURCES / "cases" / "giamip")
+MODEL_DIR = RESOURCES / "models"
+LOAD_DIR = RESOURCES / "loads"
 
 
 def _read(path: pathlib.Path) -> dict:

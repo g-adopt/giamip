@@ -9,7 +9,7 @@
     "doi": "10.1111/j.1365-246X.2011.04952.x"
   },
   "earth_model": "m3-l70-v01",
-  "loads": "loads/spada2011.json",
+  "loads": "gia_mip/resources/loads/spada2011.json",
   "what_to_compute": "Compute vertical displacement U, horizontal displacement V and geoid displacement N at the Earth's surface, as functions of colatitude, for a surface load applied as a Heaviside step.",
   "outputs": [
     "U",

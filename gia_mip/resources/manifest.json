@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-14T23:55:08+00:00",
+ "generated": "2026-09-25T12:26:15+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/gia-mip/",
  "artifacts": {
@@ -114,6 +114,91 @@
    "notes": "Its load and time labels are shifted by one from the published tables, and its basin list holds a basin the paper does not use. It generates A, D1, D2, E1, E2 and F1, and contains no code for C2 or D3, so it cannot settle the case mapping on its own. Redistribution through https://data.gadopt.org/gia-mip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
    "bytes": 15029,
    "sha256": "7c5a7bf47940c96cc104c704249325ab45715a7d9d627a42cf080423aceacd14"
+  },
+  "martinec2018/martinec2018-A.nc": {
+   "collection": "martinec2018",
+   "stage": "converted",
+   "description": "Case A: every curve the published figures draw, per contributor, in SI units with the documented sign and datum, the difference files, and the group reference with the curves that scoring compares with (reference_data.reference_curves of the case file).",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "martinec2018/resultsA_2026.zip"
+   ],
+   "converter": "gia_mip.benchmarks.martinec2018",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_martinec2018.py.",
+   "bytes": 672988,
+   "sha256": "3972e59a76a7aa70f406571fb0bb093b7608775da7ae9f380d3d200498f13390",
+   "object": "versions/3972e59a76a7aa70f406571fb0bb093b7608775da7ae9f380d3d200498f13390/martinec2018/martinec2018-A.nc"
+  },
+  "martinec2018/martinec2018-B.nc": {
+   "collection": "martinec2018",
+   "stage": "converted",
+   "description": "Case B: every curve the published figures draw, per contributor, in SI units with the documented sign and datum, the difference files, and the group reference with the curves that scoring compares with (reference_data.reference_curves of the case file).",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "martinec2018/resultsB_2026.zip"
+   ],
+   "converter": "gia_mip.benchmarks.martinec2018",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_martinec2018.py.",
+   "bytes": 1493699,
+   "sha256": "104e8ad5df5386457d395e3bebfc92eb4f2d0cb6d99a9d04fdc03dae76b63545",
+   "object": "versions/104e8ad5df5386457d395e3bebfc92eb4f2d0cb6d99a9d04fdc03dae76b63545/martinec2018/martinec2018-B.nc"
+  },
+  "martinec2018/martinec2018-C.nc": {
+   "collection": "martinec2018",
+   "stage": "converted",
+   "description": "Case C: every curve the published figures draw, per contributor, in SI units with the documented sign and datum, the difference files, and the group reference with the curves that scoring compares with (reference_data.reference_curves of the case file).",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "martinec2018/resultsC_2026.zip"
+   ],
+   "converter": "gia_mip.benchmarks.martinec2018",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_martinec2018.py.",
+   "bytes": 1036644,
+   "sha256": "407eac8b8d3ca8d2bc72277cecc508c1c97cc8b16e3dc71075724c582a6865ed",
+   "object": "versions/407eac8b8d3ca8d2bc72277cecc508c1c97cc8b16e3dc71075724c582a6865ed/martinec2018/martinec2018-C.nc"
+  },
+  "martinec2018/martinec2018-D.nc": {
+   "collection": "martinec2018",
+   "stage": "converted",
+   "description": "Case D: every curve the published figures draw, per contributor, in SI units with the documented sign and datum, the difference files, and the group reference with the curves that scoring compares with (reference_data.reference_curves of the case file).",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "martinec2018/resultsD_2026.zip"
+   ],
+   "converter": "gia_mip.benchmarks.martinec2018",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_martinec2018.py.",
+   "bytes": 1092900,
+   "sha256": "c977272690d267e0fa2a55938f162340c9229c26d3f27a798bf39a519e8370e8",
+   "object": "versions/c977272690d267e0fa2a55938f162340c9229c26d3f27a798bf39a519e8370e8/martinec2018/martinec2018-D.nc"
+  },
+  "martinec2018/martinec2018-E.nc": {
+   "collection": "martinec2018",
+   "stage": "converted",
+   "description": "Case E: every curve the published figures draw, per contributor, in SI units with the documented sign and datum, the difference files, and the group reference with the curves that scoring compares with (reference_data.reference_curves of the case file).",
+   "source_citation": "Martinec, Z., Klemann, V., van der Wal, W., Riva, R. E. M., Spada, G., Sun, Y., Melini, D., Kachuck, S. B., Barletta, V., Simon, K., A, G. and James, T. S. (2018). A benchmark study of numerical implementations of the sea level equation in GIA modelling. Geophysical Journal International 215(1), 389-414.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "martinec2018/resultsE_2026.zip"
+   ],
+   "converter": "gia_mip.benchmarks.martinec2018",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_martinec2018.py.",
+   "bytes": 133923,
+   "sha256": "42132e5d0ed27bcd07a6727edb3ac29018b809f0a654270733b36cec8b40423f",
+   "object": "versions/42132e5d0ed27bcd07a6727edb3ac29018b809f0a654270733b36cec8b40423f/martinec2018/martinec2018-E.nc"
   },
   "martinec2018/resultsA_2026.zip": {
    "collection": "martinec2018",
@@ -6047,6 +6132,176 @@
     }
    ],
    "member_count": 977
+  },
+  "spada2011/spada2011-t01-01.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-01: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 87958,
+   "sha256": "29deb186f9fe738a2568a9c5feddb2a166a3c8732655163a962c9803da235056",
+   "object": "versions/29deb186f9fe738a2568a9c5feddb2a166a3c8732655163a962c9803da235056/spada2011/spada2011-t01-01.nc"
+  },
+  "spada2011/spada2011-t01-02.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-02: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 368581,
+   "sha256": "deef89fe45d195615dda50e2ac9d5d2e6a2833cce86371100967ea02c343429f",
+   "object": "versions/deef89fe45d195615dda50e2ac9d5d2e6a2833cce86371100967ea02c343429f/spada2011/spada2011-t01-02.nc"
+  },
+  "spada2011/spada2011-t01-03.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-03: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 329926,
+   "sha256": "f0f694de6da6945cc07ab690e16f6ced24ba38639ee8f35ec166c47f4888ab4e",
+   "object": "versions/f0f694de6da6945cc07ab690e16f6ced24ba38639ee8f35ec166c47f4888ab4e/spada2011/spada2011-t01-03.nc"
+  },
+  "spada2011/spada2011-t01-04.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-04: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 83112,
+   "sha256": "879ebf461c1481bcbd02ed3b230d2e4106189e6da5ca80f6cf348309590035fd",
+   "object": "versions/879ebf461c1481bcbd02ed3b230d2e4106189e6da5ca80f6cf348309590035fd/spada2011/spada2011-t01-04.nc"
+  },
+  "spada2011/spada2011-t01-05.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-05: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 1097564,
+   "sha256": "05ce8f90f0c56bbd522604aca83a59d7dd506efd218586f6b3a3c45d35f281d9",
+   "object": "versions/05ce8f90f0c56bbd522604aca83a59d7dd506efd218586f6b3a3c45d35f281d9/spada2011/spada2011-t01-05.nc"
+  },
+  "spada2011/spada2011-t01-06.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-06: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 1143806,
+   "sha256": "cd21a7c6948cb741e89213c86105f1ebebbedbd087b3c39e41bd3a4cc960fe31",
+   "object": "versions/cd21a7c6948cb741e89213c86105f1ebebbedbd087b3c39e41bd3a4cc960fe31/spada2011/spada2011-t01-06.nc"
+  },
+  "spada2011/spada2011-t01-07.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t01-07: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 94412,
+   "sha256": "6b44fecd15592740ff0fc8d671e285b64c957b1aa68f5bbf9d96ba543d497826",
+   "object": "versions/6b44fecd15592740ff0fc8d671e285b64c957b1aa68f5bbf9d96ba543d497826/spada2011/spada2011-t01-07.nc"
+  },
+  "spada2011/spada2011-t02-01.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t02-01: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 1002580,
+   "sha256": "fabd8967eafbc5fd10ec90da97f805a76fd731178d940287ad1b627a654debba",
+   "object": "versions/fabd8967eafbc5fd10ec90da97f805a76fd731178d940287ad1b627a654debba/spada2011/spada2011-t02-01.nc"
+  },
+  "spada2011/spada2011-t02-02.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t02-02: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 1010267,
+   "sha256": "8e668f60807565db66b9e35853e5d94be2e782e89c18e6f7dfd6719c57834239",
+   "object": "versions/8e668f60807565db66b9e35853e5d94be2e782e89c18e6f7dfd6719c57834239/spada2011/spada2011-t02-02.nc"
+  },
+  "spada2011/spada2011-t02-03.nc": {
+   "collection": "spada2011",
+   "stage": "converted",
+   "description": "Test t02-03: every contributor's result in the archive, in the layout of gia_mip.benchmarks.results.SpadaResult, with the documented units and signs.",
+   "source_citation": "Spada, G., Barletta, V. R., Klemann, V., Riva, R. E. M., Martinec, Z., Gasperini, P., Lund, B., Wolf, D., Vermeersen, L. L. A. and King, M. A. (2011). A benchmark study for glacial isostatic adjustment codes. Geophysical Journal International 185(1), 106-132.",
+   "supplier": "G-ADOPT, converted in this repository",
+   "received": "2026-09-25",
+   "permission": "granted",
+   "derived_from": [
+    "spada2011/spada2011-cost-es0701.tar.gz"
+   ],
+   "converter": "gia_mip.benchmarks.spada2011",
+   "notes": "Derived from a granted original, so it is redistributed under the same permission. Regenerate with scripts/convert_spada2011.py.",
+   "bytes": 2106277,
+   "sha256": "0c38994e9d9cbb84e9ac86b9f0e6f287392310d257d691ae32534770f8a1cc0d",
+   "object": "versions/0c38994e9d9cbb84e9ac86b9f0e6f287392310d257d691ae32534770f8a1cc0d/spada2011/spada2011-t02-03.nc"
   }
  }
 }

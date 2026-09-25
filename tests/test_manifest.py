@@ -117,3 +117,49 @@ def test_a_changed_file_keeps_the_sum_of_its_earlier_version():
     again["giamip/t.zip"].pop("previous_versions")
     module.carry_history({"generated": "2026-09-14", "artifacts": new}, again)
     assert again["giamip/t.zip"]["previous_versions"] == new["giamip/t.zip"]["previous_versions"]
+
+
+# ------------------------------------------------ the converted stage
+
+CONVERTED = pathlib.Path(data.__file__).resolve().parent.parent / "data" / "converted"
+
+
+def _converted(manifest) -> dict:
+    return {k: v for k, v in manifest["artifacts"].items() if v["stage"] == "converted"}
+
+
+def test_every_tracked_converted_file_has_an_entry(manifest):
+    """A converted file without an entry could not be located or uploaded."""
+    on_disk = {f"{p.parent.name}/{p.name}" for p in CONVERTED.glob("*/*.nc")}
+    assert on_disk, "no converted file in the checkout"
+    assert on_disk == set(_converted(manifest))
+
+
+def test_each_converted_entry_matches_the_tracked_file(manifest):
+    """The manifest describes the tracked file, so `locate` accepts it in a checkout."""
+    for key, entry in _converted(manifest).items():
+        path = CONVERTED / key
+        assert path.stat().st_size == entry["bytes"], key
+        assert data.sha256(path) == entry["sha256"], (
+            f"{key}: the tracked file changed; run scripts/build_manifest.py")
+
+
+def test_each_converted_object_key_is_versions_sum_key(manifest):
+    """The literal layout. `versions/` keeps downloads out of the tracked data/converted/."""
+    for key, entry in _converted(manifest).items():
+        assert entry["object"] == f"versions/{entry['sha256']}/{key}", key
+
+
+def test_each_converted_entry_is_derived_from_known_originals(manifest):
+    originals = {k for k, v in manifest["artifacts"].items() if v["stage"] == "original"}
+    for key, entry in _converted(manifest).items():
+        assert entry["derived_from"], key
+        assert set(entry["derived_from"]) <= originals, (key, entry["derived_from"])
+        assert entry["converter"].startswith("gia_mip.benchmarks."), key
+
+
+def test_no_original_has_an_object_key(manifest):
+    """Originals keep their plain keys on the store, where they already are."""
+    for key, entry in manifest["artifacts"].items():
+        if entry["stage"] == "original":
+            assert "object" not in entry, key

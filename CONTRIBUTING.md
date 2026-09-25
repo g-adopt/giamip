@@ -2,8 +2,8 @@
 
 ## Before you change anything
 
-Read [AGENTS.md](AGENTS.md). It lists six rules, and breaking any of them
-produces a wrong answer with no error message.
+Read [AGENTS.md](AGENTS.md). It lists the rules that do not bend, and breaking
+any of them produces a wrong answer with no error message.
 
 ## Running the tests
 
@@ -12,8 +12,9 @@ pip install -e ".[test]"
 pytest -q
 ```
 
-The default run needs no data. Tests marked `data` need the third-party
-originals in `data/original/` and are excluded until they are present:
+The default run needs no network: it reads the tracked converted files in
+`data/converted/`. Tests marked `data` need the third-party originals and are
+excluded by default:
 
 ```bash
 python -m gia_mip.data --all
@@ -38,13 +39,43 @@ Never edit a file in `data/original/`. If it has a defect, add an entry to
 `gia_mip/resources/corrections.json` with the evidence, and apply it in the
 reader.
 
+## After a conversion
+
+The converted reference files in `data/converted/` are tracked, and they are
+also on the object store, where an installed gia-mip downloads them. After a
+conversion that changed one:
+
+```bash
+python3 scripts/convert_martinec2018.py      # or scripts/convert_spada2011.py
+python3 scripts/build_manifest.py            # new sums and object keys
+pytest -q && pytest -q -m data
+python3 scripts/upload_artifacts.py --stage converted --dry-run
+python3 scripts/upload_artifacts.py --stage converted
+```
+
+The upload needs the object store credentials in `~/.s3cfg-gadopt` and boto3.
+A converted file is uploaded under `versions/<sha256>/`, so the old version
+stays on the store for the releases that name it. Nothing is deleted. Until
+the upload, the `wheel` job of the Test workflow still passes, because it
+serves the checkout's files from a local store, but the Release workflow
+stops.
+
 ## Adding a case
 
-A case is one JSON file in `cases/`, shown on a page in `docs/results/`.
+A case is one JSON file in `gia_mip/resources/cases/`, shown on a page in `docs/results/`.
 `tests/test_cases.py` checks that it names an earth model and a load table that
 exist. State the physical constants in the case file: they differ between the benchmarks
 and GIAMIP, and a shared module would silently give one of them the other's
 values.
+
+## Releasing
+
+A pushed tag `v<version>` runs `.github/workflows/release.yml`. It builds the
+sdist and the wheel, checks that the tag is `v` followed by
+`gia_mip.__version__`, installs the wheel into a new virtual environment,
+checks it from outside the checkout against the real store
+(`scripts/check_installed.py --all-converted`), and publishes to PyPI through
+trusted publishing, with no token.
 
 ## Building the site
 

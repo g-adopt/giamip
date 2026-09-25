@@ -20,11 +20,11 @@ The repository records the case facts in files that a program can read. Where
 this page and those files disagree, report it, and use the files until the
 disagreement is settled.
 
-- The five cases: `cases/benchmarks/martinec2018/A.json` to `E.json`, shown in
+- The five cases: `gia_mip/resources/cases/benchmarks/martinec2018/A.json` to `E.json`, shown in
   [the Martinec (2018) collection page](../collections/martinec2018.qmd).
-- The earth model: `models/m3-l70-v01.json`, shown in
+- The earth model: `gia_mip/resources/models/m3-l70-v01.json`, shown in
   [the earth models](../reference/earth-models.qmd).
-- The ice heights, time scenarios and ocean basins: `loads/martinec2018.json`,
+- The ice heights, time scenarios and ocean basins: `gia_mip/resources/loads/martinec2018.json`,
   shown in [the loads and grids](../reference/loads-and-grids.qmd).
 - The signs and datums of each quantity:
   [the conventions](../reference/conventions.qmd).
@@ -67,7 +67,7 @@ section 3.1). It is spherically symmetric, self-gravitating and
 incompressible, with five layers. The lithosphere is elastic, the three mantle
 layers are Maxwell viscoelastic, and the core is a uniform inviscid fluid. The
 paper does not repeat the layer values. The table below is generated from
-`models/m3-l70-v01.json`.
+`gia_mip/resources/models/m3-l70-v01.json`.
 
 ```{python}
 #| echo: false
@@ -144,7 +144,7 @@ Ice height models. Source: Martinec et al. (2018), table 1.
 
 ```{python}
 #| echo: false
-# Table 1 of the paper, read from loads/martinec2018.json.
+# Table 1 of the paper, read from gia_mip/resources/loads/martinec2018.json.
 loads = cases.loads("martinec2018")
 rows = ["| Model | Centre colatitude $\\theta_0$ | Centre longitude $\\lambda_0$ | $h_0$ (m) | Angular radius $\\alpha_0$ |",
         "| --- | ---: | ---: | ---: | ---: |"]
@@ -211,7 +211,7 @@ Ocean basin parameters at $t_0$. Source: Martinec et al. (2018), table 3.
 
 ```{python}
 #| echo: false
-# Table 3 of the paper, read from loads/martinec2018.json. The minimum
+# Table 3 of the paper, read from gia_mip/resources/loads/martinec2018.json. The minimum
 # topography b_max - b_0 is computed here and is the (negative) ocean depth
 # at the basin centre.
 basins = loads["ocean_basins"]
@@ -581,6 +581,74 @@ in Fig. 21.
 14.1° from the ice centre (p. 399). In case B, the same maximum is about
 14.1° from the ice centre. The basin edge is at $\theta = 75.7^\circ$, with
 bulges at $70.4^\circ$ outside and $80.6^\circ$ inside the basin (p. 402).
+
+## How the reference is built
+
+The reference is VEGA in every case. The converter stores the curves that
+scoring compares with in the group `reference` of each converted file, and
+each curve carries attributes that say how it was built. The case file's
+`reference_data.reference_curves` gives the rule for each profile, and the
+table below is generated from those files.
+
+```{python}
+#| echo: false
+# One row per compared profile and time series, read from the case files.
+rows = ["| Case | Curve | Method | Member | Correction |",
+        "| --- | --- | --- | --- | --- |"]
+for letter in "ABCDE":
+    curves = cases.case(f"martinec2018-{letter}")["reference_data"]["reference_curves"]
+    for profile, rule in curves.get("profiles", {}).items():
+        rows.append(f"| {letter} | {profile} profile | {rule['method']} | {rule['member']} | "
+                    f"{rule.get('correction', '')} |")
+    if "time_series" in curves:
+        rule = curves["time_series"]
+        rows.append(f"| {letter} | time series | {rule['method']} | {rule['member']} | "
+                    f"{rule.get('correction', '')} |")
+Markdown("\n".join(rows))
+```
+
+**As shipped** copies VEGA's own curve (member ZM) from the archive.
+**Recovered** is YS's profile minus YS's own difference file, on YS's grid of
+2048 colatitudes from 0.044° to 179.956°. It is used where the shipped VEGA
+file is not the curve the published difference files were computed against:
+
+- In case A, the shipped VEGA file is a second run
+  (correction `benchmarkA-vega-supplied-run-differs`).
+- In the case B basin profile and both case D profiles, the shipped VEGA file
+  has 359 rows (correction `martinec2018-caseD-vega-profile-grid`).
+
+**The evidence.** For a contributor, its "recovery" is its profile minus its
+own difference file, on the difference file's grid. Every recovery is VEGA as
+that contributor's difference file saw it. A cubic spline through the YS
+recovery, evaluated on 0° to 180°, reproduces the recovery of every other
+contributor at that contributor's own points, colatitude 0° and 180°
+included, to these maxima in metres:
+
+| Profile | $U$ | $N$ | $S$ |
+| --- | ---: | ---: | ---: |
+| A, ice | 1.7e-4 | 5.9e-5 | |
+| B, basin | 3.7e-6 | 6.0e-6 | 8.7e-7 |
+| D, ice | 3.2e-6 | 1.3e-5 | |
+| D, basin | 8.6e-7 | 2.0e-6 | 2.0e-7 |
+
+The largest values come from VK and WW_axisymmetric in case A, which differ
+from the other five codes by 1.6e-4 m at the pole, and from SK in case D. So
+every difference file of a case was computed against one VEGA profile, and
+the YS recovery gives it. In case A the five recoveries of GA, GS, KS, VB and
+WW agree to 6e-14 m and give $U = -302.59759412$ m at the pole, the value of
+the one-row VEGA file in the first case A archive. In the case B basin, the
+359 shipped rows equal the recoveries of GA, KS and VK to 7e-15 m and of VB to
+1e-8 m, so the shipped rows are exact samples of the finer profile. Linear
+interpolation between them misses it by up to 0.17 m near the coast. In case
+A, both WW variants count as contributors.
+
+**How a result is scored.** `gia_mip.benchmarks.metrics.score` compares a
+profile on the result's own points inside the difference interval, with the
+reference evaluated there by the same cubic spline, and a time series on the
+result's own times, with the reference interpolated linearly. Scored this way,
+every contributor of the archive gets the maximum and RMS of its own
+published difference file to 1e-4 m (2e-4 m in case A), which
+`tests/test_scoring.py` checks.
 
 ## Reported agreement
 

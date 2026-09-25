@@ -1,9 +1,14 @@
-"""Upload the original data files to the object store behind data.gadopt.org.
+"""Upload the data files of the manifest to the object store behind data.gadopt.org.
 
-`python -m gia_mip.data` fetches every original from
-https://data.gadopt.org/gia-mip/<relative path>. That host serves the `gadopt`
-bucket of the G-ADOPT DigitalOcean Space, so an artifact is uploaded to the key
-`gia-mip/<relative path>` with public read access.
+`gia_mip.data` fetches every artifact from
+https://data.gadopt.org/gia-mip/<object>, where <object> is the artifact's
+`object` field when it has one (the converted files:
+`versions/<sha256>/<collection>/<file>`) and its manifest key otherwise (the
+originals). That host serves the `gadopt` bucket of the G-ADOPT DigitalOcean
+Space, so an artifact is uploaded to the key `gia-mip/<object>` with public
+read access. A converted file's key contains its sum, so a new version is a
+new object and the old one stays for the releases that name it. Nothing is
+ever deleted.
 
 Only an artifact whose `permission` in the manifest is `granted` is uploaded,
 and only after its SHA-256 on disk matches the manifest, so the object store
@@ -16,7 +21,8 @@ the continuous integration workflow fetches them over HTTPS with no secret.
 
 Usage::
 
-    python3 scripts/upload_originals.py [--collection martinec2018] [--config ~/.s3cfg-gadopt] [--dry-run]
+    python3 scripts/upload_artifacts.py [--stage original|converted] [--collection martinec2018]
+                                        [--config ~/.s3cfg-gadopt] [--dry-run]
 """
 
 from __future__ import annotations
@@ -26,7 +32,8 @@ import pathlib
 import re
 import sys
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+REPOSITORY = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPOSITORY))
 from gia_mip import data  # noqa: E402
 
 BUCKET = "gadopt"
@@ -51,9 +58,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--collection", action="append",
                     help="collection to upload; repeatable. Default: every granted artifact")
+    ap.add_argument("--stage", action="append", choices=data.STAGES,
+                    help="stage to upload; repeatable. Default: both")
     ap.add_argument("--config", type=pathlib.Path,
                     default=pathlib.Path("~/.s3cfg-gadopt").expanduser())
-    ap.add_argument("--root", type=pathlib.Path, default=data.ROOT / "data" / "original")
+    ap.add_argument("--root", type=pathlib.Path, default=REPOSITORY / "data",
+                    help="the directory holding original/ and converted/")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -71,9 +81,11 @@ def main() -> int:
     for rel, entry in manifest["artifacts"].items():
         if args.collection and entry["collection"] not in args.collection:
             continue
+        if args.stage and entry["stage"] not in args.stage:
+            continue
         if entry["permission"] != "granted":
             continue
-        path = args.root / rel
+        path = args.root / entry["stage"] / rel
         if not path.exists():
             print(f"MISSING  {rel}", file=sys.stderr)
             failures += 1
@@ -83,7 +95,7 @@ def main() -> int:
             print(f"CORRUPT  {rel}: the file on disk does not match the manifest", file=sys.stderr)
             failures += 1
             continue
-        key = PREFIX + rel
+        key = PREFIX + entry.get("object", rel)
         try:
             head = s3.head_object(Bucket=BUCKET, Key=key)
             if head["ContentLength"] == entry["bytes"] and head["Metadata"].get("sha256") == digest:

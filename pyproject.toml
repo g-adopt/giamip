@@ -1,10 +1,13 @@
 [build-system]
-requires = ["setuptools>=68"]
+# setuptools 77 is the first release that reads the PEP 639 `license` and
+# `license-files` fields below.
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "gia-mip"
-version = "0.1.0.dev0"
+# One version number: `gia_mip.__version__`, read by setuptools at build time.
+dynamic = ["version"]
 description = "Case definitions, reference data and output conventions for the Spada (2011) and Martinec (2018) GIA benchmarks and for GIAMIP."
 readme = "README.md"
 license = "MIT"
@@ -19,13 +22,19 @@ classifiers = [
 authors = [
   { name = "Siavash Ghelichkhan", email = "siavash.ghelichkhan@anu.edu.au" },
 ]
-# netCDF4 reads and writes every gridded product. jsonschema validates the case
-# files. numpy is used throughout. Nothing here imports a solver: this package
-# describes and checks work, and never performs it.
+# h5netcdf reads and writes every NetCDF file through h5py. It applies no mask,
+# scale or fill value, which the GIAMIP inputs need (every ice file declares
+# `_FillValue = 0.0`), and it uses the HDF5 library that h5py brings, so it
+# sits beside Firedrake's h5py with no second netCDF-C or HDF5 build. The
+# Firedrake module on Gadi has h5py and no netCDF4. scipy gives the cubic
+# spline that evaluates the Martinec reference at a result's own colatitudes.
+# The lower bounds are the versions this was tested with. Nothing here imports
+# a solver: this package describes and checks work, and never performs it.
 dependencies = [
   "numpy>=2.0",
-  "netCDF4>=1.7",
-  "jsonschema>=4.21",
+  "scipy>=1.14",
+  "h5py>=3.16",
+  "h5netcdf>=1.8",
 ]
 
 [project.optional-dependencies]
@@ -34,8 +43,10 @@ dependencies = [
 # kernel through nbclient. The pages draw their figures with matplotlib, so the
 # test extra carries everything a page needs to execute. Quarto reads the
 # percent format itself, so the docs extra needs no jupytext.
+# netCDF4 is in the test extra only, for the test that netCDF-C reads every
+# file this package writes. No module of the package imports it.
 test = ["pytest>=8", "pytest-timeout>=2.3", "ipython>=8", "jupytext>=1.16",
-        "nbclient>=0.10", "ipykernel>=6.29", "matplotlib>=3.8"]
+        "nbclient>=0.10", "ipykernel>=6.29", "matplotlib>=3.8", "netCDF4>=1.7"]
 plot = ["matplotlib>=3.8"]
 docs = ["jupyter>=1.0", "matplotlib>=3.8"]
 
@@ -45,13 +56,19 @@ Homepage = "https://github.com/g-adopt/gia-mip"
 [tool.setuptools.packages.find]
 include = ["gia_mip*"]
 
-# The schemas, the manifest and the provenance record travel with an installed
-# package, so `python -m gia_mip.data` works without a checkout. `cases/` and
-# `models/` stay at the top level and are NOT installed: they are content for
-# people to read and browse on the repository page, and a consumer resolves a
-# case from a clone or from the object store.
+[tool.setuptools.dynamic]
+version = {attr = "gia_mip.__version__"}
+
+# The package carries the small JSON files a solver needs with no network: the
+# case files, the load tables, the earth models, the manifest, the provenance
+# record, the corrections and the column layouts. It carries no data file. The
+# converted reference data and the originals come from data.gadopt.org through
+# `gia_mip.data`, which caches them on first use. The wheel job of
+# .github/workflows/test.yml checks that the wheel's resources equal
+# `git ls-files gia_mip/resources` and that it holds no .nc file.
 [tool.setuptools.package-data]
-gia_mip = ["schemas/*.json", "resources/*.json"]
+gia_mip = ["resources/*.json", "resources/cases/**/*.json",
+           "resources/loads/*.json", "resources/models/*.json"]
 
 [tool.pytest.ini_options]
 # Collect from `tests/` only. Without this, pytest walks the whole tree from

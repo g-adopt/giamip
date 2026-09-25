@@ -69,12 +69,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import pathlib
 import sys
 
 import numpy as np
 
+from gia_mip import _netcdf
 from gia_mip import cases
 from gia_mip import corrections
 from gia_mip import data
@@ -109,7 +109,7 @@ HANDLING = {
     "spada-t01-07-gs-l-in-column-3": "l is read from column 3, as the layout table records",
     "spada-t02-03-k2-files-hold-the-length-of-day": "not read: the length of day comes from lod_<member>.dat",
     "spada-t02-03-gs-tables-with-twice-the-values": "not read: the layout table names only PM_table_<load>_<setting>.dat",
-    "spada-t02-03-vb-point-mass-header": "the mass in the header is not read; the load comes from the load line, and its parameters from loads/spada2011.json",
+    "spada-t02-03-vb-point-mass-header": "the mass in the header is not read; the load comes from the load line, and its parameters from gia_mip/resources/loads/spada2011.json",
     "spada-t02-01-contributors-without-data": "BL, PG and ZM are named in the case files' not_converted, and scoring is against GS and VK",
     "spada-t02-time-layout-differs-by-contributor": "the epoch of each column is taken from the layout table",
     "spada-t01-residue-files-absolute": "not read: residues come from the signed .dat files",
@@ -128,10 +128,22 @@ HANDLING = {
 }
 
 
-def data_root() -> pathlib.Path:
-    """Root of the data tree: ``$GIA_MIP_DATA_ROOT``, else ``data/`` in the checkout."""
-    root = os.environ.get("GIA_MIP_DATA_ROOT")
-    return pathlib.Path(root) if root else data.ROOT / "data"
+def converted_dir() -> pathlib.Path:
+    """Where the converter writes by default: ``data/converted/spada2011`` of the checkout.
+
+    The converted files are tracked in the repository, so the converter writes
+    into a checkout. An installed package has none, and then ``--out`` is
+    required.
+    """
+    checkout = data.checkout_root()
+    if checkout is None:
+        raise SystemExit("gia_mip is installed, not checked out; pass an output directory")
+    return checkout / "data" / "converted" / "spada2011"
+
+
+def original_root() -> pathlib.Path:
+    """The ``original/`` directory holding the unpacked archive, fetched if needed."""
+    return data.original_tree(f"{ARCHIVE}.tar.gz")
 
 
 def load_layouts(path: pathlib.Path = LAYOUTS_PATH) -> dict:
@@ -587,7 +599,7 @@ def extract(case: str, root: pathlib.Path | None = None, layouts: dict | None = 
     case
         A short case name of `CASES`, for example ``t02-01``.
     root
-        The ``original/`` directory. Default: ``data_root() / "original"``.
+        The ``original/`` directory. Default: `original_root`.
     layouts
         The ``files`` table. Default: read from the package resources.
 
@@ -601,7 +613,7 @@ def extract(case: str, root: pathlib.Path | None = None, layouts: dict | None = 
     case = case.lower().removeprefix("spada2011-")
     if case not in CASES:
         raise ValueError(f"case {case!r} is not converted; expected one of {CASES}")
-    root = pathlib.Path(root) if root else data_root() / "original"
+    root = pathlib.Path(root) if root else original_root()
     layouts = layouts or load_layouts()
     chosen = {path: layout for path, layout in layouts.items() if case in layout["cases"]}
     if not chosen:
@@ -658,13 +670,11 @@ def extract(case: str, root: pathlib.Path | None = None, layouts: dict | None = 
 
 
 def write(case: str, members: dict, destination: pathlib.Path) -> pathlib.Path:
-    """Write every member of one case into one NetCDF4 file.
+    """Write every member of one case into one netCDF-4 file, through h5netcdf.
 
     The file is written beside the destination and moved into place only when
     complete, so a failed run never leaves a half-written reference file.
     """
-    import netCDF4
-
     destination = pathlib.Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     partial = destination.with_suffix(destination.suffix + ".partial")
@@ -672,18 +682,20 @@ def write(case: str, members: dict, destination: pathlib.Path) -> pathlib.Path:
     for member in sorted(members):
         members[member].write(partial)
     definition = cases.case(f"spada2011-{case}")
-    with netCDF4.Dataset(partial, "a") as ds:
-        ds.title = (f"Spada et al. (2011) {definition['published_name']}, "
-                    f"{definition['title']}: every contributor in the archive")
-        ds.source_citation = ("Spada, G. et al. (2011). A benchmark study for glacial isostatic "
-                              "adjustment codes. Geophysical Journal International 185(1), "
-                              "106-132. doi:10.1111/j.1365-246X.2011.04952.x")
-        ds.source_archive = f"{ARCHIVE}.tar.gz"
-        ds.converter = "gia_mip.benchmarks.spada2011"
-        ds.column_layouts = "gia_mip/resources/spada_column_layouts.json"
-        ds.not_converted = "; ".join(
-            f"{code}: {reason}" for code, reason in
-            sorted(definition["reference_data"].get("not_converted", {}).items()))
+    with _netcdf.open_write(partial, append=True) as ds:
+        _netcdf.set_attributes(ds, {
+            "title": (f"Spada et al. (2011) {definition['published_name']}, "
+                      f"{definition['title']}: every contributor in the archive"),
+            "source_citation": ("Spada, G. et al. (2011). A benchmark study for glacial isostatic "
+                                "adjustment codes. Geophysical Journal International 185(1), "
+                                "106-132. doi:10.1111/j.1365-246X.2011.04952.x"),
+            "source_archive": f"{ARCHIVE}.tar.gz",
+            "converter": "gia_mip.benchmarks.spada2011",
+            "column_layouts": "gia_mip/resources/spada_column_layouts.json",
+            "not_converted": "; ".join(
+                f"{code}: {reason}" for code, reason in
+                sorted(definition["reference_data"].get("not_converted", {}).items())),
+        })
     partial.replace(destination)
     return destination
 
@@ -697,13 +709,13 @@ def convert(case: str, root: pathlib.Path | None = None,
     case
         A short case name of `CASES`.
     root
-        The ``original/`` directory. Default: ``data_root() / "original"``.
+        The ``original/`` directory. Default: `original_root`.
     out_dir
-        Where to write. Default: ``data_root() / "converted" / "spada2011"``.
+        Where to write. Default: `converted_dir`.
     """
     case = case.lower().removeprefix("spada2011-")
     members = extract(case, root)
-    out_dir = pathlib.Path(out_dir) if out_dir else data_root() / "converted" / "spada2011"
+    out_dir = pathlib.Path(out_dir) if out_dir else converted_dir()
     return write(case, members, out_dir / f"spada2011-{case}.nc")
 
 

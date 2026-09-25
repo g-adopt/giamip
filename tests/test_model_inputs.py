@@ -160,13 +160,13 @@ def test_angular_distance_is_safe_at_the_centre_and_the_antipode():
 # ------------------------------------------------------- results and metrics
 
 def test_a_result_round_trips_through_netcdf(tmp_path):
-    r = BenchmarkResult("C", "radopt")
+    r = BenchmarkResult("C", "lovejx")
     x = np.linspace(0, 180, 181)
     r.add_profile("load", "U", x, np.sin(np.radians(x)))
     r.add_profile("load", "N", x[::-1], np.cos(np.radians(x[::-1])))
     r.add_time_series("h_UF", [0, 5, 15], [0.0, -10.0, -25.0], note="test")
     path = r.write(tmp_path / "out.nc")
-    back = BenchmarkResult.read(path, "radopt")
+    back = BenchmarkResult.read(path, "lovejx")
     assert back.case == "C"
     assert np.allclose(back.profile("load", "N").axis, x)
     assert np.allclose(back.profile("load", "N").values, np.cos(np.radians(x)))
@@ -177,12 +177,12 @@ def test_a_result_round_trips_through_netcdf(tmp_path):
 
 def test_reading_a_result_under_another_case_raises(tmp_path):
     """The file records case C, so a read as case D is refused; another spelling of C is not."""
-    r = BenchmarkResult("C", "radopt")
+    r = BenchmarkResult("C", "lovejx")
     r.add_time_series("h_UF", [0, 5, 15], [0.0, -10.0, -25.0])
     path = r.write(tmp_path / "out.nc")
-    assert BenchmarkResult.read(path, "radopt", case="martinec2018-c").case == "C"
+    assert BenchmarkResult.read(path, "lovejx", case="martinec2018-c").case == "C"
     with pytest.raises(ValueError, match="holds case C, not D"):
-        BenchmarkResult.read(path, "radopt", case="D")
+        BenchmarkResult.read(path, "lovejx", case="D")
 
 
 def test_difference_metrics_on_known_curves():
@@ -213,8 +213,12 @@ def test_a_curve_refuses_a_repeated_axis_value():
 # ------------------------------------------------- against the converted data
 
 def _need_converted():
-    if not BenchmarkResult.reference_path("E").exists():
-        pytest.skip("the converted Martinec files are absent")
+    """Skip when the converted Martinec files are neither here nor downloadable."""
+    from gia_mip import data
+    try:
+        BenchmarkResult.reference_path("E")
+    except data.DataUnavailable:
+        pytest.skip("the converted Martinec files are absent and cannot be downloaded")
 
 
 @pytest.mark.data
@@ -280,9 +284,13 @@ def test_model_years_follow_the_protocol_steps():
 
 
 def _ice_file(name="iceHistory-ICE-6G_D.nc"):
+    """The relative path of an ice history, located (and fetched) through gia_mip.data."""
+    from gia_mip import data
     rel = f"giamip/ice-history/{name}"
-    if not (mip_inputs.original_root() / rel).exists():
-        pytest.skip("the GIAMIP originals are absent")
+    try:
+        data.locate(rel, "original")
+    except data.DataUnavailable:
+        pytest.skip("the GIAMIP originals are absent and cannot be downloaded")
     return rel
 
 
@@ -316,9 +324,12 @@ def test_the_truncated_experiments_start_at_80_ka():
 
 @pytest.mark.data
 def test_topography_names_its_antarctic_dataset_from_the_filename():
+    from gia_mip import data
     rel = "giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"
-    if not (mip_inputs.original_root() / rel).exists():
-        pytest.skip("the GIAMIP originals are absent")
+    try:
+        data.locate(rel, "original")
+    except data.DataUnavailable:
+        pytest.skip("the GIAMIP originals are absent and cannot be downloaded")
     topo = mip_inputs.Topography(rel)
     assert topo.antarctic_dataset == "BedMachine Antarctica v3"
     assert "topography-source-attribute" in topo.correction_ids

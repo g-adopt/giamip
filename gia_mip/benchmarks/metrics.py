@@ -5,23 +5,39 @@ colatitude interval at a fixed time,
 
     RMS = sqrt( (1/n) sum_i (q_i - q_i_ref)^2 ),   MAX = max_i |q_i - q_i_ref|.
 
-The paper does not say which points. Here they are the points of the reference
-inside the interval, and the candidate is interpolated linearly onto them.
-Extrapolation is refused. A grid that stops just short of an end of the
-interval, such as a colatitude grid whose first node is 0.044 degrees where the
-interval starts at 0, is accepted when the gap is at most 1 per cent of the
-interval; the comparison then uses the reference points the candidate covers,
-and reports that range.
+The paper does not say which points. The published difference files answer
+it: each contributor's difference is on that contributor's own grid. So
+`score` compares a Martinec profile on the result's own points inside the
+interval, with the reference evaluated there by a cubic spline through the
+stored reference curve. Evaluated this way, every contributor of the archive
+scores the maximum and RMS of its own published difference file to 1e-4 m
+(tests/test_scoring.py). Interpolating the result onto the reference points
+does not: it changes VK's maximum in the case D load profile by 13 per cent.
 
-The reference is VEGA, contributor ZM. For three profiles the VEGA file that
-Martinec shipped is not the one the published differences were computed
-against, so the reference is recovered as a contributor's profile minus that
-contributor's own difference file, which reproduces the published reference:
+The spline is evaluated on the whole meridian, colatitude 0 to 180. The
+recovered references start at 0.044 degrees, so this continues the end cubic
+over the last 0.044 degrees, where it reproduces the contributors' own rows at
+the pole to 1.1e-4 m. A result must cover the interval to within 1 per cent of
+its width at each end.
 
-* case A (correction benchmarkA-vega-supplied-run-differs), recovered from GS;
-* the case B basin and both case D profiles
-  (correction martinec2018-caseD-vega-profile-grid), recovered from YS, whose
-  2048-point grid is the finest.
+Time series are compared on the result's own times inside the interval, with
+the reference interpolated linearly: VEGA's series is stored every 20 years,
+finer than any solver step, and it has kinks (the end of growth at 10 kyr in
+T1), where a spline would overshoot.
+
+`difference_metrics`, which interpolates the candidate onto the reference
+points, remains for the Spada benchmark, whose contributors share their grids.
+
+The reference is VEGA. The converter stores the curve that scoring compares
+with in the group ``reference`` of each converted file, following the case
+file's ``reference_data.reference_curves``: VEGA as shipped where the archive's
+VEGA file is the one the published differences were computed against, and
+elsewhere VEGA recovered as YS's profile minus YS's own difference file, on
+YS's 2048-point grid. That applies to case A (correction
+benchmarkA-vega-supplied-run-differs), the case B basin and both case D
+profiles (correction martinec2018-caseD-vega-profile-grid).
+docs/protocol/martinec2018.qmd, "How the reference is built", gives the
+evidence.
 
 Spada et al. (2011) has no such reference code; `spada_score` at the end of
 this module scores against each contributor separately.
@@ -32,18 +48,12 @@ from __future__ import annotations
 import warnings
 
 import numpy as np
+from scipy.interpolate import CubicSpline
+
+import gia_mip
 
 from gia_mip.benchmarks.inputs import MartinecCase, SpadaCase
 from gia_mip.benchmarks.results import BenchmarkResult, Curve, SpadaResult
-
-# Which contributor the reference is recovered from, where VEGA as shipped
-# cannot be used. The key is (case, profile).
-RECOVER_REFERENCE_FROM = {
-    ("A", "load"): "GS",
-    ("B", "basin"): "YS",
-    ("D", "load"): "YS",
-    ("D", "basin"): "YS",
-}
 
 
 def difference_metrics(candidate: Curve, reference: Curve,
@@ -91,43 +101,135 @@ def difference_metrics(candidate: Curve, reference: Curve,
 def reference_profile(case: str, profile: str, quantity: str) -> Curve:
     """The reference curve for one profile quantity of one case.
 
-    VEGA as shipped, except where `RECOVER_REFERENCE_FROM` names a
-    contributor. The returned curve's ``attributes["reference"]`` says which.
+    Read from the group ``reference`` of the converted file, which the
+    converter builds by the rule of the case file's
+    ``reference_data.reference_curves``. The returned curve's
+    ``attributes["reference"]`` is the curve's ``built_from`` sentence.
     """
-    letter = case.rsplit("-", 1)[-1].upper()
-    via = RECOVER_REFERENCE_FROM.get((letter, profile))
-    if via is None:
-        curve = BenchmarkResult.reference(letter, "ZM").profile(profile, quantity)
-        return Curve(curve.axis, curve.values, {"reference": "VEGA as shipped"})
-    contributor = BenchmarkResult.reference(letter, via)
-    value = contributor.profile(profile, quantity)
-    difference = contributor.differences[(profile, quantity)]
-    if not np.allclose(value.axis, difference.axis, atol=1e-4):
-        raise ValueError(f"{via} profile and difference file are on different grids")
-    return Curve(value.axis, value.values - difference.values,
-                 {"reference": f"VEGA recovered as {via} minus its difference file"})
+    curve = BenchmarkResult.reference(case).profile(profile, quantity)
+    return Curve(curve.axis, curve.values, {**curve.attributes,
+                                            "reference": curve.attributes["built_from"]})
 
 
 def reference_time_series(case: str, quantity: str) -> Curve:
-    """VEGA's time series of one quantity."""
-    letter = case.rsplit("-", 1)[-1].upper()
-    curve = BenchmarkResult.reference(letter, "ZM").series(quantity)
-    return Curve(curve.axis, curve.values, {"reference": "VEGA as shipped"})
+    """VEGA's time series of one quantity, from the group ``reference``."""
+    curve = BenchmarkResult.reference(case).series(quantity)
+    return Curve(curve.axis, curve.values, {**curve.attributes,
+                                            "reference": curve.attributes["built_from"]})
+
+
+def _covered(axis: np.ndarray, interval: tuple[float, float], what: str) -> np.ndarray:
+    """The mask of the points inside an interval, after the coverage check.
+
+    A result must reach to within 1 per cent of the interval's width of each
+    end, so that a curve which stops early is not scored on a part of the
+    interval only.
+    """
+    lo, hi = interval
+    allowed_gap = 0.01 * (hi - lo)
+    inside = (axis >= lo) & (axis <= hi)
+    if not inside.any():
+        raise ValueError(f"{what}: no point inside [{lo}, {hi}]")
+    if axis[inside][0] - lo > allowed_gap or hi - axis[inside][-1] > allowed_gap:
+        raise ValueError(f"{what}: the result covers [{axis[inside][0]}, {axis[inside][-1]}] "
+                         f"and the comparison needs [{lo}, {hi}]")
+    return inside
+
+
+def _row_metrics(x: np.ndarray, difference: np.ndarray, reference_values: np.ndarray) -> dict:
+    """RMS, maximum and where it is, the signal and the largest point spacing."""
+    i = int(np.argmax(np.abs(difference)))
+    return {"n": int(x.size),
+            "rms": float(np.sqrt(np.mean(difference ** 2))),
+            "max": float(np.abs(difference[i])),
+            "at": float(x[i]),
+            "signal_max": float(np.max(np.abs(reference_values))),
+            # A coarse result can miss a peak and so score well; this shows it.
+            "max_spacing": float(np.max(np.diff(x))) if x.size > 1 else 0.0,
+            "covered": (float(x[0]), float(x[-1])),
+            "compared_on": "result points"}
+
+
+def profile_metrics(result: Curve, reference: Curve, interval: tuple[float, float],
+                    keep=None) -> dict:
+    """Eq. 31 for one Martinec profile, on the result's own points.
+
+    Parameters
+    ----------
+    result
+        The result's curve, against colatitude in degrees.
+    reference
+        The stored reference curve.
+    interval
+        The colatitude interval of the case file.
+    keep
+        Optional function of the colatitudes that returns a mask of the points
+        to keep, for the band around the features of criterion 2.
+
+    Returns
+    -------
+    dict
+        ``n``, ``rms``, ``max``, ``at``, ``signal_max``, ``max_spacing``,
+        ``covered`` and ``compared_on``.
+
+    Raises
+    ------
+    ValueError
+        For a result point outside 0 to 180 degrees, or a result that does not
+        cover the interval.
+    """
+    if not np.all(np.isfinite(result.axis)):
+        raise ValueError("the result has a colatitude that is not a finite number")
+    if result.axis[0] < 0.0 or result.axis[-1] > 180.0:
+        raise ValueError(f"the result has colatitudes outside 0 to 180 degrees: "
+                         f"[{result.axis[0]}, {result.axis[-1]}]")
+    inside = _covered(result.axis, interval, "profile")
+    if keep is not None:
+        inside &= keep(result.axis)
+    x = result.axis[inside]
+    # Not-a-knot ends: the curve's own cubic is continued over the last 0.044
+    # degrees to colatitude 0 and 180 (module docstring).
+    ref = CubicSpline(reference.axis, reference.values)(x)
+    return _row_metrics(x, result.values[inside] - ref, ref)
+
+
+def series_metrics(result: Curve, reference: Curve, interval: tuple[float, float]) -> dict:
+    """RMS and maximum of a time series, on the result's own times.
+
+    The reference is interpolated linearly onto the result's times inside the
+    interval and inside the reference's own time range; it is never
+    extrapolated. The row also carries ``signal_range``, the range of the
+    reference on those times, because for the ocean area it is 24 times
+    smaller than the largest value.
+    """
+    if not np.all(np.isfinite(result.axis)):
+        raise ValueError("the result has a time that is not a finite number")
+    lo = max(interval[0], reference.axis[0])
+    hi = min(interval[1], reference.axis[-1])
+    inside = _covered(result.axis, (lo, hi), "time series")
+    x = result.axis[inside]
+    ref = np.interp(x, reference.axis, reference.values)
+    row = _row_metrics(x, result.values[inside] - ref, ref)
+    row["signal_range"] = float(np.max(ref) - np.min(ref))
+    return row
 
 
 def score(result: BenchmarkResult) -> list[dict]:
     """Score every profile and time series a result holds, as the paper does.
 
-    Profiles are compared over the colatitude interval of the case file, and
-    time series over their whole time interval. A quantity the result does not
-    hold is skipped, so a solver can be scored on part of a case.
+    Profiles are compared over the colatitude interval of the case file, on
+    the result's own points (`profile_metrics`), and time series over the time
+    interval of the case file, on the result's own times (`series_metrics`).
+    A quantity the result does not hold is skipped, so a solver can be scored
+    on part of a case; `envelope_check` raises for a missing quantity.
 
     Returns
     -------
     list of dict
         One row per comparison: ``kind``, ``profile`` (None for a time
-        series), ``quantity``, ``interval``, ``reference``, and the entries of
-        `difference_metrics`.
+        series), ``quantity``, ``interval``, ``reference`` (how the reference
+        curve was built), ``gia_mip_version``, and the entries of
+        `profile_metrics` or `series_metrics`.
     """
     setup = MartinecCase(result.case)
     rows = []
@@ -136,20 +238,159 @@ def score(result: BenchmarkResult) -> list[dict]:
             if (spec.name, quantity) not in result.profiles:
                 continue
             ref = reference_profile(result.case, spec.name, quantity)
-            m = difference_metrics(result.profiles[(spec.name, quantity)], ref,
-                                   spec.colatitude_interval_deg)
+            m = profile_metrics(result.profiles[(spec.name, quantity)], ref,
+                                spec.colatitude_interval_deg)
             rows.append({"kind": "profile", "profile": spec.name, "quantity": quantity,
                          "interval": spec.colatitude_interval_deg,
-                         "reference": ref.attributes["reference"], **m})
+                         "reference": ref.attributes["reference"],
+                         "gia_mip_version": gia_mip.__version__, **m})
     for spec in setup.time_series:
         for quantity in spec.quantities:
             if quantity not in result.time_series:
                 continue
             ref = reference_time_series(result.case, quantity)
-            m = difference_metrics(result.time_series[quantity], ref, spec.time_interval_kyr)
+            m = series_metrics(result.time_series[quantity], ref, spec.time_interval_kyr)
             rows.append({"kind": "time_series", "profile": None, "quantity": quantity,
                          "interval": spec.time_interval_kyr,
-                         "reference": ref.attributes["reference"], **m})
+                         "reference": ref.attributes["reference"],
+                         "gia_mip_version": gia_mip.__version__, **m})
+    return rows
+
+
+def uniform_layer(case: str) -> tuple[float, float]:
+    """The uniform water layer h_UF of the reference, from the basin profile.
+
+    Eq. 6 and eq. 8 give S = N + h_UF over the ocean, so S - N of the
+    reference on the basin meridian is h_UF at the terminal time. The spread
+    along the meridian shows that the two curves differ by a constant: 1e-8 m
+    for the rebuilt references of cases B and D, 2e-6 m for case C, whose
+    reference is VEGA's file as shipped.
+
+    Parameters
+    ----------
+    case
+        A case letter or id: B, C or D, the cases whose reference has S and N
+        on the basin meridian.
+
+    Returns
+    -------
+    tuple of float
+        The mean of S - N in metres and its range along the meridian.
+
+    Raises
+    ------
+    ValueError
+        For case A and E, which have no such profile.
+    """
+    reference = BenchmarkResult.reference(case)
+    if ("basin", "S") not in reference.profiles or ("basin", "N") not in reference.profiles:
+        raise ValueError(f"case {reference.case} has no S and N on the basin meridian")
+    surface, geoid = reference.profile("basin", "S"), reference.profile("basin", "N")
+    if surface.axis.shape != geoid.axis.shape or not np.allclose(surface.axis, geoid.axis):
+        raise ValueError(f"case {reference.case}: S and N of the reference are on "
+                         f"different colatitudes")
+    difference = surface.values - geoid.values
+    return float(difference.mean()), float(difference.max() - difference.min())
+
+
+def _away_from(features: tuple[float, ...], band_half_width_deg: float):
+    """A function that masks the points within a band around each feature."""
+    def keep(axis: np.ndarray) -> np.ndarray:
+        mask = np.ones(axis.shape, dtype=bool)
+        for feature in features:
+            mask &= np.abs(axis - feature) > band_half_width_deg
+        return mask
+    return keep
+
+
+def contributor_envelope(case: str, profile: str, quantity: str, *,
+                         band_half_width_deg: float) -> dict:
+    """The largest difference and RMS of the published codes, away from the features.
+
+    For every member of the archive except VEGA (names that start with
+    ``ZM``), the largest absolute value and the RMS of its own difference file,
+    on its own grid, inside the case interval, with the points within
+    ``band_half_width_deg`` of each feature colatitude removed. The features
+    are the cap margin and the initial coastline
+    (`MartinecCase.feature_colatitudes`). The band width has no default: which
+    width is right is not decided.
+
+    Returns
+    -------
+    dict
+        ``members`` (name to ``{"max", "rms", "n"}``), ``max`` and ``rms``
+        (the largest of each over the members), ``features`` and
+        ``band_half_width_deg``.
+    """
+    setup = MartinecCase(case)
+    spec = next(p for p in setup.profiles if p.name == profile)
+    lo, hi = spec.colatitude_interval_deg
+    features = setup.feature_colatitudes(profile)
+    keep = _away_from(features, band_half_width_deg)
+    path = BenchmarkResult.reference_path(setup.letter)
+    members = {}
+    for member in BenchmarkResult.members(path):
+        if member.startswith("ZM"):
+            continue
+        result = BenchmarkResult.read(path, member, case=setup.letter)
+        curve = result.differences.get((profile, quantity))
+        if curve is None:
+            continue
+        mask = (curve.axis >= lo) & (curve.axis <= hi) & keep(curve.axis)
+        if not mask.any():
+            continue
+        values = curve.values[mask]
+        members[member] = {"max": float(np.max(np.abs(values))),
+                           "rms": float(np.sqrt(np.mean(values ** 2))),
+                           "n": int(mask.sum())}
+    if not members:
+        raise KeyError(f"case {setup.letter}: no contributor has a {quantity} difference "
+                       f"on the {profile} meridian")
+    return {"members": members,
+            "max": max(m["max"] for m in members.values()),
+            "rms": max(m["rms"] for m in members.values()),
+            "features": features, "band_half_width_deg": band_half_width_deg}
+
+
+def envelope_check(result: BenchmarkResult, *, band_half_width_deg: float) -> list[dict]:
+    """Criterion 2: is the result inside the range of the published codes?
+
+    For each compared profile and quantity, the result's largest difference
+    and RMS from the reference (`profile_metrics`, on the result's own
+    points), over the case interval with the same band removed around each
+    feature, next to `contributor_envelope`. ``inside`` is true when neither
+    number is larger than the largest of the published codes.
+
+    Raises
+    ------
+    KeyError
+        Naming every compared profile quantity the result does not hold. A
+        missing curve would otherwise pass without being compared.
+    """
+    setup = MartinecCase(result.case)
+    missing = [f"{spec.name}/{quantity}" for spec in setup.profiles
+               for quantity in spec.quantities if (spec.name, quantity) not in result.profiles]
+    if missing:
+        raise KeyError(f"{result.member} case {result.case} lacks compared curves: "
+                       f"{', '.join(missing)}")
+    rows = []
+    for spec in setup.profiles:
+        keep = _away_from(setup.feature_colatitudes(spec.name), band_half_width_deg)
+        for quantity in spec.quantities:
+            ref = reference_profile(result.case, spec.name, quantity)
+            own = profile_metrics(result.profiles[(spec.name, quantity)], ref,
+                                  spec.colatitude_interval_deg, keep=keep)
+            envelope = contributor_envelope(result.case, spec.name, quantity,
+                                            band_half_width_deg=band_half_width_deg)
+            rows.append({"profile": spec.name, "quantity": quantity,
+                         "interval": spec.colatitude_interval_deg,
+                         "band_half_width_deg": band_half_width_deg,
+                         "features": envelope["features"],
+                         "max": own["max"], "rms": own["rms"], "n": own["n"],
+                         "envelope_max": envelope["max"], "envelope_rms": envelope["rms"],
+                         "envelope_members": sorted(envelope["members"]),
+                         "inside": own["max"] <= envelope["max"] and own["rms"] <= envelope["rms"],
+                         "gia_mip_version": gia_mip.__version__})
     return rows
 
 
@@ -260,7 +501,7 @@ def spada_score(result: SpadaResult, references: dict[str, SpadaResult]) -> list
     Parameters
     ----------
     result
-        The candidate, for example a radopt run.
+        The candidate, for example a lovejx run.
     references
         Member code to reference result, for example the GS and VK members of
         ``SpadaResult.reference_path(case)``.

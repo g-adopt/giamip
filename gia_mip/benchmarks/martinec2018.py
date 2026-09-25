@@ -60,18 +60,18 @@ second axis is named ``colatitude_2`` or ``time_2``.
 from __future__ import annotations
 
 import argparse
-import datetime
 import json
-import os
 import pathlib
 import re
 import sys
 
 import numpy as np
 
+from gia_mip import _netcdf
 from gia_mip import corrections
 from gia_mip import data
 
+COLLECTION = "martinec2018"
 RESOURCES = pathlib.Path(__file__).resolve().parent.parent / "resources"
 LAYOUTS_PATH = RESOURCES / "column_layouts.json"
 
@@ -152,13 +152,22 @@ HANDLING = {
 FIGURE_ONLY_SCALES = {"9*x/10", "2*x/3"}
 
 
-def data_root() -> pathlib.Path:
-    """Root of the data tree: ``$GIA_MIP_DATA_ROOT``, else ``data/`` in the checkout.
+def converted_dir() -> pathlib.Path:
+    """Where the converter writes by default: ``data/converted/martinec2018`` of the checkout.
 
-    This is the rule ``gia_mip.data`` and ``tests/conftest.py`` use.
+    The converted files are tracked in the repository, so the converter writes
+    into a checkout. An installed package has none, and then ``--out`` is
+    required.
     """
-    root = os.environ.get("GIA_MIP_DATA_ROOT")
-    return pathlib.Path(root) if root else data.ROOT / "data"
+    checkout = data.checkout_root()
+    if checkout is None:
+        raise SystemExit("gia_mip is installed, not checked out; pass an output directory")
+    return checkout / "data" / "converted" / COLLECTION
+
+
+def original_root(case: str) -> pathlib.Path:
+    """The ``original/`` directory holding a case's unpacked archive, fetched if needed."""
+    return data.original_tree(f"{COLLECTION}/results{case}_2026.zip")
 
 
 def load_layouts(path: pathlib.Path = LAYOUTS_PATH) -> dict:
@@ -338,7 +347,8 @@ def extract(case: str, root: pathlib.Path | None = None,
     case
         The published case letter, A to E.
     root
-        The ``original/`` directory. Default: ``data_root() / "original"``.
+        The ``original/`` directory. Default: `original_root`, which finds
+        or fetches the case's archive through `gia_mip.data.locate`.
     layouts
         The decoded layouts. Default: read from the package resources.
 
@@ -350,7 +360,7 @@ def extract(case: str, root: pathlib.Path | None = None,
     """
     if case not in CASES:
         raise ValueError(f"unknown case {case!r}; expected one of {CASES}")
-    root = root or data_root() / "original"
+    root = root or original_root(case)
     layouts = layouts or load_layouts()
     prefix = f"martinec2018/results{case}_2026/"
     scripts = [s for s in layouts["scripts"] if s["script"].startswith(prefix)]
@@ -483,11 +493,152 @@ def extract(case: str, root: pathlib.Path | None = None,
                         "time", "kyr", "time since the load was first applied"))
                     group.add(name, x, column["si_factor"] * y, attributes)
 
+    groups.update(reference_groups(case, groups))
     return {"groups": groups, "skipped": skipped}
 
 
+# Tolerance, in degrees, for two colatitude axes to count as the same grid when
+# a recovery subtracts a difference file from a profile. The archive writes
+# colatitude with at least five decimals, so 1e-9 degrees accepts only the same
+# numbers and never a neighbouring grid.
+SAME_GRID_DEG = 1e-9
+
+
+def reference_groups(case: str, groups: dict) -> dict:
+    """The curves that scoring compares with, one group per profile and one for the time series.
+
+    The case file's ``reference_data.reference_curves`` says, for each
+    compared profile and for the time series, how the reference is built:
+
+    ``as shipped``
+        VEGA's own curve (member ZM) from the archive, copied.
+    ``recovered``
+        A contributor's profile minus that contributor's difference file, on
+        the contributor's grid. Every difference file of the archive is the
+        contributor minus one finer VEGA profile that the archive does not
+        hold, so this gives that profile. YS is used: its 2048-point grid is
+        VEGA's own grid in the profiles where the shipped VEGA file is fine,
+        and it reproduces every other contributor's recovery to at most
+        1.7e-4 m (docs/protocol/martinec2018.qmd, "How the reference is
+        built").
+
+    Only the quantities the case file compares are built, so the group holds
+    exactly what `gia_mip.benchmarks.metrics.score` needs.
+
+    Parameters
+    ----------
+    case
+        The published case letter.
+    groups
+        The member groups of `extract`, keyed by group path.
+
+    Returns
+    -------
+    dict
+        ``reference/profiles/<load|basin>`` and ``reference/time_series`` to a
+        `Group`, for the parts the case compares.
+
+    Raises
+    ------
+    ValueError
+        When a compared profile or time series has no entry in
+        ``reference_curves``, when an entry names a member or a quantity the
+        archive does not hold, or when a recovery's profile and difference
+        file are on different grids.
+    """
+    # Imported here: inputs reads the case file through gia_mip.cases, and
+    # the converter module is imported by the result classes, so a module-level
+    # import would load the case machinery for every reader.
+    from gia_mip.benchmarks.inputs import MartinecCase
+
+    setup = MartinecCase(case)
+    rules = setup.definition["reference_data"].get("reference_curves", {})
+    out: dict[str, Group] = {}
+
+    def put(group: Group, name: str, axis, values, attributes: dict) -> None:
+        """Store a derived curve, ascending in its axis.
+
+        `Group.add` tells two sources of one variable apart by their source
+        file and column, which a derived curve does not have, so the curve
+        is stored directly. Its axis comes from one member group, where
+        `Group.add` already sorted it and removed repeated points.
+        """
+        axis = np.asarray(axis, dtype=float)
+        if np.any(np.diff(axis) <= 0):
+            raise ValueError(f"case {case}: the reference {name} axis does not ascend")
+        group.variables[name] = {"axis": axis, "values": np.asarray(values, dtype=float),
+                                 "attributes": attributes}
+
+    def member_variable(kind: str, where: str, member: str, quantity: str) -> dict:
+        path = f"{kind}/{where}/{member}" if where else f"{kind}/{member}"
+        if path not in groups or quantity not in groups[path].variables:
+            raise ValueError(f"case {case}: reference_curves needs {quantity} in {path}, "
+                             f"which the archive does not hold")
+        return groups[path].variables[quantity]
+
+    for spec in setup.profiles:
+        rule = rules.get("profiles", {}).get(spec.name)
+        if rule is None:
+            raise ValueError(f"case {case}: the {spec.name} profile is compared and "
+                             f"reference_curves has no entry for it")
+        group = Group("colatitude", "degrees", "colatitude, from the north pole")
+        for quantity in spec.quantities:
+            source = member_variable("profiles", spec.name, rule["member"], quantity)
+            attributes = {"units": "m", "long_name": LONG_NAMES[quantity],
+                          "method": rule["method"], "member": rule["member"],
+                          "correction": rule.get("correction", "")}
+            if rule["method"] == "as shipped":
+                axis, values = source["axis"], source["values"]
+                attributes["source_files"] = source["attributes"]["source_file"]
+                attributes["built_from"] = (f"VEGA's {quantity} curve {source['attributes']['source_file']}"
+                                            f" as shipped")
+            elif rule["method"] == "recovered":
+                difference = member_variable("differences", spec.name, rule["member"], quantity)
+                if (source["axis"].shape != difference["axis"].shape
+                        or np.max(np.abs(source["axis"] - difference["axis"])) > SAME_GRID_DEG):
+                    raise ValueError(f"case {case}: {rule['member']}'s {spec.name} profile and "
+                                     f"difference file are on different grids")
+                axis = difference["axis"]
+                # The profile minus its own difference, point by point on one
+                # grid: no interpolation enters.
+                values = source["values"] - difference["values"]
+                files = (source["attributes"]["source_file"],
+                         difference["attributes"]["source_file"])
+                attributes["source_files"] = " ".join(files)
+                attributes["built_from"] = (f"VEGA recovered as {rule['member']}'s {quantity} "
+                                            f"({files[0]}) minus {rule['member']}'s difference "
+                                            f"file ({files[1]}); correction "
+                                            f"{rule.get('correction', '')}")
+            else:
+                raise ValueError(f"case {case}: unknown method {rule['method']!r}")
+            put(group, quantity, axis, values, attributes)
+        out[f"reference/profiles/{spec.name}"] = group
+
+    compared_series = [q for s in setup.time_series for q in s.quantities]
+    if compared_series:
+        rule = rules.get("time_series")
+        if rule is None:
+            raise ValueError(f"case {case}: time series are compared and reference_curves "
+                             f"has no entry for them")
+        if rule["method"] != "as shipped":
+            raise ValueError(f"case {case}: time series can only be taken as shipped")
+        group = Group("time", "kyr", "time since the load was first applied")
+        for quantity in compared_series:
+            source = member_variable("time_series", "", rule["member"], quantity)
+            attributes = {"units": source["attributes"]["units"],
+                          "long_name": LONG_NAMES[quantity],
+                          "method": rule["method"], "member": rule["member"],
+                          "correction": rule.get("correction", ""),
+                          "source_files": source["attributes"]["source_file"],
+                          "built_from": (f"VEGA's {quantity} series "
+                                         f"{source['attributes']['source_file']} as shipped")}
+            put(group, quantity, source["axis"], source["values"], attributes)
+        out["reference/time_series"] = group
+    return out
+
+
 def write(case: str, extracted: dict, destination: pathlib.Path) -> pathlib.Path:
-    """Write one case, as returned by `extract`, to a NetCDF4 file.
+    """Write one case, as returned by `extract`, to a netCDF-4 file through h5netcdf.
 
     Parameters
     ----------
@@ -504,43 +655,35 @@ def write(case: str, extracted: dict, destination: pathlib.Path) -> pathlib.Path
     pathlib.Path
         The file written.
     """
-    import netCDF4
-
     destination.parent.mkdir(parents=True, exist_ok=True)
     partial = destination.with_suffix(destination.suffix + ".partial")
-    with netCDF4.Dataset(partial, "w", format="NETCDF4") as ds:
-        ds.title = f"Martinec et al. (2018) benchmark case {case}: every curve drawn in the published figures"
-        ds.case = case
-        ds.internal_code = INTERNAL_CODES[case] or ""
-        ds.source_directory = f"martinec2018/results{case}_2026"
-        ds.source_citation = ("Martinec, Z. et al. (2018). A benchmark study of numerical "
-                              "implementations of the sea level equation in GIA modelling. "
-                              "Geophysical Journal International 215(1), 389-414. doi:10.1093/gji/ggy280")
-        ds.converter = "gia_mip.benchmarks.martinec2018"
-        ds.column_layouts = "gia_mip/resources/column_layouts.json"
-        ds.conventions_reference = "docs/reference/conventions.qmd"
-        ds.skipped = "; ".join(f"{p}: {c}" for p, c in sorted(extracted["skipped"].items()))
-        ds.history = f"created {datetime.date.today().isoformat()}"
+    partial.unlink(missing_ok=True)
+    # The file carries no creation date, so that a conversion of the same
+    # originals with the same library versions gives the same bytes and
+    # therefore the same object key on the store (gia_mip/data.py).
+    with _netcdf.open_write(partial, append=False) as ds:
+        _netcdf.set_attributes(ds, {
+            "title": f"Martinec et al. (2018) benchmark case {case}: every curve drawn in the published figures",
+            "case": case,
+            "internal_code": INTERNAL_CODES[case] or "",
+            "source_directory": f"martinec2018/results{case}_2026",
+            "source_citation": ("Martinec, Z. et al. (2018). A benchmark study of numerical "
+                                "implementations of the sea level equation in GIA modelling. "
+                                "Geophysical Journal International 215(1), 389-414. doi:10.1093/gji/ggy280"),
+            "converter": "gia_mip.benchmarks.martinec2018",
+            "column_layouts": "gia_mip/resources/column_layouts.json",
+            "conventions_reference": "docs/reference/conventions.qmd",
+            "skipped": "; ".join(f"{p}: {c}" for p, c in sorted(extracted["skipped"].items())),
+        })
         for group_path, group in sorted(extracted["groups"].items()):
-            g = ds.createGroup(group_path)
-            for key, value in group.attributes.items():
-                g.setncattr(key, value)
-            axes: list[tuple[str, np.ndarray]] = []
-            for name, variable in sorted(group.variables.items()):
-                dim = next((d for d, a in axes if a.shape == variable["axis"].shape
-                            and np.array_equal(a, variable["axis"])), None)
-                if dim is None:
-                    dim = group.axis_name if not axes else f"{group.axis_name}_{len(axes) + 1}"
-                    axes.append((dim, variable["axis"]))
-                    g.createDimension(dim, len(variable["axis"]))
-                    coord = g.createVariable(dim, "f8", (dim,), fill_value=False)
-                    coord[:] = variable["axis"]
-                    coord.units = group.axis_units
-                    coord.long_name = group.axis_long_name
-                v = g.createVariable(name, "f8", (dim,), zlib=True, fill_value=False)
-                v[:] = variable["values"]
-                for key, value in variable["attributes"].items():
-                    v.setncattr(key, value)
+            g = _netcdf.create_group(ds, group_path)
+            _netcdf.set_attributes(g, group.attributes)
+            _netcdf.write_curves(
+                g, [(name, variable["axis"], variable["values"], variable["attributes"])
+                    for name, variable in sorted(group.variables.items())],
+                axis_name=group.axis_name,
+                coordinate_attributes={"units": group.axis_units,
+                                       "long_name": group.axis_long_name})
     partial.replace(destination)
     return destination
 
@@ -554,11 +697,11 @@ def convert(case: str, root: pathlib.Path | None = None,
     case
         The published case letter, A to E.
     root
-        The ``original/`` directory. Default: ``data_root() / "original"``.
+        The ``original/`` directory. Default: `original_root`.
     out_dir
-        Where to write. Default: ``data_root() / "converted" / "martinec2018"``.
+        Where to write. Default: `converted_dir`.
     """
-    out_dir = out_dir or data_root() / "converted" / "martinec2018"
+    out_dir = out_dir or converted_dir()
     return write(case, extract(case, root), out_dir / f"martinec2018-{case}.nc")
 
 
@@ -571,7 +714,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     for case in args.case or CASES:
         extracted = extract(case, args.root)
-        out_dir = args.out or data_root() / "converted" / "martinec2018"
+        out_dir = args.out or converted_dir()
         path = write(case, extracted, out_dir / f"martinec2018-{case}.nc")
         n = sum(len(g.variables) for g in extracted["groups"].values())
         print(f"case {case}: {len(extracted['groups'])} groups, {n} variables -> {path}")

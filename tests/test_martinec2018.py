@@ -108,19 +108,18 @@ def test_a_repeated_point_with_different_data_raises():
 # --------------------------------------------------------------- data needed
 
 def _read(path, group, name):
-    """One variable and its axis, with masking off as AGENTS.md requires."""
-    import netCDF4
-    with netCDF4.Dataset(path) as ds:
-        ds.set_auto_mask(False)
+    """One variable and its axis, read through h5netcdf as AGENTS.md requires."""
+    from gia_mip import _netcdf
+    with _netcdf.open_read(path) as ds:
         g = ds[group]
-        v = g[name]
-        axis = g[v.dimensions[0]][:].copy()
-        return axis, v[:].copy(), {k: v.getncattr(k) for k in v.ncattrs()}
+        v = g.variables[name]
+        axis = np.asarray(g.variables[v.dimensions[0]][...]).copy()
+        return axis, np.asarray(v[...]).copy(), _netcdf.attributes(v)
 
 
 @pytest.fixture(scope="module")
-def converted(tmp_path_factory, data_root=None):
-    root = martinec2018.data_root() / "original"
+def converted(tmp_path_factory, data_root):
+    root = data_root / "original"
     if not (root / "martinec2018" / "resultsE_2026").is_dir():
         pytest.skip("the resultsA_2026 to resultsE_2026 archives are not unpacked")
     out = tmp_path_factory.mktemp("martinec2018")
@@ -129,19 +128,18 @@ def converted(tmp_path_factory, data_root=None):
 
 @pytest.mark.data
 def test_every_axis_ascends_and_every_value_is_finite(converted):
-    import netCDF4
+    from gia_mip import _netcdf
     for case, path in converted.items():
-        with netCDF4.Dataset(path) as ds:
-            ds.set_auto_mask(False)
+        with _netcdf.open_read(path) as ds:
             stack = [ds]
             while stack:
                 g = stack.pop()
                 stack.extend(g.groups.values())
                 for name, v in g.variables.items():
-                    values = v[:]
-                    assert np.all(np.isfinite(values)), (case, g.path, name)
+                    values = np.asarray(v[...])
+                    assert np.all(np.isfinite(values)), (case, g.name, name)
                     if name in g.dimensions:
-                        assert np.all(np.diff(values) > 0), (case, g.path, name)
+                        assert np.all(np.diff(values) > 0), (case, g.name, name)
 
 
 @pytest.mark.data
@@ -172,11 +170,11 @@ def test_ys_minus_vega_reproduces_the_shipped_difference(converted, case, profil
 
 @pytest.mark.data
 def test_the_case_a_stale_sk_profile_is_not_converted(converted):
-    import netCDF4
-    with netCDF4.Dataset(converted["A"]) as ds:
+    from gia_mip import _netcdf
+    with _netcdf.open_read(converted["A"]) as ds:
         assert "SK" not in ds["profiles/load"].groups
         assert "SK" in ds["differences/load"].groups
-        assert "benchmarkA-sk-superseded" in ds.skipped
+        assert "benchmarkA-sk-superseded" in _netcdf.attributes(ds)["skipped"]
 
 
 @pytest.mark.data
@@ -189,9 +187,9 @@ def test_the_figure_only_rescaling_is_not_applied(converted):
 @pytest.mark.data
 def test_case_d_time_series_agree_after_unit_conversion(converted):
     """Five codes, three storage units each for mass and area, one answer."""
-    import netCDF4
+    from gia_mip import _netcdf
     path = converted["D"]
-    with netCDF4.Dataset(path) as ds:
+    with _netcdf.open_read(path) as ds:
         members = set(ds["time_series"].groups)
     assert members == {"ZM", "GS", "VK", "YS", "SK"}
     for member in members:
@@ -209,8 +207,8 @@ def test_case_d_time_series_agree_after_unit_conversion(converted):
 
 @pytest.mark.data
 def test_case_e_keeps_the_case_d_run_apart(converted):
-    import netCDF4
-    with netCDF4.Dataset(converted["E"]) as ds:
+    from gia_mip import _netcdf
+    with _netcdf.open_read(converted["E"]) as ds:
         assert {"ZM", "ZM_case_D", "VK", "YS", "SK"} == set(ds["time_series"].groups)
         assert "profiles" not in ds.groups
     _, huf, attrs = _read(converted["E"], "time_series/VK", "h_UF")
@@ -247,13 +245,13 @@ def test_every_contributor_profile_agrees_with_its_difference_file(converted, ca
     right one makes the first far smaller. Case A is compared against the
     reference recovered from GS, because its shipped VEGA file is a second run.
     """
-    import netCDF4
+    from gia_mip import _netcdf
     path = converted[case]
-    with netCDF4.Dataset(path) as ds:
+    with _netcdf.open_read(path) as ds:
         profiles = {p: set(ds[f"differences/{p}"].groups) for p in ds["differences"].groups}
     for profile, members in profiles.items():
         for member in sorted(members):
-            with netCDF4.Dataset(path) as ds:
+            with _netcdf.open_read(path) as ds:
                 if member not in ds[f"profiles/{profile}"].groups:
                     continue
                 names = set(ds[f"profiles/{profile}/{member}"].variables) & set(

@@ -9,7 +9,7 @@
     "doi": "10.1111/j.1365-246X.2011.04952.x"
   },
   "earth_model": "m3-l70-v01",
-  "loads": "loads/spada2011.json",
+  "loads": "gia_mip/resources/loads/spada2011.json",
   "what_to_compute": "Compute polar motion m, its rate, and the change in length of day, for the same loads and time history as tests 1/2 and 2/2, with the load centroid moved off the pole.",
   "outputs": [
     "polar_motion",

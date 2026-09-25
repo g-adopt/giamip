@@ -4,9 +4,9 @@ Case definitions, reference data and output conventions for glacial isostatic
 adjustment (GIA) model comparison.
 
 This repository specifies what to run and holds what to compare against. It
-contains no solver. A solver reads a case file from `cases/`, produces output,
-and uses this package to check that the output obeys the conventions and to
-score it against the reference data.
+contains no solver. A solver reads a case with `gia_mip.case`, produces
+output, and uses this package to check that the output obeys the conventions
+and to score it against the reference data.
 
 Three collections are covered.
 
@@ -19,68 +19,117 @@ Three collections are covered.
 ## Install
 
 ```
-pip install -e .
-python -m gia_mip.data --collection benchmarks
+pip install gia-mip
 ```
 
-The second command downloads the original data files into `data/original/`
-and verifies every one against a SHA-256 index, so a fetched tree is the tree
-the conversions were made from. Use `--collection giamip` for the GIAMIP
-inputs, which are larger.
-
-The files are held in the gadopt object store at data.gadopt.org. The
-fetcher downloads only files whose supplier has agreed to redistribution,
-which today is every file: the Martinec and Spada archives, Kachuck's giapy
-files and the GIAMIP inputs.
-`docs/data/fetching.qmd` describes the fetcher, and `docs/data/manifest.qmd` records the
-state of every file.
-
-## Layout
-
-```
-gia_mip/     the package: data.py (fetch and verify), grids.py (the
-             Gauss-Legendre grid), corrections.py (known defects in the
-             originals), benchmarks/ (Martinec and Spada case set-up,
-             results, scores and conversion) and mip/ (GIAMIP input
-             readers). Not written: the GIAMIP output writer
-cases/       one JSON file per case, in benchmarks/ and giamip/
-models/      earth-model parameter tables referenced by the cases
-docs/        the Quarto site: one page per collection, per reference table and
-             per case, plus the data manifest and the list of corrections.
-             docs/cases/ holds the pages for single tests as percent-format
-             Python files, which the site executes and plots
-scripts/     conversion and upload scripts, run by hand
-submissions/ one directory per submission: its identity, its compliance
-             report and its scores. The output fields themselves stay in
-             outputs/
-tests/       the test suite
-data/        original/ holds third-party files byte for byte and is
-             gitignored; converted/ holds the NetCDF4 built from them and is
-             tracked, so the tests and the site need no network
-outputs/     gitignored. The output fields a solver produced for a case
-```
+The package holds the code and the small JSON files: the case files, the load
+tables, the earth models, the manifest and the corrections. It holds no data
+file. Each data file is downloaded from data.gadopt.org the first time a
+reader needs it, checked against its SHA-256 sum, and cached. For
+development, install a checkout with `pip install -e ".[test]"`.
 
 ## How to run a case
 
-Each case has a JSON file in `cases/` and a page in `docs/results/`. The page
-gives the full specification: the earth model, the load, the time interval, the
-grid, the physical constants, the variables to produce and the data to compare
-against. The JSON file gives the same information in machine-readable form.
+```python
+import gia_mip
+from gia_mip.benchmarks.results import BenchmarkResult
 
+case = gia_mip.case("martinec2018-B")                    # the set-up of benchmark B
+h = case.ice_thickness(colatitude, longitude, t_kyr)     # the load at your points
+b = case.topography(colatitude, longitude)               # the ocean basin
+
+run = BenchmarkResult("B", "my-code")                    # your curves
+for profile in case.profiles:                            # what the case compares
+    for quantity in profile.quantities:
+        run.add_profile(profile.name, quantity, colatitude_deg,
+                        my_curve(profile, quantity))
+run.write("martinec2018-B.nc")                           # netCDF-4, through h5py
+
+rows = case.score(run)                                   # eq. 31, on your own points
+checks = case.envelope_check(run, band_half_width_deg=6.74)   # criterion 2
+```
+
+`gia_mip.case` gives a `MartinecCase`, a `SpadaCase` or a `GiamipExperiment`.
+`tests/test_doc_examples.py` runs this example. For a solver's own benchmark
+test, with both stages and the per-case list of what a result must hold, read
+the section "Using gia-mip in a solver's benchmark test" of
+`docs/reference/python-interface.qmd`.
+The reference curves of a Martinec case are VEGA, and
+`docs/protocol/martinec2018.qmd` says how each one is built.
+
+Each case also has a page in `docs/results/`, which gives the full
+specification: the earth model, the load, the time interval, the grid, the
+physical constants, the variables to produce and the data to compare against.
 Start with `docs/reference/solver-requirements.qmd`, which lists what a solver
-must be able to do, and `docs/reference/python-interface.qmd`, which shows how
-a solver reads a case and writes a result that can be scored.
+must be able to do, and `docs/reference/python-interface.qmd`, which shows the
+classes.
 
 ## Data
 
-The original data files are not in this repository. They belong to the people
-who produced them and they are large. `docs/data/manifest.qmd` records, for
-every file, its size, its SHA-256 sum, where it came from, who supplied it and
-under what terms.
+The data files are not in the package. The third-party originals (341 MB)
+belong to the people who produced them. The converted reference data (10 MB)
+is derived from them and is tracked in this repository under
+`data/converted/`. Both are in the gadopt object store at data.gadopt.org.
+`docs/data/manifest.qmd` records, for every file, its size, its SHA-256 sum,
+where it came from, who supplied it and under what terms.
+
+A reader finds a file with `gia_mip.data.locate`. It looks in the checkout
+(when it runs from one) and in the download root, and downloads the file into
+the download root when neither has it. The download root is
+`$GIA_MIP_DATA_ROOT` when it is set, else `data/` of the checkout, else
+`~/.cache/gia-mip`. `docs/data/fetching.qmd` gives the details.
 
 Some of the original files contain defects. `docs/data/corrections.qmd` lists
 every one that is known, with the evidence. The readers apply the corrections.
 The original files are never edited.
+
+### On Gadi
+
+Gadi compute nodes have no network, and in a job the Firedrake module points
+`XDG_CACHE_HOME` at storage that is deleted when the job ends. So:
+
+1. The maintainer of the Firedrake module installs gia-mip with its
+   dependencies h5netcdf and `packaging` (h5py, numpy and scipy are there).
+2. On a login node, fill a directory on `/g/data` once:
+   `GIA_MIP_DATA_ROOT=/g/data/<project>/gia-mip python -m gia_mip.data --stage converted --collection benchmarks`.
+   For the GIAMIP inputs (317 MB), run the same command with
+   `--collection giamip` and without `--stage converted`: they are originals.
+3. In the job script, set `GIA_MIP_DATA_ROOT` to the same directory.
+
+A reader on a compute node that does not find a file raises
+`DataUnavailable`, and the message gives the command of step 2.
+
+## Layout
+
+```
+gia_mip/            the package: data.py (locate, fetch and verify),
+                    grids.py (the Gauss-Legendre grid), corrections.py
+                    (known defects in the originals), benchmarks/ (Martinec
+                    and Spada case set-up, results, scores and conversion)
+                    and mip/ (GIAMIP input readers). Not written: the GIAMIP
+                    output writer
+gia_mip/resources/  the JSON files the package carries: cases/ (one file per
+                    case, in benchmarks/ and giamip/), loads/ (the analytic
+                    load tables), models/ (the earth models), the manifest,
+                    the provenance record, the corrections and the column
+                    layouts
+docs/               the Quarto site: one page per collection, per reference
+                    table and per case, plus the data manifest and the list
+                    of corrections. docs/cases/ holds the pages for single
+                    tests as percent-format Python files, which the site
+                    executes and plots
+scripts/            conversion, manifest and upload scripts, run by hand, and
+                    check_installed.py, which checks an installed wheel
+submissions/        one directory per submission: its identity, its
+                    compliance report and its scores. The output fields
+                    themselves stay in outputs/
+tests/              the test suite
+data/               original/ holds third-party files byte for byte and is
+                    gitignored; converted/ holds the netCDF-4 files built
+                    from them and is tracked; versions/ holds downloaded
+                    converted files by SHA-256 and is gitignored
+outputs/            gitignored. The output fields a solver produced for a case
+```
 
 ## Correspondence about the GIAMIP inputs
 

@@ -9,7 +9,7 @@
     "doi": "10.1111/j.1365-246X.2011.04952.x"
   },
   "earth_model": "m3-l70-v01",
-  "loads": "loads/spada2011.json",
+  "loads": "gia_mip/resources/loads/spada2011.json",
   "what_to_compute": "Compute the coefficients of the polar motion transfer function M(s) in the Laplace domain: the secular and elastic rotational residues and the rotational characteristic frequencies.",
   "outputs": [
     "pmtf_coefficients"

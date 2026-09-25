@@ -10,7 +10,7 @@
   },
   "layers": null,
   "notes": [
-    "The layer table is not reproduced here. PREM is widely distributed and every solver that needs it already carries a deck; radopt ships three PREM variants.",
+    "The layer table is not reproduced here. PREM is widely distributed and every solver that needs it already carries a deck; lovejx ships three PREM variants.",
     "The protocol states that each group may choose its own treatment of compressibility, so a PREM deck may be used compressible or with the incompressible approximation. The choice is recorded in the model report.",
     "PREM is a seismic model and is layered in depth below the surface, while M3-L70-V01 is given in radius. Mixing the two conventions is a real risk when a single reader handles both."
   ]

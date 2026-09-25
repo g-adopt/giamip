@@ -4,7 +4,7 @@ title: "Cases"
 
 Twenty-seven cases: ten tests from Spada et al. (2011), five from Martinec et
 al. (2018), and the twelve GIAMIP experiments. Each is a JSON file in
-`cases/`, and this page is generated from those files.
+`gia_mip/resources/cases/`, and this page is generated from those files.
 
 None of them has been run. A case here is a specification: what earth model,
 what load, over what time, on what grid, with which constants, and what to

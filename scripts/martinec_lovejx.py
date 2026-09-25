@@ -1,41 +1,41 @@
-"""Run a Martinec et al. (2018) benchmark case with radopt.
+"""Run a Martinec et al. (2018) benchmark case with lovejx.
 
 This repository specifies the cases and holds the data to compare against; the
-viscoelastic response is computed by radopt. This script is the piece between
+viscoelastic response is computed by lovejx. This script is the piece between
 them. It reads the case with `gia_mip.benchmarks.inputs.MartinecCase`, builds
-the earth model and the load for radopt, runs radopt, and writes the result as
+the earth model and the load for lovejx, runs lovejx, and writes the result as
 a `BenchmarkResult`, which is the same object the published contributors are
 read through.
 
-Run it from the repository root, with radopt on the path:
+Run it from the repository root, with lovejx on the path:
 
-    PYTHONPATH=~/Workplace/radopt \
-      ~/Workplace/python3.12/bin/python3.12 scripts/martinec_radopt.py A --norder 256
+    PYTHONPATH=~/Workplace/lovejx \
+      ~/Workplace/python3.12/bin/python3.12 scripts/martinec_lovejx.py A --norder 256
 
 All five cases, A to E.
 
 Case A does not solve the sea-level equation: there is no ocean, the load is
 the ice alone, and the answer is one convolution of the load history against
-the viscous kernel (`radopt.sealevel.surface_load`).
+the viscous kernel (`lovejx.sealevel.surface_load`).
 
 Cases B and C do solve it, with the ocean geometry and the topography both
-fixed at the initial time (`radopt.sealevel.solver`).
+fixed at the initial time (`lovejx.sealevel.solver`).
 
 Cases D and E let the coastline move and marine ice float. D prescribes the
 topography at the first step; E prescribes it at the terminal time and solves
 for the first step's topography with the iteration of eq. 34.
 
-Runs matched to G-ADOPT (`NOTES/martinec-radopt/03-gadopt-matched.md`). Cases B
+Runs matched to G-ADOPT (`NOTES/martinec-lovejx/03-gadopt-matched.md`). Cases B
 and C take `--ocean-function PATH`, the G-ADOPT mask `C0` on the Gauss-Legendre
-grid, which replaces the sharp mask radopt builds itself. Cases B, C and D take
+grid, which replaces the sharp mask lovejx builds itself. Cases B, C and D take
 `--times PATH`, the G-ADOPT step times, which replace the uniform step. A
 matched run is written under its own member name (`--member`), so that it does
 not collide with the published run:
 
-    PYTHONPATH=~/Workplace/radopt \
-      ~/Workplace/python3.12/bin/python3.12 scripts/martinec_radopt.py B \
+    PYTHONPATH=~/Workplace/lovejx \
+      ~/Workplace/python3.12/bin/python3.12 scripts/martinec_lovejx.py B \
       --ocean-function ocean_function_C0.npz --times gadopt_times.txt \
-      --member radopt-matched
+      --member lovejx-matched
 """
 
 from __future__ import annotations
@@ -57,22 +57,22 @@ jax.config.update("jax_enable_x64", True)
 
 from gia_mip.benchmarks.inputs import MartinecCase                   # noqa: E402
 from gia_mip.benchmarks.results import BenchmarkResult               # noqa: E402
-from radopt.lovenumbers.profile import layered_profile               # noqa: E402
-from radopt.lovenumbers.propagate import StepPlan                    # noqa: E402
-from radopt.lovenumbers.rheology import Maxwell                      # noqa: E402
-from radopt.lovenumbers.solver import LoveNumberSolver               # noqa: E402
-from radopt.lovenumbers.units import Units                           # noqa: E402
-from radopt.sealevel.constants import LegacyConstants                # noqa: E402
-from radopt.sealevel.sht import (GaussLegendreGrid, analysis,        # noqa: E402
+from lovejx.lovenumbers.profile import layered_profile               # noqa: E402
+from lovejx.lovenumbers.propagate import StepPlan                    # noqa: E402
+from lovejx.lovenumbers.rheology import Maxwell                      # noqa: E402
+from lovejx.lovenumbers.solver import LoveNumberSolver               # noqa: E402
+from lovejx.lovenumbers.units import Units                           # noqa: E402
+from lovejx.sealevel.constants import LegacyConstants                # noqa: E402
+from lovejx.sealevel.sht import (GaussLegendreGrid, analysis,        # noqa: E402
                                  area_mean, evaluate, legendre_table,
                                  synthesis)
-from radopt.lovenumbers.asymptotes import DegreeOneFrame             # noqa: E402
-from radopt.sealevel.solver import SeaLevelConfig, solve_sea_level   # noqa: E402
-from radopt.sealevel.surface_load import surface_load_response       # noqa: E402
+from lovejx.lovenumbers.asymptotes import DegreeOneFrame             # noqa: E402
+from lovejx.sealevel.solver import SeaLevelConfig, solve_sea_level   # noqa: E402
+from lovejx.sealevel.surface_load import surface_load_response       # noqa: E402
 
 
 def earth_model(case: MartinecCase, *, nodes_per_layer: int = 40, substeps: int = 2):
-    """The radopt Love-number solver and rheology for the case's earth model.
+    """The lovejx Love-number solver and rheology for the case's earth model.
 
     M3-L70-V01 is five uniform layers, incompressible, with an elastic
     lithosphere, three Maxwell mantle layers and an inviscid fluid core. Each
@@ -110,7 +110,7 @@ def earth_model(case: MartinecCase, *, nodes_per_layer: int = 40, substeps: int 
 
 
 def constants(case: MartinecCase, solver) -> LegacyConstants:
-    """The physical constants of the case, as the sea-level side of radopt takes them.
+    """The physical constants of the case, as the sea-level side of lovejx takes them.
 
     Three of these decide the answer and must be the case's own, never a module
     default: the ice density (931 kg/m3 here, 917 in GIAMIP), the water density
@@ -145,7 +145,7 @@ def cap_coefficients(case: MartinecCase, degrees_max: int, t_kyr: float) -> np.n
     The cap is axially symmetric about its centre, so its expansion about that
     centre is the one-index `sigma_n` of `MartinecCase.legendre_coefficients`.
     The addition theorem moves it to the cap's actual position: in the 4 pi
-    convention of `radopt.sealevel.sht`, where the harmonics satisfy
+    convention of `lovejx.sealevel.sht`, where the harmonics satisfy
     `sum_m |Y_lm|^2 = 2l + 1`,
 
         P_l(cos psi) = (1 / (2l+1)) sum_m Y_lm(Omega) conj(Y_lm(Omega_0)),
@@ -212,14 +212,14 @@ def run_case_a(*, norder: int = 256, nodes_per_layer: int = 40,
     # this is exact and is not an interpolation between grid rows.
     profile_spec = case.profiles[0]
     if colatitude is None:
-        # The colatitudes of the published reference, so that the two curves are
-        # sampled at the same points and the metrics of eq. 31 need no
-        # interpolation of either side.
-        from martinec_compare import published_reference
-        colatitude = published_reference("A", "load", "U")[0]
+        # The colatitudes of the stored reference, VEGA recovered on YS's
+        # 2048-point grid, plus the pole, where the cap load is largest. The
+        # scoring evaluates the reference at the result's own points, so any
+        # points serve; these are the reference's own.
+        colatitude = np.concatenate([[0.0], case.reference_colatitudes("load")])
     colatitude = np.asarray(colatitude, dtype=float)
 
-    result = BenchmarkResult("A", "radopt")
+    result = BenchmarkResult("A", "lovejx")
     for quantity, coefficients in (("U", response.uplift_lm[-1]),
                                    ("N", response.geoid_lm[-1])):
         values = np.asarray(evaluate(coefficients, colatitude, profile_spec.longitude_deg))
@@ -279,7 +279,7 @@ def _grid_for(nglv: int, norder: int):
 
 
 # The largest difference, in degrees, between a coordinate of the exported mask
-# and the same coordinate of the run's grid. The export and radopt compute the
+# and the same coordinate of the run's grid. The export and lovejx compute the
 # Gauss-Legendre nodes with two different codes, which agree to about 1e-12
 # degrees; a grid of another size differs by more than 0.1 degree.
 GRID_COORDINATE_TOLERANCE_DEG = 1.0e-8
@@ -309,7 +309,7 @@ def read_step_times(times_path, case: MartinecCase) -> np.ndarray:
     at steps after the one it is applied at, so the unloaded step must exist.
     Its length is the first step after t = 0. The solver takes the lag between
     every pair of step times from the kernel, so the steps do not have to be
-    equal (radopt `tests/test_prescribed_ocean.py`).
+    equal (lovejx `tests/test_prescribed_ocean.py`).
 
     Parameters
     ----------
@@ -447,7 +447,7 @@ def run_fixed_coastline_case(letter: str, *, norder: int = 256, nglv: int = 512,
                              step_years: float = 100.0, nodes_per_layer: int = 40,
                              substeps: int = 2, numouter: int = 1,
                              ocean_function_path=None, times_path=None,
-                             member: str = "radopt", verbose: bool = True) -> BenchmarkResult:
+                             member: str = "lovejx", verbose: bool = True) -> BenchmarkResult:
     """Benchmark B or C: a fixed coastline, with U, N and S at the terminal time.
 
     Both cases solve the sea-level equation with the ocean geometry held at its
@@ -486,7 +486,7 @@ def run_fixed_coastline_case(letter: str, *, norder: int = 256, nglv: int = 512,
         The profiles are read with `sht.evaluate`, which sums the series at the
         requested points, so no meridian has to land on a grid column.
     ocean_function_path
-        None for the sharp mask `zeta0 < 0` that radopt forms itself, or the
+        None for the sharp mask `zeta0 < 0` that lovejx forms itself, or the
         npz export of a prescribed mask `C0` (`read_ocean_function`). For a
         matched run this is the G-ADOPT mask, and the run then solves the
         smooth-mask equation of G-ADOPT. The distance of the mask from its
@@ -496,8 +496,8 @@ def run_fixed_coastline_case(letter: str, *, norder: int = 256, nglv: int = 512,
         (`read_step_times`), for example the G-ADOPT ladder. `step_years` is
         then not read.
     member
-        The member name of the result, `"radopt"` for the published run. A
-        matched run takes another name, for example `"radopt-matched"`.
+        The member name of the result, `"lovejx"` for the published run. A
+        matched run takes another name, for example `"lovejx-matched"`.
     verbose
         Print the distance of a prescribed mask from its expansion at `norder`
         (`mask_band_limit_error`). With False the run skips this computation
@@ -685,7 +685,7 @@ def _basin_topography(case: MartinecCase, grid) -> np.ndarray:
 
 
 def _profiles_and_series(case: MartinecCase, letter: str, result, times, grid,
-                         consts: LegacyConstants, member: str = "radopt") -> BenchmarkResult:
+                         consts: LegacyConstants, member: str = "lovejx") -> BenchmarkResult:
     """Pack a solved run into the `BenchmarkResult` the comparison reads.
 
     The three profile fields at the terminal time and the four time series of
@@ -729,7 +729,7 @@ def _profiles_and_series(case: MartinecCase, letter: str, result, times, grid,
 def run_case_d(*, norder: int = 256, nglv: int = 512, step_years: float = 100.0,
                nodes_per_layer: int = 40, substeps: int = 2,
                numouter: int = 3, times_path=None,
-               member: str = "radopt") -> BenchmarkResult:
+               member: str = "lovejx") -> BenchmarkResult:
     """Benchmark D: the coastline moves and marine ice floats.
 
     The same L2 cap, the same T1 growth and the same B2 basin as case C. What
@@ -909,11 +909,11 @@ def main(argv=None) -> int:
     parser.add_argument("--times", type=pathlib.Path, default=None,
                         help="a ladder of step times from t = 0 to the terminal time: "
                              "text or .npy in years, or .npz with t_kyr (cases B, C, D)")
-    # The default is None and not "radopt", so that an explicit --member is
+    # The default is None and not "lovejx", so that an explicit --member is
     # visible to the refusal below for the cases whose runners take no member.
     parser.add_argument("--member", default=None,
-                        help="member name of the result, radopt by default; a matched "
-                             "run takes another name, for example radopt-matched "
+                        help="member name of the result, lovejx by default; a matched "
+                             "run takes another name, for example lovejx-matched "
                              "(cases B, C, D)")
     parser.add_argument("--output", type=pathlib.Path, default=None,
                         help="where to write the result; the default is "
@@ -926,12 +926,12 @@ def main(argv=None) -> int:
         parser.error("--ocean-function applies to the fixed-coastline cases B and C only")
     if args.times is not None and args.case not in ("B", "C", "D"):
         parser.error("--times applies to cases B, C and D only")
-    # `run_case_a` and `run_case_e` write the member "radopt" and take no member
-    # name. A named member for them would put a "radopt" result under another
+    # `run_case_a` and `run_case_e` write the member "lovejx" and take no member
+    # name. A named member for them would put a "lovejx" result under another
     # output directory, so it is refused.
     if args.member is not None and args.case not in ("B", "C", "D"):
         parser.error("--member applies to cases B, C and D only")
-    member = args.member if args.member is not None else "radopt"
+    member = args.member if args.member is not None else "lovejx"
 
     if args.case == "A":
         result = run_case_a(norder=args.norder, nodes_per_layer=args.nodes_per_layer,

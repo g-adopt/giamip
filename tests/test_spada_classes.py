@@ -304,10 +304,10 @@ def test_love_numbers_survive_a_write_and_a_read(tmp_path):
     """NetCDF float64 round trip, so the arrays come back bit for bit."""
     results = _results()
     degrees, elastic, fluid, residues = _love()
-    run = results.SpadaResult("t01-02", "radopt")
+    run = results.SpadaResult("t01-02", "lovejx")
     run.add_love_numbers("k", degrees, elastic, fluid, residues)
     path = run.write(tmp_path / "spada2011-t01-02.nc")
-    back = results.SpadaResult.read(path, "radopt").love_numbers("k")
+    back = results.SpadaResult.read(path, "lovejx").love_numbers("k")
     np.testing.assert_array_equal(back.degrees, degrees)
     np.testing.assert_array_equal(back.elastic, elastic)
     np.testing.assert_array_equal(back.fluid, fluid)
@@ -318,32 +318,12 @@ def test_a_relaxation_spectrum_survives_a_write_and_a_read(tmp_path):
     results = _results()
     degrees = np.arange(2, 6)
     s = -np.linspace(1e-5, 3.0, 4 * 9).reshape(4, 9)
-    run = results.SpadaResult("t01-01", "radopt")
+    run = results.SpadaResult("t01-01", "lovejx")
     run.add_relaxation_spectrum(degrees, s)
     path = run.write(tmp_path / "spada2011-t01-01.nc")
-    back = results.SpadaResult.read(path, "radopt").relaxation_spectrum()
+    back = results.SpadaResult.read(path, "lovejx").relaxation_spectrum()
     np.testing.assert_array_equal(back.degrees, degrees)
     np.testing.assert_array_equal(back.s_per_kyr, s)
-
-
-def test_writing_the_2d_variables_shows_no_numpy_shape_warning(tmp_path):
-    """netCDF4 1.7.4 sets ndarray.shape on a 2D write, which NumPy 2.5 deprecates.
-
-    The residues and the spectrum are the two 2D variables. `SpadaResult.write`
-    suppresses that one warning around them, so turning it into an error here
-    must not fail the write. With an older NumPy or a fixed netCDF4 there is no
-    warning to suppress, and the test passes as well.
-    """
-    import warnings
-
-    results = _results()
-    degrees, elastic, fluid, residues = _love()
-    run = results.SpadaResult("t01-02", "radopt")
-    run.add_love_numbers("k", degrees, elastic, fluid, residues)
-    run.add_relaxation_spectrum(degrees, -np.abs(residues))
-    with warnings.catch_warnings():
-        warnings.filterwarnings("error", message="Setting the shape", category=DeprecationWarning)
-        run.write(tmp_path / "spada2011-t01-02.nc")
 
 
 def test_the_fluid_limit_and_1000_kyr_stay_two_epochs(tmp_path):
@@ -354,11 +334,11 @@ def test_the_fluid_limit_and_1000_kyr_stay_two_epochs(tmp_path):
     """
     results = _results()
     theta = np.arange(0.0, 181.0)
-    run = results.SpadaResult("t02-01", "radopt")
+    run = results.SpadaResult("t02-01", "lovejx")
     run.add_spatial("cap", "U", 1000.0, theta, np.full(theta.size, -388.11))
     run.add_spatial("cap", "U", math.inf, theta, np.full(theta.size, -395.01))
     path = run.write(tmp_path / "spada2011-t02-01.nc")
-    back = results.SpadaResult.read(path, "radopt")
+    back = results.SpadaResult.read(path, "lovejx")
     assert [float(e) for e in back.epochs("cap", "U")] == [1000.0, math.inf]
     assert back.spatial("cap", "U", math.inf).values[0] == -395.01
     assert back.spatial("cap", "U", 1000.0).values[0] == -388.11
@@ -366,7 +346,7 @@ def test_the_fluid_limit_and_1000_kyr_stay_two_epochs(tmp_path):
 
 def test_a_spatial_curve_is_held_on_an_ascending_colatitude():
     """A descending input is sorted, values with it."""
-    run = _results().SpadaResult("t02-01", "radopt")
+    run = _results().SpadaResult("t02-01", "lovejx")
     run.add_spatial("disc", "V", 0.0, [2.0, 1.0, 0.0], [0.2, 0.1, 0.0])
     curve = run.spatial("disc", "V", 0.0)
     np.testing.assert_array_equal(curve.axis, [0.0, 1.0, 2.0])
@@ -376,7 +356,7 @@ def test_a_spatial_curve_is_held_on_an_ascending_colatitude():
 @pytest.mark.parametrize("load,quantity", [("ring", "U"), ("cap", "S")])
 def test_an_unknown_load_or_quantity_is_refused(load, quantity):
     """Loads are cap, disc and point; quantities U, V, N and their rates."""
-    run = _results().SpadaResult("t02-01", "radopt")
+    run = _results().SpadaResult("t02-01", "lovejx")
     with pytest.raises(ValueError):
         run.add_spatial(load, quantity, 0.0, [0.0, 1.0], [0.0, 0.0])
 
@@ -397,32 +377,6 @@ def test_the_reference_path_is_in_the_converted_spada_directory():
     assert path.parts[-3:] == ("converted", "spada2011", "spada2011-t02-01.nc")
 
 
-def test_reading_a_result_turns_netcdf_masking_off(tmp_path, monkeypatch):
-    """AGENTS.md: every reader calls set_auto_mask(False), and a test shows it.
-
-    netCDF4.Dataset is replaced by a subclass that records the call. A masked
-    read of a zero fill value returns the same numbers here, so only the call
-    itself shows that masking is off.
-    """
-    import netCDF4
-
-    results = _results()
-    run = results.SpadaResult("t02-01", "radopt")
-    run.add_spatial("cap", "V", 0.0, [0.0, 1.0], [0.0, 0.3])
-    path = run.write(tmp_path / "spada2011-t02-01.nc")
-
-    calls = []
-
-    class Recording(netCDF4.Dataset):
-        def set_auto_mask(self, value):
-            calls.append(value)
-            return super().set_auto_mask(value)
-
-    monkeypatch.setattr(netCDF4, "Dataset", Recording)
-    results.SpadaResult.read(path, "radopt")
-    assert False in calls, calls
-
-
 def test_time_domain_love_numbers_survive_a_write_and_a_read(tmp_path):
     """One curve per quantity and degree, each on its own time axis, bit for bit.
 
@@ -430,14 +384,14 @@ def test_time_domain_love_numbers_survive_a_write_and_a_read(tmp_path):
     one member may sit on different axes, and t = 0 must survive.
     """
     results = _results()
-    run = results.SpadaResult("t01-05", "radopt")
+    run = results.SpadaResult("t01-05", "lovejx")
     t2 = np.concatenate([[0.0], np.geomspace(1e-3, 1e5, 17)])
     t12 = np.geomspace(1e-2, 1e6, 9)
     run.add_time_domain_love_numbers("h", 2, t2, -1.0 - np.log1p(t2), note="first")
     run.add_time_domain_love_numbers("h", 12, t12, -2.0 - np.log1p(t12))
     run.add_time_domain_love_numbers("k", 2, t12, -0.3 - 0.1 * np.log1p(t12))
     path = run.write(tmp_path / "spada2011-t01-05.nc")
-    back = results.SpadaResult.read(path, "radopt")
+    back = results.SpadaResult.read(path, "lovejx")
     assert back.time_domain_degrees("h") == [2, 12]
     assert back.time_domain_degrees("k") == [2]
     curve = back.time_domain_love_numbers("h", 2)
@@ -449,7 +403,7 @@ def test_time_domain_love_numbers_survive_a_write_and_a_read(tmp_path):
 
 def test_an_unknown_time_domain_quantity_is_refused():
     """h, l and k only; a tidal or a misspelt quantity has no place in these tests."""
-    run = _results().SpadaResult("t01-05", "radopt")
+    run = _results().SpadaResult("t01-05", "lovejx")
     with pytest.raises(ValueError):
         run.add_time_domain_love_numbers("q", 2, [0.0, 1.0], [0.0, 0.0])
 
@@ -461,14 +415,14 @@ def test_polar_motion_survives_a_write_and_a_read(tmp_path):
     group holds two time axes. The Chandler wobble setting is part of the key.
     """
     results = _results()
-    run = results.SpadaResult("t02-03", "radopt")
+    run = results.SpadaResult("t02-03", "lovejx")
     t_short = np.linspace(0.0, 5.0, 11)
     t_long = np.concatenate([t_short, [10.0, 20.0]])
     run.add_polar_motion("cap", "excluded", "m_x", t_short, -0.003 - 1e-3 * t_short)
     run.add_polar_motion("cap", "excluded", "m_modulus", t_long, 0.013 + 1e-3 * t_long)
     run.add_polar_motion("cap", "included", "m_rate_modulus", t_short, 3.7 - 0.1 * t_short)
     path = run.write(tmp_path / "spada2011-t02-03.nc")
-    back = results.SpadaResult.read(path, "radopt")
+    back = results.SpadaResult.read(path, "lovejx")
     np.testing.assert_array_equal(back.polar_motion("cap", "excluded", "m_x").axis, t_short)
     np.testing.assert_array_equal(back.polar_motion("cap", "excluded", "m_modulus").axis, t_long)
     rate = back.polar_motion("cap", "included", "m_rate_modulus")
@@ -478,7 +432,7 @@ def test_polar_motion_survives_a_write_and_a_read(tmp_path):
 
 def test_a_polar_motion_rate_in_another_unit_is_refused():
     """The rate is stored in degrees per Myr, as table 14 prints it; per kyr is 1000 times smaller."""
-    run = _results().SpadaResult("t02-03", "radopt")
+    run = _results().SpadaResult("t02-03", "lovejx")
     with pytest.raises(ValueError):
         run.add_polar_motion("cap", "included", "m_rate_x", [0.0, 1.0], [1.0, 2.0],
                              units="degrees/kyr")
@@ -488,7 +442,7 @@ def test_a_polar_motion_rate_in_another_unit_is_refused():
                                                            ("cap", "on", "m_x"),
                                                            ("cap", "included", "m")])
 def test_an_unknown_polar_motion_key_is_refused(load, chandler_wobble, quantity):
-    run = _results().SpadaResult("t02-03", "radopt")
+    run = _results().SpadaResult("t02-03", "lovejx")
     with pytest.raises(ValueError):
         run.add_polar_motion(load, chandler_wobble, quantity, [0.0, 1.0], [0.0, 0.0])
 
@@ -496,9 +450,9 @@ def test_an_unknown_polar_motion_key_is_refused(load, chandler_wobble, quantity)
 def test_the_length_of_day_survives_a_write_and_a_read(tmp_path):
     results = _results()
     t = np.geomspace(1e-3, 1e4, 30)
-    run = results.SpadaResult("t02-03", "radopt")
+    run = results.SpadaResult("t02-03", "lovejx")
     run.add_length_of_day("cap", t, 57.0 * np.exp(-t / 3.0))
-    back = results.SpadaResult.read(run.write(tmp_path / "spada2011-t02-03.nc"), "radopt")
+    back = results.SpadaResult.read(run.write(tmp_path / "spada2011-t02-03.nc"), "lovejx")
     curve = back.length_of_day("cap")
     np.testing.assert_array_equal(curve.axis, t)
     np.testing.assert_array_equal(curve.values, 57.0 * np.exp(-t / 3.0))
@@ -521,10 +475,10 @@ def test_the_polar_motion_transfer_function_survives_a_write_and_a_read(tmp_path
     """
     results = _results()
     frequencies, residues = _pmtf()
-    run = results.SpadaResult("t01-04", "radopt")
+    run = results.SpadaResult("t01-04", "lovejx")
     run.add_polar_motion_transfer_function("included", 0.0 + 0.0j, 0.0943836 - 1.18e-6j,
                                            frequencies, residues)
-    back = results.SpadaResult.read(run.write(tmp_path / "spada2011-t01-04.nc"), "radopt")
+    back = results.SpadaResult.read(run.write(tmp_path / "spada2011-t01-04.nc"), "lovejx")
     pmtf = back.polar_motion_transfer_function("included")
     order = np.argsort(-frequencies.real)
     np.testing.assert_array_equal(pmtf.frequencies, frequencies[order])
@@ -556,12 +510,12 @@ def test_a_member_with_only_the_new_kinds_is_listed(tmp_path):
 def test_reading_a_result_under_another_case_raises(tmp_path):
     """The file records t02-01, so a read as t02-02 is refused; another spelling of t02-01 is not."""
     results = _results()
-    run = results.SpadaResult("t02-01", "radopt")
+    run = results.SpadaResult("t02-01", "lovejx")
     run.add_spatial("cap", "V", 0.0, [0.0, 1.0], [0.0, 0.3])
     path = run.write(tmp_path / "spada2011-t02-01.nc")
-    assert results.SpadaResult.read(path, "radopt", case="spada2011-t02-01").case == "t02-01"
+    assert results.SpadaResult.read(path, "lovejx", case="spada2011-t02-01").case == "t02-01"
     with pytest.raises(ValueError, match="holds case t02-01, not t02-02"):
-        results.SpadaResult.read(path, "radopt", case="t02-02")
+        results.SpadaResult.read(path, "lovejx", case="t02-02")
 
 
 # ------------------------------------------------------------------ scoring
@@ -584,7 +538,7 @@ def test_a_result_scored_against_itself_has_zero_difference():
 def test_a_result_is_scored_against_each_reference_contributor():
     """No single reference code exists in Spada (2011); each contributor gets its rows."""
     references = {"GS": _spatial_result("GS"), "VK": _spatial_result("VK", offset=0.5)}
-    rows = _metrics().spada_score(_spatial_result("radopt"), references)
+    rows = _metrics().spada_score(_spatial_result("lovejx"), references)
     assert {row["reference"] for row in rows} == {"GS", "VK"}
 
 
@@ -595,7 +549,7 @@ def test_the_near_field_score_is_the_difference_metrics_of_the_two_curves():
     test compares with the function itself, so any other formula fails.
     """
     metrics = _metrics()
-    candidate = _spatial_result("radopt", offset=0.25)
+    candidate = _spatial_result("lovejx", offset=0.25)
     reference = _spatial_result("GS")
     rows = metrics.spada_score(candidate, {"GS": reference})
     near = [row for row in rows if row["kind"] == "spatial" and tuple(row["interval"]) == (0.0, 25.0)]
@@ -608,7 +562,7 @@ def test_the_near_field_score_is_the_difference_metrics_of_the_two_curves():
 
 def test_an_epoch_the_reference_does_not_hold_is_not_scored():
     """A solver's fluid limit is never compared with GS's 1000 kyr run."""
-    candidate = _spatial_result("radopt", epoch=math.inf)
+    candidate = _spatial_result("lovejx", epoch=math.inf)
     reference = _spatial_result("GS", epoch=1000.0)
     assert _metrics().spada_score(candidate, {"GS": reference}) == []
 
@@ -619,7 +573,7 @@ def test_love_numbers_are_scored_per_degree():
     degrees, elastic, fluid, residues = _love(n_degrees=20)
     reference = results.SpadaResult("t01-02", "GS")
     reference.add_love_numbers("h", degrees, elastic, fluid, residues)
-    candidate = results.SpadaResult("t01-02", "radopt")
+    candidate = results.SpadaResult("t01-02", "lovejx")
     candidate.add_love_numbers("h", degrees, elastic + 1e-3, fluid, residues)
     rows = _metrics().spada_score(candidate, {"GS": reference})
     elastic_rows = [row for row in rows if row["kind"] == "love_numbers"
@@ -640,7 +594,7 @@ def test_a_spectrum_with_a_different_number_of_modes_warns_and_is_not_scored():
     s = np.tile(-np.geomspace(0.01, 100.0, 9), (degrees.size, 1))
     reference = results.SpadaResult("t01-01", "GS")
     reference.add_relaxation_spectrum(degrees, s)
-    candidate = results.SpadaResult("t01-01", "radopt")
+    candidate = results.SpadaResult("t01-01", "lovejx")
     candidate.add_relaxation_spectrum(degrees, s[:, :8])
     with pytest.warns(UserWarning, match="8 relaxation modes and GS has 9"):
         rows = _metrics().spada_score(candidate, {"GS": reference})
@@ -649,7 +603,7 @@ def test_a_spectrum_with_a_different_number_of_modes_warns_and_is_not_scored():
 
 def test_every_row_carries_the_same_keys():
     """A table of rows needs one set of columns, whatever kind a row is."""
-    rows = _metrics().spada_score(_spatial_result("radopt", offset=0.1), {"GS": _spatial_result("GS")})
+    rows = _metrics().spada_score(_spatial_result("lovejx", offset=0.1), {"GS": _spatial_result("GS")})
     assert rows
     for row in rows:
         assert {"kind", "load", "quantity", "epoch_kyr", "degree", "chandler_wobble",
@@ -673,7 +627,7 @@ def test_time_domain_love_numbers_are_scored_on_a_logarithmic_time_axis():
     t_candidate = np.concatenate([[0.0], 10.0 ** (np.arange(-9, 19) / 3.0)])
     reference = results.SpadaResult("t01-05", "GS")
     reference.add_time_domain_love_numbers("h", 2, t_ref, np.log10(t_ref))
-    candidate = results.SpadaResult("t01-05", "radopt")
+    candidate = results.SpadaResult("t01-05", "lovejx")
     values = np.concatenate([[-99.0], np.log10(t_candidate[1:]) + 1e-3])
     candidate.add_time_domain_love_numbers("h", 2, t_candidate, values)
     rows = [row for row in _metrics().spada_score(candidate, {"GS": reference})
@@ -698,7 +652,7 @@ def test_polar_motion_and_length_of_day_are_scored_per_load_and_setting():
     reference.add_polar_motion("cap", "excluded", "m_modulus", t, 0.013 + 1e-3 * t)
     reference.add_polar_motion("cap", "included", "m_modulus", t, 0.017 + 1e-3 * t)
     reference.add_length_of_day("cap", t, 57.0 - 5.0 * t)
-    candidate = results.SpadaResult("t02-03", "radopt")
+    candidate = results.SpadaResult("t02-03", "lovejx")
     fine = np.linspace(0.0, 5.0, 101)
     candidate.add_polar_motion("cap", "excluded", "m_modulus", fine, 0.013 + 1e-3 * fine + 2e-4)
     candidate.add_length_of_day("cap", fine, 57.0 - 5.0 * fine - 0.5)
@@ -718,7 +672,7 @@ def test_the_polar_motion_transfer_function_is_scored_mode_by_mode():
     reference = results.SpadaResult("t01-04", "GS")
     reference.add_polar_motion_transfer_function("included", 0.0, 0.0943836 - 1.18e-6j,
                                                  frequencies, residues)
-    candidate = results.SpadaResult("t01-04", "radopt")
+    candidate = results.SpadaResult("t01-04", "lovejx")
     candidate.add_polar_motion_transfer_function("included", 0.0, 0.0943836 - 1.18e-6j + 1e-5,
                                                  frequencies, residues + 2e-6)
     rows = [row for row in _metrics().spada_score(candidate, {"GS": reference})

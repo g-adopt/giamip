@@ -611,7 +611,7 @@ TABOO_COLUMNS = {
 }
 
 # The load line of a TABOO header and of a VILMA header, as a load name of
-# loads/spada2011.json.
+# gia_mip/resources/loads/spada2011.json.
 TABOO_LOADS = {"PARABOLIC LOAD": "cap", "DISC LOAD": "disc", "POINT MASS": "point"}
 VILMA_LOADS = {"parabolic load": "cap", "disc load": "disc"}
 

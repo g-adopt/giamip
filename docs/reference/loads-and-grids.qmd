@@ -3,7 +3,7 @@ title: "Loads and grids"
 ---
 
 The surface loads, time histories and ocean basins of the two benchmarks, and
-the grid GIAMIP prescribes. Generated from `loads/` and `gia_mip/grids.py`.
+the grid GIAMIP prescribes. Generated from `gia_mip/resources/loads/` and `gia_mip/grids.py`.
 
 ## Spada et al. (2011): three analytic loads
 

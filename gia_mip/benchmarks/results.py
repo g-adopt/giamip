@@ -1,6 +1,6 @@
 """Profiles and time series of one run of one Martinec case, from any code.
 
-The published contributors, VEGA, radopt and G-ADOPT all produce the same
+The published contributors, VEGA, lovejx and G-ADOPT all produce the same
 things for a case: U, N and S along two meridians at the terminal time, and
 h_UF, ice mass and ocean area against time. `BenchmarkResult` holds those
 curves for one code, reads them from a NetCDF file and writes them to one, so
@@ -23,8 +23,8 @@ which adds Love numbers, relaxation spectra, Love numbers as functions of
 time, polar motion, the length of day and the polar motion transfer function
 to the curves.
 
-A radopt run of case C is therefore written as, for example,
-``outputs/martinec2018/radopt/martinec2018-C.nc`` with member ``radopt``, and
+A lovejx run of case C is therefore written as, for example,
+``outputs/martinec2018/lovejx/martinec2018-C.nc`` with member ``lovejx``, and
 ``BenchmarkResult.read`` opens it exactly as it opens a reference file.
 
     >>> from gia_mip.benchmarks.results import BenchmarkResult
@@ -35,39 +35,17 @@ A radopt run of case C is therefore written as, for example,
 
 from __future__ import annotations
 
-import contextlib
 import dataclasses
-import gc
 import math
 import pathlib
 import re
-import warnings
 
 import numpy as np
 
+from gia_mip import _netcdf
 from gia_mip.benchmarks import martinec2018
 
 PROFILE_QUANTITIES = ("U", "N", "S")
-
-
-@contextlib.contextmanager
-def _without_netcdf4_shape_warning():
-    """Suppress the one NumPy deprecation that netCDF4 1.7.4 raises on a 2D write.
-
-    NumPy 2.5 deprecates assigning to ``ndarray.shape``. netCDF4 1.7.4 makes
-    that assignment inside ``Variable.__setitem__`` whenever it writes a 2D
-    array, whatever form the index takes, and the warning names our line. The
-    values written are correct. netCDF4 fixed it upstream by calling
-    ``reshape`` (issue #1468, commit 2c518fc1, 2026-02-16), but on 2026-09-15
-    the latest release was still 1.7.4. Remove this function and its two uses
-    in `SpadaResult.write` when pyproject.toml requires ``netCDF4>=1.7.5``.
-    Only this message is suppressed, so every other warning still shows.
-    """
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", message="Setting the shape on a NumPy array has been deprecated",
-            category=DeprecationWarning)
-        yield
 
 
 def _time_series_units(quantity: str) -> str:
@@ -118,7 +96,7 @@ class BenchmarkResult:
         The published case letter.
     member
         The code: a contributor's two-letter code, ``ZM`` for VEGA, or a name
-        such as ``radopt`` or ``g-adopt``.
+        such as ``lovejx`` or ``g-adopt``.
     """
 
     def __init__(self, case: str, member: str):
@@ -136,7 +114,27 @@ class BenchmarkResult:
 
     def add_profile(self, profile: str, quantity: str, colatitude_deg, values,
                     **attributes) -> None:
-        """Add U, N or S in metres along the ``load`` or ``basin`` meridian."""
+        """Add U, N or S along the ``load`` or ``basin`` meridian of the case.
+
+        Parameters
+        ----------
+        profile
+            ``"load"`` (the meridian through the ice centre) or ``"basin"``
+            (through the basin centre); `MartinecCase.profiles` gives the
+            longitude of each.
+        quantity
+            ``"U"`` (vertical displacement of the solid surface), ``"N"``
+            (geoid displacement) or ``"S"`` (sea-surface variation), all in
+            metres and positive upward (docs/reference/conventions.qmd).
+        colatitude_deg
+            The colatitudes of the values, in degrees, in any order and at any
+            spacing; the curve is sorted on construction.
+        values
+            The values, one per colatitude.
+        **attributes
+            Anything to keep with the curve, for example ``time_kyr``; it is
+            written to the file as attributes of the variable.
+        """
         if profile not in ("load", "basin"):
             raise ValueError(f"profile must be 'load' or 'basin', not {profile!r}")
         if quantity not in PROFILE_QUANTITIES:
@@ -170,64 +168,102 @@ class BenchmarkResult:
 
     @staticmethod
     def reference_path(case: str) -> pathlib.Path:
-        """The converted reference file of a case."""
+        """The converted reference file of a case, fetched and cached on first use.
+
+        `gia_mip.data.locate` finds it in a checkout or in the download root,
+        or downloads it from data.gadopt.org and checks its SHA-256.
+        """
+        from gia_mip import data
         letter = case.rsplit("-", 1)[-1].upper()
-        return martinec2018.data_root() / "converted" / "martinec2018" / f"martinec2018-{letter}.nc"
+        return data.locate(f"martinec2018/martinec2018-{letter}.nc", "converted")
 
     @classmethod
-    def reference(cls, case: str, member: str = "ZM") -> "BenchmarkResult":
-        """A published contributor, or VEGA (``ZM``), from the converted data."""
-        return cls.read(cls.reference_path(case), member, case=case)
+    def reference(cls, case: str, member: str | None = None) -> "BenchmarkResult":
+        """The reference curves of a case, or one published contributor.
+
+        Parameters
+        ----------
+        case
+            The case letter or id.
+        member
+            None for the curves that scoring compares with: the group
+            ``reference`` of the converted file, returned as a result with
+            member ``"VEGA"``. Each curve's attributes say how it was built
+            (``method``, ``member``, ``source_files``, ``correction`` and
+            ``built_from``). A contributor's code, ``"ZM"`` included, reads
+            that contributor's curves as the archive shipped them.
+        """
+        path = cls.reference_path(case)
+        if member is not None:
+            return cls.read(path, member, case=case)
+        return cls.read_reference(path, case=case)
+
+    @classmethod
+    def read_reference(cls, path: pathlib.Path, case: str | None = None) -> "BenchmarkResult":
+        """Read the group ``reference`` of a converted file, as member ``"VEGA"``.
+
+        Raises KeyError when the file has no such group, and ValueError when
+        ``case`` disagrees with the case the file records.
+        """
+        with _netcdf.open_read(path) as ds:
+            stored = _netcdf.attributes(ds).get("case")
+            result = cls(case or stored or "?", "VEGA")
+            if case is not None and stored is not None and result.case != cls(stored, "VEGA").case:
+                raise ValueError(f"{path} holds case {stored}, not {result.case}")
+            if "reference" not in ds.groups:
+                raise KeyError(f"{path} has no reference group")
+            reference = ds.groups["reference"]
+            if "profiles" in reference.groups:
+                for profile, pgroup in reference.groups["profiles"].groups.items():
+                    for name, curve in _curves(pgroup):
+                        result.profiles[(profile, name)] = curve
+            if "time_series" in reference.groups:
+                for name, curve in _curves(reference.groups["time_series"]):
+                    result.time_series[name] = curve
+        return result
 
     @staticmethod
     def members(path: pathlib.Path) -> list[str]:
-        """Every member with at least one curve in a file."""
-        import netCDF4
+        """Every member with at least one curve in a file.
+
+        The ``reference`` group of a converted file holds the reference curves
+        that scoring uses, not a code's curves, so it is not a member.
+        """
         found = set()
-        with netCDF4.Dataset(path) as ds:
+        with _netcdf.open_read(path) as ds:
             for kind in ("profiles", "differences"):
                 if kind in ds.groups:
-                    for profile in ds[kind].groups.values():
+                    for profile in ds.groups[kind].groups.values():
                         found.update(profile.groups)
             if "time_series" in ds.groups:
-                found.update(ds["time_series"].groups)
+                found.update(ds.groups["time_series"].groups)
         return sorted(found)
 
     @classmethod
     def read(cls, path: pathlib.Path, member: str, case: str | None = None) -> "BenchmarkResult":
         """Read one member's curves from a file in the converted layout.
 
-        Masking is turned off, as AGENTS.md requires of every reader. Raises
-        ValueError when ``case`` is given and the file records another case.
+        The file is read through h5netcdf, which applies no mask, as AGENTS.md
+        requires of every reader. Raises ValueError when ``case`` is given and
+        the file records another case.
         """
-        import netCDF4
-        with netCDF4.Dataset(path) as ds:
-            ds.set_auto_mask(False)
-            stored = getattr(ds, "case", None)
+        with _netcdf.open_read(path) as ds:
+            stored = _netcdf.attributes(ds).get("case")
             result = cls(case or stored or "?", member)
             # A file holds one case, and `write` refuses to mix cases in it. A
             # `case` argument that disagrees with the file would score these
             # curves over the other case's intervals and report no error.
             if case is not None and stored is not None and result.case != cls(stored, member).case:
                 raise ValueError(f"{path} holds case {stored}, not {result.case}")
-
-            def curves(group):
-                for name, var in group.variables.items():
-                    if name in group.dimensions:
-                        continue
-                    axis = group[var.dimensions[0]][:]
-                    attrs = {k: var.getncattr(k) for k in var.ncattrs()}
-                    yield name, Curve(axis, var[:], attrs)
-
             for kind, store in (("profiles", result.profiles), ("differences", result.differences)):
                 if kind not in ds.groups:
                     continue
-                for profile, pgroup in ds[kind].groups.items():
+                for profile, pgroup in ds.groups[kind].groups.items():
                     if member in pgroup.groups:
-                        for name, curve in curves(pgroup[member]):
+                        for name, curve in _curves(pgroup.groups[member]):
                             store[(profile, name)] = curve
-            if "time_series" in ds.groups and member in ds["time_series"].groups:
-                for name, curve in curves(ds["time_series"][member]):
+            if "time_series" in ds.groups and member in ds.groups["time_series"].groups:
+                for name, curve in _curves(ds.groups["time_series"].groups[member]):
                     result.time_series[name] = curve
         if not (result.profiles or result.differences or result.time_series):
             raise KeyError(f"{path} has no curves for member {member!r}")
@@ -238,18 +274,20 @@ class BenchmarkResult:
 
         The file is created if it does not exist. A member that already has
         a group in the file raises, so a second run cannot silently mix with
-        the first.
+        the first. The file is written through h5netcdf and is an ordinary
+        netCDF-4 file.
         """
-        import netCDF4
         path = pathlib.Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        with netCDF4.Dataset(path, "a" if path.exists() else "w", format="NETCDF4") as ds:
-            if not hasattr(ds, "case"):
-                ds.case = self.case
-                ds.title = f"Martinec et al. (2018) benchmark case {self.case}"
-                ds.conventions_reference = "docs/reference/conventions.qmd"
-            elif ds.case != self.case:
-                raise ValueError(f"{path} holds case {ds.case}, not {self.case}")
+        with _netcdf.open_write(path, append=path.exists()) as ds:
+            stored = _netcdf.attributes(ds).get("case")
+            if stored is None:
+                _netcdf.set_attributes(ds, {
+                    "case": self.case,
+                    "title": f"Martinec et al. (2018) benchmark case {self.case}",
+                    "conventions_reference": "docs/reference/conventions.qmd"})
+            elif stored != self.case:
+                raise ValueError(f"{path} holds case {stored}, not {self.case}")
             groups: dict[str, list[tuple[str, Curve, str, str, str]]] = {}
             for (profile, name), curve in self.profiles.items():
                 groups.setdefault(f"profiles/{profile}/{self.member}", []).append(
@@ -261,70 +299,31 @@ class BenchmarkResult:
                 groups.setdefault(f"time_series/{self.member}", []).append(
                     (name, curve, _time_series_units(name), "time", "kyr"))
             for group_path, variables in sorted(groups.items()):
-                if _has_group(ds, group_path):
+                if _netcdf.has_group(ds, group_path):
                     raise ValueError(f"{path} already has {group_path}")
-                g = ds.createGroup(group_path)
-                axes: list[tuple[str, np.ndarray]] = []
-                for name, curve, units, axis_name, axis_units in sorted(variables, key=lambda v: v[0]):
-                    dim = next((d for d, a in axes if a.shape == curve.axis.shape
-                                and np.array_equal(a, curve.axis)), None)
-                    if dim is None:
-                        dim = axis_name if not axes else f"{axis_name}_{len(axes) + 1}"
-                        axes.append((dim, curve.axis))
-                        g.createDimension(dim, curve.axis.size)
-                        coord = g.createVariable(dim, "f8", (dim,), fill_value=False)
-                        coord[:] = curve.axis
-                        coord.units = axis_units
-                    v = g.createVariable(name, "f8", (dim,), zlib=True, fill_value=False)
-                    v[:] = curve.values
-                    v.units = units
+                g = _netcdf.create_group(ds, group_path)
+                variables = sorted(variables, key=lambda v: v[0])
+                # Every variable of one group shares the axis name and units
+                # (colatitude in degrees or time in kyr).
+                axis_name, axis_units = variables[0][3], variables[0][4]
+                curves = []
+                for name, curve, units, _, _ in variables:
+                    attrs = {"units": units}
                     if name in martinec2018.LONG_NAMES:
-                        v.long_name = martinec2018.LONG_NAMES[name]
-                    for key, value in curve.attributes.items():
-                        if key in ("units", "long_name"):
-                            continue
-                        v.setncattr(key, value)
+                        attrs["long_name"] = martinec2018.LONG_NAMES[name]
+                    attrs.update({k: v for k, v in curve.attributes.items()
+                                  if k not in ("units", "long_name")})
+                    curves.append((name, curve.axis, curve.values, attrs))
+                _netcdf.write_curves(g, curves, axis_name=axis_name,
+                                     coordinate_attributes={"units": axis_units})
         return path
 
 
-def _read_dataset(path: pathlib.Path, function):
-    """Open a NetCDF file with masking off, apply ``function`` to it, and free it.
-
-    ``function`` does the reading in a frame of its own, so that when it
-    returns no local name still refers to a group of the file. netCDF4 keeps
-    each dataset in a reference cycle with itself and with every group it has
-    opened, so a closed dataset is freed only by the cycle collector. If
-    ``netCDF4.Dataset`` has been replaced by a subclass defined inside a
-    function, as the masking test of tests/test_spada_classes.py does, a later
-    collection can free that class and the dataset together, and netCDF4's
-    deallocation then fails and can crash the interpreter. Collecting here,
-    after the dataset is closed and while its class is still referenced by the
-    caller, frees it safely. One full collection costs a few milliseconds.
-    """
-    import netCDF4
-    ds = netCDF4.Dataset(path)
-    try:
-        ds.set_auto_mask(False)
-        return function(ds)
-    finally:
-        ds.close()
-        del ds
-        # Keep this collection. netCDF4 holds every dataset in a reference
-        # cycle, so only the cycle collector frees a closed file. Collecting
-        # now, while the Dataset class is still referenced, frees it safely. A
-        # later collection that frees a locally defined Dataset subclass and
-        # its dataset together can crash the interpreter (see the docstring).
-        gc.collect()
-
-
-def _has_group(ds, group_path: str) -> bool:
-    """Whether a slash-separated group path exists in an open dataset."""
-    group = ds
-    for part in group_path.split("/"):
-        if part not in group.groups:
-            return False
-        group = group.groups[part]
-    return True
+def _curves(group):
+    """Every curve of one group, as ``(name, Curve)``, with its attributes decoded."""
+    for name, var in _netcdf.data_variables(group).items():
+        yield name, Curve(_netcdf.axis_of(group, var), np.asarray(var[...]),
+                          _netcdf.attributes(var))
 
 
 # =====================================================================
@@ -339,7 +338,7 @@ def _has_group(ds, group_path: str) -> bool:
 # 4/1), U, V, N or their rates against colatitude at several epochs for three
 # loads (tests 1/2 and 2/2), and polar motion and the length of day against
 # time (test 3/2). `SpadaResult` holds all of them for one code, so a
-# published contributor, radopt and G-ADOPT are read, written and scored the
+# published contributor, lovejx and G-ADOPT are read, written and scored the
 # same way.
 #
 # The file layout, shared with the converted reference data
@@ -560,7 +559,7 @@ class SpadaResult:
         ``t02-01`` or ``spada2011-t02-01``.
     member
         The code: a contributor's two-letter code, or a name such as
-        ``radopt`` or ``g-adopt``.
+        ``lovejx`` or ``g-adopt``.
     """
 
     def __init__(self, case: str, member: str):
@@ -776,10 +775,13 @@ class SpadaResult:
 
     @staticmethod
     def reference_path(case: str) -> pathlib.Path:
-        """The converted reference file of a case, which holds every contributor."""
-        from gia_mip.benchmarks import spada2011
+        """The converted reference file of a case, which holds every contributor.
+
+        Fetched and cached on first use through `gia_mip.data.locate`.
+        """
+        from gia_mip import data
         short = _short_spada_case(case)
-        return spada2011.data_root() / "converted" / "spada2011" / f"spada2011-{short}.nc"
+        return data.locate(f"spada2011/spada2011-{short}.nc", "converted")
 
     @classmethod
     def reference(cls, case: str, member: str) -> "SpadaResult":
@@ -789,124 +791,119 @@ class SpadaResult:
     @staticmethod
     def members(path: pathlib.Path) -> list[str]:
         """Every member with at least one value in a file."""
-        def collect(ds) -> list[str]:
-            found = set()
-            if "love_numbers" in ds.groups:
-                for quantity in ds["love_numbers"].groups.values():
+        found = set()
+        with _netcdf.open_read(path) as ds:
+            groups = ds.groups
+            if "love_numbers" in groups:
+                for quantity in groups["love_numbers"].groups.values():
                     found.update(quantity.groups)
-            if "relaxation_spectrum" in ds.groups:
-                found.update(ds["relaxation_spectrum"].groups)
+            if "relaxation_spectrum" in groups:
+                found.update(groups["relaxation_spectrum"].groups)
             # Groups keyed by a quantity or a load hold one group per member
             # below that key; the transfer function holds the members directly.
             for kind in ("spatial", "time_domain_love_numbers", "polar_motion", "length_of_day"):
-                if kind in ds.groups:
-                    for key in ds[kind].groups.values():
+                if kind in groups:
+                    for key in groups[kind].groups.values():
                         found.update(key.groups)
-            if "polar_motion_transfer_function" in ds.groups:
-                found.update(ds["polar_motion_transfer_function"].groups)
-            return sorted(found)
-        return _read_dataset(path, collect)
+            if "polar_motion_transfer_function" in groups:
+                found.update(groups["polar_motion_transfer_function"].groups)
+        return sorted(found)
 
     @classmethod
     def read(cls, path: pathlib.Path, member: str, case: str | None = None) -> "SpadaResult":
         """Read one member from a file in the converted layout.
 
-        Masking is turned off, as AGENTS.md requires of every reader. The
-        converted files hold no fill value, so a masked read would return the
-        same numbers today; the call keeps it that way for a file that has one.
-        Raises ValueError when ``case`` is given and the file records another
-        case.
+        The file is read through h5netcdf, which applies no mask, as AGENTS.md
+        requires of every reader. Raises ValueError when ``case`` is given and
+        the file records another case.
         """
-        return _read_dataset(path, lambda ds: cls._read_open(ds, path, member, case))
+        with _netcdf.open_read(path) as ds:
+            return cls._read_open(ds, path, member, case)
 
     @classmethod
     def _read_open(cls, ds, path: pathlib.Path, member: str, case: str | None) -> "SpadaResult":
-        """The body of `read`, on an open dataset whose masking is off."""
-        stored = ds.getncattr("case") if "case" in ds.ncattrs() else None
+        """The body of `read`, on an open file."""
+        stored = _netcdf.attributes(ds).get("case")
         result = cls(case or stored, member)
         # A file holds one case, and `write` refuses to mix cases in it. A
         # `case` argument that disagrees with the file would score these
         # curves over the other test's intervals and report no error.
         if case is not None and stored is not None and result.case != _short_spada_case(stored):
             raise ValueError(f"{path} holds case {stored}, not {result.case}")
+        groups = ds.groups
 
-        def attrs(variable_or_group, skip=()):
-            return {k: variable_or_group.getncattr(k) for k in variable_or_group.ncattrs()
-                    if k not in skip}
+        def values(group, name):
+            return np.asarray(group.variables[name][...])
 
-        if "love_numbers" in ds.groups:
-            for quantity, qgroup in ds["love_numbers"].groups.items():
+        if "love_numbers" in groups:
+            for quantity, qgroup in groups["love_numbers"].groups.items():
                 if member not in qgroup.groups:
                     continue
-                g = qgroup[member]
-                extra = attrs(g, skip=("source_file",))
-                result.add_love_numbers(quantity, g["degree"][:], g["elastic"][:],
-                                        g["fluid"][:], g["residues"][:],
-                                        source_file=g.getncattr("source_file")
-                                        if "source_file" in g.ncattrs() else None,
+                g = qgroup.groups[member]
+                extra = _netcdf.attributes(g, skip=("source_file",))
+                result.add_love_numbers(quantity, values(g, "degree"), values(g, "elastic"),
+                                        values(g, "fluid"), values(g, "residues"),
+                                        source_file=_netcdf.attributes(g).get("source_file"),
                                         **extra)
-        if "relaxation_spectrum" in ds.groups and member in ds["relaxation_spectrum"].groups:
-            g = ds["relaxation_spectrum"][member]
+        if "relaxation_spectrum" in groups and member in groups["relaxation_spectrum"].groups:
+            g = groups["relaxation_spectrum"].groups[member]
             result.add_relaxation_spectrum(
-                g["degree"][:], g["s"][:],
-                source_file=g.getncattr("source_file") if "source_file" in g.ncattrs() else None,
-                **attrs(g, skip=("source_file",)))
-        if "spatial" in ds.groups:
-            for load, lgroup in ds["spatial"].groups.items():
+                values(g, "degree"), values(g, "s"),
+                source_file=_netcdf.attributes(g).get("source_file"),
+                **_netcdf.attributes(g, skip=("source_file",)))
+        if "spatial" in groups:
+            for load, lgroup in groups["spatial"].groups.items():
                 if member not in lgroup.groups:
                     continue
-                for egroup in lgroup[member].groups.values():
-                    epoch = float(egroup.getncattr("epoch_kyr"))
-                    for name, var in egroup.variables.items():
-                        if name in egroup.dimensions:
-                            continue
-                        result.add_spatial(load, name, epoch, egroup[var.dimensions[0]][:],
-                                           var[:], **attrs(var, skip=("long_name",)))
-        if "time_domain_love_numbers" in ds.groups:
-            for quantity, qgroup in ds["time_domain_love_numbers"].groups.items():
+                for egroup in lgroup.groups[member].groups.values():
+                    epoch = float(_netcdf.attributes(egroup)["epoch_kyr"])
+                    for name, var in _netcdf.data_variables(egroup).items():
+                        result.add_spatial(load, name, epoch, _netcdf.axis_of(egroup, var),
+                                           np.asarray(var[...]),
+                                           **_netcdf.attributes(var, skip=("long_name",)))
+        if "time_domain_love_numbers" in groups:
+            for quantity, qgroup in groups["time_domain_love_numbers"].groups.items():
                 if member not in qgroup.groups:
                     continue
-                g = qgroup[member]
-                for name, var in g.variables.items():
-                    if name in g.dimensions:
-                        continue
+                g = qgroup.groups[member]
+                for name, var in _netcdf.data_variables(g).items():
                     result.add_time_domain_love_numbers(
-                        quantity, int(var.getncattr("degree")), g[var.dimensions[0]][:], var[:],
-                        **attrs(var, skip=("long_name", "degree")))
-        if "polar_motion" in ds.groups:
-            for load, lgroup in ds["polar_motion"].groups.items():
+                        quantity, int(_netcdf.attributes(var)["degree"]),
+                        _netcdf.axis_of(g, var), np.asarray(var[...]),
+                        **_netcdf.attributes(var, skip=("long_name", "degree")))
+        if "polar_motion" in groups:
+            for load, lgroup in groups["polar_motion"].groups.items():
                 if member not in lgroup.groups:
                     continue
-                for sgroup in lgroup[member].groups.values():
-                    setting = sgroup.getncattr("chandler_wobble")
-                    for name, var in sgroup.variables.items():
-                        if name in sgroup.dimensions:
-                            continue
-                        result.add_polar_motion(load, setting, name, sgroup[var.dimensions[0]][:],
-                                                var[:], **attrs(var, skip=("long_name",)))
-        if "length_of_day" in ds.groups:
-            for load, lgroup in ds["length_of_day"].groups.items():
+                for sgroup in lgroup.groups[member].groups.values():
+                    setting = _netcdf.attributes(sgroup)["chandler_wobble"]
+                    for name, var in _netcdf.data_variables(sgroup).items():
+                        result.add_polar_motion(load, setting, name, _netcdf.axis_of(sgroup, var),
+                                                np.asarray(var[...]),
+                                                **_netcdf.attributes(var, skip=("long_name",)))
+        if "length_of_day" in groups:
+            for load, lgroup in groups["length_of_day"].groups.items():
                 if member in lgroup.groups:
-                    g = lgroup[member]
-                    var = g["delta_lod"]
-                    result.add_length_of_day(load, g[var.dimensions[0]][:], var[:],
-                                             **attrs(var, skip=("long_name",)))
-        if "polar_motion_transfer_function" in ds.groups and \
-                member in ds["polar_motion_transfer_function"].groups:
-            for sgroup in ds["polar_motion_transfer_function"][member].groups.values():
+                    g = lgroup.groups[member]
+                    var = g.variables["delta_lod"]
+                    result.add_length_of_day(load, _netcdf.axis_of(g, var), np.asarray(var[...]),
+                                             **_netcdf.attributes(var, skip=("long_name",)))
+        if "polar_motion_transfer_function" in groups and \
+                member in groups["polar_motion_transfer_function"].groups:
+            for sgroup in groups["polar_motion_transfer_function"].groups[member].groups.values():
                 def pair(name, g=sgroup):
                     # Real and imaginary parts are two variables, joined here
                     # without arithmetic, so the complex number is bit for bit
                     # the one written.
-                    real = np.asarray(g[f"{name}_real"][...], dtype=float)
-                    imag = np.asarray(g[f"{name}_imag"][...], dtype=float)
+                    real = np.asarray(g.variables[f"{name}_real"][...], dtype=float)
+                    imag = np.asarray(g.variables[f"{name}_imag"][...], dtype=float)
                     return real + 1j * imag
+                group_attributes = _netcdf.attributes(sgroup)
                 result.add_polar_motion_transfer_function(
-                    sgroup.getncattr("chandler_wobble"), complex(pair("elastic")),
+                    group_attributes["chandler_wobble"], complex(pair("elastic")),
                     complex(pair("secular")), pair("frequency"), pair("residue"),
-                    source_file=sgroup.getncattr("source_file")
-                    if "source_file" in sgroup.ncattrs() else None,
-                    **attrs(sgroup, skip=("source_file", "chandler_wobble")))
+                    source_file=group_attributes.get("source_file"),
+                    **_netcdf.attributes(sgroup, skip=("source_file", "chandler_wobble")))
         if not (result.love or result.spectrum is not None or result.fields or result.time_domain
                 or result.polar or result.lod or result.pmtf):
             raise KeyError(f"{path} has nothing for member {member!r}")
@@ -917,102 +914,81 @@ class SpadaResult:
 
         The file is created if it does not exist, so several members share one
         file. A member that already has a group in the file raises, so a second
-        run cannot mix with the first.
+        run cannot mix with the first. The file is written through h5netcdf and
+        is an ordinary netCDF-4 file.
         """
-        import netCDF4
         path = pathlib.Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        with netCDF4.Dataset(path, "a" if path.exists() else "w", format="NETCDF4") as ds:
-            if "case" not in ds.ncattrs():
-                ds.case = self.case
-                ds.title = f"Spada et al. (2011) benchmark case {self.case}"
-                ds.conventions_reference = "docs/reference/conventions.qmd"
-            elif ds.getncattr("case") != self.case:
-                raise ValueError(f"{path} holds case {ds.getncattr('case')}, not {self.case}")
+        with _netcdf.open_write(path, append=path.exists()) as ds:
+            stored = _netcdf.attributes(ds).get("case")
+            if stored is None:
+                _netcdf.set_attributes(ds, {
+                    "case": self.case,
+                    "title": f"Spada et al. (2011) benchmark case {self.case}",
+                    "conventions_reference": "docs/reference/conventions.qmd"})
+            elif stored != self.case:
+                raise ValueError(f"{path} holds case {stored}, not {self.case}")
 
             def new_group(group_path):
-                if _has_group(ds, group_path):
+                if _netcdf.has_group(ds, group_path):
                     raise ValueError(f"{path} already has {group_path}")
-                return ds.createGroup(group_path)
-
-            def set_attrs(target, attributes):
-                for key, value in attributes.items():
-                    if value is None:
-                        continue
-                    target.setncattr(key, value)
+                return _netcdf.create_group(ds, group_path)
 
             def degree_and_mode(g, degrees, modes):
-                g.createDimension("degree", degrees.size)
-                g.createDimension("mode", modes)
-                d = g.createVariable("degree", "i4", ("degree",), fill_value=False)
-                d[:] = degrees
-                d.long_name = "spherical harmonic degree"
-                m = g.createVariable("mode", "i4", ("mode",), fill_value=False)
-                m[:] = np.arange(1, modes + 1)
-                m.long_name = "relaxation mode, 1 the slowest"
+                g.dimensions["degree"] = degrees.size
+                g.dimensions["mode"] = modes
+                d = g.create_variable("degree", ("degree",), "i4", data=degrees)
+                d.attrs["long_name"] = "spherical harmonic degree"
+                m = g.create_variable("mode", ("mode",), "i4", data=np.arange(1, modes + 1))
+                m.attrs["long_name"] = "relaxation mode, 1 the slowest"
 
             for quantity, love in sorted(self.love.items()):
                 g = new_group(f"love_numbers/{quantity}/{self.member}")
                 degree_and_mode(g, love.degrees, love.residues.shape[1])
-                for name, values, dims, units in (
+                for name, data, dims, units in (
                         ("elastic", love.elastic, ("degree",), "1"),
                         ("fluid", love.fluid, ("degree",), "1"),
                         ("residues", love.residues, ("degree", "mode"), "1/kyr")):
-                    v = g.createVariable(name, "f8", dims, zlib=True, fill_value=False)
-                    # The residues are 2D, and netCDF4 warns on a 2D write.
-                    with _without_netcdf4_shape_warning():
-                        v[:] = values
-                    v.units = units
-                set_attrs(g, {"source_file": love.source_file, **love.attributes})
+                    v = g.create_variable(name, dims, "f8", data=np.asarray(data, dtype=float),
+                                          compression="gzip")
+                    v.attrs["units"] = units
+                _netcdf.set_attributes(g, {"source_file": love.source_file, **love.attributes})
 
             if self.spectrum is not None:
                 g = new_group(f"relaxation_spectrum/{self.member}")
                 degree_and_mode(g, self.spectrum.degrees, self.spectrum.s_per_kyr.shape[1])
-                v = g.createVariable("s", "f8", ("degree", "mode"), zlib=True, fill_value=False)
-                with _without_netcdf4_shape_warning():
-                    v[:] = self.spectrum.s_per_kyr
-                v.units = "1/kyr"
-                v.long_name = "relaxation frequency, negative; the relaxation time is -1/s"
-                set_attrs(g, {"source_file": self.spectrum.source_file,
-                              **self.spectrum.attributes})
+                v = g.create_variable("s", ("degree", "mode"), "f8",
+                                      data=np.asarray(self.spectrum.s_per_kyr, dtype=float),
+                                      compression="gzip")
+                _netcdf.set_attributes(v, {
+                    "units": "1/kyr",
+                    "long_name": "relaxation frequency, negative; the relaxation time is -1/s"})
+                _netcdf.set_attributes(g, {"source_file": self.spectrum.source_file,
+                                           **self.spectrum.attributes})
 
             def curves(g, variables, axis_name, axis_units, axis_long_name, long_names,
                        keep_order=False, compress=True):
-                """Write curves into one group, sharing an axis wherever two are equal.
+                """Write ``(name, Curve)`` pairs with `_netcdf.write_curves`.
 
-                The first distinct axis is ``axis_name``, the next
-                ``axis_name_2`` and so on, so a group whose variables are
-                sampled alike has one axis. The variables are written in
-                order of name, or in the order given when ``keep_order`` is
-                true. With ``compress`` false the values are stored
-                uncompressed, which for curves of a few hundred points is
-                smaller: compression needs chunked storage, whose index costs
-                more than it saves on short arrays.
+                The variables are written in order of name, or in the order
+                given when ``keep_order`` is true. Each variable's long name
+                comes first and its own attributes after it.
                 """
-                axes: list[tuple[str, np.ndarray]] = []
                 ordered = variables if keep_order else sorted(variables, key=lambda v: v[0])
-                for name, curve in ordered:
-                    dim = next((d for d, a in axes if a.shape == curve.axis.shape
-                                and np.array_equal(a, curve.axis)), None)
-                    if dim is None:
-                        dim = axis_name if not axes else f"{axis_name}_{len(axes) + 1}"
-                        axes.append((dim, curve.axis))
-                        g.createDimension(dim, curve.axis.size)
-                        coord = g.createVariable(dim, "f8", (dim,), fill_value=False)
-                        coord[:] = curve.axis
-                        coord.units = axis_units
-                        coord.long_name = axis_long_name
-                    v = g.createVariable(name, "f8", (dim,), zlib=compress, fill_value=False)
-                    v[:] = curve.values
-                    v.long_name = long_names[name]
-                    set_attrs(v, curve.attributes)
+                _netcdf.write_curves(
+                    g, [(name, curve.axis, curve.values,
+                         {"long_name": long_names[name], **curve.attributes})
+                        for name, curve in ordered],
+                    axis_name=axis_name,
+                    coordinate_attributes={"units": axis_units, "long_name": axis_long_name},
+                    compress=compress)
 
             groups: dict[tuple[str, float], list[tuple[str, Curve]]] = {}
             for (load, quantity, epoch), curve in self.fields.items():
                 groups.setdefault((load, epoch), []).append((quantity, curve))
             for (load, epoch), variables in sorted(groups.items()):
                 g = new_group(f"spatial/{load}/{self.member}/epoch_{_epoch_label(epoch)}")
-                g.epoch_kyr = _epoch_label(epoch)
+                g.attrs["epoch_kyr"] = _epoch_label(epoch)
                 curves(g, variables, "colatitude", "degrees",
                        "angular distance from the load centre", SPADA_LONG_NAMES)
 
@@ -1036,7 +1012,7 @@ class SpadaResult:
                 polar.setdefault((load, setting), []).append((quantity, curve))
             for (load, setting), variables in sorted(polar.items()):
                 g = new_group(f"polar_motion/{load}/{self.member}/chandler_wobble_{setting}")
-                g.chandler_wobble = setting
+                g.attrs["chandler_wobble"] = setting
                 curves(g, variables, "time", "kyr", "time since the load was applied",
                        SPADA_POLAR_MOTION_LONG_NAMES)
 
@@ -1047,28 +1023,28 @@ class SpadaResult:
 
             for setting, pmtf in sorted(self.pmtf.items()):
                 g = new_group(f"polar_motion_transfer_function/{self.member}/chandler_wobble_{setting}")
-                g.chandler_wobble = setting
+                g.attrs["chandler_wobble"] = setting
                 modes = pmtf.frequencies.size
-                g.createDimension("mode", modes)
-                m = g.createVariable("mode", "i4", ("mode",), fill_value=False)
-                m[:] = np.arange(1, modes + 1)
-                m.long_name = "rotational mode, 1 the slowest"
+                g.dimensions["mode"] = modes
+                m = g.create_variable("mode", ("mode",), "i4", data=np.arange(1, modes + 1))
+                m.attrs["long_name"] = "rotational mode, 1 the slowest"
                 for name, value, units, long_name in (
                         ("elastic", pmtf.elastic, "1", "elastic residue A_e"),
                         ("secular", pmtf.secular, "1/kyr", "secular residue A_s")):
                     for part in ("real", "imag"):
-                        v = g.createVariable(f"{name}_{part}", "f8", (), fill_value=False)
-                        v.assignValue(getattr(value, part))
-                        v.units = units
-                        v.long_name = f"{long_name}, {part} part"
-                for name, values, long_name in (
+                        # A scalar variable: no dimension, one value.
+                        v = g.create_variable(f"{name}_{part}", (), "f8",
+                                              data=np.float64(getattr(value, part)))
+                        _netcdf.set_attributes(v, {"units": units,
+                                                   "long_name": f"{long_name}, {part} part"})
+                for name, data, long_name in (
                         ("frequency", pmtf.frequencies, "rotational frequency a_j"),
                         ("residue", pmtf.residues, "rotational residue A_j")):
                     for part in ("real", "imag"):
-                        v = g.createVariable(f"{name}_{part}", "f8", ("mode",), zlib=True,
-                                             fill_value=False)
-                        v[:] = getattr(values, part)
-                        v.units = "1/kyr"
-                        v.long_name = f"{long_name}, {part} part"
-                set_attrs(g, {"source_file": pmtf.source_file, **pmtf.attributes})
+                        v = g.create_variable(f"{name}_{part}", ("mode",), "f8",
+                                              data=np.asarray(getattr(data, part), dtype=float),
+                                              compression="gzip")
+                        _netcdf.set_attributes(v, {"units": "1/kyr",
+                                                   "long_name": f"{long_name}, {part} part"})
+                _netcdf.set_attributes(g, {"source_file": pmtf.source_file, **pmtf.attributes})
         return path

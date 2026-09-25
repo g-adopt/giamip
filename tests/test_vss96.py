@@ -1,6 +1,6 @@
 """VSS96, the earth model of Spada et al. (2011) test 6/1, is the archive's table.
 
-`models/vss96.json` is a transcription of `T01-06/VSS96.dat` in the Spada
+`gia_mip/resources/models/vss96.json` is a transcription of `T01-06/VSS96.dat` in the Spada
 archive. Two tests tie it to the archive. The first compares every value with
 the file. The second compares the viscosity with the profile that figure 1 of
 the paper draws, `T01-06/vis-vss96.dat`. The second test also fixes how a row

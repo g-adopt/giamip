@@ -2,7 +2,8 @@
 
 This package describes and checks work. It never performs it. Nothing here
 imports a solver, and nothing here computes a viscoelastic response. A solver
-reads a case from ``cases/``, produces output, and uses this package to check
+reads a case with `case`, for example ``gia_mip.case("martinec2018-B")``,
+produces output, and uses this package to check
 that the output obeys the conventions and to score it against the published
 reference data.
 
@@ -39,3 +40,31 @@ plotting code.
 """
 
 __version__ = "0.1.0.dev0"
+
+
+def case(case_id: str):
+    """One case as an object, by id: the entry point for a solver.
+
+    ``martinec2018-*`` gives a `gia_mip.benchmarks.inputs.MartinecCase`,
+    ``spada2011-*`` a `gia_mip.benchmarks.inputs.SpadaCase` and ``giamip-*`` a
+    `gia_mip.mip.inputs.GiamipExperiment`. The classes are imported here and
+    not at the top, so that ``import gia_mip`` stays light.
+
+        >>> import gia_mip
+        >>> gia_mip.case("martinec2018-B").terminal_time_kyr
+        10.0
+
+    Raises KeyError for an id that is not a case of the package.
+    """
+    from gia_mip import cases
+    if case_id not in cases.ids():
+        raise KeyError(f"no case with id {case_id!r}. Known ids: {', '.join(cases.ids())}")
+    collection = case_id.split("-", 1)[0]
+    if collection == "martinec2018":
+        from gia_mip.benchmarks.inputs import MartinecCase
+        return MartinecCase(case_id)
+    if collection == "spada2011":
+        from gia_mip.benchmarks.inputs import SpadaCase
+        return SpadaCase(case_id)
+    from gia_mip.mip.inputs import GiamipExperiment
+    return GiamipExperiment(case_id)
