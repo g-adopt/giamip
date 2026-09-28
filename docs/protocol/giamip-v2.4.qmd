@@ -3,7 +3,12 @@ title: "GIAMIP protocol v2.4"
 ---
 
 The GIAMIP experiment protocol as supplied, version 2.4, dated 8 September
-2026. Converted from the Word document to Markdown; the prose is unchanged.
+2026. Converted from the Word document to Markdown. The text keeps the meaning
+of the supplied document, and mistakes that do not change the meaning, such as
+typos and exponents that lost their superscript in the conversion, are
+corrected. The one exception is the experiment table in Section 1. It is built from the
+case files and shows the choices of the G-ADOPT team in red. The note under the
+table explains them.
 The original conversion, including the two embedded equation images, is
 `data/original/giamip/giamip-protocol-v2.4.md`.
 
@@ -77,20 +82,57 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
  
 
-|  | Experiment ID | Global input ice model | Viscosity structure | Elastic structure | Earth rheology | Initial polar topography (GEBCO 2024 for rest of the globe) | Period |
-| ----- | :---: | :---: | :---: | ----- | :---: | :---: | :---: |
-| Tier 1 Experiments (Mandatory)  | Exp01 | ICE-6G\_D | VM5a | PREM | Maxwell | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
-|  | Exp02 | ICE-7G\_NA | VM7 | PREM | Open | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
-|  | Exp03 | GLAC3b (Profile 1\) | Within suggested range |        Open | Open | Bedmap3(ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
-|  | Exp04 | GLAC3b (Profile 2\) | Within suggested range | Open | Open | Bedmap3 (ANT) \+ BedMachineV5 (Greenland) | 122 ka-1000 yrs into future |
-|  | Exp05 | PaleoMist (Version a1) | Gowan et al. (2021) | PREM | Maxwell | BedMachineV3 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
-| Tier 2l Experiments (Optional)  | Exp06 | ICE-6G\_D | VM5a | PREM | Maxwell | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
-|  | Exp07 | ICE-7G\_NA | VM7 | PREM | Same as Exp02 | Bedmap2 (ANT) \+ BedMachineV5 (Greenland) | 80 ka-1000 yrs into future |
-|  | Exp08 | PaleoMist | Open | Open | Open  | Open | 80 ka-1000 yrs into future |
-|  | Exp09 | GLAC3b (Profile 1\) | Open | Open | Open  | Open | 122 ka-1000 yrs into future |
-|  | Exp10 | GLAC3b (Profile 2\) | Open | Open | Open  | Open | 122 ka-1000 yrs into future |
-|  | Exp11 | GLAC3b (Profile 3\) | Open  | Open  | Open | Open | 122 ka-1000 yrs into future |
-|  | Exp12 | ICE-6G\_D | Open  | Open  | Open | Open | 122 ka-1000 yrs into future |
+```{python}
+#| echo: false
+# The table is built from the case files, so this page and the case files
+# cannot disagree. docs/_experiments.py explains the layout and the red cells.
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+sys.path.insert(0, str(pathlib.Path("..").resolve()))
+from IPython.display import Markdown
+import _experiments
+Markdown(_experiments.protocol_table())
+```
+
+::: {.callout-note}
+## Choices made by the G-ADOPT team
+
+The entries in red were open choices in protocol v2.4, or were left to each
+group. The G-ADOPT team decided on these values for its own runs. The other
+entries are the protocol values. The table is built from the case files in
+`giamip/resources/cases/giamip/`, so it uses their names for the ice histories
+and the Earth models. The G-ADOPT values are in the `gadopt` block of each
+case file.
+
+For Exp03, Exp04, Exp09 and Exp10, the viscosity structure is the middle of
+the ranges in Section 3.1.4, which were originally given as the choice for
+Exp03 and Exp04. The ranges are a lithosphere thickness of 60–120 km, an upper
+mantle viscosity of 10^20^–10^21^ Pa s and a lower mantle viscosity of
+10^21^–10^23^ Pa s. The viscosity ranges span orders of magnitude, so their
+middle is taken on a logarithmic scale.
+
+```{python}
+#| echo: false
+# The middle values come from the model file, so the note cannot disagree
+# with the value a run uses.
+import math
+from giamip import cases
+m = cases.earth_model("giamip-open-range-midpoint")
+um = math.log10(m["upper_mantle_viscosity_pa_s"])
+lm = math.log10(m["lower_mantle_viscosity_pa_s"])
+Markdown(f"This gives a lithosphere thickness of {m['lithosphere_thickness_km']} km, "
+         f"an upper mantle viscosity of 10^{um:g}^ ≈ "
+         f"{m['upper_mantle_viscosity_pa_s'] / 1e20:.1f} × 10^20^ Pa s and a lower "
+         f"mantle viscosity of 10^{lm:g}^ Pa s. The values are in "
+         f"`giamip/resources/models/{m['id']}.json`.")
+```
+
+The 3D viscosity of Exp11 and Exp12 is the filtered and bounded model of Lloyd
+et al. (2024), which they derive from the GLAD-M25 shear-wave speeds. The
+lateral variations of the elastic structure in Exp08 and Exp12 come from the
+same tomography model, so that one tomography model is used throughout.
+Exp12 combines Burgers and power-law rheology.
+:::
 
  
 
@@ -145,7 +187,7 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
  
 
-| Depth range (km below surface) | Viscosity (X1021Pa s) |
+| Depth range (km below surface) | Viscosity (× 10^21^ Pa s) |
 | :---: | :---: |
 | 0–60 | Elastic lid/infinite viscosity |
 | 60–100 | 10.0 |
@@ -164,7 +206,7 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
  
 
-| Depth range (km below surface) | Viscosity (X1021Pa s) |
+| Depth range (km below surface) | Viscosity (× 10^21^ Pa s) |
 | :---: | :---: |
 | 0–75 | Elastic lid/infinite viscosity |
 | 75–115  | 10.0 |
@@ -186,8 +228,8 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
 | Lithosphere thickness | 120 km |
 | :---: | :---: |
-| Upper mantle viscosity | 0.4 X 1021 Pa s |
-| Lower mantle viscosity | 40 X 1021 Pa s |
+| Upper mantle viscosity | 0.4 × 10^21^ Pa s |
+| Lower mantle viscosity | 40 × 10^21^ Pa s |
 
  
 
@@ -199,12 +241,12 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
 | Lithosphere thickness | 60–120 km |
 | :---: | :---: |
-| Upper mantle viscosity | 1020–1021 Pa s |
-| Lower mantle viscosity | 1021–1023 Pa s |
+| Upper mantle viscosity | 10^20^–10^21^ Pa s |
+| Lower mantle viscosity | 10^21^–10^23^ Pa s |
 
  
 
-In the optional experiments, we encourage 1D models to explore solid Earth parameters suitable for certain regions of the globe that are very different (e.g., West Antarctica and Alaska regions that have much lower upper mantle viscosity such as 1018 \- 1019 Pa s.)
+In the optional experiments, we encourage 1D models to explore solid Earth parameters suitable for certain regions of the globe that are very different (e.g., West Antarctica and Alaska regions that have much lower upper mantle viscosity such as 10^18^–10^19^ Pa s.)
 
  
 
@@ -342,9 +384,9 @@ coefficients must be converted to the convention defined above prior to submissi
 
 8. **Other constants**   
       
-   * density of ice: 917 kg/m^3  
-   * density of ocean water: 1025 kg/m^3 (if applicable)  
-   * density of fresh water: 1000 kg/m^3  
+   * density of ice: 917 kg/m^3^  
+   * density of ocean water: 1025 kg/m^3^ (if applicable)  
+   * density of fresh water: 1000 kg/m^3^  
    * Reference Earth radius**:** 6371000 m
 
  
@@ -460,3 +502,6 @@ Pritchard, H. D., et al.: Bedmap3 updated ice bed, surface and thickness gridded
 
  
 
+Lei, W., et al. (2020), Global adjoint tomography—model GLAD-M25, Geophysical Journal International, 223(1), 1–21, [https://doi.org/10.1093/gji/ggaa253](https://doi.org/10.1093/gji/ggaa253)
+
+Lloyd, A. J., O. Crawford, D. Al-Attar, J. Austermann, M. J. Hoggard, F. D. Richards, and F. Syvret (2024), GIA imaging of 3-D mantle viscosity based on palaeo sea level observations – Part I: Sensitivity kernels for an Earth with laterally varying viscosity, Geophysical Journal International, 236(2), 1139–1171, [https://doi.org/10.1093/gji/ggad455](https://doi.org/10.1093/gji/ggad455)

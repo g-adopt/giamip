@@ -53,5 +53,12 @@
     "rheology",
     "topography"
   ],
+  "gadopt": {
+    "viscosity": "giamip-open-range-midpoint",
+    "elastic_structure": "prem",
+    "rheology": "power-law",
+    "topography": "bedmap3",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups. Exp04 with power-law rheology."
+  },
   "status": "specified; no runner and no output writer yet"
 }

@@ -44,13 +44,13 @@ for c in cases.cases("martinec2018"):
                f"{', '.join(c['reference_data']['contributors'])} | {held} |")
 
 out.append("\n## GIAMIP\n")
-out.append("| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start |")
-out.append("| --- | ---: | --- | --- | --- | --- | --- | ---: |")
-for c in cases.cases("giamip"):
-    e, t = c["earth"], c["topography"]
-    out.append(f"| `{c['experiment_id']}` | {c['tier']} | {c['forcing']['ice_history']} | "
-               f"{e['viscosity']} | {e['elastic_structure']} | {e['rheology']} | "
-               f"{t['model']} | {c['period']['start_ka_before_2000ce']} ka |")
+out.append("A value in red is the choice the G-ADOPT team made for its own runs, "
+           "in a field the protocol leaves open.\n")
+# Built by docs/_experiments.py, which the protocol and collection pages also
+# use, so the three tables cannot disagree.
+sys.path.insert(0, str(pathlib.Path("..").resolve()))
+import _experiments
+out.append(_experiments.id_table(link=False, open_count=False))
 Markdown("\n".join(out))
 ```
 

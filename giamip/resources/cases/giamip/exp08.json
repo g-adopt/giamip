@@ -53,5 +53,12 @@
     "rheology",
     "topography"
   ],
+  "gadopt": {
+    "viscosity": "gowan2021",
+    "elastic_structure": "prem-glad-m25",
+    "rheology": "maxwell",
+    "topography": "bedmach3",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups. Exp05 with a laterally varying elastic structure."
+  },
   "status": "specified; no runner and no output writer yet"
 }

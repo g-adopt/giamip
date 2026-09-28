@@ -53,5 +53,12 @@
     "rheology",
     "topography"
   ],
+  "gadopt": {
+    "viscosity": "lloyd2024",
+    "elastic_structure": "prem-glad-m25",
+    "rheology": "burgers-power-law",
+    "topography": "bedmap3",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups. The 3D viscosity of Lloyd et al. (2024) and the elastic structure of Exp08, with Burgers and power-law rheology."
+  },
   "status": "specified; no runner and no output writer yet"
 }

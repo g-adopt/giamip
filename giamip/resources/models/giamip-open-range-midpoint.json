@@ -1,0 +1,24 @@
+{
+  "id": "giamip-open-range-midpoint",
+  "name": "Midpoint of the GIAMIP suggested range",
+  "kind": "viscosity_profile",
+  "description": "A three-parameter radial viscosity structure at the middle of the GIAMIP suggested range. The G-ADOPT team chose it for Exp03, Exp04, Exp09 and Exp10, where the protocol lets each group pick values inside the range.",
+  "derived_from": "giamip-open-range",
+  "used_by": ["G-ADOPT choice for giamip Exp03", "G-ADOPT choice for giamip Exp04", "G-ADOPT choice for giamip Exp09", "G-ADOPT choice for giamip Exp10"],
+  "source": {
+    "citation": "The middle of the ranges in the GIAMIP protocol v2.4, section 3.1.4, as decided by the G-ADOPT team."
+  },
+  "midpoint_scale": {
+    "lithosphere_thickness_km": "linear",
+    "upper_mantle_viscosity_pa_s": "logarithmic",
+    "lower_mantle_viscosity_pa_s": "logarithmic"
+  },
+  "lithosphere_thickness_km": 90,
+  "upper_mantle_viscosity_pa_s": 3.1622776601683794e20,
+  "lower_mantle_viscosity_pa_s": 1.0e22,
+  "notes": [
+    "The viscosity ranges span one and two orders of magnitude, so their middle is the geometric mean of the two ends: 10^20.5 Pa s for the upper mantle and 10^22 Pa s for the lower mantle. The lithosphere range spans a factor of two, and its middle is the arithmetic mean, 90 km.",
+    "The protocol states no depth for the boundary between upper and lower mantle. 670 km is the usual choice, and the choice made is recorded in the model report.",
+    "The elastic structure and the rheology come from the case, because Exp09 and Exp10 pair this profile with Burgers and power-law rheology."
+  ]
+}

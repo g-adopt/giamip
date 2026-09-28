@@ -23,23 +23,21 @@ The protocol as supplied is [reproduced here](../protocol/giamip-v2.4.qmd).
 ## Experiments
 
 Five mandatory, seven optional. A field marked `open` is the group's choice
-and has to be recorded in the model report.
+and has to be recorded in the model report. A value in red is the choice the
+G-ADOPT team made for its own runs, in a field the protocol leaves open. The
+"Open choices" column counts the fields that the protocol leaves open. The
+[protocol page](../protocol/giamip-v2.4.qmd) explains the G-ADOPT choices.
 
 ```{python}
 #| echo: false
+# The table is built by docs/_experiments.py, which the protocol and results
+# pages also use, so the three tables cannot disagree.
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("../..").resolve()))
+sys.path.insert(0, str(pathlib.Path("..").resolve()))
 from IPython.display import Markdown
-from giamip import cases
-rows = ["| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start | Open choices |",
-        "| --- | ---: | --- | --- | --- | --- | --- | ---: | ---: |"]
-for c in cases.cases("giamip"):
-    e, t = c["earth"], c["topography"]
-    rows.append(f"| [`{c['experiment_id']}`](../results/index.qmd#{c['id']}) | {c['tier']} | "
-                f"{c['forcing']['ice_history']} | {e['viscosity']} | {e['elastic_structure']} | "
-                f"{e['rheology']} | {t['model']} | {c['period']['start_ka_before_2000ce']} ka | "
-                f"{len(c['open_choices'])} |")
-Markdown("\n".join(rows))
+import _experiments
+Markdown(_experiments.id_table(link=True, open_count=True))
 ```
 
 ## Inputs

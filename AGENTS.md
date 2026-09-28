@@ -86,6 +86,26 @@ For the benchmark column layouts, the authority is the GMT script that plotted
 the figure. GMT 4 no longer runs, so for several data files those scripts are
 the only record of what the columns contain.
 
+## Documents reproduced on the site
+
+Some pages reproduce a supplied document, for example the GIAMIP protocol in
+`docs/protocol/`. Such a page keeps the meaning of the document. It does not
+have to keep the exact words.
+
+If the text of such a page has a mistake that does not change its meaning,
+correct it on the page. Examples are a typo, an exponent that lost its
+superscript in the conversion from Word, and broken Markdown. Do not record
+these corrections anywhere else.
+
+A change of meaning is not a correction of the text. If a value, a name or an
+instruction in the document is wrong, record it in
+`giamip/resources/corrections.json`. A choice that the G-ADOPT team made goes
+into the `gadopt` block of the case file. The page then shows the change from
+that file, so the change stays visible and has one source.
+
+This section applies to the pages only. The files in `data/original/` keep the
+rule above and are never edited.
+
 ## Case identity
 
 A case file states which published case it is, and records the evidence for

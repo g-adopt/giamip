@@ -111,3 +111,98 @@ def loads(collection: str) -> dict:
         known = sorted(p.stem for p in LOAD_DIR.glob("*.json"))
         raise KeyError(f"no load table for {collection!r}. Known: {', '.join(known)}")
     return _read(path)
+
+
+# The case fields that a G-ADOPT choice may fill. The first three live in the
+# `earth` block of a case and the last one in its `topography` block. Only a
+# field that the protocol leaves to the group, that is, a field listed in the
+# case's `open_choices`, may carry a G-ADOPT choice. tests/test_cases.py checks
+# this, so a G-ADOPT choice can never overwrite a value the protocol prescribes.
+GADOPT_FIELDS = ("viscosity", "elastic_structure", "rheology", "topography")
+
+
+def gadopt_choices(case_or_id: str | dict) -> dict[str, str]:
+    """The values the G-ADOPT team chose for the open fields of a GIAMIP case.
+
+    The protocol leaves some fields of some experiments to each group, for
+    example the rheology of Exp02. The G-ADOPT team decided these for its own
+    runs. The decisions sit in a `gadopt` block of the case file, next to the
+    protocol values, so the case file stays a transcription of the protocol and
+    the decisions are recorded in one place only.
+
+    Parameters
+    ----------
+    case_or_id
+        A case id such as ``giamip-exp03``, or a case dict already read.
+
+    Returns
+    -------
+    dict
+        Field name to chosen value, for the fields in `GADOPT_FIELDS` that the
+        G-ADOPT team decided. Empty for a case with no `gadopt` block, which
+        includes every benchmark case.
+    """
+    c = case(case_or_id) if isinstance(case_or_id, str) else case_or_id
+    block = c.get("gadopt", {})
+    # Keys that start with "$" are comments, as elsewhere in the case files.
+    return {k: v for k, v in block.items() if not k.startswith("$")}
+
+
+def protocol_value(c: dict, field: str) -> str:
+    """The value the protocol gives for one of `GADOPT_FIELDS` of a case.
+
+    Topography is stored as ``topography.model``; the other three are stored
+    in the ``earth`` block. This hides that difference from callers.
+    """
+    if field == "topography":
+        return c["topography"]["model"]
+    return c["earth"][field]
+
+
+def with_gadopt_choices(case_id: str) -> dict:
+    """A GIAMIP case with the G-ADOPT choices filled into the open fields.
+
+    This is the case as a G-ADOPT run uses it. The protocol values of the open
+    fields are replaced by the G-ADOPT values, and `open_choices` lists only
+    the fields that remain open. For a new topography the file is taken from a
+    GIAMIP case that the protocol gives that topography, because the file of a
+    topography is the same in every experiment that uses it.
+
+    Parameters
+    ----------
+    case_id
+        A GIAMIP case id, for example ``giamip-exp09``.
+
+    Returns
+    -------
+    dict
+        A new dict. The case file itself is not changed.
+    """
+    c = case(case_id)
+    chosen = gadopt_choices(c)
+    for field, value in chosen.items():
+        if field == "topography":
+            c["topography"] = {**c["topography"], "model": value,
+                               "file": topography_files()[value]}
+        else:
+            c["earth"][field] = value
+    c["open_choices"] = [f for f in c["open_choices"] if f not in chosen]
+    return c
+
+
+@functools.cache
+def topography_files() -> dict[str, str]:
+    """Map each prescribed GIAMIP topography model to its input file.
+
+    Collected from the GIAMIP cases that prescribe a topography. Two cases that
+    name the same model with different files are an error, since a G-ADOPT
+    choice of that model would then have no single file.
+    """
+    files: dict[str, str] = {}
+    for c in cases("giamip"):
+        t = c["topography"]
+        if t.get("file") is None:
+            continue
+        if files.setdefault(t["model"], t["file"]) != t["file"]:
+            raise ValueError(f"topography {t['model']!r} names two files")
+    return files

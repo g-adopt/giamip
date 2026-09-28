@@ -52,5 +52,11 @@
     "elastic_structure",
     "rheology"
   ],
+  "gadopt": {
+    "viscosity": "giamip-open-range-midpoint",
+    "elastic_structure": "prem",
+    "rheology": "maxwell",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups."
+  },
   "status": "specified; no runner and no output writer yet"
 }

@@ -1,0 +1,24 @@
+{
+  "id": "prem-glad-m25",
+  "name": "PREM with GLAD-M25 lateral variations",
+  "kind": "elastic_structure",
+  "description": "PREM with lateral variations in elastic structure taken from the global adjoint tomography model GLAD-M25. The G-ADOPT team chose it for Exp08 and Exp12, where the protocol leaves the elastic structure to each group.",
+  "base": "prem",
+  "used_by": ["G-ADOPT choice for giamip Exp08", "G-ADOPT choice for giamip Exp12"],
+  "source": {
+    "citation": "Lei, W. et al. (2020). Global adjoint tomography - model GLAD-M25. Geophysical Journal International 223(1), 1-21.",
+    "doi": "10.1093/gji/ggaa253"
+  },
+  "tomography": {
+    "name": "GLAD-M25",
+    "package": "gdrift",
+    "dataset": null,
+    "sha256": null,
+    "status": "not yet in g-drift"
+  },
+  "notes": [
+    "GLAD-M25 is the tomography model from which the Lloyd et al. (2024) viscosity is built. Exp12 pairs the two, so its viscosity and its elastic structure come from one tomography model.",
+    "GLAD-M25 is transversely isotropic. How its wave speeds and density become lateral variations of the elastic moduli is not fixed here and is recorded in the model report.",
+    "The tomography model is not in this package. It will be a g-drift dataset, and the dataset name and the SHA-256 of the version used go in `tomography` when it is added."
+  ]
+}
