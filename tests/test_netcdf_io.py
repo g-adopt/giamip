@@ -2,7 +2,7 @@
 
 AGENTS.md: every reader in the package opens NetCDF through h5netcdf, which
 applies no mask, scale or fill value, and no module of the package imports
-netCDF4 or xarray. The six GIAMIP ice files declare ``_FillValue = 0.0`` on
+netCDF4 or xarray. The eight GIAMIP ice files declare ``_FillValue = 0.0`` on
 ``ice_thickness``, so a masking reader would turn every ice-free cell into a
 missing value. These tests show:
 

@@ -157,9 +157,10 @@ class Topography(_GiamipFile):
     def antarctic_dataset(self) -> str:
         """The Antarctic bed dataset, read from the filename.
 
-        The ``source`` attribute of one file names the wrong dataset
-        (correction topography-source-attribute), and the filename is right
-        in all three, so the filename is the authority.
+        The ``source`` attribute of the first version of one file names the
+        wrong dataset (correction topography-source-attribute), and the
+        filename is right in every version of all three, so the filename is
+        the authority.
         """
         m = re.search(r"bedtopo_(\w+?)ANT_", pathlib.Path(self.relative_path).name)
         names = {"Bedmap2": "Bedmap2", "Bedmap3": "Bedmap3", "BedMach3": "BedMachine Antarctica v3"}
@@ -232,6 +233,24 @@ class GiamipExperiment:
             self._topo = Topography(rel, self._root)
         return self._topo
 
+    def earth(self, gadopt: bool = True):
+        """The radial earth of the experiment, to sample at any radius.
+
+        Parameters
+        ----------
+        gadopt
+            True fills the fields the protocol leaves open with the G-ADOPT
+            choices; False uses the protocol values alone.
+
+        Returns
+        -------
+        giamip.earth.RadialEarth
+            Call it with radii in metres to get density, elastic moduli, wave
+            speeds, gravity and viscosity. See `giamip.earth.for_case`.
+        """
+        from giamip import earth
+        return earth.for_case(self.id, gadopt=gadopt)
+
     def model_years(self) -> np.ndarray:
         """The prescribed output times in years from 2000 CE.
 
@@ -248,9 +267,10 @@ class GiamipExperiment:
     def forcing_steps(self) -> np.ndarray:
         """Indices of the ice-history steps inside the experiment's period.
 
-        For Exp06 and Exp07 the delivered file starts at 122 ka and the
-        experiment at 80 ka, so this is the truncation the case file asks for.
-        Raises if a prescribed year is not a step of the file.
+        Every prescribed ice history file starts at the start of its
+        experiment, including the ``_80ka`` files of Exp06 and Exp07, so for
+        the delivered files this is every step. Raises if a prescribed year is
+        not a step of the file.
         """
         ice = self.ice_history
         if ice is None:

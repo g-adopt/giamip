@@ -113,12 +113,16 @@ def loads(collection: str) -> dict:
     return _read(path)
 
 
-# The case fields that a G-ADOPT choice may fill. The first three live in the
-# `earth` block of a case and the last one in its `topography` block. Only a
+# The case fields that a G-ADOPT choice may fill. Topography lives in the
+# `topography` block of a case and the other four in its `earth` block. Only a
 # field that the protocol leaves to the group, that is, a field listed in the
-# case's `open_choices`, may carry a G-ADOPT choice. tests/test_cases.py checks
-# this, so a G-ADOPT choice can never overwrite a value the protocol prescribes.
-GADOPT_FIELDS = ("viscosity", "elastic_structure", "rheology", "topography")
+# case's `open_choices`, may carry a G-ADOPT choice.
+# tests/test_gadopt_choices.py checks this, so a G-ADOPT choice can never
+# overwrite a value the protocol prescribes.
+# Compressibility is open in every experiment (protocol v4.0 Section 3), and
+# every G-ADOPT run chooses a compressible earth.
+GADOPT_FIELDS = ("viscosity", "elastic_structure", "rheology", "topography",
+                 "compressibility")
 
 
 def gadopt_choices(case_or_id: str | dict) -> dict[str, str]:
@@ -151,7 +155,7 @@ def gadopt_choices(case_or_id: str | dict) -> dict[str, str]:
 def protocol_value(c: dict, field: str) -> str:
     """The value the protocol gives for one of `GADOPT_FIELDS` of a case.
 
-    Topography is stored as ``topography.model``; the other three are stored
+    Topography is stored as ``topography.model``; the other four are stored
     in the ``earth`` block. This hides that difference from callers.
     """
     if field == "topography":

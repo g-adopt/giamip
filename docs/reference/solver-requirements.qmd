@@ -55,6 +55,19 @@ for e in v["variables"]:
 Markdown("\n".join(rows))
 ```
 
+**PREM-stable as the elastic structure, compressible, with continuous
+density.** Protocol v4.0 Section 3.1 gives PREM-stable as the PREM of every
+experiment that names PREM, and asks each group to state in the model report
+(question Q14) which PREM file it used, whether its earth is compressible, and
+how it discretises density. The G-ADOPT answers are the same in every
+experiment: the file `giamip/PREM-stable.csv`, version v1.0.0 of
+doi:10.5281/zenodo.23178246; a compressible earth, with the bulk modulus of the
+file; and a continuous density, linear between the nodes of the file.
+`giamip.earth` gives these values at any radius (see
+[the Python interface](python-interface.qmd)). A solver with constant-density
+layers takes the volume average of PREM-stable in each layer and states its
+layer boundaries.
+
 **The centre of mass frame of the whole Earth system**, with the treatment of
 degree one documented.
 

@@ -18,7 +18,7 @@ byte for byte. Every known defect is an entry in
 rendered on the corrections page. A defect fixed with a text editor is
 invisible, and it is lost at the next re-fetch.
 
-**Every reader in the package opens NetCDF through h5netcdf.** All six GIAMIP
+**Every reader in the package opens NetCDF through h5netcdf.** All eight GIAMIP
 ice files declare `_FillValue = 0.0` on `ice_thickness`. A masking read hides
 every ice-free cell and propagates NaN into loads and mass integrals. h5netcdf,
 on h5py, applies no mask, scale or fill value. No module of the package

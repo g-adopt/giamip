@@ -3,17 +3,20 @@
   "name": "Gowan et al. (2021)",
   "kind": "viscosity_profile",
   "description": "A three-parameter radial viscosity structure, prescribed for GIAMIP experiment Exp05, which pairs it with the PaleoMIST ice history from the same authors.",
-  "elastic_structure": "prem",
+  "elastic_structure": "prem-stable",
   "rheology": "maxwell",
   "used_by": ["giamip Exp05"],
   "source": {
-    "citation": "Gowan, E. J., Zhang, X., Khosravi, S. et al. (2021). A new global ice sheet reconstruction for the past 80,000 years. Nature Communications 12, 1199. Reproduced in the GIAMIP protocol v2.4, section 3.1.3.",
+    "citation": "Gowan, E. J., Zhang, X., Khosravi, S. et al. (2021). A new global ice sheet reconstruction for the past 80,000 years. Nature Communications 12, 1199. Reproduced in the GIAMIP protocol v4.0, section 3.2.3.",
     "doi": "10.1038/s41467-021-21469-w"
   },
   "lithosphere_thickness_km": 120,
   "upper_mantle_viscosity_pa_s": 4.0e20,
   "lower_mantle_viscosity_pa_s": 4.0e22,
+  "upper_lower_mantle_boundary_depth_km": 670,
   "notes": [
-    "The protocol gives three numbers and no layer boundaries beyond the lithosphere thickness. The depth separating upper from lower mantle is not stated; 670 km is the usual choice and the choice made must be recorded in the model report."
+    "The protocol gives three numbers and no layer boundaries beyond the lithosphere thickness.",
+    "Protocol v4.0 states no depth for the boundary between upper and lower mantle. The G-ADOPT runs use 670 km (`upper_lower_mantle_boundary_depth_km`), the depth at which VM5a and VM7 of the same protocol, Sections 3.2.1 and 3.2.2, change from upper to lower mantle values. Each group records its own choice in the model report.",
+    "The lower mantle reaches the core-mantle boundary of the elastic structure."
   ]
 }

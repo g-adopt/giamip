@@ -48,7 +48,7 @@ Archives are unpacked into a directory named after the archive, with the
 archive's single top-level directory removed when it has one, so
 `giamip/ice-history.zip` gives
 `giamip/ice-history/iceHistory-ICE-6G_D.nc`. A stamp file inside the target
-records which archive it came from, so a second run neither extracts 317 MB
+records which archive it came from, so a second run neither extracts 363 MB
 again nor disturbs anything you put there.
 
 ## When a file is wrong
@@ -95,7 +95,7 @@ export GIAMIP_DATA_ROOT=/g/data/<project>/giamip
 ```
 
 Add `--collection giamip` (with the default stage, `original`) for the
-GIAMIP inputs, 317 MB. The Firedrake module must have giamip installed with
+GIAMIP inputs, 363 MB. The Firedrake module must have giamip installed with
 its dependencies h5netcdf and `packaging`; h5py, numpy and scipy are in the
 module already.
 :::
@@ -105,7 +105,7 @@ module already.
 ```bash
 python -m giamip.data                         # both benchmarks, the originals
 python -m giamip.data --stage converted       # the converted reference data
-python -m giamip.data --collection giamip     # the GIAMIP inputs, 317 MB
+python -m giamip.data --collection giamip     # the GIAMIP inputs, 363 MB
 python -m giamip.data --all                   # every collection
 python -m giamip.data --list                  # what exists, and what is local
 python -m giamip.data --verify --all          # check the sums, download nothing

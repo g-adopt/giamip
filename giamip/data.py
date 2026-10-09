@@ -23,7 +23,7 @@ The same can be done in advance from the command line:
 
     python -m giamip.data                         # both benchmarks, originals
     python -m giamip.data --stage converted       # the converted reference data
-    python -m giamip.data --collection giamip     # the GIAMIP inputs, 317 MB
+    python -m giamip.data --collection giamip     # the GIAMIP inputs, 363 MB
     python -m giamip.data --collection spada2011  # one collection
     python -m giamip.data --all
     python -m giamip.data --list                  # what exists, what is local
@@ -250,7 +250,7 @@ def check_member_names(names: list[str]) -> None:
 
 # Written inside an unpack target, holding the SHA-256 of the archive it came
 # from. Its presence with a matching sum means the tree is current, so a
-# re-run neither re-extracts 317 MB nor destroys anything a user put there.
+# re-run neither re-extracts 363 MB nor destroys anything a user put there.
 STAMP = ".unpacked-from"
 
 

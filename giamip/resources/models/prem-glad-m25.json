@@ -1,9 +1,9 @@
 {
   "id": "prem-glad-m25",
-  "name": "PREM with GLAD-M25 lateral variations",
+  "name": "PREM-stable with GLAD-M25 lateral variations",
   "kind": "elastic_structure",
-  "description": "PREM with lateral variations in elastic structure taken from the global adjoint tomography model GLAD-M25. The G-ADOPT team chose it for Exp08 and Exp12, where the protocol leaves the elastic structure to each group.",
-  "base": "prem",
+  "description": "PREM-stable with lateral variations in elastic structure taken from the global adjoint tomography model GLAD-M25. The G-ADOPT team chose it for Exp08 and Exp12, where the protocol leaves the elastic structure to each group.",
+  "base": "prem-stable",
   "used_by": ["G-ADOPT choice for giamip Exp08", "G-ADOPT choice for giamip Exp12"],
   "source": {
     "citation": "Lei, W. et al. (2020). Global adjoint tomography - model GLAD-M25. Geophysical Journal International 223(1), 1-21.",

@@ -2,7 +2,7 @@
 
 import pytest
 
-from giamip import cases
+from giamip import cases, data
 
 COLLECTIONS = {"spada2011", "martinec2018", "giamip"}
 
@@ -92,11 +92,21 @@ def test_the_five_tier_one_experiments_are_marked_mandatory():
     assert mandatory == {"Exp01", "Exp02", "Exp03", "Exp04", "Exp05"}
 
 
-def test_the_two_shortened_experiments_record_that_no_forcing_file_exists():
-    """Exp06 and Exp07 run over 80 ka and only 122 ka files were delivered."""
-    for eid in ("giamip-exp06", "giamip-exp07"):
-        c = cases.case(eid)
-        assert "truncation_required" in c["forcing"], eid
+def test_the_two_shortened_experiments_use_the_80_ka_files():
+    """Exp06 and Exp07 run from 80 ka, and the organisers supply 80 ka files for them.
+
+    Each names the `_80ka` file of the ice history of its 122 ka companion,
+    Exp01 or Exp02, and the manifest holds that file.
+    """
+    versions = data.file_versions()
+    for eid, companion in (("giamip-exp06", "giamip-exp01"), ("giamip-exp07", "giamip-exp02")):
+        c, full = cases.case(eid), cases.case(companion)
+        assert c["period"]["start_ka_before_2000ce"] == 80, eid
+        assert c["forcing"]["ice_history"] == full["forcing"]["ice_history"], eid
+        assert c["forcing"]["ice_history_file"] == (
+            full["forcing"]["ice_history_file"].replace(".nc", "_80ka.nc")), eid
+        assert c["forcing"]["ice_history_file"] in versions, eid
+        assert "truncation_required" not in c["forcing"], eid
 
 
 def test_case_raises_helpfully_for_an_unknown_id():

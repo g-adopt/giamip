@@ -315,11 +315,15 @@ def test_an_ice_history_reads_unmasked_on_the_prescribed_grid():
 
 
 @pytest.mark.data
-def test_the_truncated_experiments_start_at_80_ka():
+@pytest.mark.parametrize("experiment", ["Exp06", "Exp07"])
+def test_the_80_ka_experiments_read_every_step_of_their_80_ka_file(experiment):
+    """The `_80ka` files start where Exp06 and Exp07 start, so no step is skipped."""
     _ice_file()
-    steps = mip_inputs.GiamipExperiment("Exp06").forcing_steps()
-    ice = mip_inputs.GiamipExperiment("Exp06").ice_history
+    exp = mip_inputs.GiamipExperiment(experiment)
+    steps = exp.forcing_steps()
+    ice = exp.ice_history
     assert ice.years[steps[0]] == -80000 and ice.years[steps[-1]] == 1000
+    assert np.array_equal(steps, np.arange(379))
 
 
 @pytest.mark.data
@@ -332,6 +336,10 @@ def test_topography_names_its_antarctic_dataset_from_the_filename():
         pytest.skip("the GIAMIP originals are absent and cannot be downloaded")
     topo = mip_inputs.Topography(rel)
     assert topo.antarctic_dataset == "BedMachine Antarctica v3"
-    assert "topography-source-attribute" in topo.correction_ids
+    # The version of 2026-09-24 names its Antarctic dataset correctly, so the
+    # source-attribute correction does not apply to it. The missing `crs`
+    # variable is still missing.
+    assert "topography-source-attribute" not in topo.correction_ids
+    assert "topography-missing-crs" in topo.correction_ids
     z = topo.elevation()
     assert z.min() < -9000 and z.max() > 5000

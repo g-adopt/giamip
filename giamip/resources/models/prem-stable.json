@@ -1,0 +1,91 @@
+{
+  "id": "prem-stable",
+  "name": "PREM-stable",
+  "kind": "elastic_structure",
+  "description": "PREM with a density that is gravitationally stable in every layer of the crust and the mantle. Protocol v4.0 Section 3.1 gives it as the PREM of GIAMIP, for Exp01, Exp02 and Exp05 to Exp07 and for any experiment in which a group chooses PREM. Only the density differs from PREM: the bulk and shear moduli are those of PREM, and the wave speeds follow from the moduli and the new density.",
+  "base": "prem",
+  "used_by": [
+    "giamip Exp01",
+    "giamip Exp02",
+    "giamip Exp05",
+    "giamip Exp06",
+    "giamip Exp07",
+    "G-ADOPT choice for giamip Exp03",
+    "G-ADOPT choice for giamip Exp04",
+    "G-ADOPT choice for giamip Exp09",
+    "G-ADOPT choice for giamip Exp10",
+    "G-ADOPT choice for giamip Exp11"
+  ],
+  "source": {
+    "citation": "Ghelichkhan, S., Hoggard, M. and Scott, W. (2026). PREM-stable: a gravitationally stable PREM for GIA models (Version v1.0.0) [Dataset]. Zenodo.",
+    "doi": "10.5281/zenodo.23178246",
+    "concept_doi": "10.5281/zenodo.23178245",
+    "repository": "https://github.com/sghelichkhani/prem-stable",
+    "method": "METHOD.md in the Zenodo record gives the reasons for the change, the method, the result and the column formats."
+  },
+  "profile": {
+    "file": "giamip/PREM-stable.csv",
+    "stage": "converted",
+    "nodes": 339,
+    "order": "Rows go from the centre of the Earth (radius 0) to the surface (radius 6371 km).",
+    "discontinuities": "A boundary between two PREM regions has two rows at the same radius. The first row holds the value below the boundary and the second the value above.",
+    "interpolation": "Linear in radius between two neighbouring rows. Between the surface and the core-mantle boundary the gravity column is computed for density that varies linearly between nodes. In the core, mass and gravity come from the PREM polynomials, and linear interpolation of gravity there differs from them by up to about 1.2e-4 of the value.",
+    "spacing": "At most 10 km between the surface and the core-mantle boundary, and at most 100 km in the core.",
+    "columns": [
+      {
+        "name": "radius_m",
+        "quantity": "radius",
+        "unit": "m"
+      },
+      {
+        "name": "depth_km",
+        "quantity": "depth below the surface, 6371 km minus the radius",
+        "unit": "km"
+      },
+      {
+        "name": "region",
+        "quantity": "index of the PREM region of Dziewonski and Anderson (1981), Table I, counted from the centre",
+        "unit": null
+      },
+      {
+        "name": "rho_kg_m3",
+        "quantity": "density",
+        "unit": "kg/m3"
+      },
+      {
+        "name": "vp_m_s",
+        "quantity": "P-wave speed",
+        "unit": "m/s"
+      },
+      {
+        "name": "vs_m_s",
+        "quantity": "S-wave speed",
+        "unit": "m/s"
+      },
+      {
+        "name": "kappa_Pa",
+        "quantity": "bulk modulus",
+        "unit": "Pa"
+      },
+      {
+        "name": "mu_Pa",
+        "quantity": "shear modulus",
+        "unit": "Pa"
+      },
+      {
+        "name": "g_m_s2",
+        "quantity": "magnitude of the gravitational acceleration",
+        "unit": "m/s2"
+      }
+    ]
+  },
+  "layers": null,
+  "notes": [
+    "PREM as published has a density that increases upward between 24.4 and 220 km depth, and it is steeper than the adiabatic gradient at 220 to 400 km and at 600 to 670 km depth. Where such a layer flows, a self-gravitating viscoelastic model grows a Rayleigh-Taylor instability, and its response does not relax to the fluid limit. PREM-stable is the density closest to PREM, in a mass-weighted least-squares sense, that is stable or adiabatic in every interval and has no density jump that increases upward. The mass of the crust and the mantle is that of PREM, so the total mass and the surface gravity do not change.",
+    "Use the density, the bulk modulus and the shear modulus of this file. A code that reads the wave speeds takes them from this file too. The density of this file with the wave speeds of another PREM gives moduli that are not those of PREM.",
+    "Interpolate density linearly between nodes. Between the surface and the core-mantle boundary the gravity column is computed for that density. The G-ADOPT runs use the density as continuous and linear between nodes, which giamip.earth does. A code that computes gravity with the trapezoid rule differs from the column by at most 3e-5 of its value.",
+    "A code with constant-density layers takes the volume average of this profile in each layer, and states its layering in the model report (protocol v4.0 Section 3.1).",
+    "The file has no viscosity and no attenuation. Values are for a reference period of 1 s.",
+    "The core is that of PREM."
+  ]
+}

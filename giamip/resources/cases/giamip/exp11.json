@@ -5,8 +5,8 @@
   "tier": 2,
   "mandatory": false,
   "source": {
-    "citation": "GIAMIP experiment protocol v2.4, dated 2026-09-08. Lead: Holly Han.",
-    "document": "data/original/giamip/giamip-protocol-v2.4.md"
+    "citation": "GIAMIP experiment protocol v4.0, dated 2026-10-05. Lead: Holly Han.",
+    "document": "data/original/giamip/giamip-protocol-v4.0.md"
   },
   "forcing": {
     "ice_history": "GLAC3_p3",
@@ -18,7 +18,7 @@
     "viscosity": "open",
     "elastic_structure": "open",
     "rheology": "open",
-    "compressibility": "group's choice, recorded in the model report",
+    "compressibility": "open",
     "$comment": "Labelled 'Open'. The group chooses freely and records the choice. The protocol encourages exploring values well outside the suggested range where a region calls for it."
   },
   "topography": {
@@ -51,14 +51,16 @@
     "viscosity",
     "elastic_structure",
     "rheology",
-    "topography"
+    "topography",
+    "compressibility"
   ],
   "gadopt": {
     "viscosity": "lloyd2024",
-    "elastic_structure": "prem",
+    "elastic_structure": "prem-stable",
     "rheology": "maxwell",
     "topography": "bedmap3",
-    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups. Exp03 with the 3D viscosity of Lloyd et al. (2024)."
+    "compressibility": "compressible",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v4.0 leaves open and do not change what the protocol asks of other groups. Exp03 with the 3D viscosity of Lloyd et al. (2024). Protocol v4.0 Section 3 leaves compressibility to each group in every experiment. Every G-ADOPT run is compressible."
   },
   "status": "specified; no runner and no output writer yet"
 }

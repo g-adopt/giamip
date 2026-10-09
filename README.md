@@ -92,7 +92,7 @@ Gadi compute nodes have no network, and in a job the Firedrake module points
    dependencies h5netcdf and `packaging` (h5py, numpy and scipy are there).
 2. On a login node, fill a directory on `/g/data` once:
    `GIAMIP_DATA_ROOT=/g/data/<project>/giamip python -m giamip.data --stage converted --collection benchmarks`.
-   For the GIAMIP inputs (317 MB), run the same command with
+   For the GIAMIP inputs (363 MB), run the same command with
    `--collection giamip` and without `--stage converted`: they are originals.
 3. In the job script, set `GIAMIP_DATA_ROOT` to the same directory.
 
@@ -133,8 +133,9 @@ outputs/            gitignored. The output fields a solver produced for a case
 
 ## Correspondence about the GIAMIP inputs
 
-We raised two defects in the GIAMIP inputs with the GIAMIP organisers. The
-correspondence is not in this repository, so this section records the result.
+We raised two defects in the GIAMIP inputs, and the instability of PREM, with
+the GIAMIP organisers. The correspondence is not in this repository, so this
+section records the result.
 
 **GLAC3 version names** (correction `glac3-version-naming`). The protocol
 table gives the ice history of Exp03, Exp04 and Exp09 to Exp11 as GLAC3b. The
@@ -146,13 +147,20 @@ sheets. The case files give the ice history as `GLAC3_p1`, `GLAC3_p2` or
 `GLAC3_p3`, with no version letter.
 
 **Topography source attribute** (correction `topography-source-attribute`).
-In `bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc`, the `source` attribute
-names BedMachine Greenland twice. The first of the two entries must name
-BedMachine Antarctica v3. We reported this defect to Jan Swierczek-Jereczek on
-2026-09-12. Until a corrected file arrives, only the filename names the
-Antarctic dataset correctly. A corrected file has a new SHA-256 sum, and
-`tests/test_corrections.py` then fails until someone checks the correction
-against the new file.
+In the first version of `bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc`, the
+`source` attribute names BedMachine Greenland twice. The first of the two
+entries must name BedMachine Antarctica v3. We reported this defect to Jan
+Swierczek-Jereczek on 2026-09-12. The organisers replaced the file on
+2026-09-24 and announced it on 2026-10-07. The new version names BedMachine
+Antarctica v3.4, and its topography is identical to the first version. The
+correction lists the new sum as checked and clean.
+
+**PREM** (protocol v4.0 Section 3.1). GIAMIP gave no PREM file, and PREM is
+gravitationally unstable where the mantle flows. The G-ADOPT team proposed
+PREM-stable, and the organisers adopted it in protocol v4.0 of 2026-10-05 as
+the PREM of every experiment that uses PREM. The file is
+`data/converted/giamip/PREM-stable.csv`, copied unchanged from Zenodo
+(doi:10.5281/zenodo.23178246).
 
 ## Licence
 

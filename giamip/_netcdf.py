@@ -4,7 +4,7 @@ Every NetCDF file in this package is opened through h5netcdf, a netCDF-4
 layer written in Python on top of h5py. Three properties decide this:
 
 * h5netcdf applies no mask, no scale factor and no fill value. It returns the
-  numbers stored in the file. The six GIAMIP ice files declare
+  numbers stored in the file. The eight GIAMIP ice files declare
   ``_FillValue = 0.0`` on ``ice_thickness``, and a reader that masks would turn
   every ice-free cell into a missing value (AGENTS.md, "Every reader in the
   package opens NetCDF through h5netcdf").

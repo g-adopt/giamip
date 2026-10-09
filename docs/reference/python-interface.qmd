@@ -323,7 +323,7 @@ the same number of modes. GS holds three Maxwell modes that VB does not hold.
 an experiment prescribes, through h5netcdf, which applies no mask, with the
 grid checked and the corrections for the version of the file on disk. The
 files are located through `giamip.data.locate`, so they are downloaded and
-unpacked on first use (317 MB for the ice histories).
+unpacked on first use (361 MB for the ice histories).
 
 ```python
 from giamip.mip.inputs import GiamipExperiment, grounded_thickness
@@ -333,7 +333,7 @@ ice = exp.ice_history                       # IceHistory
 ice.years                                   # years from 2000 CE
 h = ice.thickness(step, north_first=True)   # (257, 513), metres
 bed = exp.topography.elevation(north_first=True)
-steps = exp.forcing_steps()                 # the steps inside the period, 80 ka for Exp06 and Exp07
+steps = exp.forcing_steps()                 # the steps inside the period; Exp06 and Exp07 read the _80ka files
 grounded = grounded_thickness(h, bed, exp.constants["ice_density_kg_m3"],
                               exp.constants["ocean_water_density_kg_m3"])
 ```
@@ -341,3 +341,37 @@ grounded = grounded_thickness(h, bed, exp.constants["ice_density_kg_m3"],
 The GIAMIP grid has 257 latitudes and 513 longitudes. A solver that assumes
 `nlat` by `2 nlat` longitudes, as the lovejx sea-level solver does, cannot take
 it without regridding.
+
+## GIAMIP: earth structure
+
+`giamip.earth` gives the radial earth of an experiment at any radius: density,
+bulk and shear modulus, wave speeds, gravity and viscosity. It reads the
+elastic structure, PREM-stable for every 1D experiment, from its node table and
+the viscosity structure from its model file. Every column of the node table is
+interpolated linearly in radius, which is the rule of protocol v4.0 Section 3.1
+for density. The viscosity is constant in each layer, infinite in the elastic
+lid and NaN in the core. The deepest layer reaches the core-mantle boundary of
+the elastic structure.
+
+```python
+import numpy as np
+import giamip
+
+e = giamip.case("giamip-exp01").earth()     # with the G-ADOPT choices; gadopt=False for the protocol alone
+r = np.linspace(3480e3, 6371e3, 2000)       # radii in metres, any shape
+v = e(r)                                    # dict of arrays with the shape of r
+v["rho_kg_m3"], v["kappa_Pa"], v["mu_Pa"], v["g_m_s2"], v["viscosity_pa_s"]
+v = e(r, side="below")                      # on a boundary, the value below it
+```
+
+The radii are in metres and every value is in SI units, as the key names say.
+At a radius exactly on a boundary of either structure, `side="above"` (the
+default) gives the value just above it and `side="below"` the value just below.
+With the default, a mantle mesh with nodes on the core-mantle boundary gets
+mantle values there. One call is one binary search per radius and no loop in
+Python, and the same radii give the same values on every machine.
+
+`e.compressibility` is `compressible` for every G-ADOPT run, and the bulk
+modulus is that of the file. Exp08, Exp11 and Exp12 raise
+`NotImplementedError`: their G-ADOPT choices vary laterally, and the grids will
+come from g-drift.

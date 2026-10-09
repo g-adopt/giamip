@@ -2,16 +2,74 @@
   "id": "prem",
   "name": "PREM",
   "kind": "elastic_structure",
-  "description": "The Preliminary Reference Earth Model, prescribed as the elastic structure for GIAMIP experiments Exp01, Exp02, Exp05, Exp06 and Exp07. A viscosity profile such as VM5a or VM7 is layered onto it.",
-  "used_by": ["giamip Exp01", "giamip Exp02", "giamip Exp05", "giamip Exp06", "giamip Exp07"],
+  "description": "The Preliminary Reference Earth Model as published, evaluated on the nodes of PREM-stable. GIAMIP uses PREM-stable in its place (protocol v4.0 Section 3.1). This file is kept to compare the two and to identify runs made with the published PREM.",
+  "used_by": [],
   "source": {
     "citation": "Dziewonski, A. M. and Anderson, D. L. (1981). Preliminary reference Earth model. Physics of the Earth and Planetary Interiors 25(4), 297-356.",
-    "doi": "10.1016/0031-9201(81)90046-7"
+    "doi": "10.1016/0031-9201(81)90046-7",
+    "evaluated_by": "Ghelichkhan, S., Hoggard, M. and Scott, W. (2026). PREM-stable: a gravitationally stable PREM for GIA models (Version v1.0.0) [Dataset]. Zenodo. doi:10.5281/zenodo.23178246"
+  },
+  "profile": {
+    "file": "giamip/PREM.csv",
+    "stage": "converted",
+    "nodes": 339,
+    "order": "Rows go from the centre of the Earth (radius 0) to the surface (radius 6371 km).",
+    "discontinuities": "A boundary between two PREM regions has two rows at the same radius. The first row holds the value below the boundary and the second the value above.",
+    "interpolation": "Linear in radius between two neighbouring rows. Between the surface and the core-mantle boundary the gravity column is computed for density that varies linearly between nodes. In the core, mass and gravity come from the PREM polynomials, and linear interpolation of gravity there differs from them by up to about 1.2e-4 of the value.",
+    "spacing": "At most 10 km between the surface and the core-mantle boundary, and at most 100 km in the core.",
+    "columns": [
+      {
+        "name": "radius_m",
+        "quantity": "radius",
+        "unit": "m"
+      },
+      {
+        "name": "depth_km",
+        "quantity": "depth below the surface, 6371 km minus the radius",
+        "unit": "km"
+      },
+      {
+        "name": "region",
+        "quantity": "index of the PREM region of Dziewonski and Anderson (1981), Table I, counted from the centre",
+        "unit": null
+      },
+      {
+        "name": "rho_kg_m3",
+        "quantity": "density",
+        "unit": "kg/m3"
+      },
+      {
+        "name": "vp_m_s",
+        "quantity": "P-wave speed",
+        "unit": "m/s"
+      },
+      {
+        "name": "vs_m_s",
+        "quantity": "S-wave speed",
+        "unit": "m/s"
+      },
+      {
+        "name": "kappa_Pa",
+        "quantity": "bulk modulus",
+        "unit": "Pa"
+      },
+      {
+        "name": "mu_Pa",
+        "quantity": "shear modulus",
+        "unit": "Pa"
+      },
+      {
+        "name": "g_m_s2",
+        "quantity": "magnitude of the gravitational acceleration",
+        "unit": "m/s2"
+      }
+    ]
   },
   "layers": null,
   "notes": [
-    "The layer table is not reproduced here. PREM is widely distributed and every solver that needs it already carries a deck; lovejx ships three PREM variants.",
-    "The protocol states that each group may choose its own treatment of compressibility, so a PREM deck may be used compressible or with the incompressible approximation. The choice is recorded in the model report.",
-    "PREM is a seismic model and is layered in depth below the surface, while M3-L70-V01 is given in radius. Mixing the two conventions is a real risk when a single reader handles both."
+    "Evaluated from the polynomial coefficients of Table I of Dziewonski and Anderson (1981), at a reference period of 1 s, with no attenuation.",
+    "Between 24.4 and 220 km depth PREM is transversely isotropic. This file uses the isotropic wave speeds of the footnote of Table I, V_P = 4.1875 + 3.9382x and V_S = 2.1519 + 2.3481x km/s, with x the radius divided by 6371 km.",
+    "The 3 km ocean layer of PREM is replaced by upper crust (2600 kg/m3, V_P 5.8 km/s, V_S 3.2 km/s) up to the surface. A GIA model applies the ocean as a surface load, so the Earth model has no fluid layer at the top.",
+    "PREM is gravitationally unstable where the mantle flows, most strongly between 24.4 and 220 km depth. See prem-stable."
   ]
 }

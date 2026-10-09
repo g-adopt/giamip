@@ -98,7 +98,7 @@ def applying_to(relative_path: str, sha256: str | None = None) -> list[dict]:
     Notes
     -----
     Matching is by shell glob, so a pattern like ``giamip/ice-history/*.nc``
-    covers all six ice files. ``fnmatch`` treats ``*`` as matching a slash as
+    covers all eight ice files. ``fnmatch`` treats ``*`` as matching a slash as
     well, which is loose, and every pattern in the table names its directory
     explicitly so that looseness never comes into play.
     """

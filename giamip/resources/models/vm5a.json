@@ -2,12 +2,12 @@
   "id": "vm5a",
   "name": "VM5a",
   "kind": "viscosity_profile",
-  "description": "A six-layer radial viscosity profile, prescribed for GIAMIP experiments Exp01 and Exp06. It is a viscosity structure only: the elastic structure is PREM and the rheology is Maxwell.",
-  "elastic_structure": "prem",
+  "description": "A six-layer radial viscosity profile, prescribed for GIAMIP experiments Exp01 and Exp06. It is a viscosity structure only: the elastic structure is PREM-stable (protocol v4.0 Section 3.1) and the rheology is Maxwell.",
+  "elastic_structure": "prem-stable",
   "rheology": "maxwell",
   "used_by": ["giamip Exp01", "giamip Exp06"],
   "source": {
-    "citation": "Roy, K. and Peltier, W. R. (2017). Space-geodetic and water level gauge constraints on continental uplift and tilting over North America. Geophysical Journal International 210(2), 1115-1142, table 2. Reproduced in the GIAMIP protocol v2.4, section 3.1.1.",
+    "citation": "Roy, K. and Peltier, W. R. (2017). Space-geodetic and water level gauge constraints on continental uplift and tilting over North America. Geophysical Journal International 210(2), 1115-1142, table 2. Reproduced in the GIAMIP protocol v4.0, section 3.2.1.",
     "doi": "10.1093/gji/ggx156"
   },
   "depth_convention": "kilometres below the solid surface",
@@ -17,11 +17,12 @@
     {"top_depth_km": 100,  "bottom_depth_km": 420,    "viscosity_pa_s": 5.0e20,  "rheology": "maxwell"},
     {"top_depth_km": 420,  "bottom_depth_km": 670,    "viscosity_pa_s": 5.0e20,  "rheology": "maxwell"},
     {"top_depth_km": 670,  "bottom_depth_km": 1260,   "viscosity_pa_s": 1.57e21, "rheology": "maxwell"},
-    {"top_depth_km": 1260, "bottom_depth_km": 2885.5, "viscosity_pa_s": 3.23e21, "rheology": "maxwell", "role": "to the core-mantle boundary"}
+    {"top_depth_km": 1260, "bottom_depth_km": 2891, "viscosity_pa_s": 3.23e21, "rheology": "maxwell", "role": "to the core-mantle boundary"}
   ],
   "notes": [
     "The protocol tabulates viscosity in units of 1e21 Pa s. The values here are in Pa s.",
     "The 100-420 km and 420-670 km layers carry the same viscosity, so the profile has five distinct values across six layers.",
-    "The protocol states that each group may choose its own treatment of compressibility."
+    "The protocol states that each group may choose its own treatment of compressibility.",
+    "Protocol v4.0 gives the deepest layer as reaching the core-mantle boundary. In PREM-stable that boundary is at a radius of 3480 km, a depth of 2891 km, so the deepest layer ends there. giamip.earth takes the boundary from the elastic structure."
   ]
 }

@@ -5,11 +5,16 @@ title: "Earth models"
 Every case names an earth model. This page is generated from `giamip/resources/models/`, so a
 case and its model cannot disagree.
 
-Two kinds appear. A **complete model** gives density, shear modulus and
+Three kinds appear. A **complete model** gives density, shear modulus and
 viscosity for every layer and stands on its own; the two published benchmarks
-both use one, M3-L70-V01. A **viscosity profile** gives viscosity against
-depth and is layered onto a separate elastic structure, which for GIAMIP is
-PREM; VM5a, VM7 and the Gowan et al. profile are of this kind.
+both use one, M3-L70-V01. An **elastic structure** gives density, elastic
+moduli and gravity, without viscosity. For GIAMIP it is PREM-stable, which
+protocol v4.0 Section 3.1 gives as the PREM of the project. It is a table of
+nodes in a CSV file, found through `giamip.data`, and the file is summarised
+below. A **viscosity profile** gives viscosity against depth and is combined
+with an elastic structure; VM5a, VM7 and the Gowan et al. profile are of this
+kind. `giamip.earth` combines the two for an experiment and returns every
+property at any radius (see [the Python interface](python-interface.qmd)).
 
 ```{python}
 #| echo: false
@@ -51,14 +56,33 @@ for m in cases.earth_models():
                        f"{L['density_kg_m3']} | {L['shear_modulus_pa']:.4g} | {visc} | "
                        f"{L['rheology']} | {L.get('gravity_at_top_m_s2', '—')} |")
         out.append("")
+    elif m.get("profile"):
+        # A node table: describe the file and its columns. The values are in
+        # the file, so the page holds no copy of them.
+        prof = m["profile"]
+        if src.get("method"):
+            out.append(f"{src['method']}\n")
+        out.append(f"**File** `{prof['file']}` ({prof['stage']}), {prof['nodes']} nodes. "
+                   f"{prof['order']} {prof['discontinuities']} {prof['interpolation']} "
+                   f"{prof['spacing']}\n")
+        out.append("\n| Column | Quantity | Unit |")
+        out.append("| --- | --- | --- |")
+        for col in prof["columns"]:
+            out.append(f"| `{col['name']}` | {col['quantity']} | {col['unit'] or '—'} |")
+        out.append("")
     elif layers and m["kind"] == "viscosity_profile":
         out.append("\n| Top depth (km) | Bottom depth (km) | Viscosity (Pa s) |")
         out.append("| ---: | ---: | ---: |")
-        for L in layers:
+        for i, L in enumerate(layers):
             visc = "elastic lid" if L["viscosity_pa_s"] is None else f"{L['viscosity_pa_s']:.3g}"
-            out.append(f"| {L['top_depth_km']} | {L['bottom_depth_km']} | {visc} |")
+            # The deepest layer reaches the core-mantle boundary, which the
+            # protocol states in place of a depth.
+            bottom = (f"{L['bottom_depth_km']} (CMB)" if i == len(layers) - 1
+                      else L["bottom_depth_km"])
+            out.append(f"| {L['top_depth_km']} | {bottom} | {visc} |")
         out.append("")
     for key, label in (("lithosphere_thickness_km", "Lithosphere thickness (km)"),
+                       ("upper_lower_mantle_boundary_depth_km", "Upper/lower mantle boundary (km depth)"),
                        ("upper_mantle_viscosity_pa_s", "Upper mantle viscosity (Pa s)"),
                        ("lower_mantle_viscosity_pa_s", "Lower mantle viscosity (Pa s)")):
         if key in m:

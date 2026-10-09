@@ -49,6 +49,23 @@ potential perturbation instead. Dividing the potential by the surface gravity
 gives the height; the Martinec scripts use 9.8155 m/s², the surface value of
 the M3-L70-V01 gravity profile.
 
+## Earth structure
+
+The earth models of GIAMIP are radial. The node tables of PREM and PREM-stable
+give the radius in metres from the centre of the Earth, and the rows go from
+the centre to the surface. Depth is in km below the solid surface, which is at
+a radius of 6371 km, so the depth is 6371 km minus the radius. The ocean of PREM
+is replaced by upper crust: the ocean is a surface load, so the earth model has
+no fluid layer at the top. The viscosity structures give their layers in depth
+below the same surface.
+
+A boundary between two regions appears twice in a node table, at the same
+radius. The first of the two rows holds the values below the boundary and the
+second the values above. `giamip.earth` asks for the side at a boundary, and its
+default is the side above. Gravity in the tables is the magnitude of the
+gravitational acceleration, positive. An elastic layer has an infinite
+viscosity, and the viscosity structure does not describe the core.
+
 ## Angles
 
 Both benchmarks work in colatitude, measured from the north pole, from 0 to

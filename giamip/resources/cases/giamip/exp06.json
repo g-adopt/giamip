@@ -5,21 +5,21 @@
   "tier": 2,
   "mandatory": false,
   "source": {
-    "citation": "GIAMIP experiment protocol v2.4, dated 2026-09-08. Lead: Holly Han.",
-    "document": "data/original/giamip/giamip-protocol-v2.4.md"
+    "citation": "GIAMIP experiment protocol v4.0, dated 2026-10-05. Lead: Holly Han.",
+    "document": "data/original/giamip/giamip-protocol-v4.0.md"
   },
   "forcing": {
     "ice_history": "ICE-6G_D",
-    "ice_history_file": "giamip/ice-history/iceHistory-ICE-6G_D.nc",
+    "ice_history_file": "giamip/ice-history/iceHistory-ICE-6G_D_80ka.nc",
     "grounded_ice_only": true,
-    "$comment": "Protocol section 2.1: only grounded ice loads the solid Earth, so floating ice is masked out.",
-    "truncation_required": "No 80 ka forcing file was delivered for this ice history. The 122 ka file must be truncated to start at 80 ka. The rule used must be recorded in the model report, and the compliance checker expects a filename ending _80ka that does not exist among the delivered files."
+    "$comment": "Protocol section 2.1: only grounded ice loads the solid Earth, so floating ice is masked out."
   },
   "earth": {
     "viscosity": "vm5a",
-    "elastic_structure": "prem",
+    "elastic_structure": "prem-stable",
     "rheology": "maxwell",
-    "compressibility": "group's choice, recorded in the model report"
+    "compressibility": "open",
+    "$elastic_structure_comment": "The protocol table names PREM. Protocol v4.0 Section 3.1 gives PREM-stable.csv as the PREM of this experiment."
   },
   "topography": {
     "model": "bedmap2",
@@ -47,7 +47,13 @@
   },
   "reference_frame": "centre of mass of the whole Earth system (CM), not the solid Earth alone (CE)",
   "outputs": "giamip/resources/variables.json",
-  "open_choices": [],
-  "status": "specified; no runner and no output writer yet",
-  "note": "Repeats Exp01 over the shorter interval, to test sensitivity to the length of the loading history."
+  "open_choices": [
+    "compressibility"
+  ],
+  "note": "Repeats Exp01 over the shorter interval, to test sensitivity to the length of the loading history.",
+  "gadopt": {
+    "compressibility": "compressible",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v4.0 leaves open and do not change what the protocol asks of other groups. Protocol v4.0 Section 3 leaves compressibility to each group in every experiment. Every G-ADOPT run is compressible."
+  },
+  "status": "specified; no runner and no output writer yet"
 }

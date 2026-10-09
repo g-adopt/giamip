@@ -9,14 +9,14 @@ to measure the spread between models.
 Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.
 Endorsed by PALSEA-Next, with the output archive supported by ISMIP7.
 
-The protocol as supplied is [reproduced here](../protocol/giamip-v2.4.qmd).
+The protocol as supplied is [reproduced here](../protocol/giamip-v4.0.qmd).
 
 ## Timeline
 
 | Milestone | Date |
 | --- | --- |
 | Protocol announcement and data release | 1 July 2026 |
-| Model submission deadline | 1 November 2026 |
+| Model submission deadline | 31 October 2026 |
 | Analysis and drafting | Winter 2026 to Spring 2027 |
 | Manuscript submission | Spring to Summer 2027 |
 
@@ -26,7 +26,7 @@ Five mandatory, seven optional. A field marked `open` is the group's choice
 and has to be recorded in the model report. A value in red is the choice the
 G-ADOPT team made for its own runs, in a field the protocol leaves open. The
 "Open choices" column counts the fields that the protocol leaves open. The
-[protocol page](../protocol/giamip-v2.4.qmd) explains the G-ADOPT choices.
+[protocol page](../protocol/giamip-v4.0.qmd) explains the G-ADOPT choices.
 
 ```{python}
 #| echo: false
@@ -42,17 +42,25 @@ Markdown(_experiments.id_table(link=True, open_count=True))
 
 ## Inputs
 
-Six ice histories and three bed topographies, all on the prescribed
-Gauss-Legendre grid of 257 latitudes by 513 longitudes. Only grounded ice
-loads the solid Earth; floating ice is masked out.
+Six ice histories, two of them also in a shorter version, and three bed
+topographies, all on the prescribed Gauss-Legendre grid of 257 latitudes by
+513 longitudes. Only grounded ice loads the solid Earth; floating ice is
+masked out.
 
 The ice histories run from 122 ka before 2000 CE to 1000 years after it, in
 463 steps, at 500 years before 26 ka and 100 years after. PaleoMIST starts at
-80 ka and has 379 steps.
+80 ka and has 379 steps. For Exp06 and Exp07, ICE-6G_D and ICE-7G_NA also come
+as `_80ka` files that start at 80 ka, with 379 steps. They equal the last 379
+steps of the 122 ka files to within float32 rounding.
 
 The three topographies differ only in their Antarctic source: BedMachine
 Antarctica v3, Bedmap3 or Bedmap2, each merged with BedMachine Greenland v5.5
 and GEBCO.
+
+The elastic structure of every experiment that names PREM is PREM-stable
+(protocol v4.0 Section 3.1). It is in this repository as
+`giamip/PREM-stable.csv`, and [the earth models page](../reference/earth-models.qmd#prem-stable)
+summarises it.
 
 ## Output
 
@@ -86,7 +94,7 @@ requires every submission to pass, and not retyped from the protocol prose,
 which names only three of the fourteen. See `AGENTS.md` on where authority
 lives.
 
-## Three things that do not line up
+## Two things that do not line up
 
 **The GLAC3 version.** The protocol table says GLAC3b. The filenames say
 `GLAC3c_profile`. The attributes inside the files say `GLAC3c_merge`. The
@@ -95,10 +103,6 @@ lead of the protocol, confirmed that the delivered files are the intended
 inputs, and that each file combines GLAC3 versions a, b and c across the ice
 sheets. The case files give the ice history as `GLAC3_p1` to `GLAC3_p3`, with
 no version letter.
-
-**Exp06 and Exp07 have no input file.** They repeat Exp01 and Exp02 over 80
-ka and only the 122 ka histories were delivered, so the truncation is ours to
-define and to record.
 
 **Four experiments are open in every column.** Exp09 to Exp12 are not cases
 until the earth structure is chosen.

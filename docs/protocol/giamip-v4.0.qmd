@@ -1,16 +1,19 @@
 ---
-title: "GIAMIP protocol v2.4"
+title: "GIAMIP protocol v4.0"
+aliases:
+  - giamip-v2.4.html
 ---
 
-The GIAMIP experiment protocol as supplied, version 2.4, dated 8 September
+The GIAMIP experiment protocol as supplied, version 4.0, dated 5 October
 2026. Converted from the Word document to Markdown. The text keeps the meaning
 of the supplied document, and mistakes that do not change the meaning, such as
 typos and exponents that lost their superscript in the conversion, are
 corrected. The one exception is the experiment table in Section 1. It is built from the
 case files and shows the choices of the G-ADOPT team in red. The note under the
 table explains them.
-The original conversion, including the two embedded equation images, is
-`data/original/giamip/giamip-protocol-v2.4.md`.
+The supplied document is `data/original/giamip/giamip-protocol-v4.0.docx`, and
+the original conversion, with the three embedded equation images, is
+`data/original/giamip/giamip-protocol-v4.0.md`.
 
 ::: {.callout-note}
 ## Where this document is not the authority
@@ -21,13 +24,16 @@ anything about output format, see
 [the GIAMIP collection page](../collections/giamip.qmd) and
 `giamip/resources/variables.json`, which are generated from the checker.
 
-Three points where the delivered files disagree with this text are recorded
-in [the corrections](../data/corrections.qmd): the GLAC3b and GLAC3c naming,
-the absence of an 80 ka forcing file for Exp06 and Exp07, and the
-mislabelled `year` variable.
+Two points where the delivered files disagree with this text are recorded
+in [the corrections](../data/corrections.qmd): the GLAC3b and GLAC3c naming
+and the mislabelled `year` variable.
 :::
 
 ---
+
+*(Last update: 10/05/2026)*
+
+Project website: [https://sites.google.com/view/giagrdmip/](https://sites.google.com/view/giagrdmip/)
 
 **Glacial Isostatic Adjustment Model Intercomparison Project (GIAMIP)**
 
@@ -53,6 +59,20 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 * Quantify measurements of GIA-derived uncertainties for the geodetic observation community for better inference of physical quantities from geodetic and space observations (e.g., ice mass and elevation changes, vertical land motions of the solid Earth)  
 * Provide background GIA signal for ice sheet models: quantify the uncertainty-bounded contribution of ongoing GIA associated with past deglaciation to future solid Earth deformation and sea-level change. Because the prescribed paleo ice histories contain no recent or future ice-loading changes, the GIA response may be approximated as linear over centennial projection timescales for many Earth models. Where appropriate, these fields may be superposed on GRD responses associated with contemporaneous ice-loading changes to provide background solid Earth deformation signals for ice-sheet simulations submitted to the Ice Sheet Model Intercomparison Project (ISMIP).
 
+**GIAMIP Participant Checklist**
+
+Before running and submitting your GIAMIP experiments:
+
+- [ ] **Choose your [experiments](https://docs.google.com/spreadsheets/d/1P62LPaUR48VnW2XwnfD6arjzOWMsr5Qq/edit?gid=1135141520#gid=1135141520):** Complete the Tier 1 experiments (Exp01–05); Tier 2 experiments (Exp06–12) are optional but encouraged. See **Section 1** for experiment configurations.
+- [ ] **Download the prescribed input files:** Download the preprocessed [ice-loading histories and reference topography files](https://drive.google.com/drive/folders/1wuEVYLWqwJh-KhA7SODvPihPe0LZplN1?usp=share_link). See **Sections 2 and 4** for details.
+- [ ] **Prepare your model configuration:** Follow the prescribed ice history, solid Earth structure/rheology, initial topography, reference frame, and other experiment-specific requirements in **Sections 1–5 and 8**.
+- [ ] **Check the required outputs:** Use the [GIAMIP Output Variable Spreadsheet](https://docs.google.com/spreadsheets/d/1J5o2MxnOGaKYWp3VmcRPSJ9j0KDQpnD2/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true) for the complete list of required/optional variables, output intervals, dimensions, units, variable names, and other formatting requirements. See **Section 6.1** for additional instructions.
+- [ ] **Format your NetCDF files:** Follow the prescribed common grid, dimension ordering, metadata, and file-naming convention in **Sections 6.1–6.2**.
+- [ ] **Run the QC checker:** Validate the final NetCDF files using the [GIAMIP QC script](https://github.com/JanJereczek/GIA_SimulationChecker) and resolve all Hard Check failures before submission. Please make sure to go through the Soft Check requirements as well. The list of checks to be performed is here: [GIAMIP_QC_Checks.docx](https://docs.google.com/document/d/1EFyQHMATeCUgvhr12Ss_ElUF2fSr0viI/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true). See **Section 6.3**.
+- [ ] **Complete the Model Report:** Fill out the [GIAMIP Model Report Template](https://docs.google.com/document/d/1oGE4pYxxYs-7Ot0w-CedKZyNnbL4g1G2/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true), documenting your model configuration and any experiment-specific choices. See **Section 9**.
+- [ ] **Request your submission folder:** Email **holly.han@dartmouth.edu** and/or **grdmip@gmail.com** with your Globus ID/email, institution/modeling group, and model name. See **Section 6.4**.
+- [ ] **Submit:** Upload the model outputs, completed model report, and QC report to your assigned Globus folder by the submission deadline **(10/31/2026)**.
+
 **GIAMIP Experiment Protocol**
 
  
@@ -64,7 +84,7 @@ To systematically assess these uncertainties, we introduce the GIA Model Interco
 
    For the optional experiments, participating groups may submit multiple simulations for a given experiment to explore sensitivities to Earth structure, rheology, numerical configuration, initial topography, or other model choices. Additional simulations should follow the naming convention ExpXX\_mYY, where XX denotes the experiment number and YY denotes the simulation/member identifier (e.g., Exp08\_m02). The m01 identifier should correspond to the primary or baseline submission for a given experiment, while subsequent identifiers may be used for additional sensitivity experiments. Any modifications relative to the nominal experiment configuration should be clearly documented in Section 8 of the [Model Report Template](https://docs.google.com/document/d/1oGE4pYxxYs-7Ot0w-CedKZyNnbL4g1G2/edit).
 
-   Experiments labeled with prescribed solid Earth structures (e.g., VM5a, VM7, Gowan et al.) should follow the specified profiles provided in Sections 3.1.1 \- 3.1.3 Experiments labeled as “Within suggested range” allow participating groups to select solid Earth parameters within the ranges provided in Section 3.1.4. Experiments labeled as “Open” allow participating groups to choose their own solid Earth structures and rheology choices of interests. All modeling choices should be documented in the accompanying model report.
+   Experiments labeled with prescribed solid Earth structures (e.g., VM5a, VM7, Gowan et al.) should follow the specified profiles provided in Sections 3.2.1–3.2.3. Experiments labeled as “Within suggested range” allow participating groups to select solid Earth parameters within the ranges provided in Section 3.2.4. Experiments labeled as “Open” allow participating groups to choose their own solid Earth structures and rheology choices of interests. All modeling choices should be documented in the accompanying model report.
 
     
 
@@ -97,15 +117,21 @@ Markdown(_experiments.protocol_table())
 ::: {.callout-note}
 ## Choices made by the G-ADOPT team
 
-The entries in red were open choices in protocol v2.4, or were left to each
+The entries in red were open choices in protocol v4.0, or were left to each
 group. The G-ADOPT team decided on these values for its own runs. The other
 entries are the protocol values. The table is built from the case files in
 `giamip/resources/cases/giamip/`, so it uses their names for the ice histories
 and the Earth models. The G-ADOPT values are in the `gadopt` block of each
 case file.
 
+The elastic structure column shows PREM-stable where the protocol table says
+PREM, because Section 3.1 gives PREM-stable.csv as the PREM of GIAMIP. The
+G-ADOPT team uses PREM-stable wherever it chooses PREM. Section 3 leaves
+compressibility to each group in every experiment, and every G-ADOPT run is
+compressible.
+
 For Exp03, Exp04, Exp09 and Exp10, the viscosity structure is the middle of
-the ranges in Section 3.1.4, which were originally given as the choice for
+the ranges in Section 3.2.4, which were originally given as the choice for
 Exp03 and Exp04. The ranges are a lithosphere thickness of 60–120 km, an upper
 mantle viscosity of 10^20^–10^21^ Pa s and a lower mantle viscosity of
 10^21^–10^23^ Pa s. The viscosity ranges span orders of magnitude, so their
@@ -179,11 +205,32 @@ Exp12 combines Burgers and power-law rheology.
 3. **Solid Earth structure profiles**  
       
    This section provides details of the solid Earth profiles for the experiments described in Section 1\. For all experiments, each modeling group can assign Earth compressibility of their choice. Where labeled as ‘Open’, each modeling group can make a choice of their own (you can be explorative\!)   
-    
 
- 
+**3.1. PREM (relevant for Exp01&02 and Exp05–07 and any experiment where a group chooses PREM)**
 
-**3.1.1. VM5a (relevant for Exp 01&06):** 
+As of October 5th, 2026, we provide a reference table for PREM:
+
+[PREM-stable.csv](https://github.com/sghelichkhani/prem-stable/blob/main/PREM-stable.csv) (Ghelichkhan, et al., 2026), with detailed motivation and methodology available in this GitHub [repo](https://github.com/sghelichkhani/prem-stable). The original PREM published in Dziewonski and Anderson (1981) is gravitationally unstable in parts of the mantle, most strongly between 24.4 and 220 km, where density increases upward. In layers that flow, this produces a Rayleigh–Taylor instability that grows rather than relaxes (Plag & Jüttner, 1995; Vermeersen & Mitrovica, 2000). Its effect depends on compressibility and viscosity, both of which the protocol leaves open in places. PREM-stable keeps density as close to PREM as possible while making every layer of the crust and mantle stable, with the elastic moduli (κ, μ) unchanged and the total mass conserved.
+
+**How to use the table:**
+
+- Use PREM-stable.csv for density, κ and μ. If your code reads Vp and Vs, take them from the same file. Please do not combine PREM-stable density with wavespeeds from another PREM version.
+- Interpolate density linearly between nodes; the g column is computed on that basis. If your code computes g itself, the result should agree closely with the file.
+- If your code uses constant-density layers, please volume-average PREM-stable within your layers and describe your layering in the model report.
+- METHOD.md in the repository gives the full rationale, method and column formats.
+
+*Note: While we strongly encourage modeling groups to use PREM-stable.csv, we understand that some groups have already completed runs with another PREM version and cannot rerun them before the deadline. In that case, you may still submit your runs. Please identify these runs in the model report with the PREM version and source; All groups should state in their model report which PREM file they used, whether their model is compressible or incompressible, and how density is discretized (continuous or layered, with layer boundaries if layered).*
+
+::: {.callout-note}
+## PREM-stable in this repository
+
+The file is `giamip/PREM-stable.csv`, version v1.0.0 of the Zenodo record
+[10.5281/zenodo.23178246](https://doi.org/10.5281/zenodo.23178246), byte for
+byte. The [earth models page](../reference/earth-models.qmd#prem-stable)
+summarises it, and `giamip.earth` interpolates it at any radius.
+:::
+
+**3.2.1. VM5a (relevant for Exp 01&06):** 
 
  
 
@@ -194,7 +241,7 @@ Exp12 combines Burgers and power-law rheology.
 | 100–420 | 0.50 |
 | 420–670 | 0.50 |
 | 670–1260 | 1.57 |
-| 1260–2885.5 (CMB) | 3.23  |
+| 1260–to the CMB | 3.23  |
 
 	(Following Table 2 in Roy & Peltier, 2017\)
 
@@ -202,7 +249,7 @@ Exp12 combines Burgers and power-law rheology.
 
  
 
-**3.1.2. VM7 (relevant for Exp 02&07):**
+**3.2.2. VM7 (relevant for Exp 02&07):**
 
  
 
@@ -216,13 +263,13 @@ Exp12 combines Burgers and power-law rheology.
 | 980–1470 | 1.80 |
 | 1470–1950 | 6.00 |
 | 1950–2400 | 10.0 |
-| 2400 – 2885.5 (CMB) | 12.0  |
+| 2400–to the CMB | 12.0  |
 
 (Following Table 2 in Roy & Peltier, 2017\)
 
  
 
-**3.1.3. Gowan et al. (2021; relevant for Exp05)** 
+**3.2.3. Gowan et al. (2021; relevant for Exp05)** 
 
  
 
@@ -235,7 +282,7 @@ Exp12 combines Burgers and power-law rheology.
 
  
 
-**3.1.4 Suggested range of solid Earth structure for the "Open" category**
+**3.2.4 Suggested range of solid Earth structure for the "Open" category**
 
  
 
@@ -250,7 +297,7 @@ In the optional experiments, we encourage 1D models to explore solid Earth param
 
  
 
-**3.2. Note specific to 3D GIA models**
+**3.3. Note specific to 3D GIA models**
 
  
 
@@ -278,7 +325,7 @@ Choices are open for tomographic models, velocity to viscosity scaling law, back
 
     
 
-6. **Outputs submission**  
+6. **Outputs and submission**  
     
 
 **6.1 Variables, grid and format**
@@ -341,15 +388,14 @@ Submitted outputs are expected to successfully pass the Hard Checks prior to off
 
 The types of checks and associated pass criteria are documented in detail [here](https://docs.google.com/document/d/1EFyQHMATeCUgvhr12Ss_ElUF2fSr0viI/edit?usp=sharing&ouid=105099731552100567345&rtpof=true&sd=true).
 
-\[**Updated 07/13/2026**: The current version of the QC script does not yet include all planned hard and soft checks. An updated version incorporating the remaining checks will be uploaded by the end of August or early September 2026\. In the meantime, modelers are encouraged to use the current version to validate their outputs. An announcement will be sent to participating groups once the finalized version becomes available.\]
 
 **6.4 Output submission repository**
 
 	Output files will be uploaded to Ghub on [Globus](https://www.globus.org/), graciously supported by [ISMIP7](https://www.ismip.org/).  
 
-When you are ready for your submission, please send an email to: [grdmip@gmail.com](mailto:grdmip@gmail.com) with the following information:
+When you are ready for your submission, please send an email to: [holly.han@dartmouth.edu](mailto:holly.han@dartmouth.edu) and/or [grdmip@gmail.com](mailto:grdmip@gmail.com) with the following information:
 
-1. Your globus email or id,   
+1. Your Globus email or id,   
 2. Your Institution or modeling group name  
 3. Model name (include version number if applicable)
 
@@ -401,21 +447,17 @@ coefficients must be converted to the convention defined above prior to submissi
 
  
 
-10. **Data transfer & storage**  
-       
-    This is in progress and will be finalized by the time of the official protocol announcement. Data transfer will be done through Globus and data storage will be supported by Ghub.  
-       
-11. **Tentative timeline**  
+10. **Project timeline**  
        
     The anticipated timeline for GIAMIP is as follows:  
 * Initial protocol testing and feedback phase: June 2026  
 * Protocol announcement and data release: July 1st, 2026  
-* Model submission deadline: November 1st, 2026  
+* Model submission deadline: October 31st, 2026  
 * Analysis and drafting manuscript : Winter 2026-Spring 2027  
 * Submission of the GIAMIP manuscript: Spring-Summer, 2027  
 *  
 
-12. ## **Data policy and publication guidelines**
+11. ## **Data policy and publication guidelines**
 
     Participating groups retain ownership of their individual model outputs and remain free to analyze and publish results based solely on their own simulations at any time.
 
@@ -427,7 +469,7 @@ coefficients must be converted to the convention defined above prior to submissi
 
  
 
-13. **Contributions and Acknowledgements**  
+12. **Contributions and Acknowledgements**  
     **Leadership**  
     Lead: Holly Han  
     Associate & Technical Lead: Jan Swierczek-Jereczek  
@@ -436,7 +478,7 @@ coefficients must be converted to the convention defined above prior to submissi
     Sam Chester, Holly Han, Erin Hightower, Sam Kodama, Donghyuck David Lee, Jan Swierczek-Jereczek  
        
     **Protocol Development (alphabetical order)**  
-    Surendra Adhikari, Jacky Austermann, Lambert Caron, Sam Chester, Roger Creel, Jeff Freymueller, Heiko Goelzer, Holly Han, Erin Hightower, Matt Hoffman, Erik Ivins (JPL), Volker Klemann, Tanghua Li, Yucheng Lin,  Andrew Lloyd, Daniele Melini, Glenn Milne, Tamara Pico, Riccardo Riva, William Scott, Giorgio Spada, Lev Tarasov, Tao Yuan, Shijie Zhong  
+    Surendra Adhikari, Jacky Austermann, Lambert Caron, Sam Chester, Roger Creel, Jeff Freymueller, Siavash Ghelichkhan, Heiko Goelzer, Holly Han, Erin Hightower, Matt Hoffman, Mark Hoggard, Erik Ivins, Volker Klemann, Tanghua Li, Yucheng Lin,  Andrew Lloyd, Daniele Melini, Glenn Milne, Tamara Pico, Riccardo Riva, William Scott, Giorgio Spada, Lev Tarasov, Tao Yuan, Shijie Zhong  
        
     **Steering Committee**  
     Glenn Milne, Jerry Mitrovica, Frank Pattyn  
@@ -450,23 +492,27 @@ GIAMIP is endorsed by the [PALSEA-Next](https://palseagroup.weebly.com/) (PALeo 
 
  
 
-14. **Contact email: [grdmip@gmail.com](mailto:grdmip@gmail.com)**  
+13. **Contact email: [holly.han@dartmouth.edu](mailto:holly.han@dartmouth.edu) & [grdmip@gmail.com](mailto:grdmip@gmail.com)**  
        
-15. **Protocol Document Versions**  
+14. **Protocol Document Versions**  
 * v1.0 — October 22, 2025  
 * v2.0 — May 24, 2026  
 * v2.1 — June 10, 2026  
 * v2.2 — July 2, 2026  
 * V2.3 — July 13, 2026 (information added regarding output submission and output file checker)  
-* V2.4 — Sept 8, 2026 (note adding regarding dimension ordering of output variables
+* V2.4 — Sept 8, 2026 (note adding regarding dimension ordering of output variables)
+* V3.0 — Sept 11, 2026: added GIAMIP Participant Checklist and updates on the status of the QC check
+* V4.0 — Oct 5, 2026: provided a PREM reference table (Section 3.1)
 
  
 
-**References**
+15. **References**
 
  
 
 Dziewonski, A. M., and D. L. Anderson (1981), Preliminary reference Earth model, Physics of the Earth and Planetary Interiors, 25(4), 297–356, [https://doi.org/10.1016/0031-9201(81)90046-7](https://doi.org/10.1016/0031-9201\(81\)90046-7)
+
+Ghelichkhan, S., Hoggard, M., & Scott, W. (2026). PREM-stable: a gravitationally stable PREM for GIA models (Version v1.0.0) \[Dataset\]. Zenodo. [https://doi.org/10.5281/zenodo.23178246](https://doi.org/10.5281/zenodo.23178246)
 
 Gowan, E. J., X. Zhang, S. Khosravi*,* et al. (2021), A new global ice sheet reconstruction for the past 80,000 years, Nature Communications, *12*, 1199, [https://doi.org/10.1038/s41467-021-21469-w](https://doi.org/10.1038/s41467-021-21469-w)
 

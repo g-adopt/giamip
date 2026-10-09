@@ -1,8 +1,38 @@
 {
- "generated": "2026-09-25T21:15:04+00:00",
+ "generated": "2026-10-09T04:07:31+00:00",
  "generated_by": "scripts/build_manifest.py",
  "base_url": "https://data.gadopt.org/giamip/",
  "artifacts": {
+  "giamip/PREM-stable.csv": {
+   "collection": "giamip",
+   "stage": "converted",
+   "source_doi": "10.5281/zenodo.23178246",
+   "source_citation": "Ghelichkhan, S., Hoggard, M. and Scott, W. (2026). PREM-stable: a gravitationally stable PREM for GIA models (Version v1.0.0) [Dataset]. Zenodo.",
+   "supplier": "Sia Ghelichkhani, Mark Hoggard and Will Scott (Australian National University, G-ADOPT), the authors of the dataset; copied in this repository from the Zenodo record",
+   "received": "2026-10-09",
+   "permission": "granted",
+   "converter": "copied unchanged",
+   "description": "PREM-stable: PREM with a density that is gravitationally stable in every layer of the crust and the mantle, on the 339 nodes of PREM.csv. GIAMIP protocol v4.0 Section 3.1 gives it as the PREM of every experiment that uses PREM.",
+   "notes": "Byte-identical to PREM-stable.csv in prem-stable-v1.0.0.zip of the Zenodo record. Released under CC-BY-4.0, so it is redistributed with the citation above. METHOD.md in that record gives the method and the column formats.",
+   "bytes": 43333,
+   "sha256": "a2d8d58c6d0fc69b256becb09180d1c25827dc86baaec11dc465e5ad8fb33a82",
+   "object": "versions/a2d8d58c6d0fc69b256becb09180d1c25827dc86baaec11dc465e5ad8fb33a82/giamip/PREM-stable.csv"
+  },
+  "giamip/PREM.csv": {
+   "collection": "giamip",
+   "stage": "converted",
+   "source_doi": "10.5281/zenodo.23178246",
+   "source_citation": "Ghelichkhan, S., Hoggard, M. and Scott, W. (2026). PREM-stable: a gravitationally stable PREM for GIA models (Version v1.0.0) [Dataset]. Zenodo.",
+   "supplier": "Sia Ghelichkhani, Mark Hoggard and Will Scott (Australian National University, G-ADOPT), the authors of the dataset; copied in this repository from the Zenodo record",
+   "received": "2026-10-09",
+   "permission": "granted",
+   "converter": "copied unchanged",
+   "description": "PREM evaluated from the Table I polynomials of Dziewonski and Anderson (1981) on 339 radial nodes, with isotropic wave speeds between 24.4 and 220 km depth and the ocean layer replaced by upper crust.",
+   "notes": "Byte-identical to PREM.csv in prem-stable-v1.0.0.zip of the Zenodo record. Released under CC-BY-4.0, so it is redistributed with the citation above. It is on the same nodes as PREM-stable.csv, for comparison.",
+   "bytes": 42978,
+   "sha256": "1530cf4517292359075cdc30f1cb38998d29e4cf38716f0881a7af394e9981d4",
+   "object": "versions/1530cf4517292359075cdc30f1cb38998d29e4cf38716f0881a7af394e9981d4/giamip/PREM.csv"
+  },
   "giamip/giamip-protocol-v2.4.md": {
    "collection": "giamip",
    "stage": "original",
@@ -16,17 +46,43 @@
    "bytes": 41130,
    "sha256": "277d584fb2e8d172c10b43bf7de05824fc72d32861a767e85d2883bf94ab90d6"
   },
+  "giamip/giamip-protocol-v4.0.docx": {
+   "collection": "giamip",
+   "stage": "original",
+   "description": "The GIAMIP experiment protocol, version 4.0, dated 2026-10-05, as the supplied Word document.",
+   "source_citation": "GIAMIP protocol document. Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.",
+   "supplier": "GIAMIP organisers, through the shared protocol folder",
+   "received": "2026-10-09",
+   "permission": "granted",
+   "notes": "Byte-identical to GIAMIP Protocol document.docx in the shared folder downloaded on 2026-10-09. Version 4.0 adds the PREM reference table of Section 3.1, which names PREM-stable.csv, and renumbers the earth model sections from 3.1.x to 3.2.x. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
+   "bytes": 464641,
+   "sha256": "33275cc5aa47a88de2213235eb8f2c7e48facbb9528d8bc4c0fa3cde895e5444"
+  },
+  "giamip/giamip-protocol-v4.0.md": {
+   "collection": "giamip",
+   "stage": "original",
+   "description": "The GIAMIP experiment protocol, version 4.0, dated 2026-10-05, converted from the supplied Word document to Markdown.",
+   "source_citation": "GIAMIP protocol document. Lead: Holly Han. Associate and technical lead: Jan Swierczek-Jereczek.",
+   "supplier": "GIAMIP organisers, through the shared protocol folder",
+   "received": "2026-10-09",
+   "permission": "granted",
+   "notes": "Converted from giamip/giamip-protocol-v4.0.docx in two steps: pandoc 3.11 with `-t gfm --wrap=none --extract-media=media4`, which writes the three equation images as files and links them as <img> tags, and then each <img> source replaced by a data:image/png;base64 URI of its file, keeping the style attribute. The prose is unchanged. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
+   "modified_from_supplied": "Converted from the supplied Word document to Markdown, so the sum is of our conversion. The supplied document is kept byte for byte as giamip/giamip-protocol-v4.0.docx.",
+   "bytes": 80935,
+   "sha256": "72708930d7cc3df01e0e6060d262b197252441d3e946b14572e6a2476007b68e"
+  },
   "giamip/ice-history.zip": {
    "collection": "giamip",
    "stage": "original",
-   "description": "Six global ice-thickness histories interpolated onto the prescribed Gauss-Legendre grid: ICE-6G_D, ICE-7G_NA, PaleoMIST 1a and GLAC3c profiles 1, 2 and 3.",
+   "description": "Eight global ice-thickness histories interpolated onto the prescribed Gauss-Legendre grid: ICE-6G_D, ICE-7G_NA, PaleoMIST 1a and GLAC3c profiles 1, 2 and 3, which start at 122 ka except PaleoMIST, and ICE-6G_D and ICE-7G_NA again from 80 ka for Exp06 and Exp07.",
    "source_citation": "GIAMIP input distribution. The underlying reconstructions are third-party and each carries its own terms: ICE-6G_D (Peltier, Argus and Drummond), ICE-7G_NA (Roy and Peltier), PaleoMIST (Gowan et al. 2021), GLAC3 (Tarasov, unpublished).",
    "supplier": "GIAMIP organisers, through the shared input folder",
-   "received": "2026-09-11",
+   "received": "2026-10-09",
    "permission": "granted",
-   "notes": "The protocol table names GLAC3b; the filenames say GLAC3c_profile; the internal title and source attributes say GLAC3c_merge. All six files declare _FillValue = 0.0 on ice_thickness. PaleoMIST starts at 80 ka with 379 steps; the other five start at 122 ka with 463. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
-   "bytes": 315706629,
-   "sha256": "f27723c81000473dff3f76da40be6cc12bcfc32a4c42bba421e3dad1a54742f6",
+   "notes": "The protocol table names GLAC3b; the filenames say GLAC3c_profile; the internal title and source attributes say GLAC3c_merge. All eight files declare _FillValue = 0.0 on ice_thickness. PaleoMIST starts at 80 ka with 379 steps; the two _80ka files also start at 80 ka with 379 steps, and the other five start at 122 ka with 463. The two _80ka files, added by the organisers on 2026-10-01, equal the last 379 steps of the 122 ka files of the same ice history to within 2.5e-4 m, which is float32 rounding. The first version of this archive, received on 2026-09-11, held the six files without _80ka. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
+   "modified_from_supplied": "Repacked. The organisers supply one shared folder, downloaded on 2026-10-09 as one zip of the whole folder. This archive holds the files of its subfolder Input files/Ice History under the member prefix Ice History/, as in the first version. Every member is byte-identical to the supplied file; the archive itself is ours.",
+   "bytes": 360681278,
+   "sha256": "7f43854dabf72b73da7b6009698c27a3de37a4f99be2e98cacc9540ece1b8b56",
    "members": [
     {
      "name": "Ice History/iceHistory-GLAC3c_profile1.nc",
@@ -49,9 +105,19 @@
      "sha256": "5b28b99c9e12954d759f8a46d032819697a863916264a64da0fcf083591b818f"
     },
     {
+     "name": "Ice History/iceHistory-ICE-6G_D_80ka.nc",
+     "bytes": 22041032,
+     "sha256": "f8d4ac5fdbb7172f211f10565935db8e22eebe34aa9f17cf159f79aea1ecffd3"
+    },
+    {
      "name": "Ice History/iceHistory-ICE-7G_NA.nc",
      "bytes": 45652642,
      "sha256": "d12b4a6520ab6de33563922e384c7c26f1e2720ade33156bc3a32fd0d721f7a0"
+    },
+    {
+     "name": "Ice History/iceHistory-ICE-7G_NA_80ka.nc",
+     "bytes": 25507627,
+     "sha256": "adabce88fff7ab8ca7fd6de0b889a5a441ba544b743a762fb9a4f4d577186c16"
     },
     {
      "name": "Ice History/iceHistory-PaleoMIST_1a.nc",
@@ -59,7 +125,40 @@
      "sha256": "91f1875e7200921676052c633b5003ec7a4a6ed78bf062ea72e28e4b6847f169"
     }
    ],
-   "member_count": 6
+   "member_count": 8,
+   "previous_versions": [
+    {
+     "sha256": "f27723c81000473dff3f76da40be6cc12bcfc32a4c42bba421e3dad1a54742f6",
+     "bytes": 315706629,
+     "recorded_in_manifest_of": "2026-09-25T21:15:04+00:00",
+     "members": [
+      {
+       "name": "Ice History/iceHistory-GLAC3c_profile1.nc",
+       "sha256": "16e7ed216415808b8f46aaff92ad604d1a594922cd7cd43523c210997556f81d"
+      },
+      {
+       "name": "Ice History/iceHistory-GLAC3c_profile2.nc",
+       "sha256": "5347981a930866246a150cc609f51f44e1140dc61f2cefa6c5ad3343f972b3fa"
+      },
+      {
+       "name": "Ice History/iceHistory-GLAC3c_profile3.nc",
+       "sha256": "252ad8a3404b5d0f97d9691c29a0f2728b818743931d36ed8a85f37fb58f4bc4"
+      },
+      {
+       "name": "Ice History/iceHistory-ICE-6G_D.nc",
+       "sha256": "5b28b99c9e12954d759f8a46d032819697a863916264a64da0fcf083591b818f"
+      },
+      {
+       "name": "Ice History/iceHistory-ICE-7G_NA.nc",
+       "sha256": "d12b4a6520ab6de33563922e384c7c26f1e2720ade33156bc3a32fd0d721f7a0"
+      },
+      {
+       "name": "Ice History/iceHistory-PaleoMIST_1a.nc",
+       "sha256": "91f1875e7200921676052c633b5003ec7a4a6ed78bf062ea72e28e4b6847f169"
+      }
+     ]
+    }
+   ]
   },
   "giamip/initial-topography.zip": {
    "collection": "giamip",
@@ -67,16 +166,17 @@
    "description": "Three present-day bed elevations on the prescribed grid, differing only in the Antarctic source: BedMachine Antarctica v3, Bedmap3 or Bedmap2, each merged with BedMachine Greenland v5.5 and GEBCO.",
    "source_citation": "GIAMIP input distribution. Fretwell et al. (2013) Bedmap2; Pritchard et al. (2025) Bedmap3; Morlighem et al. (2020) BedMachine; GEBCO.",
    "supplier": "GIAMIP organisers, through the shared input folder",
-   "received": "2026-09-11",
+   "received": "2026-10-09",
    "permission": "granted",
-   "notes": "The source attribute of the BedMachine Antarctica v3 file names BedMachine Greenland twice and never names its Antarctic dataset. The other two files are correct. All three reference a grid_mapping variable named crs that does not exist in the file. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
-   "bytes": 1429867,
-   "sha256": "350348219f73598432d749d3a2115069109d2c8a3278eed4c04ba694d07d0b4d",
+   "notes": "All three files reference a grid_mapping variable named crs that does not exist in the file. In the first version, received on 2026-09-11, the source attribute of the BedMachine Antarctica v3 file named BedMachine Greenland twice and never named its Antarctic dataset. The organisers replaced that file on 2026-09-24 with one whose source attribute names BedMachine Antarctica v3.4; its topg, lat and lon are identical to the first version, and only its source and history attributes differ. Redistribution through https://data.gadopt.org/giamip/ is granted by Sia Ghelichkhani's decision of 2026-09-15.",
+   "modified_from_supplied": "Repacked. The organisers supply one shared folder, downloaded on 2026-10-09 as one zip of the whole folder. This archive holds the files of its subfolder Input files/Initial Topography under the member prefix Initial Topography/, as in the first version. Every member is byte-identical to the supplied file; the archive itself is ours.",
+   "bytes": 1429394,
+   "sha256": "d73803e351e8be4a5124fb10178578a4205ce179878df01b2e4a4ef144ba41c7",
    "members": [
     {
      "name": "Initial Topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc",
-     "bytes": 537218,
-     "sha256": "046934c34ca18249addb4d5d72cc9f5e4b8cc4e3e93725894bd89698e324fba8"
+     "bytes": 537219,
+     "sha256": "476d03100cc61446393f58cf45c779bf7a30b35e848c7edd86e2f085628ecdf9"
     },
     {
      "name": "Initial Topography/bedtopo_Bedmap2ANT_BedMach5GRL_GEBCO_GLQ256.nc",
@@ -89,7 +189,28 @@
      "sha256": "3de8b5d08bdf3fe0ae2799a10e2e4e0c46b5abf8a942742e61a7c4751d07262b"
     }
    ],
-   "member_count": 3
+   "member_count": 3,
+   "previous_versions": [
+    {
+     "sha256": "350348219f73598432d749d3a2115069109d2c8a3278eed4c04ba694d07d0b4d",
+     "bytes": 1429867,
+     "recorded_in_manifest_of": "2026-09-25T21:15:04+00:00",
+     "members": [
+      {
+       "name": "Initial Topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc",
+       "sha256": "046934c34ca18249addb4d5d72cc9f5e4b8cc4e3e93725894bd89698e324fba8"
+      },
+      {
+       "name": "Initial Topography/bedtopo_Bedmap2ANT_BedMach5GRL_GEBCO_GLQ256.nc",
+       "sha256": "ba2d48a045436c00108345489e5ebd5efa2d7b2554090796742980e2fc0d014e"
+      },
+      {
+       "name": "Initial Topography/bedtopo_Bedmap3ANT_BedMach5GRL_GEBCO_GLQ256.nc",
+       "sha256": "3de8b5d08bdf3fe0ae2799a10e2e4e0c46b5abf8a942742e61a7c4751d07262b"
+      }
+     ]
+    }
+   ]
   },
   "martinec2018/giapy_mod_M3-L70-V01_lovenumbers.txt": {
    "collection": "martinec2018",

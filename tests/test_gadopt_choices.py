@@ -23,14 +23,29 @@ import _experiments  # noqa: E402
 # page, which the last test checks.
 RHEOLOGIES = {"maxwell", "burgers", "power-law", "burgers-power-law"}
 
+# The compressibility choices a case may name. Each one needs a label on the
+# protocol page as well.
+COMPRESSIBILITIES = {"compressible", "incompressible"}
+
 GIAMIP = cases.cases("giamip")
 WITH_CHOICES = [c for c in GIAMIP if cases.gadopt_choices(c)]
 
 
-def test_the_expected_experiments_carry_choices():
-    """Exp01, Exp05, Exp06 and Exp07 leave nothing open, so they have none."""
+def test_every_experiment_carries_choices():
+    """Compressibility is open in every experiment, so each one has a choice."""
     assert {c["experiment_id"] for c in WITH_CHOICES} == {
-        "Exp02", "Exp03", "Exp04", "Exp08", "Exp09", "Exp10", "Exp11", "Exp12"}
+        c["experiment_id"] for c in GIAMIP}
+
+
+def test_only_compressibility_is_chosen_where_the_protocol_fixes_the_rest():
+    """Exp01, Exp05, Exp06 and Exp07 prescribe every field except compressibility."""
+    for eid in ("giamip-exp01", "giamip-exp05", "giamip-exp06", "giamip-exp07"):
+        assert cases.gadopt_choices(eid) == {"compressibility": "compressible"}, eid
+
+
+def test_every_gadopt_run_is_compressible():
+    for c in GIAMIP:
+        assert cases.gadopt_choices(c)["compressibility"] == "compressible", c["id"]
 
 
 @pytest.mark.parametrize("c", WITH_CHOICES, ids=lambda c: c["id"])
@@ -51,6 +66,8 @@ def test_every_choice_names_something_that_exists(c):
         assert chosen["rheology"] in RHEOLOGIES
     if "topography" in chosen:
         assert chosen["topography"] in cases.topography_files()
+    if "compressibility" in chosen:
+        assert chosen["compressibility"] in COMPRESSIBILITIES
 
 
 @pytest.mark.parametrize("c", WITH_CHOICES, ids=lambda c: c["id"])
@@ -121,3 +138,4 @@ def test_every_rheology_and_topography_has_a_protocol_label():
                   **cases.gadopt_choices(c)}
         assert values["rheology"] in _experiments.RHEOLOGY_LABELS, c["id"]
         assert values["topography"] in _experiments.TOPOGRAPHY_LABELS, c["id"]
+        assert values["compressibility"] in _experiments.COMPRESSIBILITY_LABELS, c["id"]

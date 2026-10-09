@@ -16,8 +16,9 @@ the name of the object on the store and of its place in a local cache. The key
 contains the sum, so every version of a converted file has its own object, an
 older release of giamip downloads the version it was built with, and two
 versions never overwrite each other in a cache (giamip/data.py,
-`cache_path`). Only ``data/converted/<collection>/*.nc`` is scanned, so no
-downloaded version, lock file or temporary file is ever taken for an artifact.
+`cache_path`). Only the files ``data/converted/<collection>/*.nc`` and
+``data/converted/<collection>/*.csv`` are scanned, so no downloaded version,
+lock file or temporary file is ever taken for an artifact.
 
 Usage::
 
@@ -54,6 +55,9 @@ from giamip.data import (  # noqa: E402
 # memory. The same chunk size is used by lovejx.data, for no reason beyond
 # consistency between the two fetchers.
 CHUNK = 1 << 20
+
+# The file types that count as converted artifacts under data/converted/.
+CONVERTED_SUFFIXES = (".nc", ".csv")
 
 
 def sha256_path(path: pathlib.Path) -> str:
@@ -160,7 +164,7 @@ def main() -> int:
     ap.add_argument("--root", type=pathlib.Path, default=here / "data" / "original",
                     help="directory holding the original files")
     ap.add_argument("--converted-root", type=pathlib.Path, default=here / "data" / "converted",
-                    help="directory holding the converted files, <collection>/<file>.nc")
+                    help="directory holding the converted files, <collection>/<file>.nc or .csv")
     ap.add_argument("--output", type=pathlib.Path,
                     default=here / "giamip" / "resources" / "manifest.json")
     ap.add_argument("--provenance", type=pathlib.Path,
@@ -174,7 +178,7 @@ def main() -> int:
                           if e["stage"] == "converted"}
 
     # One inventory pass. Reading an archive decompresses all of it, and the
-    # ice history is 316 MB, so this is done once and the result serves both
+    # ice history is 361 MB, so this is done once and the result serves both
     # the manifest entry and the stray check.
     inventories: dict[str, list[dict] | None] = {}
     for rel in sorted(declared):
@@ -229,8 +233,11 @@ def main() -> int:
         if relative not in on_disk_names(archive_rel):
             strays.append(str(path.relative_to(args.root)))
 
+    # NetCDF for the converted benchmark data, CSV for the earth model
+    # profiles that are copied unchanged from their published record.
     found_converted = {f"{path.parent.name}/{path.name}"
-                       for path in sorted(args.converted_root.glob("*/*.nc"))}
+                       for suffix in CONVERTED_SUFFIXES
+                       for path in sorted(args.converted_root.glob(f"*/*{suffix}"))}
     missing = sorted((declared - found) | (declared_converted - found_converted))
     undeclared = sorted((found - declared) | (found_converted - declared_converted))
     if missing or undeclared or strays:

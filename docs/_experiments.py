@@ -40,6 +40,11 @@ TOPOGRAPHY_LABELS = {
     "bedmap3": "Bedmap3 (ANT) + BedMachineV5 (Greenland)",
     "bedmach3": "BedMachineV3 (ANT) + BedMachineV5 (Greenland)",
 }
+COMPRESSIBILITY_LABELS = {
+    "open": "Open",
+    "compressible": "Compressible",
+    "incompressible": "Incompressible",
+}
 TIER_LABELS = {1: "Tier 1 Experiments (Mandatory)",
                2: "Tier 2 Experiments (Optional)"}
 
@@ -50,6 +55,8 @@ def _label(field: str, value: str) -> str:
         return RHEOLOGY_LABELS[value]
     if field == "topography":
         return TOPOGRAPHY_LABELS[value]
+    if field == "compressibility":
+        return COMPRESSIBILITY_LABELS[value]
     if value == "open":
         return "Open"
     # A viscosity or an elastic structure: the name in its model file.
@@ -57,7 +64,7 @@ def _label(field: str, value: str) -> str:
 
 
 def _cells(c: dict, labelled: bool) -> list[str]:
-    """The four cells of `cases.GADOPT_FIELDS` for one case.
+    """The five cells of `cases.GADOPT_FIELDS` for one case, in its order.
 
     Parameters
     ----------
@@ -83,8 +90,8 @@ def protocol_table() -> str:
     """The experiment table of the protocol page, in the protocol's layout."""
     rows = ["|  | Experiment ID | Global input ice model | Viscosity structure | "
             "Elastic structure | Earth rheology | Initial polar topography "
-            "(GEBCO 2024 for rest of the globe) | Period |",
-            "| ----- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |"]
+            "(GEBCO 2024 for rest of the globe) | Compressibility | Period |",
+            "| ----- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |"]
     seen_tiers = set()
     for c in cases.cases("giamip"):
         # The tier label appears once, on the first row of its tier.
@@ -110,8 +117,9 @@ def id_table(link: bool, open_count: bool) -> str:
     open_count
         True adds a column with the number of fields the protocol leaves open.
     """
-    head = "| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography | Start |"
-    rule = "| --- | ---: | --- | --- | --- | --- | --- | ---: |"
+    head = ("| Experiment | Tier | Ice history | Viscosity | Elastic | Rheology | Topography "
+            "| Compressibility | Start |")
+    rule = "| --- | ---: | --- | --- | --- | --- | --- | --- | ---: |"
     if open_count:
         head += " Open choices |"
         rule += " ---: |"

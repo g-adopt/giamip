@@ -8,10 +8,15 @@ NOTES/
 /outputs/
 
 # The converted reference data is the exception. It is small, it is derived by
-# our own scripts, and every plot, score and test depends on it, so tracking it
-# means the site builds and the tests run with no network and with no
-# permission to re-host anyone else's files.
+# our own scripts or copied unchanged from a dataset we published (the PREM
+# profiles from Zenodo), and every plot, score and test depends on it, so
+# tracking it means the site builds and the tests run with no network and with
+# no permission to re-host anyone else's files.
 !/data/converted/
+
+# The GIAMIP organisers' shared folder, as a browser downloads it. Its files are
+# repacked into data/original/giamip/, so the download itself is never tracked.
+/GIAMIP Official Protocol-*.zip
 
 # Quarto build products. `_freeze/` is the execution cache that a local render
 # writes. It is not committed: CI executes every page on each render, and no

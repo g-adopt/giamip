@@ -28,6 +28,9 @@ corrections
     original files themselves are never edited.
 cases
     Look up a case, an earth model or a load table.
+earth
+    The radial earth of a GIAMIP case: density, elastic moduli, gravity and
+    viscosity at any radius, interpolated from the earth model files.
 benchmarks
     Martinec (2018) and Spada (2011) case set-up, results, scores and
     conversion to NetCDF.

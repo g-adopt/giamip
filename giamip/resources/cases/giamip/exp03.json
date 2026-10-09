@@ -5,8 +5,8 @@
   "tier": 1,
   "mandatory": true,
   "source": {
-    "citation": "GIAMIP experiment protocol v2.4, dated 2026-09-08. Lead: Holly Han.",
-    "document": "data/original/giamip/giamip-protocol-v2.4.md"
+    "citation": "GIAMIP experiment protocol v4.0, dated 2026-10-05. Lead: Holly Han.",
+    "document": "data/original/giamip/giamip-protocol-v4.0.md"
   },
   "forcing": {
     "ice_history": "GLAC3_p1",
@@ -18,7 +18,7 @@
     "viscosity": "giamip-open-range",
     "elastic_structure": "open",
     "rheology": "open",
-    "compressibility": "group's choice, recorded in the model report",
+    "compressibility": "open",
     "$comment": "Labelled 'Within suggested range' in the protocol table. Choose values inside giamip/resources/models/giamip-open-range.json and record them in the model report."
   },
   "topography": {
@@ -50,13 +50,15 @@
   "open_choices": [
     "viscosity",
     "elastic_structure",
-    "rheology"
+    "rheology",
+    "compressibility"
   ],
   "gadopt": {
     "viscosity": "giamip-open-range-midpoint",
-    "elastic_structure": "prem",
+    "elastic_structure": "prem-stable",
     "rheology": "maxwell",
-    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v2.4 leaves open and do not change what the protocol asks of other groups."
+    "compressibility": "compressible",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v4.0 leaves open and do not change what the protocol asks of other groups. Protocol v4.0 Section 3 leaves compressibility to each group in every experiment. Every G-ADOPT run is compressible."
   },
   "status": "specified; no runner and no output writer yet"
 }

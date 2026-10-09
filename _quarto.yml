@@ -19,7 +19,7 @@ project:
 # has one, so that a second render does not execute every page again.
 # `_freeze/` is gitignored, so a CI runner has no cache and executes every
 # page. Every page reads only tracked files, which is what lets it execute
-# there. A page that needs the 317 MB of GIAMIP input or a solver run cannot
+# there. A page that needs the 363 MB of GIAMIP input or a solver run cannot
 # execute on a runner.
 #
 # The pages under docs/cases/ execute on every render, local renders included.
@@ -84,7 +84,7 @@ website:
           - docs/data/corrections.qmd
       - text: "Protocol"
         menu:
-          - docs/protocol/giamip-v2.4.qmd
+          - docs/protocol/giamip-v4.0.qmd
           - docs/protocol/martinec2018.qmd
 
 format:

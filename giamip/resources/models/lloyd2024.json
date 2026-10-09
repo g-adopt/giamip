@@ -20,7 +20,7 @@
     "The paper gives two versions of the model. The unmodified inference is in its Supporting Information and is shown in its Fig. S2. The filtered and bounded version is derived from it, is shown in its Fig. 2, and is the one the authors use in their own GIA runs. The G-ADOPT choice is the filtered and bounded version.",
     "The model is built from the Voigt average shear-wave speeds of GLAD-M25 (Lei et al., 2020), with the calibration of Richards et al. (2020) for the upper mantle. The shear-wave speeds are converted to temperature and the temperature to viscosity.",
     "The model extends to the surface and has no separate elastic lithosphere. A high-viscosity region near the surface, about 1.5e26 Pa s, acts as the lithosphere on the time scale of a glacial cycle.",
-    "The paper uses the 1D PREM elastic and density structure with this viscosity model.",
+    "The paper uses the 1D PREM elastic and density structure with this viscosity model. The G-ADOPT runs use PREM-stable, which protocol v4.0 Section 3.1 gives as the PREM of GIAMIP.",
     "The grid is not in this package. It will be a g-drift dataset, and the dataset name and the SHA-256 of the version used go in `grid` when it is added."
   ]
 }

@@ -53,7 +53,7 @@ def test_sums_look_like_sha256(manifest):
 
 
 def test_an_original_that_we_changed_says_so(manifest):
-    """`original` means a third-party input, and two of them we repacked.
+    """`original` means a third-party input, and some of them we repacked or converted.
 
     A reader who wants to check our copy against the supplier's needs to know
     which ones cannot be compared byte for byte, and why.
@@ -65,10 +65,13 @@ def test_an_original_that_we_changed_says_so(manifest):
             assert entry["modified_from_supplied"].strip(), rel
 
 
-def test_the_two_repacked_artifacts_are_flagged(manifest):
-    """Named explicitly, so removing the flag from either is a failure."""
+def test_the_repacked_artifacts_are_flagged(manifest):
+    """Named explicitly, so removing the flag from any of them is a failure."""
     for rel in ("spada2011/spada2011-cost-es0701.tar.gz",
-                "giamip/giamip-protocol-v2.4.md"):
+                "giamip/giamip-protocol-v2.4.md",
+                "giamip/giamip-protocol-v4.0.md",
+                "giamip/ice-history.zip",
+                "giamip/initial-topography.zip"):
         assert "modified_from_supplied" in manifest["artifacts"][rel], rel
 
 
@@ -130,7 +133,8 @@ def _converted(manifest) -> dict:
 
 def test_every_tracked_converted_file_has_an_entry(manifest):
     """A converted file without an entry could not be located or uploaded."""
-    on_disk = {f"{p.parent.name}/{p.name}" for p in CONVERTED.glob("*/*.nc")}
+    on_disk = {f"{p.parent.name}/{p.name}"
+               for suffix in ("nc", "csv") for p in CONVERTED.glob(f"*/*.{suffix}")}
     assert on_disk, "no converted file in the checkout"
     assert on_disk == set(_converted(manifest))
 
@@ -151,8 +155,19 @@ def test_each_converted_object_key_is_versions_sum_key(manifest):
 
 
 def test_each_converted_entry_is_derived_from_known_originals(manifest):
+    """A converted file names what it came from and how.
+
+    Either it was written by a converter of this package from originals in the
+    manifest, or it was copied unchanged from a published dataset that has a
+    DOI. The second kind is the PREM profiles, copied from their Zenodo record.
+    """
     originals = {k for k, v in manifest["artifacts"].items() if v["stage"] == "original"}
     for key, entry in _converted(manifest).items():
+        if "source_doi" in entry:
+            assert "derived_from" not in entry, key
+            assert entry["source_doi"].startswith("10."), key
+            assert entry["converter"] == "copied unchanged", key
+            continue
         assert entry["derived_from"], key
         assert set(entry["derived_from"]) <= originals, (key, entry["derived_from"])
         assert entry["converter"].startswith("giamip.benchmarks."), key

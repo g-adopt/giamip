@@ -2,12 +2,12 @@
   "id": "vm7",
   "name": "VM7",
   "kind": "viscosity_profile",
-  "description": "A nine-layer radial viscosity profile, prescribed for GIAMIP experiments Exp02 and Exp07. A viscosity structure only: the elastic structure is PREM.",
-  "elastic_structure": "prem",
+  "description": "A nine-layer radial viscosity profile, prescribed for GIAMIP experiments Exp02 and Exp07. A viscosity structure only: the elastic structure is PREM-stable (protocol v4.0 Section 3.1).",
+  "elastic_structure": "prem-stable",
   "rheology": "open",
   "used_by": ["giamip Exp02", "giamip Exp07"],
   "source": {
-    "citation": "Roy, K. and Peltier, W. R. (2017). Geophysical Journal International 210(2), 1115-1142, table 2. Reproduced in the GIAMIP protocol v2.4, section 3.1.2.",
+    "citation": "Roy, K. and Peltier, W. R. (2017). Geophysical Journal International 210(2), 1115-1142, table 2. Reproduced in the GIAMIP protocol v4.0, section 3.2.2.",
     "doi": "10.1093/gji/ggx156"
   },
   "depth_convention": "kilometres below the solid surface",
@@ -20,9 +20,10 @@
     {"top_depth_km": 980,  "bottom_depth_km": 1470,   "viscosity_pa_s": 1.80e21},
     {"top_depth_km": 1470, "bottom_depth_km": 1950,   "viscosity_pa_s": 6.00e21},
     {"top_depth_km": 1950, "bottom_depth_km": 2400,   "viscosity_pa_s": 1.00e22},
-    {"top_depth_km": 2400, "bottom_depth_km": 2885.5, "viscosity_pa_s": 1.20e22, "role": "to the core-mantle boundary"}
+    {"top_depth_km": 2400, "bottom_depth_km": 2891, "viscosity_pa_s": 1.20e22, "role": "to the core-mantle boundary"}
   ],
   "notes": [
+    "Protocol v4.0 gives the deepest layer as reaching the core-mantle boundary. In PREM-stable that boundary is at a radius of 3480 km, a depth of 2891 km, so the deepest layer ends there. giamip.earth takes the boundary from the elastic structure.",
     "The lithosphere is 75 km here and 60 km in VM5a.",
     "The rheology for Exp02 is Open in the protocol experiment table, so the group chooses it and records the choice in the model report. Exp07 repeats whatever Exp02 used."
   ]

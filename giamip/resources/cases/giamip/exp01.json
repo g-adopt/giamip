@@ -5,8 +5,8 @@
   "tier": 1,
   "mandatory": true,
   "source": {
-    "citation": "GIAMIP experiment protocol v2.4, dated 2026-09-08. Lead: Holly Han.",
-    "document": "data/original/giamip/giamip-protocol-v2.4.md"
+    "citation": "GIAMIP experiment protocol v4.0, dated 2026-10-05. Lead: Holly Han.",
+    "document": "data/original/giamip/giamip-protocol-v4.0.md"
   },
   "forcing": {
     "ice_history": "ICE-6G_D",
@@ -16,9 +16,10 @@
   },
   "earth": {
     "viscosity": "vm5a",
-    "elastic_structure": "prem",
+    "elastic_structure": "prem-stable",
     "rheology": "maxwell",
-    "compressibility": "group's choice, recorded in the model report"
+    "compressibility": "open",
+    "$elastic_structure_comment": "The protocol table names PREM. Protocol v4.0 Section 3.1 gives PREM-stable.csv as the PREM of this experiment."
   },
   "topography": {
     "model": "bedmap2",
@@ -46,6 +47,12 @@
   },
   "reference_frame": "centre of mass of the whole Earth system (CM), not the solid Earth alone (CE)",
   "outputs": "giamip/resources/variables.json",
-  "open_choices": [],
+  "open_choices": [
+    "compressibility"
+  ],
+  "gadopt": {
+    "compressibility": "compressible",
+    "$comment": "Decided by the G-ADOPT team for its own runs. These values fill fields that protocol v4.0 leaves open and do not change what the protocol asks of other groups. Protocol v4.0 Section 3 leaves compressibility to each group in every experiment. Every G-ADOPT run is compressible."
+  },
   "status": "specified; no runner and no output writer yet"
 }

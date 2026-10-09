@@ -47,13 +47,24 @@ def test_applying_to_matches_the_ice_files():
 
 
 def test_applying_to_matches_one_topography_file_only():
-    """The source-attribute defect is in the BedMachine Antarctica file alone."""
+    """The source-attribute defect is in the first BedMachine Antarctica file alone.
+
+    The organisers replaced that file under the same name, and the new version
+    names its Antarctic dataset correctly. The defect must therefore apply to
+    the earlier version, which the manifest keeps under `previous_versions`,
+    and to neither the current version nor another topography file.
+    """
     bad_path = "giamip/initial-topography/bedtopo_BedMach3ANT_BedMach5GRL_GEBCO_GLQ256.nc"
     good_path = "giamip/initial-topography/bedtopo_Bedmap2ANT_BedMach5GRL_GEBCO_GLQ256.nc"
-    bad = corrections.applying_to(bad_path, _current(bad_path))
+    first_version = data.file_versions()[bad_path]["previous"][0]
+    bad = corrections.applying_to(bad_path, first_version)
+    repaired = corrections.applying_to(bad_path, _current(bad_path))
     good = corrections.applying_to(good_path, _current(good_path))
     assert "topography-source-attribute" in {e["id"] for e in bad}
+    assert "topography-source-attribute" not in {e["id"] for e in repaired}
     assert "topography-source-attribute" not in {e["id"] for e in good}
+    # The missing `crs` variable is still missing in the repaired file.
+    assert "topography-missing-crs" in {e["id"] for e in repaired}
 
 
 def test_fortran_exponents_rewrites_a_real_line():

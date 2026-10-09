@@ -6,7 +6,7 @@
   "derived_from": "giamip-open-range",
   "used_by": ["G-ADOPT choice for giamip Exp03", "G-ADOPT choice for giamip Exp04", "G-ADOPT choice for giamip Exp09", "G-ADOPT choice for giamip Exp10"],
   "source": {
-    "citation": "The middle of the ranges in the GIAMIP protocol v2.4, section 3.1.4, as decided by the G-ADOPT team."
+    "citation": "The middle of the ranges in the GIAMIP protocol v4.0, section 3.2.4, as decided by the G-ADOPT team."
   },
   "midpoint_scale": {
     "lithosphere_thickness_km": "linear",
@@ -16,9 +16,10 @@
   "lithosphere_thickness_km": 90,
   "upper_mantle_viscosity_pa_s": 3.1622776601683794e20,
   "lower_mantle_viscosity_pa_s": 1.0e22,
+  "upper_lower_mantle_boundary_depth_km": 670,
   "notes": [
     "The viscosity ranges span one and two orders of magnitude, so their middle is the geometric mean of the two ends: 10^20.5 Pa s for the upper mantle and 10^22 Pa s for the lower mantle. The lithosphere range spans a factor of two, and its middle is the arithmetic mean, 90 km.",
-    "The protocol states no depth for the boundary between upper and lower mantle. 670 km is the usual choice, and the choice made is recorded in the model report.",
+    "Protocol v4.0 states no depth for the boundary between upper and lower mantle. The G-ADOPT runs use 670 km (`upper_lower_mantle_boundary_depth_km`), the depth at which VM5a and VM7 of the same protocol, Sections 3.2.1 and 3.2.2, change from upper to lower mantle values. Each group records its own choice in the model report.",
     "The elastic structure and the rheology come from the case, because Exp09 and Exp10 pair this profile with Burgers and power-law rheology."
   ]
 }
