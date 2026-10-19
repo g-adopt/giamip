@@ -2,25 +2,37 @@
   "id": "lloyd2024",
   "name": "Lloyd et al. (2024)",
   "kind": "viscosity_3d",
-  "description": "A 3D mantle viscosity model inferred from the GLAD-M25 shear-wave speeds. The G-ADOPT team chose its filtered and bounded version for Exp11 and Exp12, where the protocol leaves the viscosity structure to each group.",
+  "description": "A 3D mantle viscosity model inferred from the GLAD-M25 shear-wave speeds. The G-ADOPT team chose its unmodified inference, with a lower bound and no upper bound, for Exp11 and Exp12, where the protocol leaves the viscosity structure to each group.",
   "used_by": ["G-ADOPT choice for giamip Exp11", "G-ADOPT choice for giamip Exp12"],
   "source": {
     "citation": "Lloyd, A. J., Crawford, O., Al-Attar, D., Austermann, J., Hoggard, M. J., Richards, F. D. and Syvret, F. (2024). GIA imaging of 3-D mantle viscosity based on palaeo sea level observations - Part I: Sensitivity kernels for an Earth with laterally varying viscosity. Geophysical Journal International 236(2), 1139-1171.",
     "doi": "10.1093/gji/ggad455"
   },
-  "version": "filtered and bounded",
+  "version": "unmodified inference (Fig. S2 of the paper), with the G-ADOPT lower bound",
   "tomography": "GLAD-M25",
   "grid": {
     "package": "gdrift",
-    "dataset": null,
-    "sha256": null,
-    "status": "not yet in g-drift"
+    "dataset": "3d_earthmodel_Lloyd_et_al_2024_GJI",
+    "field": "log10_viscosity",
+    "sha256": "108087ef4d926e437af92de5b0d87ec340963ad2cfbe90dfc2aa809113452f7a",
+    "status": "in g-drift"
   },
+  "bounds": {
+    "applied_to": "log10 of the viscosity in Pa s, after the interpolation to the evaluation point",
+    "lower_pa_s": [
+      {"top_depth_km": 0, "bottom_depth_km": 670, "viscosity_pa_s": 1.0e20},
+      {"top_depth_km": 670, "bottom_depth_km": 2891, "viscosity_pa_s": 1.0e21}
+    ],
+    "upper_pa_s": null
+  },
+  "lithosphere": "none added: the values of the model near the surface act as the lithosphere",
   "notes": [
-    "The paper gives two versions of the model. The unmodified inference is in its Supporting Information and is shown in its Fig. S2. The filtered and bounded version is derived from it, is shown in its Fig. 2, and is the one the authors use in their own GIA runs. The G-ADOPT choice is the filtered and bounded version.",
+    "The paper gives two versions of the model. The unmodified inference is in its Supporting Information and is shown in its Fig. S2. The filtered and bounded version is derived from it, is shown in its Fig. 2, and is the one the authors use in their own GIA runs. It is not in the Supporting Information. The G-ADOPT choice is the unmodified inference, which is the g-drift dataset, with the bounds of `bounds` (decided by Sia Ghelichkhani, 2026-10-18 and 2026-10-19).",
+    "The unmodified inference ranges from 1e18 to 1e39 Pa s. The lower bound is the low end of the suggested range of protocol v4.0 Section 3.2.4 for each layer. There is no upper bound: protocol v4.0 Section 3.3 leaves the 3D choices open, and a very high viscosity acts as elastic over a glacial cycle.",
+    "Interpolate log10 of the viscosity, never the linear value, because the values span 21 orders of magnitude.",
     "The model is built from the Voigt average shear-wave speeds of GLAD-M25 (Lei et al., 2020), with the calibration of Richards et al. (2020) for the upper mantle. The shear-wave speeds are converted to temperature and the temperature to viscosity.",
-    "The model extends to the surface and has no separate elastic lithosphere. A high-viscosity region near the surface, about 1.5e26 Pa s, acts as the lithosphere on the time scale of a glacial cycle.",
+    "The model extends to the surface and has no separate elastic lithosphere. A high-viscosity region near the surface, about 1.5e26 Pa s in the crust and higher in the cratons, acts as the lithosphere on the time scale of a glacial cycle. No elastic lid is added, so a weak region near the surface stays weak.",
     "The paper uses the 1D PREM elastic and density structure with this viscosity model. The G-ADOPT runs use PREM-stable, which protocol v4.0 Section 3.1 gives as the PREM of GIAMIP.",
-    "The grid is not in this package. It will be a g-drift dataset, and the dataset name and the SHA-256 of the version used go in `grid` when it is added."
+    "The grid is not in this package. A solver reads it from g-drift."
   ]
 }

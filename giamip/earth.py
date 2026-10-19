@@ -47,8 +47,8 @@ A scalar radius gives 0-d arrays, so every value has the shape of the input
 whether the input is a number or an array.
 
 Laterally varying models (Lloyd et al. 2024 and PREM-stable with GLAD-M25
-variations) are not handled here. Their grids will come from g-drift, and the
-model files record the dataset when it exists.
+variations) are not handled here. Their grids are g-drift datasets, which the
+model files name with their SHA-256, and a solver reads them from g-drift.
 """
 
 from __future__ import annotations
@@ -172,8 +172,8 @@ class ElasticProfile:
         model = cases.earth_model(model_id)
         if "tomography" in model:
             raise NotImplementedError(
-                f"{model_id} varies laterally. Its grid will come from g-drift; "
-                f"the model file records the dataset once it exists. Use its "
+                f"{model_id} varies laterally. Its grid is the g-drift dataset "
+                f"that the model file names. Use its "
                 f"radial base, {model.get('base')!r}, for a 1D run.")
         profile = model.get("profile")
         if model["kind"] != "elastic_structure" or profile is None:
@@ -311,8 +311,8 @@ class ViscosityProfile:
         kind = model["kind"]
         if kind == "viscosity_3d":
             raise NotImplementedError(
-                f"{model_id} varies laterally. Its grid will come from g-drift; "
-                f"the model file records the dataset once it exists.")
+                f"{model_id} varies laterally. Its grid is the g-drift dataset "
+                f"that the model file names.")
         if kind == "parameter_range":
             raise ValueError(
                 f"{model_id} is a range of values. Choose one structure inside "

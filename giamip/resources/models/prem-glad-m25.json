@@ -12,13 +12,24 @@
   "tomography": {
     "name": "GLAD-M25",
     "package": "gdrift",
-    "dataset": null,
-    "sha256": null,
-    "status": "not yet in g-drift"
+    "dataset": "3d_seismic_GLAD-M25",
+    "fields": ["vs", "vp"],
+    "sha256": "b9b37f2628c42c4ed5d09f94ed1bd44a5f4d701a8d18ce1efa53e24a0c5a3f95",
+    "status": "in g-drift"
+  },
+  "perturbation": {
+    "relative_change": "dlnvs = vs / <vs>(r) - 1 and dlnvp = vp / <vp>(r) - 1, with <.>(r) the mean of GLAD-M25 over the sphere at each depth of the dataset",
+    "shear_modulus": "mu = mu_P (1 + dlnvs)^2",
+    "bulk_modulus": "K = rho_P (vp_P^2 (1 + dlnvp)^2 - 4/3 vs_P^2 (1 + dlnvs)^2)",
+    "density": "PREM-stable, unchanged",
+    "above_top_depth": "the values at 6 km, the top depth of the dataset"
   },
   "notes": [
+    "The subscript P is PREM-stable. The rule was decided by Sia Ghelichkhani on 2026-10-18. The density stays radial, so the reference state stays hydrostatic.",
+    "g-drift stores each depth of GLAD-M25 on one equal-area point set, so the plain mean of a layer is its mean over the sphere. The relative change is lateral at each depth, so the radial jumps of GLAD-M25 (650 km, and between 405 and 410 km) do not enter the moduli. PREM-stable keeps its own jumps at 400 and 670 km.",
+    "vs and vp are the Voigt averages of the g-drift dataset. GLAD-M25 is transversely isotropic in the upper mantle; the anisotropy is not used.",
+    "GLAD-M25 covers 6 to 2891 km. A g-drift query above 6 km returns the 6 km values.",
     "GLAD-M25 is the tomography model from which the Lloyd et al. (2024) viscosity is built. Exp12 pairs the two, so its viscosity and its elastic structure come from one tomography model.",
-    "GLAD-M25 is transversely isotropic. How its wave speeds and density become lateral variations of the elastic moduli is not fixed here and is recorded in the model report.",
-    "The tomography model is not in this package. It will be a g-drift dataset, and the dataset name and the SHA-256 of the version used go in `tomography` when it is added."
+    "The tomography model is not in this package. A solver reads it from g-drift."
   ]
 }

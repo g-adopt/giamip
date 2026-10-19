@@ -153,11 +153,18 @@ Markdown(f"This gives a lithosphere thickness of {m['lithosphere_thickness_km']}
          f"`giamip/resources/models/{m['id']}.json`.")
 ```
 
-The 3D viscosity of Exp11 and Exp12 is the filtered and bounded model of Lloyd
-et al. (2024), which they derive from the GLAD-M25 shear-wave speeds. The
-lateral variations of the elastic structure in Exp08 and Exp12 come from the
-same tomography model, so that one tomography model is used throughout.
-Exp12 combines Burgers and power-law rheology.
+The 3D viscosity of Exp11 and Exp12 is the model of Lloyd et al. (2024),
+which they derive from the GLAD-M25 shear-wave speeds. The G-ADOPT runs use
+its unmodified inference from g-drift with a lower bound of 10^20^ Pa s
+above 670 km and 10^21^ Pa s below, and no upper bound. No elastic lid is
+added: the high viscosity of the model near the surface acts as the
+lithosphere. The lateral variations of the elastic structure in Exp08 and
+Exp12 come from the same tomography model, so that one tomography model is
+used throughout. They change the shear and bulk moduli of PREM-stable by the
+relative changes of the GLAD-M25 shear and compressional wave speeds at each
+depth, and keep the density of PREM-stable. Exp12 combines Burgers and
+power-law rheology. The rules are in `giamip/resources/models/lloyd2024.json`
+and `prem-glad-m25.json`.
 :::
 
  
