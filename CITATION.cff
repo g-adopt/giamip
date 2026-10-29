@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this repository, cite it with the metadata below. Cite the underlying data through the references in docs/data/manifest.qmd."
 title: "giamip: case definitions and reference data for GIA benchmarks and GIAMIP"
 type: software
-version: 0.3.0
+version: 0.3.1
 date-released: 2026-10-29
 repository-code: "https://github.com/g-adopt/giamip"
 license: MIT
