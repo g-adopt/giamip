@@ -132,3 +132,99 @@ GIAMIP requires the optional Stokes coefficients as fully normalised real
 spherical harmonics with 4 pi normalisation, dimensionless, at a reference
 radius of 6371000 m, for degrees 0 to 96. A different internal convention
 must be converted before submission.
+
+## GIAMIP output of the G-ADOPT runs {#giamip-output}
+
+This section defines the quantities in the GIAMIP files of the G-ADOPT
+submission, group `G-ADOPT`, model `g-adopt`. The `references` attribute of
+every file links here. The general GIAMIP conventions above, under
+[Reference frame](#reference-frame), [Time](#time) and
+[Spherical harmonics](#spherical-harmonics), also apply.
+
+| Variable | Definition | Positive direction | Datum |
+| --- | --- | --- | --- |
+| `delta_bed` | Radial displacement of the solid surface, u . r̂ | Upward | The bed at the first output |
+| `delta_g` | Change of N + Shift, with N = (ψ + ψ_rot) / g_s | Sea surface rising | N + Shift at the first output |
+| `delta_bed_east` | Horizontal displacement, u . ê_east | Eastward | The surface at the first output |
+| `delta_bed_north` | Horizontal displacement, u . ê_north | Northward | The surface at the first output |
+| `ocean_area_fraction` | Cell mean of B, 1 over open water and floating ice | | |
+| `land_ice_area_fraction` | Cell mean of [I > 1 mm], grounded and floating ice | | |
+
+N is the geoid of the solver: the gravitational potential ψ plus the
+rotational potential ψ_rot, divided by the surface gravity g_s. Shift is the
+uniform change of the sea surface that conserves the total mass of ice and
+ocean water. So `delta_g` is the change of the sea surface equipotential and
+includes its uniform part.
+
+Each variable carries a `reference` attribute with its datum, from the
+"Reference" column of the data request. For `delta_bed_east` and
+`delta_bed_north` that column says "Geoid at initial simulation timestep",
+which repeats the `delta_g` row. The files give "Bedrock position at initial
+simulation timestep" for these two, the datum of a horizontal displacement.
+
+The six scalar series are integrals on the native surface mesh of the
+solver, computed before any regridding, as protocol section 6.1 asks. I is
+the ice thickness, SL the water depth of the solver at the same step, B the
+ocean without grounded ice and C the ocean including the marine regions
+under grounded ice.
+
+- `mean_delta_g` is ∫ `delta_g` B dS / ∫ B dS, the mean of `delta_g` over
+  the ocean of the same step, open water and floating ice. It differs from
+  the barystatic estimate from `maf`, because the mean of the sea-surface
+  change over the ocean also contains the mean change of the sea floor
+  under the ocean, and the ocean area B itself changes between steps as the
+  coastline moves.
+- `maf` is ρ_i ∫ max(0, I - (ρ_w / ρ_i) max(SL, 0)) dS, the ice mass above
+  flotation, with ρ_w and ρ_i the ocean water and ice densities of the
+  case file (the GIAMIP column of the [Densities](#densities) table). The
+  integrand is zero
+  where the ice floats or where there is no ice.
+- `grd_ice_mass` is ρ_i ∫ (1 - B) I dS, `total_ice_mass` is ρ_i ∫ I dS,
+  `ocean_area` is ∫ B dS and `ocean_area_grdice` is ∫ C dS.
+
+The four displacement and geoid fields are the values of the finite-element
+fields at the Gauss-Legendre nodes, with no smoothing.
+
+::: {.callout-warning}
+The method that averages the two fractions over each grid cell is not
+decided yet (plan decision A4). This paragraph is a placeholder. Until the
+method is decided, the `comment` attribute of each fraction names the method
+of the file.
+:::
+
+The runs of Exp09, Exp10 and Exp12 write output at a subset of the forcing
+years. The files carry every forcing year. At a year with no model output,
+each value is the linear interpolation in time between the two neighbouring
+model outputs, and at a model output year the value is the model value. The
+`comment` attribute of each variable names the interpolated years. The other
+experiments write output at every forcing year, and no value is
+interpolated.
+
+`Clm` and `Slm` are the coefficients of `delta_g` at the final output minus
+`delta_g` at the first output, in the basis of protocol section 7:
+
+$$
+\delta g(\theta, \phi) = R \sum_{l=0}^{96} \sum_{m=0}^{l}
+\left(C_{lm} \cos m\phi + S_{lm} \sin m\phi\right) \bar P_{lm}(\cos\theta),
+\qquad
+\bar P_{lm} = \sqrt{(2 - \delta_{m0})(2l+1)\frac{(l-m)!}{(l+m)!}}\, P_{lm},
+$$
+
+with R = 6371000 m, θ the colatitude, and P_lm the associated Legendre
+function without the Condon-Shortley phase (-1)^m. The integral of the
+square of each basis function over the sphere is 4π. The coefficients come
+from Gauss-Legendre quadrature of the gridded `delta_g`, which is exact on
+this grid to degree 96. They are stored as (degree, order) arrays of 97 × 97,
+with zeros where the order is larger than the degree.
+
+The solver constrains the centre of mass of the solid Earth and the surface
+load to the origin at every step. The outputs are therefore in the CM frame
+with no conversion from CE. In this frame the degree-1 part of `delta_g` is
+close to zero, and the degree-1 part of the displacement is not zero,
+because it is the motion of the solid Earth relative to the centre of mass
+of the whole system.
+
+Each file names the version and the commit of the giamip code that wrote it
+in its `references` attribute. The global attributes with the prefix `run_`
+copy the attributes of the intermediate file of the export, for example the
+G-ADOPT commit, the Firedrake and PETSc versions, the mesh, k_s and C - A.
