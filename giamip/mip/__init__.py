@@ -15,4 +15,12 @@ inputs
     `GiamipExperiment`, `IceHistory` and `Topography`: the prescribed forcing,
     read with masking off, on the checked grid, with the corrections for the
     version of each file.
+export
+    `ExportFile`: the intermediate file of the G-ADOPT export (the surface
+    fields at the Gauss-Legendre nodes and the scalars of the native mesh),
+    checked against its layout.
+outputs
+    `write_experiment`: the GIAMIP NetCDF files of one experiment from an
+    intermediate file, with the time interpolation of the schedule-D runs,
+    the Stokes coefficients and every attribute the checker asks for.
 """
