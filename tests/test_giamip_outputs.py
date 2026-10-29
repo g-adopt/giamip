@@ -343,7 +343,9 @@ def test_interpolated_years_are_named_in_the_comment(protocol, schedule_d):
     assert "at 7 of the 12 forcing years" in attrs["comment"]
     assert "-2500; -1500; -800 to -600 (3 years)" in attrs["comment"]
     assert report["interpolated_years"] == 5
-    assert g["time_interpolation"].startswith("linear in time")
+    assert g["time_interpolation"].startswith(
+        "the model writes output at 7 of the 12 forcing years; the values at the other 5 "
+        "years are linear interpolations")
     _, out_dir_p, _ = protocol
     _, attrs_p, g_p = _read(out_dir_p / outputs.file_name("maf", "Exp01"), "maf")
     assert "interpolation" not in attrs_p["comment"]
@@ -515,3 +517,44 @@ def test_full_exp01_axis_passes_the_checker_with_the_real_forcing(tmp_path):
     forcing_path = GiamipExperiment("Exp01").ice_history.path
     summary = _run_checker(out_dir, forcing_path)
     assert summary["total_errors"] == 0, summary["log_text"]
+
+
+def test_time_interpolation_states_model_and_interpolated_counts(tmp_path):
+    """An axis like Exp09: the sentence gives the model outputs and the interpolated years apart.
+
+    The two numbers differ (here 4 model outputs and 8 interpolated years of
+    12), so a sentence that puts one count in the place of the other fails.
+    """
+    model = np.array([-3000.0, -1000.0, -500.0, 100.0])
+    _, out_dir, report = _write(tmp_path, model)
+    _, _, g = _read(out_dir / outputs.file_name("delta_g", "Exp01"), "delta_g")
+    assert report["model_years"] == 4 and report["interpolated_years"] == 8
+    assert ("the model writes output at 4 of the 12 forcing years; the values at the other 8 "
+            "years are linear interpolations in time") in g["time_interpolation"]
+
+
+@pytest.mark.parametrize("number", range(1, 13))
+def test_no_attribute_says_same_as_or_open(tmp_path, number):
+    """Every case field copied into an attribute is resolved, for all twelve case files.
+
+    Exp07 gives its rheology as "same as Exp02" in the protocol table; the
+    file must carry the rheology of Exp02 with the G-ADOPT choices (maxwell).
+    """
+    exp = f"Exp{number:02d}"
+    years = np.array([-3000.0, 100.0])
+    path = fx.write_synthetic_export(tmp_path / "e.h5", exp, years)
+    case = cases.with_gadopt_choices(f"giamip-exp{number:02d}")
+    tm = outputs.TimeMap.from_years(years, years)
+    table = outputs.variable_table()
+    with ExportFile(path, exp) as e:
+        attrs = outputs.global_attributes(e, case, {"commit": "0" * 40}, tm, "sha")
+        texts = {k: v for k, v in attrs.items() if isinstance(v, str)}
+        for name in ALL_VARIABLES:
+            for k, v in outputs.variable_attributes(name, table[name], case, e, tm).items():
+                if isinstance(v, str):
+                    texts[f"{name}:{k}"] = v
+    offenders = {k: v for k, v in texts.items() if "same as" in v.lower()}
+    assert not offenders, offenders
+    assert not [k for k in attrs if k.startswith("earth_") and attrs[k] == "open"]
+    if number == 7:
+        assert attrs["earth_rheology"] == "maxwell"

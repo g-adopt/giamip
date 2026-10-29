@@ -406,6 +406,45 @@ def _attribute_value(value):
     return str(value)
 
 
+# The protocol table gives some fields of an experiment as a reference to
+# another experiment, for example the rheology of Exp07, "same as Exp02".
+SAME_AS = re.compile(r"^same as (Exp\d{2})$", re.IGNORECASE)
+
+
+def resolve_case_value(case: dict, *path: str, _seen: tuple = ()):
+    """A field of a case with a "same as ExpNN" reference replaced by the value it names.
+
+    The referenced case is read with the G-ADOPT choices applied
+    (`cases.with_gadopt_choices`), which is how the run used it, and the
+    same field is looked up there. This is the rule `giamip.earth.for_case`
+    applies to the rheology, here for any field the writer copies into an
+    attribute, so a file never says "same as Exp02" where the reader needs
+    the value. A chain of references is followed; a loop raises.
+
+    Parameters
+    ----------
+    case
+        The case, with the G-ADOPT choices applied.
+    *path
+        Keys into the case, for example ``"earth", "rheology"``.
+
+    Returns
+    -------
+    The value of the field after every reference is resolved.
+    """
+    value = case
+    for key in path:
+        value = value[key]
+    match = SAME_AS.match(value) if isinstance(value, str) else None
+    if match is None:
+        return value
+    other = f"giamip-exp{int(match.group(1)[3:]):02d}"
+    if other in _seen or other == case["id"]:
+        raise ValueError(f"{case['id']}: {'/'.join(path)} refers back to itself through {other}")
+    return resolve_case_value(cases.with_gadopt_choices(other), *path,
+                              _seen=_seen + (case["id"],))
+
+
 def global_attributes(export: ExportFile, case: dict, provenance: dict,
                       time_map: TimeMap, export_sha256: str) -> dict:
     """The global attributes of every file of one experiment.
@@ -419,15 +458,18 @@ def global_attributes(export: ExportFile, case: dict, provenance: dict,
     """
     run = export.attrs
     constants = {k: v for k, v in case["constants"].items() if not k.startswith("$")}
-    earth = case["earth"]
     see = f" See {CONVENTIONS_URL}."
     if time_map.is_identity:
         interpolation = "none: the model writes output at every forcing year."
     else:
+        # Two different counts: the years the model wrote, and the years
+        # made by interpolation. They add up to the forcing years.
         n = int(np.count_nonzero(time_map.interpolated))
-        interpolation = (f"linear in time between model outputs at {n} of the "
-                         f"{time_map.forcing_years.size} forcing years; the years are named in "
-                         "the comment of each variable.")
+        interpolation = (f"the model writes output at {time_map.model_years.size} of the "
+                         f"{time_map.forcing_years.size} forcing years; the values at the other "
+                         f"{n} years are linear interpolations in time between the two "
+                         "neighbouring model outputs. The interpolated years are named in the "
+                         "comment of each variable.")
     attrs = {
         "group": GROUP,
         "model": MODEL,
@@ -448,13 +490,15 @@ def global_attributes(export: ExportFile, case: dict, provenance: dict,
                                     "surface load). The solver constrains the centre of mass to "
                                     "the origin at every step, so the outputs are in CM with no "
                                     "CE-to-CM conversion." + see),
-        "ice_history": case["forcing"]["ice_history"],
-        "ice_history_file": case["forcing"]["ice_history_file"],
-        "topography": case["topography"]["model"],
-        "earth_viscosity": earth["viscosity"],
-        "earth_elastic_structure": earth["elastic_structure"],
-        "earth_rheology": earth["rheology"],
-        "earth_compressibility": earth["compressibility"],
+        # Every case field is resolved, so a "same as ExpNN" of the protocol
+        # table becomes the value that experiment used.
+        "ice_history": resolve_case_value(case, "forcing", "ice_history"),
+        "ice_history_file": resolve_case_value(case, "forcing", "ice_history_file"),
+        "topography": resolve_case_value(case, "topography", "model"),
+        "earth_viscosity": resolve_case_value(case, "earth", "viscosity"),
+        "earth_elastic_structure": resolve_case_value(case, "earth", "elastic_structure"),
+        "earth_rheology": resolve_case_value(case, "earth", "rheology"),
+        "earth_compressibility": resolve_case_value(case, "earth", "compressibility"),
         **constants,
         "field_regridding": ("delta_bed, delta_g, delta_bed_east and delta_bed_north are "
                              "point values of the finite-element fields at the Gauss-Legendre "
