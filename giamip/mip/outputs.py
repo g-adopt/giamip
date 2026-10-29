@@ -118,7 +118,7 @@ COORDINATE_ATTRIBUTES = {
 # variable. The QC document names "reference surface and time information"
 # as a hard check that the checker code does not test, so it is written as a
 # `reference` attribute. The variables whose column is a dash have none.
-VARIABLE_REFERENCE = {
+VARIABLE_REFERENCE_DATA_REQUEST = {
     "delta_bed": "Bedrock elevation at initial simulation timestep",
     "delta_g": "Geoid at initial simulation timestep",
     "mean_delta_g": "Geoid at initial simulation timestep",
@@ -127,6 +127,19 @@ VARIABLE_REFERENCE = {
     "Clm": "Initial simulation timestep",
     "Slm": "Initial simulation timestep",
 }
+
+# The data request gives "Geoid at initial simulation timestep" as the datum
+# of the two horizontal displacement components. A horizontal displacement is
+# measured from the position of the surface point at the first step; the
+# geoid is not its datum. The organisers' text is a copy of the delta_g row,
+# so the two components get the datum that matches their long name ("...
+# relative to the initial simulation timestep"). The checker does not test
+# this attribute, and the conventions page records the difference.
+VARIABLE_REFERENCE = dict(
+    VARIABLE_REFERENCE_DATA_REQUEST,
+    delta_bed_east="Bedrock position at initial simulation timestep",
+    delta_bed_north="Bedrock position at initial simulation timestep",
+)
 
 # The optional fields that are left out, never clipped, when a value is
 # outside the checker bounds. Any other variable outside its bounds stops

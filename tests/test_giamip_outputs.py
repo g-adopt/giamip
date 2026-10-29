@@ -263,7 +263,13 @@ def test_tables_agree_with_the_pinned_checker():
             reference[cells[2].strip("`")] = cells[11]
     assert len(reference) == 14
     for name, value in reference.items():
-        assert outputs.VARIABLE_REFERENCE.get(name) == (None if value in ("—", "-") else value), name
+        # The table that transcribes the data request must equal it exactly.
+        # The attribute that is written may differ only for the two horizontal
+        # components, whose data-request datum is a copy of the delta_g row.
+        expected = None if value in ("—", "-") else value
+        assert outputs.VARIABLE_REFERENCE_DATA_REQUEST.get(name) == expected, name
+        if name not in ("delta_bed_east", "delta_bed_north"):
+            assert outputs.VARIABLE_REFERENCE.get(name) == expected, name
 
 
 # ------------------------------------------------------------------ the checker

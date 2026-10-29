@@ -156,6 +156,12 @@ uniform change of the sea surface that conserves the total mass of ice and
 ocean water. So `delta_g` is the change of the sea surface equipotential and
 includes its uniform part.
 
+Each variable carries a `reference` attribute with its datum, from the
+"Reference" column of the data request. For `delta_bed_east` and
+`delta_bed_north` that column says "Geoid at initial simulation timestep",
+which repeats the `delta_g` row. The files give "Bedrock position at initial
+simulation timestep" for these two, the datum of a horizontal displacement.
+
 The six scalar series are integrals on the native surface mesh of the
 solver, computed before any regridding, as protocol section 6.1 asks. I is
 the ice thickness, SL the water depth of the solver at the same step, B the
