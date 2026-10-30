@@ -185,12 +185,31 @@ under grounded ice.
 The four displacement and geoid fields are the values of the finite-element
 fields at the Gauss-Legendre nodes, with no smoothing.
 
-::: {.callout-warning}
-The method that averages the two fractions over each grid cell is not
-decided yet (plan decision A4). This paragraph is a placeholder. Until the
-method is decided, the `comment` attribute of each fraction names the method
-of the file.
-:::
+The two fractions, `ocean_area_fraction` and `land_ice_area_fraction`, are
+area means over each Gauss-Legendre cell. On the mesh, B and [I > 1 mm] are
+constant on each surface triangle. A point value at a grid node would give
+the value of one triangle only, so it would not be a fraction of the cell
+area. The cell (j, i) has the latitude edges sin(e_j) = -1 + Σ_{k<j} w_k,
+with w the Gauss weights, and the longitude edges lon_i ± Δλ / 2. Its area
+is the quadrature weight times R² Δλ.
+
+The export computes the cell mean from samples on the mesh triangles. Each
+triangle is cut into k² equal sub-triangles. The centroid of each
+sub-triangle is a sample with the weight a_f / k², where a_f is the area of
+the triangle. Each sample goes to the grid cell of its direction, and the
+cell mean is the weighted mean of the samples in the cell. The level k is set
+per triangle so that the smallest cells near the poles get about 64 samples,
+and every cell gets at least 4. The result is a weighted mean of values in
+[0, 1], so it stays in [0, 1]. Its area integral over the sphere equals the
+mesh integral to within the binning of the samples. In every experiment the
+grid sum of `ocean_area_fraction` times the cell area agrees with
+`ocean_area` to better than 1e-5, relative.
+
+A second method serves as a check in the export of every experiment. It
+places n × n points inside each grid cell and finds the mesh triangle of each
+point. The two methods use independent code, and the export stops when they
+disagree. The `comment` attribute of each fraction names the method,
+`m2`.
 
 The runs of Exp09, Exp10 and Exp12 write output at a subset of the forcing
 years. The files carry every forcing year. At a year with no model output,
